@@ -7,6 +7,6 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface IModuleRepository
     {
         IQueryable<Module> Get();
-        Task<Module> GetById(int id);
+        Module GetById(int id);
     }
 }

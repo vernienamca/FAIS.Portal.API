@@ -1,4 +1,4 @@
- using System.Text;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,11 +26,6 @@ namespace FAIS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
-           
-
-
             services.AddCors();
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
@@ -56,25 +51,24 @@ namespace FAIS
             services.AddControllers();
 
             services.AddDbContext<FAISContext>(options =>
-              options.UseOracle(Configuration.GetConnectionString("DefaultConnection")));
-
+            {
+                options.UseOracle(Configuration.GetConnectionString("DefaultConnection"));
+                //options.UseOracleSQLCompatibility("11");
+            });
+               
             services.Configure<TokenKeys>(Configuration.GetSection("TokenOptions"));
 
             services.AddScoped(typeof(IModuleRepository), typeof(ModuleRepository));
             services.AddScoped(typeof(ISettingsRepository), typeof(SettingsRepository));
             services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+            services.AddScoped(typeof(ILibraryTypeRepository), typeof(LibraryTypeRepository));
 
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
             services.AddScoped(typeof(ISettingsService), typeof(SettingsService));
             services.AddScoped(typeof(IRoleService), typeof(RoleService));
             services.AddScoped(typeof(IUserService), typeof(UserService));
-            services.AddScoped<IEmailService, EmailService>();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Your API Title", Version = "v1" });
-            });
+            services.AddScoped(typeof(ILibraryTypeService), typeof(LibraryTypeService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,15 +83,9 @@ namespace FAIS
                 app.UseDeveloperExceptionPage();
             }
 
-
-           
-
             app.UseHttpsRedirection();
 
-
             app.UseRouting();
-
-
 
             app.UseAuthentication();
 
@@ -107,13 +95,6 @@ namespace FAIS
             {
                 endpoints.MapControllers();
             });
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API Title V1");
-            });
-
         }
     }
 }

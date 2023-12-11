@@ -1,5 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Services;
 using FAIS.Infrastructure.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,9 +18,9 @@ namespace FAIS.Infrastructure.Data
             return _dbContext.Settings;
         }
 
-        public async Task<Settings> GetById(int id)
+        public Settings GetById(int id)
         {
-            return await GetByIdAsync(id);
+            return _dbContext.Settings.Where(t => t.Id == id).ToList()[0];
         }
     }
 }

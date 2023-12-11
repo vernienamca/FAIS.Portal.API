@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +6,6 @@ using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
-using FAIS.ApplicationCore.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,7 +13,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using static ApplicationCore.Enumeration.LoginEnum;
-using FAIS.ApplicationCore.Entities.Structure;
 
 namespace FAIS.Controllers
 {
@@ -50,121 +47,72 @@ namespace FAIS.Controllers
 
         #endregion Constructor
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromQuery]string username, [FromQuery]string password)
+        [HttpGet("authenticate")]
+        public async Task<IActionResult> AuthenticateUser([FromQuery]string username, [FromQuery]string password)
         {
-            return Ok();
+            try
+            {
+                var userDto = new UserDTO();
 
-            //try
-            //{
-            //    UserDTO userDTO = new UserDTO();
+                var user = _userService.GetByUserName(username);
 
-            //    var fmisUser = _fmisUserService.GetByUsername(username);
+                if (user == null)
+                    return Ok("Invalid username or password combination. Please try again.");
 
-            //    if (fmisUser != null)
-            //    {
-            //        userDTO.UserName = username;
+                userDto.Id = user.Id;
 
-            //        var settings = _settingsService.GetById(1).Result;
+                var settings = _settingsService.GetById(1);
 
-            //        if (settings != null)
-            //        {
-            //            if (DateTime.Today <= fmisUser.ExpirationDate)
-            //            {
-            //                var user = _userService.GetByUsername(fmisUser.Username);
+                if (settings == null)
+                    return Ok(new { errorDescription = "No system parameter setup yet in the system." });
 
-            //                UserDTO userDto = new UserDTO()
-            //                {
-            //                    LastName = fmisUser.LastName,
-            //                    FirstName = fmisUser.FirstName,
-            //                    UserName = fmisUser.Username,
-            //                    Password = fmisUser.Password,
-            //                    EmailAddress = fmisUser.Email,
-            //                    PhoneNumber = "(02) 8912-4526",
-            //                    Address = "Camp General Emilio Aguinaldo 1100 Quezon City, Philippines",
-            //                    UserStatus = (int)UserStatus.Active,
-            //                    AvatarUrl = "empty-avatar.png",
-            //                    SignOnAttempts = 0,
-            //                    LoggedIn = true,
-            //                    ExpirationDate = fmisUser.ExpirationDate,
-            //                    CreatedBy = 1,
-            //                    DateCreated = fmisUser.CreatedDate,
-            //                    DateUpdated = DateTime.Now
-            //                };
+                if (DateTime.Today >= user.DateExpired)
+                    return Ok(new { errorDescription = "Your account has expired. Please contact your system administrator." });
 
-            //                if (user != null)
-            //                {
-            //                    if (user.LastName != fmisUser.LastName || user.FirstName != fmisUser.FirstName || user.Password != fmisUser.Password || 
-            //                        user.ExpirationDate.Date != fmisUser.ExpirationDate.Date)
-            //                    {
-            //                        await _userService.Update(userDto);
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    await _userService.Add(userDto);
-            //                }
+                if (user.StatusCode == (int)UserStatus.Inactive)
+                    return Ok(new { errorDescription = "Your account is inactive. Please contact your system administrator." });
 
-            //                if (user.UserStatus != (int)UserStatus.Inactive)
-            //                {
-            //                    if (user.UserStatus != (int)UserStatus.Locked)
-            //                    {
-            //                        if (user.SignOnAttempts <= settings.MaxSignOnAttempts)
-            //                        {
-            //                            if (user.Password == EncryptionHelper.HashPassword(password))
-            //                            {
-            //                                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("KeyForSignInSecret@1234"));
-            //                                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                if (user.StatusCode == (int)UserStatus.Locked)
+                    return Ok(new { errorDescription = "Your account has been locked. Please contact your system administrator." });
 
-            //                                var tokenOptions = new JwtSecurityToken(
-            //                                    issuer: _tokenOptions.Issuer,
-            //                                    audience: _tokenOptions.Audience,
-            //                                    claims: new List<Claim>(),
-            //                                    expires: DateTime.Now.AddMinutes(_tokenOptions.ExpiresInMinutes),
-            //                                    signingCredentials: signinCredentials
-            //                                );
+                if (user.SignInAttempts >= settings.MaxSignOnAttempts)
+                {
+                    await _userService.LockedAccount(userDto);
 
-            //                                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+                    return Ok(new { errorDescription = "You've reached the maximum login limit. Your account has been locked." });
+                }
 
-            //                                userDTO.LoginStatus = (int)LoginStatus.Success;
+                if (user.Password != EncryptionHelper.HashPassword(password))
+                {
+                    await _userService.UpdateSignInAttempts(userDto);
 
-            //                                await _userService.UpdateSignOnAttempts(userDTO);
+                    return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
+                }
 
-            //                                return Ok(new { userId = user.Id, token = tokenString, user.FirstName, user.LastName, user.EmailAddress });
-            //                            }
-            //                            else
-            //                            {
-            //                                await _userService.UpdateSignOnAttempts(userDTO);
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("KeyForSignInSecret@1234"));
+                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                var tokenOptions = new JwtSecurityToken(
+                    issuer: _tokenOptions.Issuer,
+                    audience: _tokenOptions.Audience,
+                    claims: new List<Claim>(),
+                    expires: DateTime.Now.AddMinutes(_tokenOptions.ExpiresInMinutes),
+                    signingCredentials: signinCredentials
+                );
 
-            //                                return Ok(ErrorCodes.EDS_ERR_INVALID_LOGIN_NG);
-            //                            }
-            //                        }
-            //                        else
-            //                        {
-            //                            await _userService.LockedAccount(userDTO);
+                userDto.LoginStatus = (int)LoginStatus.Success;
 
-            //                            return Ok(ErrorCodes.EDS_ERR_MAXLOGIN_LIMIT_NG);
-            //                        }
-            //                    }
-            //                    else
-            //                        return Ok(ErrorCodes.EDS_ERR_LOCKED_OUT_NG);
-            //                }
-            //                else
-            //                    return Ok(ErrorCodes.EDS_ACCOUNT_INACTIVE_NG);
-            //            }
-            //            else
-            //                return Ok(ErrorCodes.EDS_ERR_ACCOUNT_EXPIRED_NG);
-            //        }
-            //        else
-            //            return Ok(ErrorCodes.EDS_ERR_NO_PARAMETER_NG);
-            //    }
-            //    else
-            //        return Ok(ErrorCodes.EDS_ERR_INVALID_LOGIN_NG);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex);
-            //}
+                return Ok(new { userId = user.Id, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("test")]
+        public string Test()
+        {
+            return "This is a test api.";
         }
     }
 }

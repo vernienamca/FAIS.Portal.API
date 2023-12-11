@@ -19,9 +19,9 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public async Task<Module> GetById(int id)
+        public Module GetById(int id)
         {
-            return await _repository.GetById(id);
+            return _repository.GetById(id);
         }
     }
 }

@@ -1,25 +1,24 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
 {
-    public class SettingsService : ISettingsService
+    public class LibraryTypeService : ILibraryTypeService
     {
-        private readonly ISettingsRepository _repository;
+        private readonly ILibraryTypeRepository _repository;
 
-        public SettingsService(ISettingsRepository repository)
+        public LibraryTypeService(ILibraryTypeRepository repository)
         {
             _repository = repository;
         }
 
-        public IQueryable<Settings> Get()
+        public IQueryable<LibraryType> Get()
         {
             return _repository.Get();
         }
 
-        public Settings GetById(int id)
+        public LibraryType GetById(decimal id)
         {
             return _repository.GetById(id);
         }
