@@ -14,6 +14,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<Settings> Settings { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<LibraryType> LibraryTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -50,20 +51,20 @@ namespace FAIS.Infrastructure.Data
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.CreatedBy)
-                    .HasColumnName("USER_CREATED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_CREATED");
 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnName("DATE_CREATED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
 
                 entity.Property(e => e.UpdatedBy)
-                    .HasColumnName("USER_MODIFIED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_MODIFIED");
 
                 entity.Property(e => e.UpdatedAt)
-                    .HasColumnName("DATE_MODIFIED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_MODIFIED");
             });
 
             builder.Entity<Settings>(entity =>
@@ -106,35 +107,35 @@ namespace FAIS.Infrastructure.Data
 
                 entity.Property(e => e.PasswordExpiry)
                     .HasColumnType("NUMBER")
-                    .HasColumnName("MIN_SPECIAL_CHARS");
+                    .HasColumnName("PASSWORD_EXPIRY");
 
                 entity.Property(e => e.IdleTime)
                     .HasColumnType("NUMBER")
-                    .HasColumnName("MIN_SPECIAL_CHARS");
+                    .HasColumnName("IDLE_TIME");
 
                 entity.Property(e => e.EnforcePasswordHistory)
                     .HasColumnType("NUMBER")
-                    .HasColumnName("MIN_SPECIAL_CHARS");
+                    .HasColumnName("ENFORCE_PASSWORD_HISTORY");
 
                 entity.Property(e => e.MaxSignOnAttempts)
                     .HasColumnType("NUMBER")
-                    .HasColumnName("MIN_SPECIAL_CHARS");
+                    .HasColumnName("MAX_SIGN_ATTEMPTS");
 
                 entity.Property(e => e.CreatedBy)
-                    .HasColumnName("USER_CREATED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_CREATED");
 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnName("DATE_CREATED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
 
                 entity.Property(e => e.UpdatedBy)
-                    .HasColumnName("USER_MODIFIED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_MODIFIED");
 
                 entity.Property(e => e.UpdatedAt)
-                    .HasColumnName("DATE_MODIFIED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_MODIFIED");
             });
 
             builder.Entity<Role>(entity =>
@@ -164,20 +165,20 @@ namespace FAIS.Infrastructure.Data
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.CreatedBy)
-                    .HasColumnName("USER_CREATED")
-                    .HasColumnType("datetime");
+                   .HasColumnType("NUMBER")
+                   .HasColumnName("USER_CREATED");
 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnName("DATE_CREATED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
 
                 entity.Property(e => e.UpdatedBy)
-                    .HasColumnName("USER_MODIFIED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_MODIFIED");
 
                 entity.Property(e => e.UpdatedAt)
-                    .HasColumnName("DATE_MODIFIED")
-                    .HasColumnType("datetime");
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_MODIFIED");
             });
 
             builder.Entity<User>(entity =>
@@ -196,6 +197,7 @@ namespace FAIS.Infrastructure.Data
 
                 entity.Property(e => e.MiddleName)
                     .HasMaxLength(35)
+                    .IsRequired(false)
                     .HasColumnName("MIDDLE_NAME");
 
                 entity.Property(e => e.LastName)
@@ -204,11 +206,21 @@ namespace FAIS.Infrastructure.Data
 
                 entity.Property(e => e.EmployeeNumber)
                     .HasMaxLength(7)
+                    .IsRequired(false)
                     .HasColumnName("EMP_NO");
 
                 entity.Property(e => e.UserName)
                     .HasMaxLength(20)
                     .HasColumnName("USERNAME");
+
+                entity.Property(e => e.PositionId)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("POSITION_SEQ");
+
+                entity.Property(e => e.DivisionId)
+                   .HasColumnType("NUMBER")
+                   .IsRequired(false)
+                   .HasColumnName("DIVISION_SEQ");
 
                 entity.Property(e => e.Password)
                     .HasMaxLength(250)
@@ -221,6 +233,112 @@ namespace FAIS.Infrastructure.Data
                 entity.Property(e => e.MobileNumber)
                     .HasColumnType("NUMBER")
                     .HasColumnName("MOBILE_NO");
+
+                entity.Property(e => e.OupFgId)
+                    .HasColumnType("NUMBER")
+                    .IsRequired(false)
+                    .HasColumnName("OUP_FG_SEQ");
+
+                entity.Property(e => e.Photo)
+                    .HasMaxLength(250)
+                    .IsRequired(false)
+                    .HasColumnName("PHOTO");
+
+                entity.Property(e => e.SessionId)
+                    .HasColumnType("NUMBER")
+                    .IsRequired(false)
+                    .HasColumnName("SESSION_SEQ");
+
+                entity.Property(e => e.SignInAttempts)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("SIGNIN_ATTEMPTS");
+
+                entity.Property(e => e.StatusCode)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("STATUS_CODE");
+
+                entity.Property(e => e.StatusDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("STATUS_DATE");
+
+                entity.Property(e => e.DateExpired)
+                    .HasColumnType("datetime")
+                    .IsRequired(false)
+                    .HasColumnName("DATE_EXPIRED");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnType("NUMBER")
+                    .IsRequired(false)
+                    .HasColumnName("USER_CREATED");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnType("NUMBER")
+                    .IsRequired(false)
+                    .HasColumnName("USER_MODIFIED");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .IsRequired(false)
+                    .HasColumnName("DATE_MODIFIED");
+
+                entity.Property(e => e.TempKey)
+                    .HasMaxLength(250)
+                    .IsRequired(false)
+                    .HasColumnName("TEMP_KEY");
+            });
+
+            builder.Entity<LibraryType>(entity =>
+            {
+                entity.ToTable("LIBRARY_TYPES", "TRANSCO");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("LIB_TYPE_SEQ");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(100)
+                    .HasColumnName("LIB_TYPE_NAME");
+
+                entity.Property(e => e.Code)
+                    .HasMaxLength(10)
+                    .HasColumnName("LIB_TYPE_CODE");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(200)
+                    .IsRequired(false)
+                    .HasColumnName("LIB_TYPE_DESC");
+
+                entity.Property(e => e.IsActive)
+                    .HasMaxLength(1)
+                    .HasColumnName("IS_ACTIVE");
+
+                entity.Property(e => e.StatusDate)
+                    .HasColumnName("STATUS_DATE")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_CREATED");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnType("NUMBER")
+                    .IsRequired(false)
+                    .HasColumnName("USER_MODIFIED");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .IsRequired(false)
+                    .HasColumnName("DATE_MODIFIED");
             });
         }
     }

@@ -7,6 +7,6 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface ISettingsService
     {
         IQueryable<Settings> Get();
-        Task<Settings> GetById(int id);
+        Settings GetById(int id);
     }
 }

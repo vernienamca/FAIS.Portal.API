@@ -21,13 +21,13 @@ namespace FAIS.ApplicationCore.Entities.Security
         public DateTime StatusDate { get; set; }
 
         [DataMember]
-        public string CreatedBy { get; set; }
+        public decimal CreatedBy { get; set; }
 
         [DataMember]
         public DateTime CreatedAt { get; set; }
 
         [DataMember]
-        public string UpdatedBy { get; set; }
+        public decimal? UpdatedBy { get; set; }
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }

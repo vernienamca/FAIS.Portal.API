@@ -1,7 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -19,9 +18,9 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public async Task<Role> GetById(int id)
+        public Role GetById(int id)
         {
-            return await _repository.GetById(id);
+            return _repository.GetById(id);
         }
     }
 }

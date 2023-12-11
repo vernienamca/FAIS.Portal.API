@@ -7,6 +7,6 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface IRoleRepository
     {
         IQueryable<Role> Get();
-        Task<Role> GetById(int id);
+        Role GetById(int id);
     }
 }

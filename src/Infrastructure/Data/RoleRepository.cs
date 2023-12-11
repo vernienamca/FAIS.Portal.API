@@ -1,7 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -16,9 +15,9 @@ namespace FAIS.Infrastructure.Data
             return _dbContext.Roles;
         }
 
-        public async Task<Role> GetById(int id)
+        public Role GetById(int id)
         {
-            return await GetByIdAsync(id);
+            return _dbContext.Roles.Where(t => t.Id == id).ToList()[0];
         }
     }
 }

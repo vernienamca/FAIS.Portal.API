@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    public class Module : BaseEntity<int>
+    public class LibraryType : BaseEntity<int>
     {
         [DataMember]
         public decimal Id { get; set; }
@@ -12,10 +12,10 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string Name { get; set; }
 
         [DataMember]
-        public string Description { get; set; }
+        public string Code { get; set; }
 
         [DataMember]
-        public string Url { get; set; }
+        public string Description { get; set; }
 
         [DataMember]
         public char IsActive { get; set; }
