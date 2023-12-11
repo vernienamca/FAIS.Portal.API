@@ -23,7 +23,7 @@ namespace FAIS.API.Controllers
         [HttpGet("[action]")]
         public IEnumerable<Module> Get()
         {
-            return _service.Get();
+            return _service.Get(); 
         }
 
         [HttpGet("[action]")]
