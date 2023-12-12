@@ -268,7 +268,6 @@ namespace FAIS.Infrastructure.Data
 
                 entity.Property(e => e.CreatedBy)
                     .HasColumnType("NUMBER")
-                    .IsRequired(false)
                     .HasColumnName("USER_CREATED");
 
                 entity.Property(e => e.CreatedAt)

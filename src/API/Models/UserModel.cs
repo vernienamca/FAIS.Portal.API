@@ -13,7 +13,6 @@ namespace FAIS.Portal.API.Models
         public string UserName { get; set; }
         public string Position { get; set; }
         public string Division { get; set; }
-        public bool IsActive { get; set; }
         public string Password { get; set; }
         public string EmailAddress { get; set; }
         public decimal MobileNumber { get; set; }

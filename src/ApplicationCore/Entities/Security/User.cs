@@ -60,10 +60,10 @@ namespace FAIS.ApplicationCore.Entities.Security
         public DateTime? DateExpired { get; set; }
 
         [DataMember]
-        public decimal? CreatedBy { get; set; }
+        public decimal CreatedBy { get; set; }
 
         [DataMember]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [DataMember]
         public decimal? UpdatedBy { get; set; }

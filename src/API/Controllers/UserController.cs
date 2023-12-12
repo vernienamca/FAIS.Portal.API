@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -26,9 +24,48 @@ namespace FAIS.API.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<User> Get()
+        public IEnumerable<UserModel> Get()
         {
-            return _userService.Get();
+            List<UserModel> users = new List<UserModel>();
+
+            foreach (var user in _userService.Get())
+            {
+                var createdBy = _userService.GetById(user.CreatedBy);
+                var modifiedBy = _userService.GetById(user.UpdatedBy.Value);
+
+                var entity = new UserModel()
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    EmployeeNumber = user.EmployeeNumber,
+                    UserName = user.UserName,
+                    Position = _libraryTypeService.GetById(user.PositionId).Name,
+                    EmailAddress = user.EmailAddress,
+                    MobileNumber = user.MobileNumber,
+                    Photo = user.Photo,
+                    StatusCode = user.StatusCode,
+                    StatusDate = user.StatusDate,
+                    DateExpired = user.DateExpired,
+                    CreatedBy = string.Format("{0} {1}", createdBy.FirstName, createdBy.LastName),
+                    CreatedAt = user.CreatedAt
+                };
+
+                var division = _libraryTypeService.GetById(user.DivisionId.Value);
+
+                if (division != null)
+                    entity.Division = _libraryTypeService.GetById(user.DivisionId.Value).Name;
+                    
+                if (modifiedBy != null)
+                {
+                    entity.UpdatedBy = string.Format("{0} {1}", modifiedBy.FirstName, modifiedBy.LastName);
+                    entity.UpdatedAt = user.UpdatedAt;
+                }
+
+                users.Add(entity);
+            }
+
+            return users;
         }
 
         [HttpGet("[action]")]

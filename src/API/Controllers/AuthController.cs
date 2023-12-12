@@ -101,6 +101,8 @@ namespace FAIS.Controllers
 
                 userDto.LoginStatus = (int)LoginStatus.Success;
 
+                await _userService.UpdateSignInAttempts(userDto);
+
                 return Ok(new { userId = user.Id, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
             }
             catch (Exception ex)
