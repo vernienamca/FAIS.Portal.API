@@ -1,5 +1,7 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +24,22 @@ namespace FAIS.ApplicationCore.Services
         public Module GetById(int id)
         {
             return _repository.GetById(id);
+        }
+
+        public async Task<Module> Add(ModuleDTO moduleDto)
+        {
+            var module = new Module()
+            {
+                Name = moduleDto.Name,
+                Description = moduleDto.Description,
+                Url = moduleDto.Url,
+                IsActive = moduleDto.IsActive,
+                StatusDate = moduleDto.StatusDate,
+                CreatedBy = moduleDto.CreatedBy,
+                CreatedAt = DateTime.Now
+            };
+
+            return await _repository.Add(module);
         }
     }
 }
