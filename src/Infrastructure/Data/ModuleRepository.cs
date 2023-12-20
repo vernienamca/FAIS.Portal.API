@@ -21,5 +21,10 @@ namespace FAIS.Infrastructure.Data
         {
             return _dbContext.Modules.Where(t => t.Id == id).ToList()[0];
         }
+
+        public async Task<Module> Add(Module module)
+        {
+            return await AddAsync(module);
+        }
     }
 }
