@@ -36,5 +36,10 @@ namespace FAIS.Infrastructure.Data
         {
             return await UpdateAsync(user);
         }
+
+        public async Task<User> Add(User user)
+        {
+            return await AddAsync(user);
+        }
     }
 }
