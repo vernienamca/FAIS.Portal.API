@@ -13,5 +13,7 @@ namespace FAIS.ApplicationCore.Interfaces
         User GetByUserName(string userName);
         Task<User> LockedAccount(UserDTO userDTO);
         Task<User> UpdateSignInAttempts(UserDTO userDTO);
+
+        Task<User> Add(UserDTO userDTO);
     }
 }

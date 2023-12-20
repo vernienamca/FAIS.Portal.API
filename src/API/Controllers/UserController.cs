@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using FAIS.ApplicationCore.DTOs;
+using System.Threading.Tasks;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -22,6 +26,10 @@ namespace FAIS.API.Controllers
             _userService = userService;
             _libraryTypeService = libraryTypeService;
         }
+
+       
+
+
 
         [HttpGet("[action]")]
         public IEnumerable<UserModel> Get()
@@ -84,5 +92,43 @@ namespace FAIS.API.Controllers
 
             return Ok(user);
         }
+
+
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
+        {
+            try
+            {
+                if (userDTO == null)
+                {
+                    return BadRequest("UserDTO is null");
+                }
+
+                var addedUser = await _userService.Add(userDTO);
+
+                return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception using Debug.WriteLine for debugging
+                Debug.WriteLine($"An error occurred in AddUser action: {ex.Message}");
+
+                // Log the stack trace
+                Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+                // Log inner exception details if available
+                if (ex.InnerException != null)
+                {
+                    Debug.WriteLine($"Inner Exception Message: {ex.InnerException.Message}");
+                    Debug.WriteLine($"Inner Exception Stack Trace: {ex.InnerException.StackTrace}");
+                }
+
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+
+
     }
 }
