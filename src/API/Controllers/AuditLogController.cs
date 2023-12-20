@@ -8,7 +8,7 @@ namespace FAIS.Portal.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class AuditLogController : ControllerBase
     {
         private readonly IAuditLogService _auditLogService;
