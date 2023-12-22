@@ -12,6 +12,7 @@ using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Services;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
 
 namespace FAIS
 {
@@ -56,9 +57,10 @@ namespace FAIS
                 options.UseOracle(Configuration.GetConnectionString("DefaultConnection"), oracleOptions =>
                 {
                     oracleOptions.UseOracleSQLCompatibility("11");
-                    
-                });
+                })
+                .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
             });
+
 
 
             services.Configure<TokenKeys>(Configuration.GetSection("TokenOptions"));
@@ -88,7 +90,7 @@ namespace FAIS
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors(
-                options => options.WithOrigins("localhost:3000").AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader()
+                options => options.WithOrigins("localhost:4200").AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader()
             );
 
             if (env.IsDevelopment())
@@ -102,6 +104,7 @@ namespace FAIS
 
             app.UseAuthentication();
 
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

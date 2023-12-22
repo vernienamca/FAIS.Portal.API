@@ -125,7 +125,7 @@ namespace FAIS.Portal.API.Controllers
             try
             {
                 var user = await _context.Users.SingleOrDefaultAsync(u => u.EmailAddress == email);
-
+              
                 if (user != null)
                 {
                    
