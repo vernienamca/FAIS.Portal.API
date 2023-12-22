@@ -23,7 +23,7 @@ namespace FAIS.Infrastructure.Data
 
             builder.Entity<Module>(entity =>
             {
-                entity.ToTable("MODULES", "FAIS");
+                entity.ToTable("MODULES", "TRANSCO");
 
                 entity.HasKey(e => e.Id);
 
@@ -70,7 +70,7 @@ namespace FAIS.Infrastructure.Data
 
             builder.Entity<Settings>(entity =>
             {
-                entity.ToTable("SETTINGS", "FAIS");
+                entity.ToTable("SETTINGS", "TRANSCO");
 
                 entity.HasKey(e => e.Id);
 
@@ -141,7 +141,7 @@ namespace FAIS.Infrastructure.Data
 
             builder.Entity<Role>(entity =>
             {
-                entity.ToTable("ROLES", "FAIS");
+                entity.ToTable("ROLES", "TRANSCO");
 
                 entity.HasKey(e => e.Id);
 
@@ -184,18 +184,19 @@ namespace FAIS.Infrastructure.Data
 
             builder.Entity<User>(entity =>
             {
-                entity.ToTable("USERS", "FAIS");
+                entity.ToTable("USERS", "TRANSCO");
 
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Id)
                     .HasColumnType("NUMBER")
                     .HasColumnName("USER_SEQ");
+           
 
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(35)
                     .HasColumnName("FIRST_NAME");
-
+                
                 entity.Property(e => e.MiddleName)
                     .HasMaxLength(35)
                     .IsRequired(false)
@@ -293,7 +294,7 @@ namespace FAIS.Infrastructure.Data
 
             builder.Entity<LibraryType>(entity =>
             {
-                entity.ToTable("LIBRARY_TYPES", "FAIS");
+                entity.ToTable("LIBRARY_TYPES", "TRANSCO");
 
                 entity.HasKey(e => e.Id);
 

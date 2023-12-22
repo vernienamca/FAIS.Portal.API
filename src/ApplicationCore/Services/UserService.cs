@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using System;
 using System.Linq;
@@ -61,11 +62,11 @@ namespace FAIS.ApplicationCore.Services
                 UserName = userDTO.UserName,
                 PositionId = userDTO.PositionId,
                 DivisionId  = userDTO.DivisionId,
-                Password    = userDTO.Password,
-                EmailAddress  = userDTO.EmailAddress,
+                Password = EncryptionHelper.HashPassword(userDTO.Password),
+                EmailAddress = userDTO.EmailAddress,
                 MobileNumber    = userDTO.MobileNumber,
                 OupFgId= userDTO.OupFgId,
-                //Photo   = userDTO.Photo, 
+                Photo   = userDTO.Photo, 
                 SessionId = userDTO.SessionId,
                 SignInAttempts= userDTO.SignInAttempts,
                 StatusCode  =  userDTO.StatusCode,
@@ -75,7 +76,7 @@ namespace FAIS.ApplicationCore.Services
                 CreatedAt = DateTime.Now,
                 UpdatedBy = userDTO?.UpdatedBy,
                 UpdatedAt = DateTime.Now,
-                //TempKey = userDTO.TempKey,
+                TempKey = userDTO.TempKey,
             };
 
             return await _repository.Add(user);
