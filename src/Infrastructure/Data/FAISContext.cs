@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using FAIS.ApplicationCore.Entities.Security;
+﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
+using Microsoft.EntityFrameworkCore;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -15,6 +15,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<LibraryType> LibraryTypes { get; set; }
+        public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -339,6 +340,51 @@ namespace FAIS.Infrastructure.Data
                     .HasColumnType("datetime")
                     .IsRequired(false)
                     .HasColumnName("DATE_MODIFIED");
+            });
+
+            builder.Entity<AuditLog>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("AUDIT_LOGS");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("NUMBER(38)")
+                    .HasColumnName("AUDIT_LOG_SEQ");
+
+                entity.Property(e => e.Activity)
+                    .HasMaxLength(350)
+                    .IsUnicode(false)
+                    .HasColumnName("ACTIVITY");
+
+                entity.Property(e => e.DateCreated)
+                    .HasColumnType("DATE")
+                    .HasColumnName("DATE_CREATED")
+                    .HasDefaultValueSql("systimestamp\n   ");
+
+                entity.Property(e => e.IpAddress)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("IP_ADDRESS");
+
+                entity.Property(e => e.ModuleSeq)
+                    .HasColumnType("NUMBER(38)")
+                    .HasColumnName("MODULE_SEQ");
+
+                entity.Property(e => e.NewValues)
+                    .HasMaxLength(350)
+                    .IsUnicode(false)
+                    .HasColumnName("NEW_VALUES");
+
+                entity.Property(e => e.OldValues)
+                    .HasMaxLength(350)
+                    .IsUnicode(false)
+                    .HasColumnName("OLD_VALUES");
+
+                entity.Property(e => e.UserCreated)
+                    .HasColumnType("NUMBER(38)")
+                    .HasColumnName("USER_CREATED");
             });
         }
     }

@@ -65,12 +65,14 @@ namespace FAIS
 
             services.Configure<TokenKeys>(Configuration.GetSection("TokenOptions"));
 
+            services.AddScoped(typeof(IAuditLogRepository), typeof(AuditLogRepository));
             services.AddScoped(typeof(IModuleRepository), typeof(ModuleRepository));
             services.AddScoped(typeof(ISettingsRepository), typeof(SettingsRepository));
             services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(ILibraryTypeRepository), typeof(LibraryTypeRepository));
 
+            services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
             services.AddScoped(typeof(ISettingsService), typeof(SettingsService));
             services.AddScoped(typeof(IRoleService), typeof(RoleService));
