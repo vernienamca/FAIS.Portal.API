@@ -8,7 +8,7 @@ namespace FAIS.Portal.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class AuditLogController : ControllerBase
     {
         private readonly IAuditLogService _auditLogService;
@@ -36,7 +36,7 @@ namespace FAIS.Portal.API.Controllers
                 {
                     Id = auditLog.Id,
                     Activity = auditLog.Activity,
-                    DateCreated = System.DateTime.UtcNow,
+                    DateCreated = System.DateTime.Now,
                     IpAddress = auditLog.IpAddress,
                     ModuleSeq = auditLog.ModuleSeq,
                     NewValues = auditLog.NewValues,
