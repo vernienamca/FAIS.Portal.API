@@ -7,6 +7,10 @@ using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Asn1.X509;
+using FAIS.ApplicationCore.Models;
+using System.Linq;
 
 namespace FAIS.API.Controllers
 {
@@ -15,8 +19,14 @@ namespace FAIS.API.Controllers
     //[Authorize]
     public class UserController : ControllerBase
     {
+        #region Variables
+
         private readonly IUserService _userService;
         private readonly ILibraryTypeService _libraryTypeService;
+
+        #endregion Variables
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
@@ -27,9 +37,7 @@ namespace FAIS.API.Controllers
             _libraryTypeService = libraryTypeService;
         }
 
-       
-
-
+        #endregion Constructor
 
         [HttpGet("[action]")]
         public IEnumerable<UserModel> Get()
@@ -76,8 +84,28 @@ namespace FAIS.API.Controllers
             return users;
         }
 
-        [HttpGet("[action]")]
-        public IActionResult GetById([FromQuery] int id)
+        /// <summary>
+        /// Gets the list of permissions for the specific user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("permissions/{userId:int}")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<PermissionModel>), StatusCodes.Status200OK)]
+        public IActionResult GetPermissions(int userId)
+        {
+            var permissions = _userService.GetPermissions(userId).ToList();
+
+            return Ok(permissions);
+        }
+
+        /// <summary>
+        /// Gets the user by unique identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
+        public IActionResult GetById(int id)
         {
             var entity = _userService.GetById(id);
 
@@ -92,8 +120,6 @@ namespace FAIS.API.Controllers
 
             return Ok(user);
         }
-
-
 
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
@@ -127,8 +153,5 @@ namespace FAIS.API.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
-
-
-
     }
 }

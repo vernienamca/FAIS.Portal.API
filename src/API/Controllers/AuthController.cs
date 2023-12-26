@@ -13,6 +13,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using static ApplicationCore.Enumeration.LoginEnum;
+using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace FAIS.Controllers
 {
@@ -47,7 +49,13 @@ namespace FAIS.Controllers
 
         #endregion Constructor
 
+
+        /// <summary>
+        /// Authenticate the user attempting to gain access.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("authenticate")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AuthenticateUser([FromQuery]string username, [FromQuery]string password)
         {
             try
@@ -105,9 +113,9 @@ namespace FAIS.Controllers
 
                 return Ok(new { userId = user.Id, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex);
+                return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
             }
         }
 

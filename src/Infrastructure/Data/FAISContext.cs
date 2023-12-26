@@ -14,8 +14,10 @@ namespace FAIS.Infrastructure.Data
         public DbSet<Settings> Settings { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<LibraryType> LibraryTypes { get; set; }
-        public virtual DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -42,6 +44,14 @@ namespace FAIS.Infrastructure.Data
                 entity.Property(e => e.Url)
                     .HasMaxLength(200)
                     .HasColumnName("URL");
+
+                entity.Property(e => e.Icon)
+                    .HasMaxLength(25)
+                    .HasColumnName("ICON");
+
+                entity.Property(e => e.GroupName)
+                    .HasMaxLength(50)
+                    .HasColumnName("GROUP_NAME");
 
                 entity.Property(e => e.IsActive)
                     .HasMaxLength(1)
@@ -290,6 +300,100 @@ namespace FAIS.Infrastructure.Data
                     .HasMaxLength(250)
                     .IsRequired(false)
                     .HasColumnName("TEMP_KEY");
+            });
+
+            builder.Entity<UserRole>(entity =>
+            {
+                entity.ToTable("USER_ROLES", "FAIS");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_ROLE_SEQ");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_SEQ");
+
+                entity.Property(e => e.RoleId)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("ROLE_SEQ");
+
+                entity.Property(e => e.IsActive)
+                    .HasMaxLength(1)
+                    .HasColumnName("IS_ACTIVE");
+
+                entity.Property(e => e.StatusDate)
+                    .HasColumnName("STATUS_DATE")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_CREATED");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_MODIFIED");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_MODIFIED");
+            });
+
+            builder.Entity<RolePermission>(entity =>
+            {
+                entity.ToTable("ROLE_PERMISSIONS", "FAIS");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("ROLE_PER_SEQ");
+
+                entity.Property(e => e.RoleId)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("ROLE_SEQ");
+
+                entity.Property(e => e.ModuleId)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("MODULE_SEQ");
+
+                entity.Property(e => e.IsCreate)
+                    .HasMaxLength(1)
+                    .HasColumnName("P_CREATE");
+
+                entity.Property(e => e.IsRead)
+                    .HasMaxLength(1)
+                    .HasColumnName("P_READ");
+
+                entity.Property(e => e.IsUpdate)
+                    .HasMaxLength(1)
+                    .HasColumnName("P_UPDATE");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_CREATED");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_MODIFIED");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_MODIFIED");
+
+                entity.Property(e => e.DateRemoved)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_REMOVED");
             });
 
             builder.Entity<LibraryType>(entity =>

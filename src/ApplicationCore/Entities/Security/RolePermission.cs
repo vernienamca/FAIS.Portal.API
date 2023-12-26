@@ -1,33 +1,30 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace FAIS.ApplicationCore.Entities.Structure
+namespace FAIS.ApplicationCore.Entities.Security
 {
-    public class Module : BaseEntity<int>
+    public class RolePermission : BaseEntity<decimal>
     {
         [DataMember]
         public decimal Id { get; set; }
 
         [DataMember]
-        public string Name { get; set; }
+        public int RoleId { get; set; }
 
         [DataMember]
-        public string Description { get; set; }
+        public int ModuleId { get; set; }
 
         [DataMember]
-        public string Url { get; set; }
+        public char IsCreate { get; set; }
 
         [DataMember]
-        public string Icon { get; set; }
+        public char IsRead { get; set; }
 
         [DataMember]
-        public string GroupName { get; set; }
+        public char IsUpdate { get; set; }
 
         [DataMember]
-        public char IsActive { get; set; }
-
-        [DataMember]
-        public DateTime StatusDate { get; set; }
+        public DateTime? DateRemoved { get; set; }
 
         [DataMember]
         public decimal CreatedBy { get; set; }

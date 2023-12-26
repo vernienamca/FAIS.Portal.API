@@ -15,15 +15,21 @@ namespace FAIS.ApplicationCore.Entities.Security
         public int RoleId { get; set; }
 
         [DataMember]
-        public int CreatedBy { get; set; }
+        public char IsActive { get; set; }
 
         [DataMember]
-        public DateTime DateCreated { get; set; }
+        public DateTime StatusDate { get; set; }
 
         [DataMember]
-        public int? UpdatedBy { get; set; }
+        public decimal CreatedBy { get; set; }
 
         [DataMember]
-        public DateTime? DateUpdated { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        [DataMember]
+        public decimal? UpdatedBy { get; set; }
+
+        [DataMember]
+        public DateTime? UpdatedAt { get; set; }
     }
 }
