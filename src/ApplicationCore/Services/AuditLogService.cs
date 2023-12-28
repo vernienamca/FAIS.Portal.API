@@ -1,9 +1,7 @@
-﻿using FAIS.ApplicationCore.Entities.Security;
+﻿using ArrayToExcel;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -14,6 +12,12 @@ namespace FAIS.ApplicationCore.Services
         public AuditLogService(IAuditLogRepository repository)
         {
             _repository = repository;
+        }
+
+        public byte[] ExportAuditLogs()
+        {
+            var logs = _repository.Get();
+            return logs.ToList().ToExcel();
         }
 
         public IQueryable<AuditLog> Get()
