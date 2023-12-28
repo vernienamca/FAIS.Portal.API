@@ -49,5 +49,9 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime? UpdatedAt { get; set; }
         public int LoginStatus { get; set; }
         public string TempKey { get; set; }
+
+
+        public string Name { get; set; }
+        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -14,10 +15,15 @@ namespace FAIS.ApplicationCore.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly ILibraryTypeRepository _ILibraryTypeRepository;
 
-        public UserService(IUserRepository repository)
+        private readonly ILibraryTypeService _libraryTypeService;
+
+        public UserService(IUserRepository repository,ILibraryTypeRepository libraryTypeRepository, ILibraryTypeService libraryTypeService)
         {
             _repository = repository;
+            _ILibraryTypeRepository = libraryTypeRepository;
+            _libraryTypeService = libraryTypeService;
         }
 
         public IQueryable<User> Get()
@@ -60,6 +66,9 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<User> Add(UserDTO userDTO)
         {
+
+            var positionId = await _ILibraryTypeRepository.GetPositionIdByName(userDTO.Name);
+
             var user = new User()
             {
                 FirstName = userDTO.FirstName,
@@ -67,7 +76,7 @@ namespace FAIS.ApplicationCore.Services
                 LastName = userDTO.LastName,
                 EmployeeNumber = userDTO.EmployeeNumber,
                 UserName = userDTO.UserName,
-                PositionId = userDTO.PositionId,
+                PositionId = positionId.Id,
                 DivisionId  = userDTO.DivisionId,
                 Password = EncryptionHelper.HashPassword(userDTO.Password),
                 EmailAddress = userDTO.EmailAddress,
@@ -84,10 +93,14 @@ namespace FAIS.ApplicationCore.Services
                 UpdatedBy = userDTO?.UpdatedBy,
                 UpdatedAt = DateTime.Now,
                 TempKey = userDTO.TempKey,
+
+               
             };
 
             return await _repository.Add(user);
         }
+
+      
 
 
     }

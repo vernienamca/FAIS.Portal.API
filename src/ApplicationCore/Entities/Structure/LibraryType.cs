@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FAIS.ApplicationCore.Entities.Security;
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
@@ -34,5 +36,8 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
+
+     
+
     }
 }

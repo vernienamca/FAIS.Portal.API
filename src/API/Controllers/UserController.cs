@@ -137,13 +137,8 @@ namespace FAIS.API.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception using Debug.WriteLine for debugging
-                Debug.WriteLine($"An error occurred in AddUser action: {ex.Message}");
-
-                // Log the stack trace
-                Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-
-                // Log inner exception details if available
+                
+              
                 if (ex.InnerException != null)
                 {
                     Debug.WriteLine($"Inner Exception Message: {ex.InnerException.Message}");
@@ -153,5 +148,17 @@ namespace FAIS.API.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        // return library names depending on library code PST or DIV 
+
+        [HttpGet("GetLibraryNamesByCode/{libraryCode}")]
+        public IActionResult GetLibraryNamesByCode(string libraryCode)
+        {
+            var libraryNames = _libraryTypeService.GetLibraryNamesByCode(libraryCode);
+            return Ok(libraryNames);
+        }
+
+
+
     }
 }

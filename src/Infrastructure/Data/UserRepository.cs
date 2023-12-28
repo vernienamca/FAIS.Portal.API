@@ -75,5 +75,15 @@ namespace FAIS.Infrastructure.Data
         {
             return await AddAsync(user);
         }
+
+        public List<string> GetLibraryNamesByCode(string libraryCode)
+        {
+            return _dbContext.LibraryTypes
+                .Where(l => l.Code == libraryCode)
+                .Select(l => l.Description)
+                .Distinct()
+                .ToList();
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FAIS.ApplicationCore.Entities.Structure;
+using System;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Security
@@ -73,5 +74,7 @@ namespace FAIS.ApplicationCore.Entities.Security
 
         [DataMember]
         public string TempKey { get; set; }
+
+
     }
 }

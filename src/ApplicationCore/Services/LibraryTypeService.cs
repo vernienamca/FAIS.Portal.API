@@ -1,6 +1,10 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -22,5 +26,17 @@ namespace FAIS.ApplicationCore.Services
         {
             return _repository.GetById(id);
         }
+
+        public List<string> GetLibraryNamesByCode(string libraryCode)
+        {
+            return _repository.GetLibraryNamesByCode(libraryCode);
+        }
+
+        public async Task<LibraryType> GetPositionIdByName(string positionName)
+        {
+            return await _repository.GetPositionIdByName(positionName);
+        }
+
+
     }
 }

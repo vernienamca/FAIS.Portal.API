@@ -9,7 +9,7 @@ namespace FAIS.Infrastructure.Data
         public FAISContext(DbContextOptions<FAISContext> options) : base(options)
         {
         }
-       
+
         public DbSet<Module> Modules { get; set; }
         public DbSet<Settings> Settings { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -201,12 +201,12 @@ namespace FAIS.Infrastructure.Data
                 entity.Property(e => e.Id)
                     .HasColumnType("NUMBER")
                     .HasColumnName("USER_SEQ");
-           
+
 
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(35)
                     .HasColumnName("FIRST_NAME");
-                
+
                 entity.Property(e => e.MiddleName)
                     .HasMaxLength(35)
                     .IsRequired(false)
