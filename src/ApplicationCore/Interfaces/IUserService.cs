@@ -2,6 +2,7 @@
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<User> UpdateSignInAttempts(UserDTO userDTO);
         Task<User> Add(UserDTO userDTO);
 
-     
+        //decimal GetCurrentUserId(HttpContext httpContext);
 
     }
 }

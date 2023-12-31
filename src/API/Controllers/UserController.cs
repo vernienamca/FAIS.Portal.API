@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Org.BouncyCastle.Asn1.X509;
 using FAIS.ApplicationCore.Models;
 using System.Linq;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace FAIS.API.Controllers
 {
@@ -23,6 +25,7 @@ namespace FAIS.API.Controllers
 
         private readonly IUserService _userService;
         private readonly ILibraryTypeService _libraryTypeService;
+        private readonly IRoleService _roleService;
 
         #endregion Variables
 
@@ -31,10 +34,11 @@ namespace FAIS.API.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
-        public UserController(IUserService userService, ILibraryTypeService libraryTypeService)
+        public UserController(IUserService userService, ILibraryTypeService libraryTypeService, IRoleService roleService)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
+            _roleService = roleService;
         }
 
         #endregion Constructor
@@ -108,14 +112,25 @@ namespace FAIS.API.Controllers
         public IActionResult GetById(int id)
         {
             var entity = _userService.GetById(id);
-
+ 
             var user = new UserModel()
             {
                 Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
+                EmployeeNumber = entity.EmployeeNumber,
+                UserName = entity.UserName,
+                MiddleName = entity.MiddleName,
+                EmailAddress = entity.EmailAddress,
+                MobileNumber = entity.MobileNumber,
+                StatusDate = entity.StatusDate,
+                DateExpired = entity.DateExpired,
+                StatusCode = entity.StatusCode,
                 Position = _libraryTypeService.GetById(entity.PositionId).Name,
+                Division = _libraryTypeService.GetById(Convert.ToDecimal(entity.DivisionId)).Name,
+                OupFgId = entity.OupFgId,
                 Photo = entity.Photo
+        
             };
 
             return Ok(user);
@@ -124,32 +139,16 @@ namespace FAIS.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
-            try
+            if (userDTO == null)
             {
-                if (userDTO == null)
-                {
-                    return BadRequest("UserDTO is null");
-                }
-
-                var addedUser = await _userService.Add(userDTO);
-
-                return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
+                return BadRequest("UserDTO is null");
             }
-            catch (Exception ex)
-            {
-                
-              
-                if (ex.InnerException != null)
-                {
-                    Debug.WriteLine($"Inner Exception Message: {ex.InnerException.Message}");
-                    Debug.WriteLine($"Inner Exception Stack Trace: {ex.InnerException.StackTrace}");
-                }
 
-                return StatusCode(500, "Internal Server Error");
-            }
+            var addedUser = await _userService.Add(userDTO);
+
+            return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
         }
 
-        // return library names depending on library code PST or DIV 
 
         [HttpGet("GetLibraryNamesByCode/{libraryCode}")]
         public IActionResult GetLibraryNamesByCode(string libraryCode)

@@ -16,14 +16,13 @@ namespace FAIS.ApplicationCore.Services
     {
         private readonly IUserRepository _repository;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
+      
 
-        private readonly ILibraryTypeService _libraryTypeService;
-
-        public UserService(IUserRepository repository,ILibraryTypeRepository libraryTypeRepository, ILibraryTypeService libraryTypeService)
+        public UserService(IUserRepository repository,ILibraryTypeRepository libraryTypeRepository)
         {
             _repository = repository;
             _ILibraryTypeRepository = libraryTypeRepository;
-            _libraryTypeService = libraryTypeService;
+           
         }
 
         public IQueryable<User> Get()
@@ -67,7 +66,9 @@ namespace FAIS.ApplicationCore.Services
         public async Task<User> Add(UserDTO userDTO)
         {
 
-            var positionId = await _ILibraryTypeRepository.GetPositionIdByName(userDTO.Name);
+            var positionId = await _ILibraryTypeRepository.GetPositionIdByName(userDTO.positionName);
+            var divisionId = await _ILibraryTypeRepository.GetPositionIdByName(userDTO.divisionName);
+            
 
             var user = new User()
             {
@@ -77,7 +78,7 @@ namespace FAIS.ApplicationCore.Services
                 EmployeeNumber = userDTO.EmployeeNumber,
                 UserName = userDTO.UserName,
                 PositionId = positionId.Id,
-                DivisionId  = userDTO.DivisionId,
+                DivisionId  = divisionId.Id,
                 Password = EncryptionHelper.HashPassword(userDTO.Password),
                 EmailAddress = userDTO.EmailAddress,
                 MobileNumber    = userDTO.MobileNumber,
@@ -93,8 +94,6 @@ namespace FAIS.ApplicationCore.Services
                 UpdatedBy = userDTO?.UpdatedBy,
                 UpdatedAt = DateTime.Now,
                 TempKey = userDTO.TempKey,
-
-               
             };
 
             return await _repository.Add(user);

@@ -8,7 +8,7 @@ namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;

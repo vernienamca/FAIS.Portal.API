@@ -29,9 +29,9 @@ namespace FAIS.ApplicationCore.DTOs
 
         public decimal OupFgId { get; set; }
 
-        public string Photo { get; set; }
+        public string? Photo { get; set; }
 
-        public decimal SessionId { get; set; }
+        public decimal? SessionId { get; set; }
 
         public decimal SignInAttempts { get; set; }
 
@@ -49,9 +49,7 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime? UpdatedAt { get; set; }
         public int LoginStatus { get; set; }
         public string TempKey { get; set; }
-
-
-        public string Name { get; set; }
-        
+        public string positionName { get; set; }
+        public string divisionName { get; set; }
     }
 }

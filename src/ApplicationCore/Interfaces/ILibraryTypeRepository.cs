@@ -11,13 +11,7 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IQueryable<LibraryType> Get();
         LibraryType GetById(decimal id);
-     
         List<string> GetLibraryNamesByCode(string libraryCode);
-
-
         Task<LibraryType> GetPositionIdByName(string positionName);
-
-
-
     }
 }

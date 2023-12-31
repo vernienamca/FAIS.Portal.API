@@ -25,5 +25,6 @@ namespace FAIS.Portal.API.Models
         public DateTime? CreatedAt { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public decimal? OupFgId { get; set; }
     }
 }

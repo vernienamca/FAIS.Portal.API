@@ -3,11 +3,13 @@ using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
+
 
 namespace FAIS.Infrastructure.Data
 {
@@ -76,14 +78,6 @@ namespace FAIS.Infrastructure.Data
             return await AddAsync(user);
         }
 
-        public List<string> GetLibraryNamesByCode(string libraryCode)
-        {
-            return _dbContext.LibraryTypes
-                .Where(l => l.Code == libraryCode)
-                .Select(l => l.Description)
-                .Distinct()
-                .ToList();
-        }
-
+     
     }
 }
