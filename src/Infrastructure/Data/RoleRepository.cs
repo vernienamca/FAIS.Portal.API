@@ -17,7 +17,8 @@ namespace FAIS.Infrastructure.Data
 
         public Role GetById(int id)
         {
-            return _dbContext.Roles.Where(t => t.Id == id).ToList()[0];
+            return _dbContext.Roles.FirstOrDefault(t => t.Id == id);
         }
+
     }
 }

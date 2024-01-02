@@ -26,7 +26,7 @@ namespace FAIS.Infrastructure.Data
 
         public User GetById(decimal id)
         {
-            return _dbContext.Users.Where(t => t.Id == id).ToList()[0];
+            return _dbContext.Users.FirstOrDefault(t => t.Id == id);
         }
 
         public User GetByUserName(string userName)
@@ -78,6 +78,15 @@ namespace FAIS.Infrastructure.Data
             return await AddAsync(user);
         }
 
-     
+        public async Task<User> Edit(decimal id, User user)
+        {
+            return await UpdateAsync(user);
+        }
+        public async Task<decimal> GetLastUserId()
+        {
+            var lastUserId = await _dbContext.Users.MaxAsync(u => (decimal?)u.Id) ?? 0;
+            return lastUserId;
+        }
+
     }
 }

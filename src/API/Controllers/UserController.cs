@@ -13,6 +13,8 @@ using FAIS.ApplicationCore.Models;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using FAIS.ApplicationCore.Helpers;
+using FAIS.Infrastructure.Data;
 
 namespace FAIS.API.Controllers
 {
@@ -145,11 +147,15 @@ namespace FAIS.API.Controllers
             }
 
             var addedUser = await _userService.Add(userDTO);
-
+     
             return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="libraryCode"></param>
+        /// <returns></returns>
         [HttpGet("GetLibraryNamesByCode/{libraryCode}")]
         public IActionResult GetLibraryNamesByCode(string libraryCode)
         {
@@ -157,7 +163,32 @@ namespace FAIS.API.Controllers
             return Ok(libraryNames);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userDTO"></param>
+        /// <returns></returns>
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> UpdateUser(decimal id, [FromBody] UserDTO userDTO)
+        {
+            if (id <= 0 || userDTO == null)
+            {
+                return BadRequest("Invalid input");
+            }
+            var updatedUser = await _userService.Edit(id, userDTO);
+            return Ok(updatedUser);
+        }
 
-
+        /// <summary>
+        /// /
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetLastUserId()
+        {
+            var lastUserId = await _userService.GetLastUserId();
+            return Ok(lastUserId);
+        }
     }
 }
