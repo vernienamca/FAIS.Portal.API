@@ -7,5 +7,7 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IQueryable<AuditLog> Get();
         AuditLog GetById(decimal id);
+
+        byte[] ExportAuditLogs();
     }
 }

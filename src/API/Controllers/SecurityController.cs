@@ -80,8 +80,26 @@ namespace FAIS.Portal.API.Controllers
             return BadRequest("Invalid or expired tempKey");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="changePasswordDTO"></param>
+        /// <returns></returns>
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Password == EncryptionHelper.HashPassword(changePasswordDTO.OldPassword));
 
+            if (user == null)
+            {
+                Debug.WriteLine("Invalid old password");
+                return BadRequest("Invalid old password");
+            }
 
+            user.Password = EncryptionHelper.HashPassword(changePasswordDTO.NewPassword);
+            await _context.SaveChangesAsync();
+            Debug.WriteLine("Change password successfully");
+            return Ok();
 
         /// <summary>
         /// 

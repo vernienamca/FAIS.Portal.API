@@ -2,7 +2,9 @@
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace FAIS.Portal.API.Controllers
 {
@@ -67,6 +69,22 @@ namespace FAIS.Portal.API.Controllers
             };
 
             return Ok(auditLog);
+        }
+
+        [HttpGet("Export")]
+        public IActionResult ExportAuditLogs()
+        {
+            var bytes = _auditLogService.ExportAuditLogs();
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, $"logs_{ DateTime.Now.Date }.xlsx");
+        }
+
+        [HttpGet("OpenFolder")]
+        public IActionResult OpenFolder()
+        {
+            //todo: sample loading of explorer. set the path from the setting.
+            Process.Start("explorer.exe", @"C:\temp");
+
+            return Ok();
         }
     }
 }
