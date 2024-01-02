@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using FAIS.ApplicationCore.DTOs;
-using System.Threading.Tasks;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Interfaces;
-using FAIS.Portal.API.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Asn1.X509;
 using FAIS.ApplicationCore.Models;
+using FAIS.Portal.API.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using FAIS.ApplicationCore.Helpers;
-using FAIS.Infrastructure.Data;
+using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
 {
