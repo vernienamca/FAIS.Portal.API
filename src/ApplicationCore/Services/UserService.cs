@@ -13,49 +13,52 @@ namespace FAIS.ApplicationCore.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _repository;
+        private readonly IUserRepository _userRepository;
+        private readonly ILoginHistoryRepository _historyRepository;
 
-        public UserService(IUserRepository repository)
+        public UserService(IUserRepository userRepository
+            , ILoginHistoryRepository historyRepository)
         {
-            _repository = repository;
+            _userRepository = userRepository;
+            _historyRepository = historyRepository;
         }
 
         public IQueryable<User> Get()
         {
-            return _repository.Get();
+            return _userRepository.Get();
         }
 
         public User GetById(decimal id)
         {
-            return _repository.GetById(id);
+            return _userRepository.GetById(id);
         }
 
         public User GetByUserName(string userName)
         {
-            return _repository.GetByUserName(userName);
+            return _userRepository.GetByUserName(userName);
         }
 
         public List<PermissionModel> GetPermissions(int id)
         {
-            return _repository.GetPermissions(id);
+            return _userRepository.GetPermissions(id);
         }
 
         public async Task<User> LockedAccount(UserDTO userDto)
         {
-            var user = _repository.GetById(userDto.Id);
+            var user = _userRepository.GetById(userDto.Id);
 
             user.StatusCode = (int)LoginEnum.UserStatus.Locked;
 
-            return await _repository.LockedAccount(user);
+            return await _userRepository.LockedAccount(user);
         }
 
         public async Task<User> UpdateSignInAttempts(UserDTO userDto)
         {
-            var user = _repository.GetById(userDto.Id);
+            var user = _userRepository.GetById(userDto.Id);
 
             user.SignInAttempts = userDto.LoginStatus == (int)LoginEnum.LoginStatus.Success ? 0 : (user.SignInAttempts + 1);
 
-            return await _repository.UpdateSignInAttempts(user);
+            return await _userRepository.UpdateSignInAttempts(user);
         }
 
         public async Task<User> Add(UserDTO userDTO)
@@ -86,9 +89,20 @@ namespace FAIS.ApplicationCore.Services
                 TempKey = userDTO.TempKey,
             };
 
-            return await _repository.Add(user);
+            return await _userRepository.Add(user);
         }
 
+        public async Task<LoginHistory> AddLoginHistory(decimal userId, string username, bool isFailed)
+        {
+            var history = new LoginHistory()
+            {
+                UserId = userId,
+                Username = username,
+                IsFailed = isFailed ? 'Y' : 'N',
+                CreatedAt = DateTime.Now
+            };
 
+            return await _historyRepository.Add(history);
+        }
     }
 }

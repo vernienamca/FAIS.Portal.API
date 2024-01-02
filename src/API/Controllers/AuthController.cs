@@ -13,7 +13,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using static ApplicationCore.Enumeration.LoginEnum;
-using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace FAIS.Controllers
@@ -94,6 +93,8 @@ namespace FAIS.Controllers
                 {
                     await _userService.UpdateSignInAttempts(userDto);
 
+                    await _userService.AddLoginHistory(user.Id, username, true);
+
                     return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
                 }
 
@@ -111,6 +112,8 @@ namespace FAIS.Controllers
 
                 await _userService.UpdateSignInAttempts(userDto);
 
+                await _userService.AddLoginHistory(user.Id, username, false);
+
                 return Ok(new { userId = user.Id, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
             }
             catch (Exception)
@@ -122,7 +125,7 @@ namespace FAIS.Controllers
         [HttpGet("test")]
         public string Test()
         {
-            return "This is a test api.";
+            return "This is a test response.";
         }
     }
 }
