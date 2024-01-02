@@ -19,6 +19,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<LibraryType> LibraryTypes { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<StringInterpolation> StringInterpolations { get; set; }
+        public DbSet<LoginHistory> LoginHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -465,7 +466,7 @@ namespace FAIS.Infrastructure.Data
                 entity.Property(e => e.DateCreated)
                     .HasColumnType("DATE")
                     .HasColumnName("DATE_CREATED")
-                    .HasDefaultValueSql("systimestamp\n   ");
+                    .HasDefaultValueSql("systimestamp\n");
 
                 entity.Property(e => e.IpAddress)
                     .IsRequired()
@@ -491,7 +492,7 @@ namespace FAIS.Infrastructure.Data
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("USER_CREATED");
             });
-
+            
             builder.Entity<StringInterpolation>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -522,6 +523,28 @@ namespace FAIS.Infrastructure.Data
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("USER_CREATED")
                     .HasDefaultValueSql("systimestamp\n   ");
+
+            builder.Entity<LoginHistory>(entity =>
+            {
+                entity.ToTable("LOGIN_HISTORY", "FAIS");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("LOGIN_HIS_SEQ");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_SEQ");
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(20)
+                    .HasColumnName("USERNAME");
+
+                entity.Property(e => e.IsFailed)
+                    .HasMaxLength(1)
+                    .HasColumnName("IS_FAILED");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("datetime")
