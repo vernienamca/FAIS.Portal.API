@@ -5,6 +5,8 @@ using FAIS.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
@@ -19,11 +21,11 @@ namespace FAIS.Portal.API.Controllers
     {
         private readonly IEmailService _emailService;
 
-     
+
 
         private readonly FAISContext _context;
 
-        public SecurityController(IEmailService emailService,  FAISContext context)
+        public SecurityController(IEmailService emailService, FAISContext context)
         {
             _emailService = emailService;
             _context = context;
@@ -42,7 +44,7 @@ namespace FAIS.Portal.API.Controllers
         {
             var tempKeyHelper = new TempKey();
             string tempKey = tempKeyHelper.GenerateTempKey();
-         
+
 
             bool keyStored = await StoreTempKeyInDatabaseAsync(request.To, tempKey);
 
@@ -100,6 +102,8 @@ namespace FAIS.Portal.API.Controllers
             await _context.SaveChangesAsync();
             Debug.WriteLine("Change password successfully");
             return Ok();
+        }
+
 
         /// <summary>
         /// 
@@ -120,6 +124,11 @@ namespace FAIS.Portal.API.Controllers
 
             return false;
         }
-
     }
-}
+}   
+        
+
+
+
+
+
