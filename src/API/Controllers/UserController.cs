@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Asn1.X509;
 using FAIS.ApplicationCore.Models;
 using System.Linq;
 
@@ -16,7 +15,6 @@ namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -40,6 +38,7 @@ namespace FAIS.API.Controllers
         #endregion Constructor
 
         [HttpGet("[action]")]
+        [Authorize]
         public IEnumerable<UserModel> Get()
         {
             List<UserModel> users = new List<UserModel>();
