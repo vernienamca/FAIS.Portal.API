@@ -18,6 +18,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<LibraryType> LibraryTypes { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<StringInterpolation> StringInterpolations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -489,6 +490,50 @@ namespace FAIS.Infrastructure.Data
                 entity.Property(e => e.UserCreated)
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("USER_CREATED");
+            });
+
+            builder.Entity<StringInterpolation>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("STRING_INTERPOLATION");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("NUMBER(38)")
+                    .HasColumnName("STRING_INTERPOLATION_SEQ");
+
+                entity.Property(e => e.TransactionCode)
+                    .HasMaxLength(250)
+                    .HasColumnName("TRANSACTION_CODE");
+
+                entity.Property(e => e.TransactionDescription)
+                    .HasMaxLength(250)
+                    .HasColumnName("TRANSACTION_DESCRIPTION");
+
+                entity.Property(e => e.IsActive)
+                    .HasMaxLength(1)
+                    .HasColumnName("IS_ACTIVE");
+
+                entity.Property(e => e.StatusDate)
+                    .HasColumnName("STATUS_DATE")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnType("NUMBER(38)")
+                    .HasColumnName("USER_CREATED")
+                    .HasDefaultValueSql("systimestamp\n   ");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_MODIFIED");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_MODIFIED");
             });
         }
     }
