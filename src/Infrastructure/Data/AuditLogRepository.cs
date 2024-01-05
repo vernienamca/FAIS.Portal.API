@@ -12,7 +12,6 @@ namespace FAIS.Infrastructure.Data
 
         public IQueryable<AuditLog> Get()
         {
-            // take latest 100 records only.
             return _dbContext.AuditLogs.OrderByDescending(o => o.DateCreated).Take(100);
         }
 

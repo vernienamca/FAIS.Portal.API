@@ -15,14 +15,16 @@ namespace FAIS.Portal.API.Controllers
     {
         private readonly IAuditLogService _auditLogService;
         private readonly IUserService _userService;
+        private readonly IModuleService _moduleService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditLogController"/> class.
         /// </summary>
-        public AuditLogController(IAuditLogService auditLogService, IUserService userService)
+        public AuditLogController(IAuditLogService auditLogService, IUserService userService, IModuleService moduleService)
         {
             _auditLogService = auditLogService;
             _userService = userService;
+            _moduleService = moduleService;
         }
 
         [HttpGet("[action]")]
@@ -33,17 +35,20 @@ namespace FAIS.Portal.API.Controllers
             foreach (var auditLog in _auditLogService.Get())
             {
                 var createdBy = _userService.GetById(auditLog.UserCreated);
+                var module = _moduleService.GetById((int)auditLog.ModuleSeq);
 
                 var entity = new AuditLogModel()
                 {
                     Id = auditLog.Id,
                     Activity = auditLog.Activity,
-                    DateCreated = System.DateTime.Now,
+                    DateCreated = auditLog.DateCreated,
                     IpAddress = auditLog.IpAddress,
                     ModuleSeq = auditLog.ModuleSeq,
                     NewValues = auditLog.NewValues,
                     OldValues = auditLog.OldValues,
-                    UserCreated = createdBy.Id
+                    UserCreated = createdBy.Id,
+                    CreatedBy = string.Format("{0} {1}", createdBy.FirstName, createdBy.LastName),
+                    ModuleName = module.Name,
                 };
 
                 auditLogs.Add(entity);
@@ -75,7 +80,7 @@ namespace FAIS.Portal.API.Controllers
         public IActionResult ExportAuditLogs()
         {
             var bytes = _auditLogService.ExportAuditLogs();
-            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, $"logs_{ DateTime.Now.Date }.xlsx");
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, $"Audit_Logs_{ DateTime.Now.Date }.xlsx");
         }
 
         [HttpGet("OpenFolder")]

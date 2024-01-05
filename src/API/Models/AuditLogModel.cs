@@ -13,5 +13,7 @@ namespace FAIS.Portal.API.Models
         public string IpAddress { get; set; }
         public decimal UserCreated { get; set; }
         public DateTime DateCreated { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModuleName { get; set; }
     }
 }
