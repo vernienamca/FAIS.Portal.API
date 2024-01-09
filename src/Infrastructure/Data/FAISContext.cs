@@ -9,7 +9,7 @@ namespace FAIS.Infrastructure.Data
         public FAISContext(DbContextOptions<FAISContext> options) : base(options)
         {
         }
-       
+
         public DbSet<Module> Modules { get; set; }
         public DbSet<Settings> Settings { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -203,12 +203,12 @@ namespace FAIS.Infrastructure.Data
                 entity.Property(e => e.Id)
                     .HasColumnType("NUMBER")
                     .HasColumnName("USER_SEQ");
-           
+
 
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(35)
                     .HasColumnName("FIRST_NAME");
-                
+
                 entity.Property(e => e.MiddleName)
                     .HasMaxLength(35)
                     .IsRequired(false)
@@ -492,7 +492,7 @@ namespace FAIS.Infrastructure.Data
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("USER_CREATED");
             });
-            
+
             builder.Entity<StringInterpolation>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -518,33 +518,15 @@ namespace FAIS.Infrastructure.Data
                 entity.Property(e => e.StatusDate)
                     .HasColumnName("STATUS_DATE")
                     .HasColumnType("datetime");
+                
+                entity.Property(e => e.NotificationType)
+                    .HasMaxLength(50)
+                    .HasColumnName("NOTIFICATION_TYPE");
 
                 entity.Property(e => e.CreatedBy)
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("USER_CREATED")
                     .HasDefaultValueSql("systimestamp\n   ");
-
-            builder.Entity<LoginHistory>(entity =>
-            {
-                entity.ToTable("LOGIN_HISTORY", "FAIS");
-
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("NUMBER")
-                    .HasColumnName("LOGIN_HIS_SEQ");
-
-                entity.Property(e => e.UserId)
-                    .HasColumnType("NUMBER")
-                    .HasColumnName("USER_SEQ");
-
-                entity.Property(e => e.Username)
-                    .HasMaxLength(20)
-                    .HasColumnName("USERNAME");
-
-                entity.Property(e => e.IsFailed)
-                    .HasMaxLength(1)
-                    .HasColumnName("IS_FAILED");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("datetime")
@@ -558,6 +540,35 @@ namespace FAIS.Infrastructure.Data
                     .HasColumnType("datetime")
                     .HasColumnName("DATE_MODIFIED");
             });
+
+            builder.Entity<LoginHistory>(entity =>
+                {
+                    entity.ToTable("LOGIN_HISTORY", "FAIS");
+
+                    entity.HasKey(e => e.Id);
+
+                    entity.Property(e => e.Id)
+                        .HasColumnType("NUMBER")
+                        .HasColumnName("LOGIN_HIS_SEQ");
+
+                    entity.Property(e => e.UserId)
+                        .HasColumnType("NUMBER")
+                        .HasColumnName("USER_SEQ");
+
+                    entity.Property(e => e.Username)
+                        .HasMaxLength(20)
+                        .HasColumnName("USERNAME");
+
+                    entity.Property(e => e.IsFailed)
+                        .HasMaxLength(1)
+                        .HasColumnName("IS_FAILED");
+
+                    entity.Property(e => e.CreatedAt)
+                        .HasColumnType("datetime")
+                        .HasColumnName("DATE_CREATED");
+
+                });
         }
     }
+
 }
