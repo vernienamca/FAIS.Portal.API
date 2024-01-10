@@ -16,15 +16,21 @@ namespace FAIS.Portal.API.Controllers
         private readonly IAuditLogService _auditLogService;
         private readonly IUserService _userService;
         private readonly IModuleService _moduleService;
+        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditLogController"/> class.
         /// </summary>
-        public AuditLogController(IAuditLogService auditLogService, IUserService userService, IModuleService moduleService)
+        public AuditLogController(
+            IAuditLogService auditLogService, 
+            IUserService userService, 
+            IModuleService moduleService,
+            ISettingsService settingsService)
         {
             _auditLogService = auditLogService;
             _userService = userService;
             _moduleService = moduleService;
+            _settingsService = settingsService;
         }
 
         [HttpGet("[action]")]
@@ -86,8 +92,8 @@ namespace FAIS.Portal.API.Controllers
         [HttpGet("OpenFolder")]
         public IActionResult OpenFolder()
         {
-            //todo: sample loading of explorer. set the path from the setting.
-            Process.Start("explorer.exe", @"C:\temp");
+            var setting = _settingsService.GetById(1);
+            Process.Start("explorer.exe", setting.AuditLogsFilePath);
 
             return Ok();
         }
