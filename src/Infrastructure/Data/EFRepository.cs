@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore;
+using System;
+using MimeKit.Encodings;
+using DocumentFormat.OpenXml.InkML;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -35,11 +38,18 @@ namespace FAIS.Infrastructure.Data
 
         public async Task<EntityType> UpdateAsync(EntityType entity)
         {
-            _dbContext.Entry(entity).State = EntityState.Modified;
+            try
+            {
+                _dbContext.Entry(entity).State = EntityState.Modified;
 
-            await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
-            return entity;
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task DeleteAsync(EntityType entity)
@@ -47,6 +57,17 @@ namespace FAIS.Infrastructure.Data
             _dbContext.Set<EntityType>().Remove(entity);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteListAsync(List<EntityType> entity)
+        {
+            try
+            {
+                _dbContext.Set<EntityType>().RemoveRange(entity);
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch(Exception ex) { throw ex; }
         }
 
         public async Task<EntityType> GetByIdAsync(IdType id)

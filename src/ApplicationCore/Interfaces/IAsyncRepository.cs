@@ -9,5 +9,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<EntityType> AddAsync(EntityType entity);
         Task<EntityType> UpdateAsync(EntityType entity);
         Task DeleteAsync(EntityType entity);
+        Task DeleteListAsync(List<EntityType> entity);
+        Task<EntityType> GetByIdAsync(IdType id);
     }
 }

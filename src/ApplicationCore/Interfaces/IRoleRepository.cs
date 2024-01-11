@@ -8,5 +8,6 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IQueryable<Role> Get();
         Role GetById(int id);
+        Task<Role> UpdateRole(Role role);
     }
 }

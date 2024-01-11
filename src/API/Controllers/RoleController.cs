@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,53 +15,41 @@ namespace FAIS.API.Controllers
     {
         private readonly IRoleService _roleService;
         private readonly IUserService _userService;
+        private readonly IRolePermissionService _rolePermissionService;
+        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoleController"/> class.
         /// </summary>
-        public RoleController(IRoleService roleService, IUserService userService)
+        public RoleController(IRoleService roleService, IUserService userService, IRolePermissionService rolePermissionService)
         {
             _roleService = roleService;
             _userService = userService;
+            _rolePermissionService = rolePermissionService;
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<RoleModel> Get()
+        public async Task<IActionResult> Get()
         {
-            List<RoleModel> roles = new List<RoleModel>();
-
-            foreach (var role in _roleService.Get())
-            {
-                var createdBy = _userService.GetById(role.CreatedBy);
-                var modifiedBy = _userService.GetById(role.UpdatedBy.Value);
-
-                var entity = new RoleModel()
-                {
-                    Id = role.Id,
-                    Name = role.Name,
-                    Description = role.Description,
-                    IsActive = role.IsActive == 'Y',
-                    StatusDate = role.StatusDate,
-                    CreatedBy = string.Format("{0} {1}", createdBy.FirstName, createdBy.LastName),
-                    CreatedAt = role.CreatedAt
-                };
-
-                if (modifiedBy != null)
-                {
-                    entity.UpdatedBy = string.Format("{0} {1}", modifiedBy.FirstName, modifiedBy.LastName);
-                    entity.UpdatedAt = role.UpdatedAt;
-                }
-
-                roles.Add(entity);
-            }
-
-            return roles;
+            return Ok(await _rolePermissionService.GetRolePermission());
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetById([FromQuery] int id)
+        public IActionResult GetById(int id)
         {
             return Ok(_roleService.GetById(id));
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetRolePermissionById([FromQuery]int id)
+        {
+            return Ok(await _rolePermissionService.GetRolePermissionById(id));
+        }
+
+        [HttpPut("[action]")]
+        public async Task<IActionResult> UpdateRolePermission([FromBody] RoleModelDTO permissions)
+        {
+             return Ok(await _rolePermissionService.UpdateRolePermission(permissions));
         }
     }
 }

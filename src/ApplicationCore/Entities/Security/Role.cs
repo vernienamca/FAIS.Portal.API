@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Security
 {
-    public class Role : BaseEntity<int>
+    public class Role : BaseEntity<decimal>
     {
         [DataMember]
         public decimal Id { get; set; }
