@@ -33,6 +33,10 @@ namespace FAIS.Portal.API.Controllers
             _settingsService = settingsService;
         }
 
+        /// <summary>
+        /// Endpoint for retrieving audit logs.
+        /// </summary>
+        /// <returns>The audit logs.</returns>
         [HttpGet("[action]")]
         public IEnumerable<AuditLogModel> Get()
         {
@@ -63,6 +67,11 @@ namespace FAIS.Portal.API.Controllers
             return auditLogs;
         }
 
+        /// <summary>
+        /// Endpoint for retrieving audit log filter by id.
+        /// </summary>
+        /// <param name="id">The log id.</param>
+        /// <returns>THe audit log.</returns>
         [HttpGet("[action]")]
         public IActionResult GetById([FromQuery] int id)
         {
@@ -82,6 +91,10 @@ namespace FAIS.Portal.API.Controllers
             return Ok(auditLog);
         }
 
+        /// <summary>
+        /// Endpoint for exporting audit logs.
+        /// </summary>
+        /// <returns>The file.</returns>
         [HttpGet("Export")]
         public IActionResult ExportAuditLogs()
         {
@@ -89,12 +102,14 @@ namespace FAIS.Portal.API.Controllers
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, $"Audit_Logs_{ DateTime.Now.Date }.xlsx");
         }
 
-        [HttpGet("OpenFolder")]
+        /// <summary>
+        /// Endpoint for opening the folder explorer with the define path on the settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Folder")]
         public IActionResult OpenFolder()
         {
-            var setting = _settingsService.GetById(1);
-            Process.Start("explorer.exe", setting.AuditLogsFilePath);
-
+            Process.Start("explorer.exe", _settingsService.GetById(1).AuditLogsFilePath);
             return Ok();
         }
     }
