@@ -3,10 +3,10 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Security
 {
-    public class User : BaseEntity<decimal>
+    public class User : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
         public string FirstName { get; set; }

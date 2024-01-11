@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
 {
@@ -25,6 +25,10 @@ namespace FAIS.API.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Retrieve all modules.
+        /// </summary>
+        /// <returns>The modules.</returns>
         [HttpGet("[action]")]
         public IEnumerable<ModuleModel> Get()
         {
@@ -59,10 +63,33 @@ namespace FAIS.API.Controllers
             return modules;
         }
 
+        /// <summary>
+        /// Retrieve module filter by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The module.</returns>
         [HttpGet("[action]")]
         public IActionResult GetById([FromQuery] int id)
         {
             return Ok(_moduleService.GetById(id));
+        }
+
+        /// <summary>
+        /// Update module.
+        /// </summary>
+        /// <param name="moduleDTO">The module DTO.</param>
+        /// <returns></returns>
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UpdateModule([FromBody] ModuleDTO moduleDTO)
+        {
+            if (moduleDTO == null)
+            {
+                return BadRequest("ModuleDTO is null");
+            }
+
+            var result = await _moduleService.Update(moduleDTO);
+
+            return Ok(result);
         }
     }
 }

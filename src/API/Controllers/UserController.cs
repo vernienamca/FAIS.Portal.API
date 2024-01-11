@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using FAIS.ApplicationCore.DTOs;
-using System.Threading.Tasks;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
 {
@@ -151,6 +151,19 @@ namespace FAIS.API.Controllers
 
                 return StatusCode(500, "Internal Server Error");
             }
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO)
+        {
+            if (userDTO == null)
+            {
+                return BadRequest("UserDTO is null");
+            }
+
+            var result = await _userService.Update(userDTO);
+
+            return Ok(result);
         }
     }
 }

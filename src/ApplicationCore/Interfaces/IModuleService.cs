@@ -10,5 +10,6 @@ namespace FAIS.ApplicationCore.Interfaces
         IQueryable<Module> Get();
         Module GetById(int id);
         Task<Module> Add(ModuleDTO moduleDto);
+        Task<Module> Update(ModuleDTO moduleDto);
     }
 }

@@ -1,12 +1,15 @@
 ﻿using ApplicationCore.Enumeration;
+using DocumentFormat.OpenXml.Wordprocessing;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
@@ -103,6 +106,41 @@ namespace FAIS.ApplicationCore.Services
             };
 
             return await _historyRepository.Add(history);
+        }
+
+        public async Task<User> Update(UserDTO userDto)
+        {
+            var user = _userRepository.GetById(userDto.Id);
+            if (user == null)
+            {
+                return null;
+            }
+
+
+            user.FirstName = userDto.FirstName;
+            user.MiddleName = userDto.MiddleName;
+            user.LastName = userDto.LastName;
+            //EmployeeNumber = userDTO.EmployeeNumber,
+            //UserName = userDTO.UserName,
+            //PositionId = userDTO.PositionId,
+            //DivisionId = userDTO.DivisionId,
+            //Password = EncryptionHelper.HashPassword(userDTO.Password),
+            //EmailAddress = userDTO.EmailAddress,
+            //MobileNumber = userDTO.MobileNumber,
+            //OupFgId = userDTO.OupFgId,
+            //Photo = userDTO.Photo, 
+            //SessionId = userDTO.SessionId,
+            //SignInAttempts = userDTO.SignInAttempts,
+            //StatusCode = userDTO.StatusCode,
+            //StatusDate = userDTO.StatusDate,
+            //DateExpired = userDTO.DateExpired,
+            //CreatedBy = userDTO.CreatedBy,
+            //CreatedAt = DateTime.Now,
+            //UpdatedBy = userDTO?.UpdatedBy,
+            //UpdatedAt = DateTime.Now,
+            //TempKey = userDTO.TempKey,
+
+            return await _userRepository.Update(user);
         }
     }
 }

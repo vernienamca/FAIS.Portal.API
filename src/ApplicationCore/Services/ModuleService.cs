@@ -41,5 +41,24 @@ namespace FAIS.ApplicationCore.Services
 
             return await _repository.Add(module);
         }
+
+        public async Task<Module> Update(ModuleDTO moduleDto)
+        {
+            var module = _repository.GetById(moduleDto.Id);
+            if(module == null)
+            {
+                return null;
+            }
+
+            module.Name = moduleDto.Name;
+            module.Description = moduleDto.Description;
+            module.Url = moduleDto.Url;
+            module.IsActive = moduleDto.IsActive;
+            module.StatusDate = moduleDto.StatusDate;
+            module.UpdatedBy = moduleDto.UpdatedBy;
+            module.UpdatedAt = DateTime.Now;
+
+            return await _repository.Update(module);
+        }
     }
 }

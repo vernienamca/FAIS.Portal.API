@@ -31,7 +31,7 @@ namespace FAIS.Infrastructure.Data
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Id)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("INT")
                     .HasColumnName("MODULE_SEQ");
 
                 entity.Property(e => e.Name)
@@ -204,7 +204,7 @@ namespace FAIS.Infrastructure.Data
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Id)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("INT")
                     .HasColumnName("USER_SEQ");
            
 

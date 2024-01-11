@@ -6,7 +6,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
     public class Module : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
         public string Name { get; set; }

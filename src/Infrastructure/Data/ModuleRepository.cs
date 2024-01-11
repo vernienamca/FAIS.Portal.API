@@ -1,6 +1,5 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,6 +24,11 @@ namespace FAIS.Infrastructure.Data
         public async Task<Module> Add(Module module)
         {
             return await AddAsync(module);
+        }
+
+        public async Task<Module> Update(Module module)
+        {
+            return await UpdateAsync(module);
         }
     }
 }

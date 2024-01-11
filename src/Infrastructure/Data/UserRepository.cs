@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
-    public class UserRepository : EFRepository<User, decimal>, IUserRepository
+    public class UserRepository : EFRepository<User, int>, IUserRepository
     {
         public UserRepository(FAISContext context) : base(context)
         {
@@ -70,6 +70,11 @@ namespace FAIS.Infrastructure.Data
         public async Task<User> Add(User user)
         {
             return await AddAsync(user);
+        }
+
+        public async Task<User> Update(User user)
+        {
+            return await UpdateAsync(user);
         }
     }
 }
