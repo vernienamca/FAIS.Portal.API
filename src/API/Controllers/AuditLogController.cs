@@ -16,17 +16,27 @@ namespace FAIS.Portal.API.Controllers
         private readonly IAuditLogService _auditLogService;
         private readonly IUserService _userService;
         private readonly IModuleService _moduleService;
+        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditLogController"/> class.
         /// </summary>
-        public AuditLogController(IAuditLogService auditLogService, IUserService userService, IModuleService moduleService)
+        public AuditLogController(
+            IAuditLogService auditLogService, 
+            IUserService userService, 
+            IModuleService moduleService,
+            ISettingsService settingsService)
         {
             _auditLogService = auditLogService;
             _userService = userService;
             _moduleService = moduleService;
+            _settingsService = settingsService;
         }
 
+        /// <summary>
+        /// Endpoint for retrieving audit logs.
+        /// </summary>
+        /// <returns>The audit logs.</returns>
         [HttpGet("[action]")]
         public IEnumerable<AuditLogModel> Get()
         {
@@ -57,6 +67,11 @@ namespace FAIS.Portal.API.Controllers
             return auditLogs;
         }
 
+        /// <summary>
+        /// Endpoint for retrieving audit log filter by id.
+        /// </summary>
+        /// <param name="id">The log id.</param>
+        /// <returns>THe audit log.</returns>
         [HttpGet("[action]")]
         public IActionResult GetById([FromQuery] int id)
         {
@@ -76,6 +91,10 @@ namespace FAIS.Portal.API.Controllers
             return Ok(auditLog);
         }
 
+        /// <summary>
+        /// Endpoint for exporting audit logs.
+        /// </summary>
+        /// <returns>The file.</returns>
         [HttpGet("Export")]
         public IActionResult ExportAuditLogs()
         {
@@ -83,12 +102,14 @@ namespace FAIS.Portal.API.Controllers
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, $"Audit_Logs_{ DateTime.Now.Date }.xlsx");
         }
 
-        [HttpGet("OpenFolder")]
+        /// <summary>
+        /// Endpoint for opening the folder explorer with the define path on the settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Folder")]
         public IActionResult OpenFolder()
         {
-            //todo: sample loading of explorer. set the path from the setting.
-            Process.Start("explorer.exe", @"C:\temp");
-
+            Process.Start("explorer.exe", _settingsService.GetById(1).AuditLogsFilePath);
             return Ok();
         }
     }
