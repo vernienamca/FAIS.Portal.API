@@ -1,5 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Interfaces
 {
@@ -7,5 +8,7 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IQueryable<StringInterpolation> Get();
         StringInterpolation GetById(decimal id);
+        Task<StringInterpolation> Add(StringInterpolation stringInterpolation);
+        Task<StringInterpolation> Update(StringInterpolation stringInterpolation);
     }
 }

@@ -105,5 +105,35 @@ namespace FAIS.API.Controllers
 
             return Ok(returnValue);
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AddStringInterpolation([FromBody] StringInterpolationDTO stringInterpolationDTO)
+        {
+            if (stringInterpolationDTO == null)
+            {
+                return BadRequest("StringInterpolationDTO is null");
+            }
+
+            var addedStringInterpolation = await _notificationService.AddStringInterpolation(stringInterpolationDTO);
+
+            return CreatedAtAction(nameof(GetById), new { id = addedStringInterpolation.Id }, addedStringInterpolation);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="stringInterpolationDTO"></param>
+        /// <returns></returns>
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> UpdateStringInterpolation(decimal id, [FromBody] StringInterpolationDTO stringInterpolationDTO)
+        {
+            if (id <= 0 || stringInterpolationDTO == null)
+            {
+                return BadRequest("Invalid input");
+            }
+            var update = await _notificationService.UpdateStringInterpolation(id, stringInterpolationDTO);
+            return Ok(update);
+        }
     }
 }

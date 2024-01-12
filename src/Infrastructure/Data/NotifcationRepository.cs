@@ -1,6 +1,7 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -12,13 +13,21 @@ namespace FAIS.Infrastructure.Data
 
         public IQueryable<StringInterpolation> Get()
         {
-            // take latest 100 records only.
             return _dbContext.StringInterpolations.OrderByDescending(o => o.CreatedAt).Take(100);
         }
 
         public StringInterpolation GetById(decimal id)
         {
             return _dbContext.StringInterpolations.Where(t => t.Id == id).ToList()[0];
+        }
+        public async Task<StringInterpolation> Add(StringInterpolation stringInterpolation)
+        {
+            return await AddAsync(stringInterpolation);
+        }
+
+        public async Task<StringInterpolation> Update(StringInterpolation stringInterpolation)
+        {
+            return await UpdateAsync(stringInterpolation);
         }
     }
 }
