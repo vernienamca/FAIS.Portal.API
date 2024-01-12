@@ -149,6 +149,10 @@ namespace FAIS.Infrastructure.Data
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("datetime")
                     .HasColumnName("DATE_MODIFIED");
+
+                entity.Property(e => e.AuditLogsFilePath)
+                   .HasMaxLength(300)
+                   .HasColumnName("AUDIT_LOGS_FILEPATH");
             });
 
             builder.Entity<Role>(entity =>
