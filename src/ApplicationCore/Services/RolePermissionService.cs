@@ -1,12 +1,8 @@
-﻿using DocumentFormat.OpenXml.Office.CustomUI;
-using FAIS.ApplicationCore.DTOs;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
-using FAIS.ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
@@ -70,8 +66,8 @@ namespace FAIS.ApplicationCore.Services
                             RoleId = (int)permission.RoleId,
                             CreatedBy = createdBy.Id,
                             ModuleName = getModule.Name,
-                            IsRead = permission.IsCreate == 'Y' ? true : false,
-                            IsCreate = permission.IsRead == 'Y' ? true : false,
+                            IsCreate = permission.IsCreate == 'Y' ? true : false,
+                            IsRead = permission.IsRead == 'Y' ? true : false,
                             IsUpdate = permission.IsUpdate == 'Y' ? true : false,
                             DateRemoved = permission.DateRemoved
                         });
@@ -120,8 +116,8 @@ namespace FAIS.ApplicationCore.Services
                         ModuleId = (int)permission.ModuleId,
                         RoleId = (int)permission.RoleId,
                         ModuleName = getModule.Name,
-                        IsRead = permission.IsCreate == 'Y' ? true : false,
-                        IsCreate = permission.IsRead == 'Y' ? true : false,
+                        IsRead = permission.IsRead == 'Y' ? true : false,
+                        IsCreate = permission.IsCreate == 'Y' ? true : false,
                         IsUpdate = permission.IsUpdate == 'Y' ? true : false,
                         DateRemoved = permission.DateRemoved
                     });
@@ -160,9 +156,9 @@ namespace FAIS.ApplicationCore.Services
                     {
                         RoleId = roleModelDTO.Id,
                         ModuleId = item.ModuleId,                        
-                        IsCreate = item.IsRead ? 'Y': 'N',
+                        IsCreate = item.IsCreate ? 'Y' : 'N',
                         IsUpdate = item.IsUpdate ? 'Y' : 'N',
-                        IsRead = item.IsCreate ? 'Y' : 'N',
+                        IsRead = item.IsRead ? 'Y' : 'N',
                         CreatedAt = DateTime.Now,
                         CreatedBy = roleModelDTO.CreatedById,
                         UpdatedAt= DateTime.Now,
