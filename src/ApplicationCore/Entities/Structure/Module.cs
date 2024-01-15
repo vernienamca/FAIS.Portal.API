@@ -6,7 +6,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
     public class Module : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -24,19 +24,22 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string GroupName { get; set; }
 
         [DataMember]
+        public int? Sequence { get; set; }
+
+        [DataMember]
         public char IsActive { get; set; }
 
         [DataMember]
         public DateTime StatusDate { get; set; }
 
         [DataMember]
-        public decimal CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
 
         [DataMember]
         public DateTime CreatedAt { get; set; }
 
         [DataMember]
-        public decimal? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }

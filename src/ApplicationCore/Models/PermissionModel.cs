@@ -2,7 +2,7 @@
 {
     public class PermissionModel
     {
-        public decimal Id { get; set; }
+        public int Id { get; set; }
         public int RoleId { get; set; }
         public decimal ModuleId { get; set; }
         public string ModuleName { get; set; }

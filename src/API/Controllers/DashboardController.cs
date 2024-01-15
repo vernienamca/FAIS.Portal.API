@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 namespace FAIS.API.Controllers
 {
-    [ApiController]
+    [Produces("application/json")]
     [Route("[controller]")]
+    [ApiController]
     [Authorize]
     public class DashboardController : ControllerBase
     {

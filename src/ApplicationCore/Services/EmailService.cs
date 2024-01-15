@@ -1,55 +1,74 @@
-﻿using FAIS.ApplicationCore.DTOs;
-using FAIS.ApplicationCore.Interfaces;
+﻿using FAIS.ApplicationCore.Interfaces;
 using Microsoft.Extensions.Configuration;
-using MimeKit;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit.Text;
-using System.IO;
-using System.Linq;
+using System.Net.Mail;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IConfiguration _config;
-    
+        #region Variables
 
-        public EmailService(IConfiguration config)
+        private readonly ISettingsRepository _settingsRepository;
+
+        #endregion Variables
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmailService"/> class.
+        /// <param name="settingsRepository">The settings repository.</param>
+        /// </summary>
+        public EmailService(ISettingsRepository settingsRepository)
         {
-            _config = config;
+            _settingsRepository = settingsRepository;
         }
 
-        public void SendEmail(EmailDTO request, string tempKey)
+        #endregion Constructor
+
+        /// <summary>
+        /// Sends email to target email address.
+        /// </summary>
+        /// <param name="emailAddress">The target email address.</param>
+        /// <param name="subject">The email subject.</param>
+        /// <param name="content">The content body.</param>
+        public bool SendEmail(string emailAddress, string subject, string content)
         {
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
-            email.To.Add(MailboxAddress.Parse(request.To));
-            email.Subject = "Reset Password";
+            var settings = _settingsRepository.GetById(1);
 
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
 
-            // Read the content of the HTML template file TODO: how can I make this dynamic? 
-            var templatePath = "C:\\Users\\Nieto\\Desktop\\Work\\Github-MyBusyBee\\FAIS.Portal\\src\\ApplicationCore\\Services\\EmailTemplates\\ForgotPassword.html";
+            try
+            {
+                MailMessage mail = new MailMessage
+                {
+                    From = new MailAddress(settings.SMTPFromEmail, settings.SMTPDisplayName)
+                };
+                mail.To.Add(new MailAddress(emailAddress));
+                mail.Subject = subject;
+                mail.IsBodyHtml = true;
+                mail.Body = content;
 
-            var templateContent = File.ReadAllText(templatePath);
-            
-            templateContent = templateContent.Replace("{{tempKey}}", tempKey); 
+                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient
+                {
+                    Port = settings.SMTPPort.Value,
+                    Host = settings.SMTPServerName,
+                    EnableSsl = settings.SMTPEnableSSL == 'Y',
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(settings.SMTPFromEmail, settings.SMTPPassword),
+                    DeliveryMethod = SmtpDeliveryMethod.Network
+                };
+                smtp.Send(mail);
+            }
+            catch (SmtpFailedRecipientException)
+            {
+                return false;
+            }
 
-            // Set the HTML content as the body of the email
-            email.Body = new TextPart(TextFormat.Html) { Text = templateContent };
-
-            using var smtp = new SmtpClient();
-            smtp.CheckCertificateRevocation = false;
-
-            smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_config.GetSection("EmailUsername").Value, _config.GetSection("EmailPassword").Value);
-            smtp.Send(email);
-            smtp.Disconnect(true);
+            return true;
         }
-
-   
     }
 }

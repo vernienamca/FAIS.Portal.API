@@ -6,7 +6,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
     public class Settings : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
         public string CompanyName { get; set; }
@@ -24,31 +24,52 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string Address { get; set; }
 
         [DataMember]
-        public decimal MinPasswordLength { get; set; }
+        public string SMTPFromEmail { get; set; }
 
         [DataMember]
-        public decimal MinSpecialCharacters { get; set; }
+        public string SMTPPassword { get; set; }
 
         [DataMember]
-        public decimal PasswordExpiry { get; set; }
+        public string SMTPServerName { get; set; }
+
+        [DataMember]
+        public int? SMTPPort { get; set; }
+
+        [DataMember]
+        public char? SMTPEnableSSL { get; set; }
+
+        [DataMember]
+        public string SMTPDisplayName { get; set; }
+
+        [DataMember]
+        public int MinPasswordLength { get; set; }
+
+        [DataMember]
+        public int MinSpecialCharacters { get; set; }
+
+        [DataMember]
+        public int PasswordExpiry { get; set; }
 
         [DataMember]
         public decimal IdleTime { get; set; }
 
         [DataMember]
-        public decimal EnforcePasswordHistory { get; set; }
+        public int EnforcePasswordHistory { get; set; }
 
         [DataMember]
-        public decimal MaxSignOnAttempts { get; set; }
+        public int MaxSignOnAttempts { get; set; }
 
         [DataMember]
-        public decimal CreatedBy { get; set; }
+        public string BaseUrl { get; set; }
+
+        [DataMember]
+        public int CreatedBy { get; set; }
 
         [DataMember]
         public DateTime CreatedAt { get; set; }
 
         [DataMember]
-        public decimal? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }

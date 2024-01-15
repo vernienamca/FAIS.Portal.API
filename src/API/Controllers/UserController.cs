@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using FAIS.ApplicationCore.DTOs;
 using System.Threading.Tasks;
 using FAIS.ApplicationCore.Interfaces;
-using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using FAIS.ApplicationCore.Models;
-using System.Linq;
+using System.IO;
 
 namespace FAIS.API.Controllers
 {
-    [ApiController]
+    [Produces("application/json")]
     [Route("[controller]")]
+    [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
 
         private readonly IUserService _userService;
         private readonly ILibraryTypeService _libraryTypeService;
+        private readonly IEmailService _emailService;
+        private readonly ISettingsService _settingsService;
 
         #endregion Variables
 
@@ -28,73 +30,35 @@ namespace FAIS.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// <param name="userService">The user service.</param>
+        /// <param name="libraryTypeService">The library type service.</param>
+        /// <param name="emailService">The email service.</param>
+        /// <param name="settingsService">The settings service.</param>
         /// </summary>
-        public UserController(IUserService userService, ILibraryTypeService libraryTypeService)
+        public UserController(IUserService userService
+            , ILibraryTypeService libraryTypeService
+            , IEmailService emailService
+            , ISettingsService settingsService)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
+            _emailService = emailService;
+            _settingsService = settingsService;
         }
 
         #endregion Constructor
 
-        [HttpGet("[action]")]
-        [Authorize]
-        public IEnumerable<UserModel> Get()
-        {
-            List<UserModel> users = new List<UserModel>();
-
-            foreach (var user in _userService.Get())
-            {
-                var createdBy = _userService.GetById(user.CreatedBy);
-                var modifiedBy = _userService.GetById(user.UpdatedBy.Value);
-
-                var entity = new UserModel()
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    EmployeeNumber = user.EmployeeNumber,
-                    UserName = user.UserName,
-                    Position = _libraryTypeService.GetById(user.PositionId).Name,
-                    EmailAddress = user.EmailAddress,
-                    MobileNumber = user.MobileNumber,
-                    Photo = user.Photo,
-                    StatusCode = user.StatusCode,
-                    StatusDate = user.StatusDate,
-                    DateExpired = user.DateExpired,
-                    CreatedBy = string.Format("{0} {1}", createdBy.FirstName, createdBy.LastName),
-                    CreatedAt = user.CreatedAt
-                };
-
-                var division = _libraryTypeService.GetById(user.DivisionId.Value);
-
-                if (division != null)
-                    entity.Division = _libraryTypeService.GetById(user.DivisionId.Value).Name;
-                    
-                if (modifiedBy != null)
-                {
-                    entity.UpdatedBy = string.Format("{0} {1}", modifiedBy.FirstName, modifiedBy.LastName);
-                    entity.UpdatedAt = user.UpdatedAt;
-                }
-
-                users.Add(entity);
-            }
-
-            return users;
-        }
+        #region Get
 
         /// <summary>
-        /// Gets the list of permissions for the specific user.
+        /// List the users.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        [HttpGet("permissions/{userId:int}")]
-        [ProducesResponseType(typeof(IReadOnlyCollection<PermissionModel>), StatusCodes.Status200OK)]
-        public IActionResult GetPermissions(int userId)
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<UserModel>), StatusCodes.Status200OK)]
+        public IActionResult Get()
         {
-            var permissions = _userService.GetPermissions(userId).ToList();
-
-            return Ok(permissions);
+            return Ok(_userService.Get());
         }
 
         /// <summary>
@@ -104,9 +68,9 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var entity = _userService.GetById(id);
+            var entity = await _userService.GetById(id);
 
             var user = new UserModel()
             {
@@ -120,37 +84,73 @@ namespace FAIS.API.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Gets the list of permissions for the specific user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("permissions/{userId:int}")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<PermissionModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPermissions(int userId)
+        {
+            var permissions = await _userService.GetPermissions(userId);
+
+            return Ok(permissions);
+        }
+
+        #endregion Get
+
+        #region Post
+
+        /// <summary>
+        /// Posts the forgot password.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpPost("forgot-password/{userId:int}")]
+        public async Task<IActionResult> ForgotPassword(int userId)
+        {
+            var user = await _userService.GetById(userId);
+
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            string htmlTemplatePath = Path.Combine($"{Environment.CurrentDirectory}\\Email Templates", "ForgotPassword.html");
+
+            if (!System.IO.File.Exists(htmlTemplatePath))
+                throw new FileNotFoundException(nameof(htmlTemplatePath));
+
+            string content = System.IO.File.ReadAllText(htmlTemplatePath);
+
+            var settings = _settingsService.GetById(1);
+
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
+            await _userService.SetTemporaryKey(1);
+
+            content = content.Replace("${firstname}", user.FirstName);
+            content = content.Replace("${supportemail}", settings.EmailAddress);
+            content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/dsd");
+            content = content.Replace("${baseurl}", $"{settings.BaseUrl}");
+
+            if (_emailService.SendEmail(user.EmailAddress, "Forgot Password", content))
+                return Ok(user);
+
+            return Ok();
+        }
+
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
-            try
-            {
-                if (userDTO == null)
-                {
-                    return BadRequest("UserDTO is null");
-                }
+            if (userDTO == null)
+                throw new ArgumentNullException(nameof(userDTO));
 
-                var addedUser = await _userService.Add(userDTO);
+            var addedUser = await _userService.Add(userDTO);
 
-                return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception using Debug.WriteLine for debugging
-                Debug.WriteLine($"An error occurred in AddUser action: {ex.Message}");
-
-                // Log the stack trace
-                Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-
-                // Log inner exception details if available
-                if (ex.InnerException != null)
-                {
-                    Debug.WriteLine($"Inner Exception Message: {ex.InnerException.Message}");
-                    Debug.WriteLine($"Inner Exception Stack Trace: {ex.InnerException.StackTrace}");
-                }
-
-                return StatusCode(500, "Internal Server Error");
-            }
+            return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
         }
+
+        #endregion Post
     }
 }

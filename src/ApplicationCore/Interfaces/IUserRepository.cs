@@ -8,13 +8,12 @@ namespace FAIS.ApplicationCore.Interfaces
 {
     public interface IUserRepository
     {
-        IQueryable<User> Get();
-        User GetById(decimal id);
-        User GetByUserName(string userName);
-        List<PermissionModel> GetPermissions(int id);
-        Task<User> LockedAccount(User user);
-        Task<User> UpdateSignInAttempts(User user);
-        Task<User> Add(User user);
+        IReadOnlyCollection<UserModel> Get();
+        Task<User> GetById(int id);
+        Task<User> GetByUserName(string userName);
+        Task<List<PermissionModel>> GetPermissions(int id);
+        Task<User> Add(User test);
+        Task<User> Update(User test);
     }
 }
  

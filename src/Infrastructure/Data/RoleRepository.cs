@@ -1,6 +1,10 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -10,14 +14,41 @@ namespace FAIS.Infrastructure.Data
         {
         }
 
-        public IQueryable<Role> Get()
+        public IReadOnlyCollection<RoleModel> Get()
         {
-            return _dbContext.Roles;
+            var roles = (from rol in _dbContext.Roles.AsNoTracking()
+                        join usrC in _dbContext.Users.AsNoTracking() on rol.CreatedBy equals usrC.Id
+                        join usrU in _dbContext.Users.AsNoTracking() on rol.UpdatedBy equals usrU.Id into usrUX
+                        from usrU in usrUX.DefaultIfEmpty()
+                        select new RoleModel()
+                        {
+                            Id = rol.Id,
+                            Name = rol.Name,
+                            Description = rol.Description,
+                            IsActive = rol.IsActive,
+                            StatusDate = rol.StatusDate,
+                            CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
+                            CreatedAt = rol.CreatedAt,
+                            UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                            UpdatedAt = rol.UpdatedAt
+                        }).ToList();
+
+            return roles;
         }
 
         public Role GetById(int id)
         {
-            return _dbContext.Roles.Where(t => t.Id == id).ToList()[0];
+            return _dbContext.Roles.FirstOrDefault(t => t.Id == id);
+        }
+
+        public async Task<Role> Add(Role role)
+        {
+            return await AddAsync(role);
+        }
+
+        public async Task<Role> Update(Role role)
+        {
+            return await UpdateAsync(role);
         }
     }
 }

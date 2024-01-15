@@ -16,11 +16,11 @@ namespace FAIS.ApplicationCore.DTOs
       
         public DateTime StatusDate { get; set; }
 
-        public decimal CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
-        public decimal? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
     }

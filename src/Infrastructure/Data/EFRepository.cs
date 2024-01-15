@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
+using FAIS.ApplicationCore.Entities.Security;
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -26,20 +31,35 @@ namespace FAIS.Infrastructure.Data
 
         public async Task<EntityType> AddAsync(EntityType entity)
         {
-            _dbContext.Set<EntityType>().Add(entity);
+            try
+            {
+                _dbContext.Set<EntityType>().Add(entity);
 
-            await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
-            return entity;
+                return entity;
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
+        
         }
 
         public async Task<EntityType> UpdateAsync(EntityType entity)
         {
-            _dbContext.Entry(entity).State = EntityState.Modified;
+            try
+            {
+                _dbContext.Attach(entity).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
 
-            await _dbContext.SaveChangesAsync();
+                return entity;
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
 
-            return entity;
         }
 
         public async Task DeleteAsync(EntityType entity)

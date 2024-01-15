@@ -5,23 +5,30 @@ using System.Text;
 
 namespace FAIS.ApplicationCore.Entities.Security
 {
-    public class AuditLog : BaseEntity<decimal>
+    public class AuditLog : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
+        
         [DataMember]
-        public decimal ModuleSeq { get; set; }
+        public int ModuleSeq { get; set; }
+        
         [DataMember]
         public string Activity { get; set; }
+        
         [DataMember]
         public string OldValues { get; set; }
+        
         [DataMember]
         public string NewValues { get; set; }
+        
         [DataMember]
         public string IpAddress { get; set; }
+        
         [DataMember]
-        public decimal UserCreated { get; set; }
+        public int CreatedBy { get; set; }
+        
         [DataMember]
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

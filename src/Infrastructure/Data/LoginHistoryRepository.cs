@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
-    public class LoginHistoryRepository : EFRepository<LoginHistory, decimal>, ILoginHistoryRepository
+    public class LoginHistoryRepository : EFRepository<LoginHistory, int>, ILoginHistoryRepository
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginHistoryRepository"/> class.
+        /// </summary>
         public LoginHistoryRepository(FAISContext context) : base(context)
         {
         }

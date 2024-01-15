@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FAIS.API.Controllers
@@ -11,55 +13,51 @@ namespace FAIS.API.Controllers
     [Authorize]
     public class RoleController : ControllerBase
     {
+        #region Variables
+
         private readonly IRoleService _roleService;
-        private readonly IUserService _userService;
+
+        #endregion Variables
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoleController"/> class.
+        /// <param name="roleService">The role service.</param>
+        /// <param name="userService">The user service.</param>
         /// </summary>
-        public RoleController(IRoleService roleService, IUserService userService)
+        public RoleController(IRoleService roleService)
         {
             _roleService = roleService;
-            _userService = userService;
         }
 
+        #endregion Constructor
+
+        #region Get
+
+        /// <summary>
+        /// List the roles.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("[action]")]
-        public IEnumerable<RoleModel> Get()
+        [ProducesResponseType(typeof(IReadOnlyCollection<RoleModel>), StatusCodes.Status200OK)]
+        public IActionResult Get()
         {
-            List<RoleModel> roles = new List<RoleModel>();
-
-            foreach (var role in _roleService.Get())
-            {
-                var createdBy = _userService.GetById(role.CreatedBy);
-                var modifiedBy = _userService.GetById(role.UpdatedBy.Value);
-
-                var entity = new RoleModel()
-                {
-                    Id = role.Id,
-                    Name = role.Name,
-                    Description = role.Description,
-                    IsActive = role.IsActive == 'Y',
-                    StatusDate = role.StatusDate,
-                    CreatedBy = string.Format("{0} {1}", createdBy.FirstName, createdBy.LastName),
-                    CreatedAt = role.CreatedAt
-                };
-
-                if (modifiedBy != null)
-                {
-                    entity.UpdatedBy = string.Format("{0} {1}", modifiedBy.FirstName, modifiedBy.LastName);
-                    entity.UpdatedAt = role.UpdatedAt;
-                }
-
-                roles.Add(entity);
-            }
-
-            return roles;
+            return Ok(_roleService.Get());
         }
 
-        [HttpGet("[action]")]
-        public IActionResult GetById([FromQuery] int id)
+        /// <summary>
+        /// Gets the role by unique identifier.
+        /// </summary>
+        /// <param name="id">The role identifier.</param>
+        /// <returns></returns>
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(Role), StatusCodes.Status200OK)]
+        public IActionResult GetById(int id)
         {
             return Ok(_roleService.GetById(id));
         }
+
+        #endregion Get
     }
 }

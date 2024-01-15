@@ -1,7 +1,14 @@
 ﻿using ArrayToExcel;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
+using System;
 using System.Linq;
+using static ApplicationCore.Enumeration.LoginEnum;
+using System.Threading.Tasks;
+using FAIS.ApplicationCore.Models;
+using System.Collections.Generic;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -14,20 +21,42 @@ namespace FAIS.ApplicationCore.Services
             _repository = repository;
         }
 
-        public byte[] ExportAuditLogs()
-        {
-            var logs = _repository.Get();
-            return logs.ToList().ToExcel();
-        }
-
-        public IQueryable<AuditLog> Get()
+        public IReadOnlyCollection<AuditLogModel> Get()
         {
             return _repository.Get();
         }
 
-        public AuditLog GetById(decimal id)
+        public AuditLog GetById(int id)
         {
             return _repository.GetById(id);
+        }
+
+        public byte[] ExportAuditLogs()
+        {
+            return _repository.Get().ToExcel();
+        }
+
+        public async Task<AuditLog> Add(AuditLogDTO auditLogDto)
+        {
+            try
+            {
+                var auditLog = new AuditLog()
+                {
+                    ModuleSeq = auditLogDto.ModuleSeq,
+                    Activity = auditLogDto.Activity,
+                    OldValues = auditLogDto.OldValues,
+                    NewValues = auditLogDto.NewValues,
+                    IpAddress = auditLogDto.IpAddress,
+                    CreatedBy = auditLogDto.CreatedBy,
+                    CreatedAt = DateTime.Now
+                };
+
+                return await _repository.Add(auditLog);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

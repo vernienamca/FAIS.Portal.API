@@ -30,12 +30,5 @@ namespace ApplicationCore.Enumeration
             Success = 1,
             Failed = 0
         }
-
-        public enum UserStatus
-        {
-            Active = 1,
-            Inactive = 2,
-            Locked = 3
-        }
     }
 }

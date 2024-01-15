@@ -13,5 +13,8 @@ namespace FAIS.ApplicationCore.Entities.Security
 
         [DataMember]
         public int ExpiresInMinutes { get; set; }
+
+        [DataMember]
+        public string SecretKey { get; set; }
     }
 }

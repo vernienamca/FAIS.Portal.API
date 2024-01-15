@@ -5,13 +5,13 @@ using System.Text;
 
 namespace FAIS.ApplicationCore.Entities.Security
 {
-    public class LoginHistory : BaseEntity<decimal>
+    public class LoginHistory : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
-        public decimal? UserId { get; set; }
+        public int? UserId { get; set; }
 
         [DataMember]
         public string Username { get; set; }

@@ -41,5 +41,14 @@ namespace FAIS.ApplicationCore.Services
 
             return await _repository.Add(module);
         }
+
+        public async Task<Module> Update(int id)
+        {
+            var module = _repository.GetById(id);
+
+            module.UpdatedAt = DateTime.Now;
+
+            return await _repository.Update(module);
+        }
     }
 }

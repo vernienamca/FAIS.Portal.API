@@ -1,6 +1,9 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -18,9 +21,41 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public LibraryType GetById(decimal id)
+        public LibraryType GetById(int id)
         {
             return _repository.GetById(id);
+        }
+
+        public async Task<LibraryType> Add(LibraryTypeDTO libraryTypeDto)
+        {
+            try
+            {
+                var libraryType = new LibraryType()
+                {
+                    Name = libraryTypeDto.Name,
+                    Code = libraryTypeDto.Code,
+                    Description = libraryTypeDto.Description,
+                    IsActive = libraryTypeDto.IsActive,
+                    StatusDate = DateTime.Now,
+                    CreatedBy = libraryTypeDto.CreatedBy,
+                    CreatedAt = DateTime.Now
+                };
+
+                return await _repository.Add(libraryType);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<LibraryType> Update(int id)
+        {
+            var libraryType = _repository.GetById(id);
+
+            libraryType.UpdatedAt = DateTime.Now;
+
+            return await _repository.Update(libraryType);
         }
     }
 }
