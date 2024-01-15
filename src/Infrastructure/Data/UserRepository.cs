@@ -1,6 +1,4 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Entities.Structure;
-using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -25,7 +23,7 @@ namespace FAIS.Infrastructure.Data
                          join div in _dbContext.LibraryTypes.Where(t => t.Code == "DIV").AsNoTracking() on usr.DivisionId equals div.Id
                          join ofg in _dbContext.LibraryTypes.Where(t => t.Code == "OUFG").AsNoTracking() on usr.OupFgId equals ofg.Id
                          select new UserModel()
-                        {
+                         {
                             Id = usr.Id,
                             FirstName = usr.FirstName,
                             LastName = usr.LastName,
