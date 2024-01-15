@@ -63,6 +63,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string BaseUrl { get; set; }
 
         [DataMember]
+        public string AuditLogsFilePath { get; set; }
+
+        [DataMember]
         public int CreatedBy { get; set; }
 
         [DataMember]
@@ -73,8 +76,5 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
-
-        [DataMember]
-        public string AuditLogsFilePath { get; set; }
     }
 }

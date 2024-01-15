@@ -103,6 +103,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(150)
                 .HasColumnName("BASE_URL");
 
+            builder.Property(e => e.AuditLogsFilePath)
+                .IsRequired(false)
+                .HasMaxLength(250)
+                .HasColumnName("AUDIT_LOGS_FILE_PATH");
+
             builder.Property(e => e.CreatedBy)
                 .IsRequired()
                 .HasColumnName("USER_CREATED");

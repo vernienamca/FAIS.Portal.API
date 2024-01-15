@@ -104,7 +104,7 @@ namespace FAIS.Controllers
                     return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
                 }
 
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenOptions.SecretKey));
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("KeyForSignInSecret@1234"));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokenOptions = new JwtSecurityToken(
                     issuer: _tokenOptions.Issuer,

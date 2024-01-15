@@ -18,9 +18,9 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<UserModel> Get()
         {
             var users = (from usr in _dbContext.Users.AsNoTracking()
-                         join pst in _dbContext.LibraryTypes.Where(t => t.Code == "PST").AsNoTracking() on usr.PositionId equals pst.Id into pstX
+                         join pst in _dbContext.LibraryTypes.Where(x => x.Code == "PST").AsNoTracking() on usr.PositionId equals pst.Id into pstX
                          from pst in pstX.DefaultIfEmpty()
-                         join div in _dbContext.LibraryTypes.Where(t => t.Code == "DIV").AsNoTracking() on usr.DivisionId equals div.Id
+                         join div in _dbContext.LibraryTypes.Where(x => x.Code == "DIV").AsNoTracking() on usr.DivisionId equals div.Id
                          join ofg in _dbContext.LibraryTypes.Where(t => t.Code == "OUFG").AsNoTracking() on usr.OupFgId equals ofg.Id
                          select new UserModel()
                          {
@@ -56,6 +56,7 @@ namespace FAIS.Infrastructure.Data
             var permissions = await (from per in _dbContext.RolePermissions.AsNoTracking()
                                     join mod in _dbContext.Modules.AsNoTracking() on per.ModuleId equals mod.Id
                                     where mod.IsActive == 'Y' && roleIds.Contains(per.RoleId)
+                                    orderby mod.Sequence
                                     select new PermissionModel()
                                     {
                                         Id = per.Id,
