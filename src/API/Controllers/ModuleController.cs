@@ -10,7 +10,7 @@ namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class ModuleController : ControllerBase
     {
         private readonly IModuleService _moduleService;
@@ -90,6 +90,14 @@ namespace FAIS.API.Controllers
             var result = await _moduleService.Update(moduleDTO);
 
             return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteModule(int id)
+        {
+            await _moduleService.Delete(id);
+
+            return Ok();
         }
     }
 }

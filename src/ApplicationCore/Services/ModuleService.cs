@@ -60,5 +60,16 @@ namespace FAIS.ApplicationCore.Services
 
             return await _repository.Update(module);
         }
+
+        public async Task Delete(int id)
+        {
+            var module = _repository.GetById(id);
+            if (module == null)
+            {
+                // throw message
+            }
+
+            await _repository.Delete(module);
+        }
     }
 }

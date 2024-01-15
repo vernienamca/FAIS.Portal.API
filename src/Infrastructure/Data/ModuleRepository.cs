@@ -30,5 +30,10 @@ namespace FAIS.Infrastructure.Data
         {
             return await UpdateAsync(module);
         }
+
+        public async Task Delete(Module module)
+        {
+            await DeleteAsync(module);
+        }
     }
 }

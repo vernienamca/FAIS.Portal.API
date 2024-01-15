@@ -11,5 +11,6 @@ namespace FAIS.ApplicationCore.Interfaces
         Module GetById(int id);
         Task<Module> Add(ModuleDTO moduleDto);
         Task<Module> Update(ModuleDTO moduleDto);
+        Task Delete(int id);
     }
 }
