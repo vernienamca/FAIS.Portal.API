@@ -1,10 +1,12 @@
 ﻿using ArrayToExcel;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using FAIS.ApplicationCore.DTOs;
-using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,14 +21,15 @@ namespace FAIS.ApplicationCore.Services
             _repository = repository;
         }
 
-        public IQueryable<StringInterpolation> Get()
+        #region STRING_INTERPOLATION
+        public async Task<List<StringInterpolation>> GetStringInterpolation()
         {
-            return _repository.Get();
+            return await _repository.GetStringInterpolation();
         }
 
-        public StringInterpolation GetById(decimal id)
+        public async Task<StringInterpolation> GetStringInterpolationById(decimal id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetStringInterpolationById(id);
         }
 
         public async Task<StringInterpolation> AddStringInterpolation(StringInterpolationDTO stringInterpolationDTO)
@@ -44,40 +47,53 @@ namespace FAIS.ApplicationCore.Services
                 UpdatedBy = stringInterpolationDTO?.UpdatedBy,
                 UpdatedAt = DateTime.Now
             };
-            return await _repository.Add(stringInterpolation);
+            return await _repository.AddStringInterpolation(stringInterpolation);
         }
 
         public async Task<StringInterpolation> UpdateStringInterpolation(decimal id, StringInterpolationDTO stringInterpolationDTO)
         {
-            var stringInterpolation = _repository.GetById(id);
+            var stringInterpolation = _repository.GetStringInterpolationById(id);
 
-            if (stringInterpolation != null)
-            {
-                stringInterpolation.Id = id;
-                if (!string.IsNullOrEmpty(stringInterpolationDTO.TransactionCode))
-                {
-                    stringInterpolation.TransactionCode = stringInterpolationDTO.TransactionCode;
-                }
-                if (!string.IsNullOrEmpty(stringInterpolationDTO.TransactionDescription))
-                {
-                    stringInterpolation.TransactionDescription = stringInterpolationDTO.TransactionDescription;
-                }
-                if (!string.IsNullOrEmpty(stringInterpolation.NotificationType))
-                {
-                    stringInterpolation.NotificationType = stringInterpolationDTO.NotificationType;
-                }
+            //if (stringInterpolation != null)
+            //{
+            //    stringInterpolation.Id = id;
+            //    if (!string.IsNullOrEmpty(stringInterpolationDTO.TransactionCode))
+            //    {
+            //        stringInterpolation.TransactionCode = stringInterpolationDTO.TransactionCode;
+            //    }
+            //    if (!string.IsNullOrEmpty(stringInterpolationDTO.TransactionDescription))
+            //    {
+            //        stringInterpolation.TransactionDescription = stringInterpolationDTO.TransactionDescription;
+            //    }
+            //    if (!string.IsNullOrEmpty(stringInterpolation.NotificationType))
+            //    {
+            //        stringInterpolation.NotificationType = stringInterpolationDTO.NotificationType;
+            //    }
 
-                if (stringInterpolation.IsActive != stringInterpolationDTO.IsActive)
-                {
-                    stringInterpolation.IsActive = stringInterpolationDTO.IsActive;
-                    stringInterpolation.StatusDate = DateTime.Now;
-                }
-               
-                stringInterpolation.UpdatedBy = stringInterpolationDTO.UpdatedBy;
+            //    if (stringInterpolation.IsActive != stringInterpolationDTO.IsActive)
+            //    {
+            //        stringInterpolation.IsActive = stringInterpolationDTO.IsActive;
+            //        stringInterpolation.StatusDate = DateTime.Now;
+            //    }
 
-                return await _repository.Update(stringInterpolation);
-            }
+            //    stringInterpolation.UpdatedBy = stringInterpolationDTO.UpdatedBy;
+
+            //    return await _repository.Update(stringInterpolation);
+            //}
             return null;
         }
+        #endregion
+
+        #region ALERTS
+        public async Task<List<Alerts>> GetAlerts()
+        {
+            return await _repository.GetAlerts();
+        }
+
+        public async Task<Alerts> GetAlertsById(decimal id)
+        {
+            return await _repository.GetAlertsById(id);
+        }
+        #endregion
     }
 }

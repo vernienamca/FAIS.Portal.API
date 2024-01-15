@@ -14,6 +14,7 @@ using System.Linq;
 using FAIS.ApplicationCore.Services;
 using FAIS.ApplicationCore.Entities.Security;
 using DocumentFormat.OpenXml.Vml.Office;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace FAIS.API.Controllers
 {
@@ -43,12 +44,17 @@ namespace FAIS.API.Controllers
         #endregion Constructor
 
 
-        [HttpGet("[action]")]
-        public IEnumerable<StringInterpolationModel> Get()
+        #region STRING_INTERPOLATION
+        /// <summary>
+        /// Get String Interpolation List
+        /// </summary>
+        /// <returns>String Interpolation list</returns>
+        [HttpGet("interpolations")]
+        public async Task<IEnumerable<StringInterpolationModel>> GetStringInterpolation()
         {
             List<StringInterpolationModel> stringInterpolations = new List<StringInterpolationModel>();
 
-            foreach (var stringInterpolation in _notificationService.Get())
+            foreach (var stringInterpolation in await _notificationService.GetStringInterpolation())
             {
                 var createdBy = _userService.GetById(stringInterpolation.CreatedBy);
                 var modifiedBy = _userService.GetById(stringInterpolation.UpdatedBy.Value);
@@ -77,10 +83,15 @@ namespace FAIS.API.Controllers
             return stringInterpolations;
         }
 
+        /// <summary>
+        /// Get String Interpolation By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>String Interpolation details</returns>
         [HttpGet("[action]")]
-        public IActionResult GetById([FromQuery] int id)
+        public async Task<IActionResult> GetStringInterpolationById([FromQuery] int id)
         {
-            var stringInterpolation = _notificationService.GetById(id);
+            var stringInterpolation = await _notificationService.GetStringInterpolationById(id);
 
             var createdBy = _userService.GetById(stringInterpolation.CreatedBy);
             var modifiedBy = _userService.GetById(stringInterpolation.UpdatedBy.Value);
@@ -106,6 +117,10 @@ namespace FAIS.API.Controllers
             return Ok(returnValue);
         }
 
+        /// <summary>
+        /// Add String Interpolation
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("[action]")]
         public async Task<IActionResult> AddStringInterpolation([FromBody] StringInterpolationDTO stringInterpolationDTO)
         {
@@ -116,11 +131,11 @@ namespace FAIS.API.Controllers
 
             var addedStringInterpolation = await _notificationService.AddStringInterpolation(stringInterpolationDTO);
 
-            return CreatedAtAction(nameof(GetById), new { id = addedStringInterpolation.Id }, addedStringInterpolation);
+            return CreatedAtAction(nameof(GetStringInterpolationById), new { id = addedStringInterpolation.Id }, addedStringInterpolation);
         }
 
         /// <summary>
-        /// 
+        /// Update String Interpolation
         /// </summary>
         /// <param name="id"></param>
         /// <param name="stringInterpolationDTO"></param>
@@ -135,5 +150,85 @@ namespace FAIS.API.Controllers
             var update = await _notificationService.UpdateStringInterpolation(id, stringInterpolationDTO);
             return Ok(update);
         }
+        #endregion
+
+
+        #region ALERTS
+        /// <summary>
+        /// Get alerts List
+        /// </summary>
+        /// <returns>Alert list</returns>
+        [HttpGet("templates")]
+        public async Task<IEnumerable<AlertsModel>> GetAlerts()
+        {
+            List<AlertsModel> alerts = new List<AlertsModel>();
+
+            foreach (var alert in await _notificationService.GetAlerts())
+            {
+                var createdBy = _userService.GetById(alert.CreatedBy);
+                var modifiedBy = _userService.GetById(alert.UpdatedBy.Value);
+
+                var entity = new AlertsModel()
+                {
+                    Id = alert.Id,
+                    Subject = alert.Subject,
+                    Content = alert.Content,
+                    Receiver = alert.Receiver,
+                    NotificationType = alert.NotificationType,
+                    IsActive = alert.IsActive,
+                    StatusDate = alert.StatusDate,
+                    
+                    CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}",
+                    CreatedAt = alert.CreatedAt,
+                };
+
+                if (modifiedBy != null)
+                {
+                    entity.UpdatedBy = $"{modifiedBy.FirstName} {modifiedBy.LastName}";
+                    entity.UpdatedAt = alert.UpdatedAt;
+                }
+
+                alerts.Add(entity);
+            }
+
+            return alerts;
+        }
+
+        /// <summary>
+        /// Get Alerts By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Alert details</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetAlertsById([FromQuery] int id)
+        {
+            var alert = await _notificationService.GetAlertsById(id);
+
+            var createdBy = _userService.GetById(alert.CreatedBy);
+            var modifiedBy = _userService.GetById(alert.UpdatedBy.Value);
+
+            var returnValue = new AlertsModel()
+            {
+                Id = alert.Id,
+                Subject = alert.Subject,
+                Content = alert.Content,
+                Receiver = alert.Receiver,
+                NotificationType = alert.NotificationType,
+                IsActive = alert.IsActive,
+                StatusDate = alert.StatusDate,
+
+                CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}",
+                CreatedAt = alert.CreatedAt,
+            };
+            if (modifiedBy != null)
+            {
+                returnValue.UpdatedBy = $"{modifiedBy.FirstName} {modifiedBy.LastName}";
+                returnValue.UpdatedAt = alert.UpdatedAt;
+            }
+
+            return Ok(returnValue);
+        }
+        #endregion
+
     }
 }

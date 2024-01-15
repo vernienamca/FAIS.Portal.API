@@ -19,6 +19,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<LibraryType> LibraryTypes { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<StringInterpolation> StringInterpolations { get; set; }
+        public DbSet<Alerts> Alerts { get; set; }
         public DbSet<LoginHistory> LoginHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -523,6 +524,62 @@ namespace FAIS.Infrastructure.Data
                     .HasColumnName("STATUS_DATE")
                     .HasColumnType("datetime");
                 
+                entity.Property(e => e.NotificationType)
+                    .HasMaxLength(50)
+                    .HasColumnName("NOTIFICATION_TYPE");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnType("NUMBER(38)")
+                    .HasColumnName("USER_CREATED")
+                    .HasDefaultValueSql("systimestamp\n   ");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_CREATED");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnType("NUMBER")
+                    .HasColumnName("USER_MODIFIED");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE_MODIFIED");
+            });
+
+            builder.Entity<Alerts>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("ALERTS");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("NUMBER(38)")
+                    .HasColumnName("ALERT_SEQ");
+
+                entity.Property(e => e.Subject)
+                    .HasMaxLength(250)
+                    .HasColumnName("SUBJECT");
+
+                entity.Property(e => e.Content)
+                    .HasMaxLength(500)
+                    .HasColumnName("CONTENT");
+
+                entity.Property(e => e.Receiver)
+                    .HasMaxLength(250)
+                    .HasColumnName("RECEIVER");
+
+                entity.Property(e => e.NotificationType)
+                    .HasMaxLength(50)
+                    .HasColumnName("NOTIFICATION_TYPE");
+
+                entity.Property(e => e.IsActive)
+                    .HasMaxLength(1)
+                    .HasColumnName("IS_ACTIVE");
+
+                entity.Property(e => e.StatusDate)
+                    .HasColumnName("STATUS_DATE")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.NotificationType)
                     .HasMaxLength(50)
                     .HasColumnName("NOTIFICATION_TYPE");
