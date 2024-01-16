@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System.Reflection;
 using FAIS.Portal.API.Models;
+using FAIS.ApplicationCore.Models;
 
 namespace FAIS.Portal.API
 {

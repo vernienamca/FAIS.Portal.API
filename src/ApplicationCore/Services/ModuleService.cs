@@ -1,7 +1,9 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +18,7 @@ namespace FAIS.ApplicationCore.Services
             _repository = repository;
         }
 
-        public IQueryable<Module> Get()
+        public IReadOnlyCollection<ModuleModel> Get()
         {
             return _repository.Get();
         }

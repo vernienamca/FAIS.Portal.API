@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
-namespace FAIS.Portal.API.Models
+namespace FAIS.ApplicationCore.Models
 {
     public class ModuleModel
     {

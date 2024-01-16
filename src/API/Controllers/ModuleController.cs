@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
-using FAIS.Portal.API.Models;
+using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,42 +45,9 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpGet("[action]")]
         [ProducesResponseType(typeof(IReadOnlyCollection<ModuleModel>), StatusCodes.Status200OK)]
-        public async Task<IEnumerable<ModuleModel>> Get()
+        public IActionResult Get()
         {
-            var data = _moduleService.Get();
-
-            if (data == null)
-                return null;
-
-            List<ModuleModel> modules = new List<ModuleModel>();
-
-            foreach (var module in data)
-            {
-                var createdBy = await _userService.GetById(module.CreatedBy);
-                var modifiedBy = await _userService.GetById(module.UpdatedBy.Value);
-
-                var entity = new ModuleModel()
-                {
-                    Id = module.Id,
-                    Name = module.Name,
-                    Description = module.Description,
-                    Url = module.Url,
-                    IsActive = module.IsActive,
-                    StatusDate = module.StatusDate,
-                    CreatedBy = string.Format("{0} {1}", createdBy.FirstName, createdBy.LastName),
-                    CreatedAt = module.CreatedAt
-                };
-
-                if (modifiedBy != null)
-                {
-                    entity.UpdatedBy = string.Format("{0} {1}", modifiedBy.FirstName, modifiedBy.LastName);
-                    entity.UpdatedAt = module.UpdatedAt;
-                }
-
-                modules.Add(entity);
-            }
-
-            return modules;
+            return Ok(_moduleService.Get());
         }
 
         /// <summary>

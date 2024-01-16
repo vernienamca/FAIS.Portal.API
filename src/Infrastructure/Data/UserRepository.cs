@@ -56,7 +56,7 @@ namespace FAIS.Infrastructure.Data
             var permissions = await (from per in _dbContext.RolePermissions.AsNoTracking()
                                     join mod in _dbContext.Modules.AsNoTracking() on per.ModuleId equals mod.Id
                                     where mod.IsActive == 'Y' && roleIds.Contains(per.RoleId)
-                                    orderby mod.Sequence
+                                    orderby mod.Sequence, mod.Id
                                     select new PermissionModel()
                                     {
                                         Id = per.Id,
