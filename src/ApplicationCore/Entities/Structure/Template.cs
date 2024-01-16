@@ -5,10 +5,10 @@ using System.Text;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    public class Alerts : BaseEntity<decimal>
+    public class Template : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
         [DataMember]
         public string Subject { get; set; }
         [DataMember]
@@ -22,11 +22,11 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public DateTime StatusDate { get; set; }
         [DataMember]
-        public decimal CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
         [DataMember]
         public DateTime? CreatedAt { get; set; }
         [DataMember]
-        public decimal? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
     }

@@ -21,7 +21,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<Settings> Settings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<StringInterpolation> StringInterpolations { get; set; }
-        public DbSet<Alerts> Alerts { get; set; }
+        public DbSet<Template> Templates { get; set; }
         public DbSet<LoginHistory> LoginHistory { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserTAFG> UserTAFGs { get; set; }
@@ -41,6 +41,8 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new RoleEntityConfiguration());
             builder.ApplyConfiguration(new RolePermissionEntityConfiguration());
             builder.ApplyConfiguration(new SettingsEntityConfiguration());
+            builder.ApplyConfiguration(new StringInterpolationEntityConfiguration());
+            builder.ApplyConfiguration(new TemplateEntityConfiguration());
             builder.ApplyConfiguration(new UserEntityConfiguration());
             builder.ApplyConfiguration(new UserRoleEntityConfiguration());
             builder.ApplyConfiguration(new UserTAFGEntityConfiguration());

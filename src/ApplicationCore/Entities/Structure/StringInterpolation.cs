@@ -5,10 +5,10 @@ using System.Text;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    public class StringInterpolation : BaseEntity<decimal>
+    public class StringInterpolation : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
         [DataMember]
         public string TransactionCode { get; set; }
         [DataMember]
@@ -20,11 +20,11 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public string NotificationType { get; set; }
         [DataMember]
-        public decimal CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
         [DataMember]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         [DataMember]
-        public decimal? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
     }

@@ -1,11 +1,10 @@
-﻿using System.Runtime.Serialization;
-using System;
+﻿using System;
 
-namespace FAIS.Portal.API.Models
+namespace FAIS.ApplicationCore.Models
 {
-    public class AlertsModel
+    public class TemplateModel
     {
-        public decimal Id { get; set; }
+        public int Id { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
         public string Receiver { get; set; }

@@ -1,7 +1,6 @@
-﻿using System.Runtime.Serialization;
-using System;
+﻿using System;
 
-namespace FAIS.Portal.API.Models
+namespace FAIS.ApplicationCore.Models
 {
     public class StringInterpolationModel
     {

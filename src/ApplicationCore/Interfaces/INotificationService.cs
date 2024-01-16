@@ -1,5 +1,6 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
+using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,15 +10,13 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface INotificationService
     {
         #region STRING_INTERPOLATION
-        Task<List<StringInterpolation>> GetStringInterpolation();
-        Task<StringInterpolation> GetStringInterpolationById(decimal id);
-        Task<StringInterpolation> AddStringInterpolation(StringInterpolationDTO userDTO);
-        Task<StringInterpolation> UpdateStringInterpolation(decimal id, StringInterpolationDTO userDTO);
+        Task<List<StringInterpolationModel>> GetStringInterpolations();
+        Task<StringInterpolation> GetStringInterpolationById(int id);
         #endregion
 
-        #region ALERTS
-        Task<List<Alerts>> GetAlerts();
-        Task<Alerts> GetAlertsById(decimal id);
+        #region TEMPLATES
+        Task<List<TemplateModel>> GetTemplates();
+        Task<Template> GetTemplateById(int id);
         #endregion
 
     }
