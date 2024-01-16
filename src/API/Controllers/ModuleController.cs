@@ -10,7 +10,7 @@ namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class ModuleController : ControllerBase
     {
         private readonly IModuleService _moduleService;
@@ -79,7 +79,7 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="moduleDTO">The module DTO.</param>
         /// <returns></returns>
-        [HttpPost("[action]")]
+        [HttpPut("[action]")]
         public async Task<IActionResult> UpdateModule([FromBody] ModuleDTO moduleDTO)
         {
             if (moduleDTO == null)
