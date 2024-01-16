@@ -3,10 +3,10 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Security
 {
-    public class RolePermission : BaseEntity<decimal>
+    public class RolePermission : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
         public int RoleId { get; set; }
@@ -27,13 +27,13 @@ namespace FAIS.ApplicationCore.Entities.Security
         public DateTime? DateRemoved { get; set; }
 
         [DataMember]
-        public decimal CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
 
         [DataMember]
         public DateTime CreatedAt { get; set; }
 
         [DataMember]
-        public decimal? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }

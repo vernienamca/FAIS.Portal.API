@@ -1,75 +1,86 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
-    public class UserRepository : EFRepository<User, decimal>, IUserRepository
+    public class UserRepository : EFRepository<User, int>, IUserRepository
     {
         public UserRepository(FAISContext context) : base(context)
         {
         }
 
-        public IQueryable<User> Get()
+        public IReadOnlyCollection<UserModel> Get()
         {
-            return _dbContext.Users;
+            var users = (from usr in _dbContext.Users.AsNoTracking()
+                         join pst in _dbContext.LibraryTypes.Where(x => x.Code == "PST").AsNoTracking() on usr.PositionId equals pst.Id into pstX
+                         from pst in pstX.DefaultIfEmpty()
+                         join div in _dbContext.LibraryTypes.Where(x => x.Code == "DIV").AsNoTracking() on usr.DivisionId equals div.Id
+                         join ofg in _dbContext.LibraryTypes.Where(t => t.Code == "OUFG").AsNoTracking() on usr.OupFgId equals ofg.Id
+                         select new UserModel()
+                         {
+                            Id = usr.Id,
+                            FirstName = usr.FirstName,
+                            LastName = usr.LastName,
+                            UserName = usr.UserName,
+                            Position = pst.Name,
+                            Division = div.Name,
+                            TAFGs = _dbContext.UserTAFGs.Where(x => x.UserId == usr.Id).AsNoTracking().Join(_dbContext.LibraryTypes.AsNoTracking(), fgs => fgs.TAFGId, lib => lib.Id,
+                                (fgs, lib) => new { fgs, lib }).Select(t => t.lib.Name).ToList(),
+                            OUFG = ofg.Name,
+                            Status = StatusHelpers.GetUserStatus(usr.StatusCode)
+                         }).ToList();
+
+            return users;
         }
 
-        public User GetById(decimal id)
+        public async Task<User> GetByUserName(string userName)
         {
-            return _dbContext.Users.Where(t => t.Id == id).ToList()[0];
+            return await _dbContext.Users.FirstOrDefaultAsync(t => t.UserName == userName);
         }
 
-        public User GetByUserName(string userName)
+        public async Task<User> GetById(int id)
         {
-            return _dbContext.Users.Where(t => t.UserName == userName).ToList()[0];
+            return await _dbContext.Users.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public List<PermissionModel> GetPermissions(int id)
+        public async Task<List<PermissionModel>> GetPermissions(int id)
         {
-            List<int> roleIds = _dbContext.UserRoles.Where(t => t.UserId == id).Select(s => s.RoleId).ToList();
-            var rolePermissions = _dbContext.RolePermissions.Where(t => roleIds.Contains(t.RoleId)).ToList();
+            List<int> roleIds = await _dbContext.UserRoles.Where(t => t.UserId == id).Select(s => s.RoleId).ToListAsync();
 
-            List<PermissionModel> permissions = new List<PermissionModel>();
-
-            foreach (var permission in rolePermissions)
-            {
-                var module = _dbContext.Modules.Where(t => t.Id == permission.ModuleId).ToList()[0];
-
-                permissions.Add(new PermissionModel()
-                {
-                    Id = permission.Id,
-                    RoleId = permission.RoleId,
-                    ModuleId = module.Id,
-                    ModuleName = module.Name,
-                    Url = module.Url,
-                    Icon = module.Icon,
-                    GroupName = module.GroupName,
-                    IsCreate = permission.IsCreate == 'Y',
-                    IsRead = permission.IsRead == 'Y',
-                    IsUpdate = permission.IsUpdate == 'Y'
-                });
-            }
-
+            var permissions = await (from per in _dbContext.RolePermissions.AsNoTracking()
+                                    join mod in _dbContext.Modules.AsNoTracking() on per.ModuleId equals mod.Id
+                                    where mod.IsActive == 'Y' && roleIds.Contains(per.RoleId)
+                                    orderby mod.Sequence, mod.Id
+                                    select new PermissionModel()
+                                    {
+                                        Id = per.Id,
+                                        RoleId = per.RoleId,
+                                        ModuleId = mod.Id,
+                                        ModuleName = mod.Name,
+                                        Url = mod.Url,
+                                        Icon = mod.Icon,
+                                        GroupName = mod.GroupName,
+                                        IsCreate = per.IsCreate == 'Y',
+                                        IsRead = per.IsRead == 'Y',
+                                        IsUpdate = per.IsUpdate == 'Y'
+                                    }).ToListAsync();
             return permissions;
         }
 
-        public async Task<User> LockedAccount(User user)
+        public async Task<User> Add(User test)
         {
-            return await UpdateAsync(user);
+            return await AddAsync(test);
         }
 
-        public async Task<User> UpdateSignInAttempts(User user)
+        public async Task<User> Update(User test)
         {
-            return await UpdateAsync(user);
-        }
-
-        public async Task<User> Add(User user)
-        {
-            return await AddAsync(user);
+            return await UpdateAsync(test);
         }
     }
 }

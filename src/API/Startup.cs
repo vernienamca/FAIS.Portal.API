@@ -62,33 +62,29 @@ namespace FAIS
                 .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
             });
 
-
-
             services.Configure<TokenKeys>(Configuration.GetSection("TokenOptions"));
 
             services.AddScoped(typeof(IAuditLogRepository), typeof(AuditLogRepository));
             services.AddScoped(typeof(IModuleRepository), typeof(ModuleRepository));
             services.AddScoped(typeof(ISettingsRepository), typeof(SettingsRepository));
             services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
-            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(ILibraryTypeRepository), typeof(LibraryTypeRepository));
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
             services.AddScoped(typeof(INotificationRepository), typeof(NotifcationRepository));
+            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
             services.AddScoped(typeof(ISettingsService), typeof(SettingsService));
             services.AddScoped(typeof(IRoleService), typeof(RoleService));
-            services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped(typeof(ILibraryTypeService), typeof(LibraryTypeService));
+            services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API Title", Version = "v1" });
-
-             
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FAIS Portal API", Version = "v1" });
             });
         }
 
@@ -105,11 +101,8 @@ namespace FAIS
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthentication();
-
             app.UseCors();
             app.UseAuthorization();
 
@@ -121,7 +114,7 @@ namespace FAIS
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API Title V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FAIS Portal API");
                 c.RoutePrefix = "swagger";
             });
         }

@@ -8,5 +8,7 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IQueryable<Settings> Get();
         Settings GetById(int id);
+        Task<Settings> Add(Settings settings);
+        Task<Settings> Update(Settings settings);
     }
 }

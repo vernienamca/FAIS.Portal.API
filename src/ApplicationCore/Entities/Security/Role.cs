@@ -6,7 +6,7 @@ namespace FAIS.ApplicationCore.Entities.Security
     public class Role : BaseEntity<int>
     {
         [DataMember]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -21,13 +21,13 @@ namespace FAIS.ApplicationCore.Entities.Security
         public DateTime StatusDate { get; set; }
 
         [DataMember]
-        public decimal CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
 
         [DataMember]
         public DateTime CreatedAt { get; set; }
 
         [DataMember]
-        public decimal? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }

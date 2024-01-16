@@ -7,6 +7,6 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface ILibraryTypeService
     {
         IQueryable<LibraryType> Get();
-        LibraryType GetById(decimal id);
+        LibraryType GetById(int id);
     }
 }

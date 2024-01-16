@@ -1,116 +1,94 @@
-﻿using FAIS.ApplicationCore.Interfaces;
-using FAIS.Portal.API.Models;
+﻿using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 namespace FAIS.Portal.API.Controllers
 {
-    [ApiController]
+    [Produces("application/json")]
     [Route("[controller]")]
+    [ApiController]
     [Authorize]
     public class AuditLogController : ControllerBase
     {
+        #region Variables
+
         private readonly IAuditLogService _auditLogService;
-        private readonly IUserService _userService;
-        private readonly IModuleService _moduleService;
         private readonly ISettingsService _settingsService;
+
+        #endregion Variables
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditLogController"/> class.
+        /// <param name="auditLogService">The audit log service.</param>
+        /// <param name="userService">The user service.</param>
         /// </summary>
-        public AuditLogController(
-            IAuditLogService auditLogService, 
-            IUserService userService, 
-            IModuleService moduleService,
-            ISettingsService settingsService)
+        public AuditLogController(IAuditLogService auditLogService 
+            ,ISettingsService settingsService)
         {
             _auditLogService = auditLogService;
-            _userService = userService;
-            _moduleService = moduleService;
             _settingsService = settingsService;
         }
 
-        /// <summary>
-        /// Endpoint for retrieving audit logs.
-        /// </summary>
-        /// <returns>The audit logs.</returns>
-        [HttpGet("[action]")]
-        public IEnumerable<AuditLogModel> Get()
-        {
-            List<AuditLogModel> auditLogs = new List<AuditLogModel>();
+        #endregion Constructor
 
-            foreach (var auditLog in _auditLogService.Get())
-            {
-                var createdBy = _userService.GetById(auditLog.UserCreated);
-                var module = _moduleService.GetById((int)auditLog.ModuleSeq);
-
-                var entity = new AuditLogModel()
-                {
-                    Id = auditLog.Id,
-                    Activity = auditLog.Activity,
-                    DateCreated = auditLog.DateCreated,
-                    IpAddress = auditLog.IpAddress,
-                    ModuleSeq = auditLog.ModuleSeq,
-                    NewValues = auditLog.NewValues,
-                    OldValues = auditLog.OldValues,
-                    UserCreated = createdBy.Id,
-                    CreatedBy = string.Format("{0} {1}", createdBy.FirstName, createdBy.LastName),
-                    ModuleName = module.Name,
-                };
-
-                auditLogs.Add(entity);
-            }
-
-            return auditLogs;
-        }
+        #region Get
 
         /// <summary>
-        /// Endpoint for retrieving audit log filter by id.
-        /// </summary>
-        /// <param name="id">The log id.</param>
-        /// <returns>THe audit log.</returns>
-        [HttpGet("[action]")]
-        public IActionResult GetById([FromQuery] int id)
-        {
-            var entity = _auditLogService.GetById(id);
-
-            var auditLog = new AuditLogModel()
-            {
-                Id = entity.Id,
-                Activity = entity.Activity,
-                DateCreated = System.DateTime.UtcNow,
-                IpAddress = entity.IpAddress,
-                ModuleSeq= entity.ModuleSeq,
-                NewValues = entity.NewValues,
-                OldValues= entity.OldValues,
-            };
-
-            return Ok(auditLog);
-        }
-
-        /// <summary>
-        /// Endpoint for exporting audit logs.
-        /// </summary>
-        /// <returns>The file.</returns>
-        [HttpGet("Export")]
-        public IActionResult ExportAuditLogs()
-        {
-            var bytes = _auditLogService.ExportAuditLogs();
-            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, $"Audit_Logs_{ DateTime.Now.Date }.xlsx");
-        }
-
-        /// <summary>
-        /// Endpoint for opening the folder explorer with the define path on the settings.
+        /// List the audit logs.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("Folder")]
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<AuditLogModel>), StatusCodes.Status200OK)]
+        public IActionResult Get()
+        {
+            return Ok(_auditLogService.Get());
+        }
+
+        /// <summary>
+        /// Gets the audit logs by unique identifier.
+        /// </summary>
+        /// <param name="id">The audit logs identifier.</param>
+        /// <returns></returns>
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(AuditLog), StatusCodes.Status200OK)]
+        public IActionResult GetById([FromQuery] int id)
+        {
+            return Ok(_auditLogService.GetById(id));
+        }
+
+        /// <summary>
+        /// Gets the exported logs file in bytes.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("export")]
+        [ProducesResponseType(typeof(File), StatusCodes.Status200OK)]
+        public IActionResult ExportLogs()
+        {
+            return File(_auditLogService.ExportAuditLogs(), System.Net.Mime.MediaTypeNames.Application.Octet, 
+                $"logs_{DateTime.Now.Date}.xlsx");
+        }
+
+        /// <summary>
+        /// Opens folder based on the configuration.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("open-folder")]
         public IActionResult OpenFolder()
         {
             Process.Start("explorer.exe", _settingsService.GetById(1).AuditLogsFilePath);
+
             return Ok();
         }
+
+        #endregion Get
     }
 }

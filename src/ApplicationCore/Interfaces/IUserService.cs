@@ -10,13 +10,14 @@ namespace FAIS.ApplicationCore.Interfaces
 {
     public interface IUserService
     {
-        IQueryable<User> Get();
-        User GetById(decimal id);
-        User GetByUserName(string userName);
-        List<PermissionModel> GetPermissions(int id);
-        Task<User> LockedAccount(UserDTO userDTO);
-        Task<User> UpdateSignInAttempts(UserDTO userDTO);
-        Task<User> Add(UserDTO userDTO);
-        Task<LoginHistory> AddLoginHistory(decimal userId, string username, bool isFailed);
+        IReadOnlyCollection<UserModel> Get();
+        Task<User> GetById(int id);
+        Task<User> GetByUserName(string userName);
+        Task<List<PermissionModel>> GetPermissions(int id);
+        Task<User> Add(UserDTO userDto);
+        Task<LoginHistory> AddLoginHistory(int userId, string username, bool isFailed = false);
+        Task<User> LockAccount(int id);
+        Task<User> UpdateSignInAttempts(UserDTO userDto);
+        Task<User> SetTemporaryKey(int id);
     }
 }

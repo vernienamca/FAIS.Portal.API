@@ -1,9 +1,10 @@
 ﻿using FAIS.ApplicationCore.DTOs;
+using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Interfaces
 {
     public interface IEmailService
     {
-        void SendEmail(EmailDTO request, string tempKey);
+        bool SendEmail(string emailAddress, string subject, string content);
     }
 }

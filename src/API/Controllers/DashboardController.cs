@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace FAIS.API.Controllers
 {
-    [ApiController]
+    [Produces("application/json")]
     [Route("[controller]")]
-    [Authorize]
+    [ApiController]
+    //[Authorize]
     public class DashboardController : ControllerBase
     {
         /// <summary>

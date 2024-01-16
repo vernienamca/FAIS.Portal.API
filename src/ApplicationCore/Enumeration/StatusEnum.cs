@@ -1,11 +1,9 @@
 ﻿namespace FAIS.ApplicationCore.Enumeration
 {
-    public enum OverremittanceStatusEnum
+    public enum UserStatusEnum
     {
-        ForComputation = 1,
-        Computed = 2,
-        ForApproval = 3,
-        Approved = 4,
-        Rejected = 5
+        Active = 1,
+        Inactive = 2,
+        Locked = 3
     }
 }

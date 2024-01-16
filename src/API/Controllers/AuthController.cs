@@ -14,19 +14,21 @@ using System.Text;
 using System.Threading.Tasks;
 using static ApplicationCore.Enumeration.LoginEnum;
 using Microsoft.AspNetCore.Http;
+using FAIS.ApplicationCore.Enumeration;
 
 namespace FAIS.Controllers
 {
+    [Produces("application/json")]
+    [Route("[controller]")]
     [ApiController]
-    [Route("[controller]")] 
     public class AuthController : ControllerBase
     {
         #region Variables
 
         private readonly TokenKeys _tokenOptions;
-        private readonly ILogger<AuthController> _logger;
         private readonly ISettingsService _settingsService;
         private readonly IUserService _userService;
+        private readonly IAuditLogService _auditLogService;
 
         #endregion Variables
 
@@ -34,23 +36,27 @@ namespace FAIS.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthController"/> class.
+        /// <param name="tokenOptions">The token options.</param>
+        /// <param name="settingsService">The settings service.</param>
+        /// <param name="auditLogService">The audit log service.</param>
         /// </summary>
         public AuthController(IOptions<TokenKeys> tokenOptions
-          , ILogger<AuthController> logger
           , ISettingsService settingsService
-          , IUserService userService)
+          , IUserService userService
+          , IAuditLogService auditLogService)
         {
             _tokenOptions = tokenOptions.Value;
-            _logger = logger;
             _settingsService = settingsService;
             _userService = userService;
+            _auditLogService = auditLogService;
         }
 
         #endregion Constructor
 
+        #region Get
 
         /// <summary>
-        /// Authenticate the user attempting to gain access.
+        /// Authenticates the user login credential.
         /// </summary>
         /// <returns></returns>
         [HttpGet("authenticate")]
@@ -61,7 +67,7 @@ namespace FAIS.Controllers
             {
                 var userDto = new UserDTO();
 
-                var user = _userService.GetByUserName(username);
+                var user = await _userService.GetByUserName(username);
 
                 if (user == null)
                     return Ok("Invalid username or password combination. Please try again.");
@@ -76,15 +82,15 @@ namespace FAIS.Controllers
                 if (DateTime.Today >= user.DateExpired)
                     return Ok(new { errorDescription = "Your account has expired. Please contact your system administrator." });
 
-                if (user.StatusCode == (int)UserStatus.Inactive)
+                if (user.StatusCode == (int)UserStatusEnum.Inactive)
                     return Ok(new { errorDescription = "Your account is inactive. Please contact your system administrator." });
 
-                if (user.StatusCode == (int)UserStatus.Locked)
+                if (user.StatusCode == (int)UserStatusEnum.Locked)
                     return Ok(new { errorDescription = "Your account has been locked. Please contact your system administrator." });
 
                 if (user.SignInAttempts >= settings.MaxSignOnAttempts)
                 {
-                    await _userService.LockedAccount(userDto);
+                    await _userService.LockAccount(userDto.Id);
 
                     return Ok(new { errorDescription = "You've reached the maximum login limit. Your account has been locked." });
                 }
@@ -93,7 +99,7 @@ namespace FAIS.Controllers
                 {
                     await _userService.UpdateSignInAttempts(userDto);
 
-                    await _userService.AddLoginHistory(user.Id, username, true);
+                    await _userService.AddLoginHistory(userDto.Id, username, true);
 
                     return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
                 }
@@ -112,7 +118,16 @@ namespace FAIS.Controllers
 
                 await _userService.UpdateSignInAttempts(userDto);
 
-                await _userService.AddLoginHistory(user.Id, username, false);
+                await _userService.AddLoginHistory(userDto.Id, username);
+
+                await _auditLogService.Add(new AuditLogDTO()
+                {
+                    ModuleSeq = 18,
+                    Activity = "Login to the system",
+                    IpAddress = GeoLocationHelpers.GetClientIpAddress(),
+                    CreatedBy = userDto.Id,
+                    CreatedAt = DateTime.Now
+                });
 
                 return Ok(new { userId = user.Id, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
             }
@@ -122,10 +137,6 @@ namespace FAIS.Controllers
             }
         }
 
-        [HttpGet("test")]
-        public string Test()
-        {
-            return "This is a test response.";
-        }
+        #endregion Get
     }
 }
