@@ -10,12 +10,12 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface INotificationService
     {
         #region STRING_INTERPOLATION
-        Task<List<StringInterpolationModel>> GetStringInterpolations();
+        IReadOnlyCollection<StringInterpolationModel> GetStringInterpolations();
         Task<StringInterpolation> GetStringInterpolationById(int id);
         #endregion
 
         #region TEMPLATES
-        Task<List<TemplateModel>> GetTemplates();
+        IReadOnlyCollection<TemplateModel> GetTemplates();
         Task<Template> GetTemplateById(int id);
         #endregion
 

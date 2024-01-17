@@ -16,7 +16,7 @@ namespace FAIS.Infrastructure.Data
         }
 
         #region STRING_INTERPOLATION
-        public async Task<List<StringInterpolationModel>> GetStringInterpolation()
+        public IReadOnlyCollection<StringInterpolationModel> GetStringInterpolation()
         {
             var stringInterpolation = (from interpolation in _dbContext.StringInterpolations.AsNoTracking()
                                        join usrC in _dbContext.Users.AsNoTracking() on interpolation.CreatedBy equals usrC.Id
@@ -34,9 +34,9 @@ namespace FAIS.Infrastructure.Data
                                            CreatedAt = interpolation.CreatedAt,
                                            UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                            UpdatedAt = interpolation.UpdatedAt
-                                       }).ToListAsync();
+                                       }).ToList();
 
-            return await stringInterpolation;
+            return stringInterpolation;
         }
 
         public async Task<StringInterpolation> GetStringInterpolationById(int id)
@@ -57,7 +57,7 @@ namespace FAIS.Infrastructure.Data
 
         #region TEMPLATES
 
-        public async Task<List<TemplateModel>> GetTemplates()
+        public IReadOnlyCollection<TemplateModel> GetTemplates()
         {
             var templates = (from template in _dbContext.Templates.AsNoTracking()
                                        join usrC in _dbContext.Users.AsNoTracking() on template.CreatedBy equals usrC.Id
@@ -76,9 +76,9 @@ namespace FAIS.Infrastructure.Data
                                            CreatedAt = template.CreatedAt,
                                            UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                            UpdatedAt =  template.UpdatedAt
-                                       }).ToListAsync();
+                                       }).ToList();
 
-            return await templates;
+            return templates;
         }
 
         public async Task<Template> GetTemplateById(int id)

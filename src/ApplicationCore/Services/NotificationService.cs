@@ -23,11 +23,9 @@ namespace FAIS.ApplicationCore.Services
         }
 
         #region STRING_INTERPOLATION
-        public async Task<List<StringInterpolationModel>> GetStringInterpolations()
+        public IReadOnlyCollection<StringInterpolationModel> GetStringInterpolations()
         {
-            
-
-            return await _repository.GetStringInterpolation();
+            return _repository.GetStringInterpolation();
         }
 
         public async Task<StringInterpolation> GetStringInterpolationById(int id)
@@ -38,9 +36,9 @@ namespace FAIS.ApplicationCore.Services
         #endregion
 
         #region TEMPLATES
-        public async Task<List<TemplateModel>> GetTemplates()
+        public IReadOnlyCollection<TemplateModel> GetTemplates()
         {
-            return await _repository.GetTemplates();
+            return _repository.GetTemplates();
         }
 
         public async Task<Template> GetTemplateById(int id)
