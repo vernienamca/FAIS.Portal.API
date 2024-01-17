@@ -19,25 +19,24 @@ namespace FAIS.API.Controllers
         #region Variables
 
         private readonly INotificationService _notificationService;
-        private readonly IUserService _userService;
 
         #endregion Variables
 
         #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationController"/> class.
         /// </summary>
-        public NotificationController(INotificationService notificationService, IUserService userService)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationController"/> class.
+        /// <param name="notificationService">The notification service.</param>
+        /// </summary>
+        public NotificationController(INotificationService notificationService)
         {
             _notificationService = notificationService;
-            _userService = userService;
         }
-
         #endregion Constructor
 
-
-        #region STRING_INTERPOLATION
+        #region String Interpolation
         /// <summary>
         /// Get String Interpolation List
         /// </summary>
@@ -50,8 +49,7 @@ namespace FAIS.API.Controllers
         }
         #endregion
 
-
-        #region TEMPLATES
+        #region Templates
         /// <summary>
         /// Get templates List
         /// </summary>
@@ -61,8 +59,7 @@ namespace FAIS.API.Controllers
         public IActionResult GetTemplates()
         {
             return Ok(_notificationService.GetTemplates());
-        }            
-
+        }           
         #endregion
 
     }

@@ -14,81 +14,66 @@ namespace FAIS.Infrastructure.Data
         public NotifcationRepository(FAISContext context) : base(context)
         {
         }
-
-        #region STRING_INTERPOLATION
         public IReadOnlyCollection<StringInterpolationModel> GetStringInterpolation()
         {
-            var stringInterpolation = (from interpolation in _dbContext.StringInterpolations.AsNoTracking()
-                                       join usrC in _dbContext.Users.AsNoTracking() on interpolation.CreatedBy equals usrC.Id
-                                       join usrU in _dbContext.Users.AsNoTracking() on interpolation.UpdatedBy equals usrU.Id into usrUX
+            var stringInterpolation = (from str in _dbContext.StringInterpolations.AsNoTracking()
+                                       join usrC in _dbContext.Users.AsNoTracking() on str.CreatedBy equals usrC.Id
+                                       join usrU in _dbContext.Users.AsNoTracking() on str.UpdatedBy equals usrU.Id into usrUX
                                        from usrU in usrUX.DefaultIfEmpty()
                                        select new StringInterpolationModel()
                                        {
-                                           Id = interpolation.Id,
-                                           TransactionCode = interpolation.TransactionCode,
-                                           TransactionDescription = interpolation.TransactionDescription,
-                                           IsActive = interpolation.IsActive,
-                                           StatusDate = interpolation.StatusDate,
-                                           NotificationType = interpolation.NotificationType,
+                                           Id = str.Id,
+                                           TransactionCode = str.TransactionCode,
+                                           TransactionDescription = str.TransactionDescription,
+                                           IsActive = str.IsActive,
+                                           StatusDate = str.StatusDate,
+                                           NotificationType = str.NotificationType,
                                            CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
-                                           CreatedAt = interpolation.CreatedAt,
+                                           CreatedAt = str.CreatedAt,
                                            UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                                           UpdatedAt = interpolation.UpdatedAt
+                                           UpdatedAt = str.UpdatedAt
                                        }).ToList();
 
             return stringInterpolation;
         }
+        public IReadOnlyCollection<TemplateModel> GetTemplates()
+        {
+            var templates = (from temp in _dbContext.Templates.AsNoTracking()
+                             join usrC in _dbContext.Users.AsNoTracking() on temp.CreatedBy equals usrC.Id
+                             join usrU in _dbContext.Users.AsNoTracking() on temp.UpdatedBy equals usrU.Id into usrUX
+                             from usrU in usrUX.DefaultIfEmpty()
+                             select new TemplateModel()
+                             {
+                                 Id = temp.Id,
+                                 Subject = temp.Subject,
+                                 Content = temp.Content,
+                                 Receiver = temp.Receiver,
+                                 NotificationType = temp.NotificationType,
+                                 IsActive = temp.IsActive,
+                                 StatusDate = temp.StatusDate,
+                                 CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
+                                 CreatedAt = temp.CreatedAt,
+                                 UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                                 UpdatedAt = temp.UpdatedAt
+                             }).ToList();
 
+            return templates;
+        }
         public async Task<StringInterpolation> GetStringInterpolationById(int id)
         {
             return await _dbContext.StringInterpolations.FirstOrDefaultAsync(o => o.Id == id);
+        }
+        public async Task<Template> GetTemplateById(int id)
+        {
+            return await _dbContext.Templates.FirstOrDefaultAsync(o => o.Id == id);
         }
         public async Task<StringInterpolation> AddStringInterpolation(StringInterpolation stringInterpolation)
         {
             return await AddAsync(stringInterpolation);
         }
-
         public async Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation stringInterpolation)
         {
             return await UpdateAsync(stringInterpolation);
         }
-
-        #endregion
-
-        #region TEMPLATES
-
-        public IReadOnlyCollection<TemplateModel> GetTemplates()
-        {
-            var templates = (from template in _dbContext.Templates.AsNoTracking()
-                                       join usrC in _dbContext.Users.AsNoTracking() on template.CreatedBy equals usrC.Id
-                                       join usrU in _dbContext.Users.AsNoTracking() on template.UpdatedBy equals usrU.Id into usrUX
-                                       from usrU in usrUX.DefaultIfEmpty()
-                                       select new TemplateModel()
-                                       {
-                                           Id = template.Id,
-                                           Subject = template.Subject,
-                                           Content = template.Content,
-                                           Receiver = template.Receiver,
-                                           NotificationType = template.NotificationType,
-                                           IsActive = template.IsActive,
-                                           StatusDate = template.StatusDate,
-                                           CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
-                                           CreatedAt = template.CreatedAt,
-                                           UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                                           UpdatedAt =  template.UpdatedAt
-                                       }).ToList();
-
-            return templates;
-        }
-
-        public async Task<Template> GetTemplateById(int id)
-        {
-            return await _dbContext.Templates.FirstOrDefaultAsync(o => o.Id == id);
-        }
-
-        #endregion
-
-
     }
-
 }
