@@ -11,6 +11,7 @@ namespace FAIS.ApplicationCore.Interfaces
         IReadOnlyCollection<UserModel> Get();
         Task<User> GetById(int id);
         Task<User> GetByUserName(string userName);
+        Task<User> GetByEmailAddress(string emailAddress);
         Task<List<PermissionModel>> GetPermissions(int id);
         Task<User> Add(User test);
         Task<User> Update(User test);

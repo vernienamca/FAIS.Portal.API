@@ -13,11 +13,12 @@ namespace FAIS.ApplicationCore.Interfaces
         IReadOnlyCollection<UserModel> Get();
         Task<User> GetById(int id);
         Task<User> GetByUserName(string userName);
+        Task<User> GetByEmailAddress(string emailAddress);
         Task<List<PermissionModel>> GetPermissions(int id);
         Task<User> Add(UserDTO userDto);
         Task<LoginHistory> AddLoginHistory(int userId, string username, bool isFailed = false);
         Task<User> LockAccount(int id);
         Task<User> UpdateSignInAttempts(UserDTO userDto);
-        Task<User> SetTemporaryKey(int id);
+        Task<string> SetTemporaryKey(int id);
     }
 }

@@ -25,6 +25,7 @@ namespace FAIS.Infrastructure.Data
                          join usrC in _dbContext.Users.AsNoTracking() on mod.CreatedBy equals usrC.Id
                          join usrU in _dbContext.Users.AsNoTracking() on mod.UpdatedBy equals usrU.Id into usrUX
                          from usrU in usrUX.DefaultIfEmpty()
+                         orderby mod.Id descending
                          select new ModuleModel()
                          {
                              Id = mod.Id,
@@ -39,7 +40,7 @@ namespace FAIS.Infrastructure.Data
                              CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
                              CreatedAt = mod.CreatedAt,
                              UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                             UpdatedAt = mod.UpdatedAt
+                             UpdatedAt = mod.UpdatedBy != null ? mod.UpdatedAt : null,
                          }).ToList();
 
             return modules;

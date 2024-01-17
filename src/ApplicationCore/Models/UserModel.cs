@@ -12,7 +12,7 @@ namespace FAIS.ApplicationCore.Models
         public string Division { get; set; }
         public IReadOnlyCollection<string> TAFGs { get; set; }
         public string OUFG { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public string Photo { get; set; }
     }
 }

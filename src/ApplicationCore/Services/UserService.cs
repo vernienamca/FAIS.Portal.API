@@ -41,6 +41,11 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.GetByUserName(userName);
         }
 
+        public async Task<User> GetByEmailAddress(string emailAddress)
+        {
+            return await _userRepository.GetByEmailAddress(emailAddress);
+        }
+
         public async Task<List<PermissionModel>> GetPermissions(int id)
         {
             return await _userRepository.GetPermissions(id);
@@ -114,13 +119,15 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.Update(user);
         }
 
-        public async Task<User> SetTemporaryKey(int id)
+        public async Task<string> SetTemporaryKey(int id)
         {
             var user = await _userRepository.GetById(id);
 
             user.TempKey = $"{Guid.NewGuid()}-{DateTime.Now.Date.ToString().Split(' ')[0].Replace("/", string.Empty)}";
 
-            return await _userRepository.Update(user);
+            await _userRepository.Update(user);
+
+            return user.TempKey;
         }
     }
 }

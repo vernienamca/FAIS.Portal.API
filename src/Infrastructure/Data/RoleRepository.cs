@@ -20,6 +20,7 @@ namespace FAIS.Infrastructure.Data
                         join usrC in _dbContext.Users.AsNoTracking() on rol.CreatedBy equals usrC.Id
                         join usrU in _dbContext.Users.AsNoTracking() on rol.UpdatedBy equals usrU.Id into usrUX
                         from usrU in usrUX.DefaultIfEmpty()
+                        orderby rol.Id descending
                         select new RoleModel()
                         {
                             Id = rol.Id,
@@ -30,7 +31,7 @@ namespace FAIS.Infrastructure.Data
                             CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
                             CreatedAt = rol.CreatedAt,
                             UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                            UpdatedAt = rol.UpdatedAt
+                            UpdatedAt = rol.UpdatedBy != null ? rol.UpdatedAt : null,
                         }).ToList();
 
             return roles;

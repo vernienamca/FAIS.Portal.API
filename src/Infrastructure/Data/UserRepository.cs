@@ -22,6 +22,7 @@ namespace FAIS.Infrastructure.Data
                          from pst in pstX.DefaultIfEmpty()
                          join div in _dbContext.LibraryTypes.Where(x => x.Code == "DIV").AsNoTracking() on usr.DivisionId equals div.Id
                          join ofg in _dbContext.LibraryTypes.Where(t => t.Code == "OUFG").AsNoTracking() on usr.OupFgId equals ofg.Id
+                         orderby usr.Id descending
                          select new UserModel()
                          {
                             Id = usr.Id,
@@ -33,7 +34,7 @@ namespace FAIS.Infrastructure.Data
                             TAFGs = _dbContext.UserTAFGs.Where(x => x.UserId == usr.Id).AsNoTracking().Join(_dbContext.LibraryTypes.AsNoTracking(), fgs => fgs.TAFGId, lib => lib.Id,
                                 (fgs, lib) => new { fgs, lib }).Select(t => t.lib.Name).ToList(),
                             OUFG = ofg.Name,
-                            Status = StatusHelpers.GetUserStatus(usr.StatusCode)
+                            Status = usr.StatusCode
                          }).ToList();
 
             return users;
@@ -42,6 +43,11 @@ namespace FAIS.Infrastructure.Data
         public async Task<User> GetByUserName(string userName)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(t => t.UserName == userName);
+        }
+
+        public async Task<User> GetByEmailAddress(string emailAddress)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(t => t.EmailAddress == emailAddress);
         }
 
         public async Task<User> GetById(int id)
