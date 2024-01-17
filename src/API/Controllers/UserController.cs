@@ -107,10 +107,11 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        [HttpPost("forgot-password/{userId:int}")]
-        public async Task<IActionResult> ForgotPassword(int userId)
+        [HttpPost("forgot-password/{emailAddress}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(string emailAddress)
         {
-            var user = await _userService.GetById(userId);
+            var user = await _userService.GetByEmailAddress(emailAddress);
 
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
@@ -127,11 +128,11 @@ namespace FAIS.API.Controllers
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
 
-            await _userService.SetTemporaryKey(1);
+            string tempKey = await _userService.SetTemporaryKey(user.Id);
 
             content = content.Replace("${firstname}", user.FirstName);
             content = content.Replace("${supportemail}", settings.EmailAddress);
-            content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/dsd");
+            content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/${tempKey}");
             content = content.Replace("${baseurl}", $"{settings.BaseUrl}");
 
             if (_emailService.SendEmail(user.EmailAddress, "Forgot Password", content))
