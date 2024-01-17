@@ -5,12 +5,15 @@ using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FAIS.API.Controllers
 {
+    [Produces("application/json")]
+    [Route("[controller]")]
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class NotificationController : ControllerBase
     {
         #region Variables
