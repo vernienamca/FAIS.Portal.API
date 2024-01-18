@@ -13,6 +13,7 @@ using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace FAIS
 {
@@ -69,6 +70,7 @@ namespace FAIS
             services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
             services.AddScoped(typeof(ILibraryTypeRepository), typeof(LibraryTypeRepository));
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
+            services.AddScoped(typeof(INotificationRepository), typeof(NotificationRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
@@ -78,6 +80,7 @@ namespace FAIS
             services.AddScoped(typeof(ILibraryTypeService), typeof(LibraryTypeService));
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped(typeof(INotificationService), typeof(NotificationService));
 
             services.AddSwaggerGen(c =>
             {
