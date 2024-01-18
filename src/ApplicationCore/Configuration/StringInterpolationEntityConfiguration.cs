@@ -25,7 +25,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(250)
                 .HasColumnName("TRANSACTION_CODE");
 
-            builder.Property(e => e.TransactionDescription)
+            builder.Property(e => e.Description)
                 .HasMaxLength(250)
                 .HasColumnName("TRANSACTION_DESCRIPTION");
 

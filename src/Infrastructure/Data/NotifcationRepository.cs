@@ -24,7 +24,7 @@ namespace FAIS.Infrastructure.Data
                                        {
                                            Id = str.Id,
                                            TransactionCode = str.TransactionCode,
-                                           TransactionDescription = str.TransactionDescription,
+                                           Description = str.Description,
                                            IsActive = str.IsActive,
                                            StatusDate = str.StatusDate,
                                            NotificationType = str.NotificationType,

@@ -38,9 +38,8 @@ namespace FAIS.API.Controllers
 
         #region String Interpolation
         /// <summary>
-        /// Get String Interpolation List
+        /// List the string interpolations
         /// </summary>
-        /// <returns>String Interpolation list</returns>
         [HttpGet("interpolations")]
         [ProducesResponseType(typeof(IReadOnlyCollection<StringInterpolationModel>), StatusCodes.Status200OK)]
         public IActionResult GetStringInterpolations()
@@ -55,7 +54,7 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <returns>Template list</returns>
         [HttpGet("templates")]
-        [ProducesResponseType(typeof(List<TemplateModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<NotificationTemplateModel>), StatusCodes.Status200OK)]
         public IActionResult GetNotificationTemplates()
         {
             return Ok(_notificationService.GetNotificationTemplates());

@@ -3,7 +3,7 @@ using System;
 
 namespace FAIS.Portal.API.Models
 {
-    public class TemplateModel
+    public class NotificationTemplateModel
     {
         public int Id { get; set; }
         public string Subject { get; set; }

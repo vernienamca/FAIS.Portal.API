@@ -12,7 +12,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public string TransactionCode { get; set; }
         [DataMember]
-        public string TransactionDescription { get; set; }
+        public string Description { get; set; }
         [DataMember]
         public char IsActive { get; set; }
         [DataMember]
