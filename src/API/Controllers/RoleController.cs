@@ -10,7 +10,7 @@ namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class RoleController : ControllerBase
     {
         #region Variables
@@ -56,6 +56,18 @@ namespace FAIS.API.Controllers
         public IActionResult GetById(int id)
         {
             return Ok(_roleService.GetById(id));
+        }
+
+        /// <summary>
+        /// Get UserRoles by Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("[action]")]
+        public IActionResult GetUserRoles(int userId)
+        {
+            var userRoles = _roleService.GetUserRolesById(userId);
+            return Ok(userRoles);
         }
 
         #endregion Get

@@ -2,6 +2,7 @@
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,8 +18,10 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<List<PermissionModel>> GetPermissions(int id);
         Task<User> Add(UserDTO userDto);
         Task<LoginHistory> AddLoginHistory(int userId, string username, bool isFailed = false);
+        Task<DateTime?> GetLastLoginDate(int userId);
         Task<User> LockAccount(int id);
         Task<User> UpdateSignInAttempts(UserDTO userDto);
         Task<string> SetTemporaryKey(int id);
+        Task<User> Edit(int id, UserDTO userDTO);
     }
 }

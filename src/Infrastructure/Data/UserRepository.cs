@@ -88,5 +88,9 @@ namespace FAIS.Infrastructure.Data
         {
             return await UpdateAsync(test);
         }
+        public async Task<User> Edit(int id, User user)
+        {
+            return await UpdateAsync(user);
+        }
     }
 }

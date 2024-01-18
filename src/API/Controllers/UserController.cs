@@ -14,7 +14,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -71,14 +71,24 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
-
+           
             var user = new UserModel()
             {
                 Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Position = _libraryTypeService.GetById(entity.PositionId).Name,
-                Photo = entity.Photo
+                Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : null,
+                TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
+                OUFG = _libraryTypeService.GetLibraryCodesById(entity.Id, "OUFG")[0],
+                EmployeeNumber = entity.EmployeeNumber,
+                DateExpired = entity.DateExpired,
+                StatusDate = entity.StatusDate,
+                UserName = entity.UserName,
+                MobileNumber = entity.MobileNumber,
+                Status = entity.StatusCode,
+                EmailAddress = entity.EmailAddress,
+                Photo = entity.Photo,
             };
 
             return Ok(user);
@@ -97,6 +107,14 @@ namespace FAIS.API.Controllers
 
             return Ok(permissions);
         }
+        
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetLastLoginDate(int userId)
+        {
+            var lastLoginDate = await _userService.GetLastLoginDate(userId);
+            return Ok(lastLoginDate.Value);
+        }
+
 
         #endregion Get
 
@@ -153,5 +171,24 @@ namespace FAIS.API.Controllers
         }
 
         #endregion Post
+
+        #region Put
+        /// <summary>
+        /// Updates the user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userDTO"></param>
+        /// <returns></returns>
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO userDTO)
+        {
+            if (id <= 0 || userDTO == null)
+            {
+                return BadRequest("Invalid input");
+            }
+            var updatedUser = await _userService.Edit(id, userDTO);
+            return Ok(updatedUser);
+        }
+        #endregion Put
     }
 }

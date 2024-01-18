@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using DocumentFormat.OpenXml.Vml.Office;
+using FAIS.ApplicationCore.Entities.Structure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -27,12 +28,12 @@ namespace FAIS.ApplicationCore.Configuration
             builder.Property(e => e.Code)
                 .IsRequired(false)
                 .HasColumnName("LIB_TYPE_OPT_CODE")
-                .HasMaxLength(10);
+            .HasMaxLength(10);
 
             builder.Property(e => e.Description)
-                .IsRequired()
-                .HasColumnName("LIB_TYPE_CODE")
-                .HasMaxLength(250);
+                  .HasMaxLength(200)
+                  .IsRequired(true)
+                  .HasColumnName("LIB_TYPE_OPT_DESC");
 
             builder.Property(e => e.Remarks)
                 .IsRequired(false)
