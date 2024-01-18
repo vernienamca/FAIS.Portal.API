@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
-    public class NotifcationRepository : EFRepository<StringInterpolation, int>, INotificationRepository
+    public class NotificationRepository : EFRepository<StringInterpolation, int>, INotificationRepository
     {
-        public NotifcationRepository(FAISContext context) : base(context)
+        public NotificationRepository(FAISContext context) : base(context)
         {
         }
         public IReadOnlyCollection<StringInterpolationModel> GetStringInterpolation()
@@ -36,7 +36,7 @@ namespace FAIS.Infrastructure.Data
 
             return stringInterpolation;
         }
-        public IReadOnlyCollection<TemplateModel> GetTemplates()
+        public IReadOnlyCollection<TemplateModel> GetNotificationTemplates()
         {
             var templates = (from temp in _dbContext.Templates.AsNoTracking()
                              join usrC in _dbContext.Users.AsNoTracking() on temp.CreatedBy equals usrC.Id

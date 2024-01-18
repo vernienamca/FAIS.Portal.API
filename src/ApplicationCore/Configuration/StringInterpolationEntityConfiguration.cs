@@ -13,16 +13,17 @@ namespace FAIS.ApplicationCore.Configuration
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            builder.ToTable("STRING_INTERPOLATION");
+            builder.ToTable("STRING_INTERPOLATION", "FAIS");
+
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnType("NUMBER(38)")
+                .IsRequired()
                 .HasColumnName("STRING_INTERPOLATION_SEQ");
 
             builder.Property(e => e.TransactionCode)
                 .HasMaxLength(250)
-            .HasColumnName("TRANSACTION_CODE");
+                .HasColumnName("TRANSACTION_CODE");
 
             builder.Property(e => e.TransactionDescription)
                 .HasMaxLength(250)
@@ -30,11 +31,11 @@ namespace FAIS.ApplicationCore.Configuration
 
             builder.Property(e => e.IsActive)
                 .HasMaxLength(1)
-            .HasColumnName("IS_ACTIVE");
+                .HasColumnName("IS_ACTIVE");
 
             builder.Property(e => e.StatusDate)
                 .HasColumnName("STATUS_DATE")
-            .HasColumnType("datetime");
+                .HasColumnType("datetime");
 
             builder.Property(e => e.NotificationType)
                 .HasMaxLength(50)

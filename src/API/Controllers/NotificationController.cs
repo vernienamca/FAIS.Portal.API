@@ -51,14 +51,14 @@ namespace FAIS.API.Controllers
 
         #region Templates
         /// <summary>
-        /// Get templates List
+        /// List the notification templates
         /// </summary>
         /// <returns>Template list</returns>
         [HttpGet("templates")]
         [ProducesResponseType(typeof(List<TemplateModel>), StatusCodes.Status200OK)]
-        public IActionResult GetTemplates()
+        public IActionResult GetNotificationTemplates()
         {
-            return Ok(_notificationService.GetTemplates());
+            return Ok(_notificationService.GetNotificationTemplates());
         }           
         #endregion
 

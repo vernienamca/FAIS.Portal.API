@@ -11,7 +11,7 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IReadOnlyCollection<StringInterpolationModel> GetStringInterpolations();
         Task<StringInterpolation> GetStringInterpolationById(int id);
-        IReadOnlyCollection<TemplateModel> GetTemplates();
+        IReadOnlyCollection<TemplateModel> GetNotificationTemplates();
         Task<Template> GetTemplateById(int id);
     }
 }

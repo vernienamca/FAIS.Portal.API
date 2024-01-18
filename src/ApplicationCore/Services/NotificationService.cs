@@ -28,9 +28,9 @@ namespace FAIS.ApplicationCore.Services
         {
             return await _repository.GetStringInterpolationById(id);
         }
-        public IReadOnlyCollection<TemplateModel> GetTemplates()
+        public IReadOnlyCollection<TemplateModel> GetNotificationTemplates()
         {
-            return _repository.GetTemplates();
+            return _repository.GetNotificationTemplates();
         }
         public async Task<Template> GetTemplateById(int id)
         {

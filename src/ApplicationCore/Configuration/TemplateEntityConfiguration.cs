@@ -13,12 +13,12 @@ namespace FAIS.ApplicationCore.Configuration
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
+            builder.ToTable("TEMPLATES", "FAIS");
 
-            builder.ToTable("TEMPLATES");
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnType("NUMBER(38)")
+                .IsRequired()
                 .HasColumnName("TEMPLATE_SEQ");
 
             builder.Property(e => e.Subject)
