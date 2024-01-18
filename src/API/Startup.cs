@@ -70,6 +70,7 @@ namespace FAIS
             services.AddScoped(typeof(ILibraryTypeRepository), typeof(LibraryTypeRepository));
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+            services.AddScoped(typeof(IRolePermissionRepository), typeof(RolePermissionRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
@@ -78,6 +79,7 @@ namespace FAIS
             services.AddScoped(typeof(ILibraryTypeService), typeof(LibraryTypeService));
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped(typeof(IRolePermissionService), typeof(RolePermissionService));
 
             services.AddSwaggerGen(c =>
             {

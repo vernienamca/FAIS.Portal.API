@@ -73,5 +73,16 @@ namespace FAIS.Infrastructure.Data
         {
             return await _dbContext.Set<EntityType>().FindAsync(id);
         }
+
+        public async Task DeleteListAsync(List<EntityType> entity)
+        {
+            try
+            {
+                _dbContext.Set<EntityType>().RemoveRange(entity);
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex) { throw ex; }
+        }
     }
 }

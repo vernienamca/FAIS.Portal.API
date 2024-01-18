@@ -1,6 +1,5 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using System;
@@ -30,7 +29,7 @@ namespace FAIS.ApplicationCore.Services
             return _repository.GetById(id);
         }
 
-        public async Task<Role> Add(RoleDTO roleDto)
+        public async Task<Role> Add(RoleRequestModelDTO roleDto)
         {
             try
             {
@@ -38,9 +37,9 @@ namespace FAIS.ApplicationCore.Services
                 {
                     Name = roleDto.Name,
                     Description = roleDto.Description,
-                    IsActive = roleDto.IsActive,
+                    IsActive = roleDto.IsActive ? 'Y' : 'N',
                     StatusDate = DateTime.Now,
-                    CreatedBy = roleDto.CreatedBy,
+                    CreatedBy = roleDto.CreatedById,
                     CreatedAt = DateTime.Now
                 };
 
