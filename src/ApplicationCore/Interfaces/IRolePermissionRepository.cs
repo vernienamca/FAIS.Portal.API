@@ -14,6 +14,6 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<RolePermission> AddRolePermission(RolePermission rolePermission);
         Task DeleteRolePermissionAsync(RolePermission rolePermission);
         Task DeleteRolePermissionListAsync(List<RolePermission> rolePermissions);
-        Task<List<RolePermission>> GetRolePermissionByRoleId(int roleId);
+        List<RolePermission> GetRolePermissionByRoleId(int roleId);
     }
 }

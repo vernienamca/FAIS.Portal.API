@@ -46,7 +46,7 @@ namespace FAIS.ApplicationCore.Services
 
             foreach (var role in  _roleService.Get())
             {
-                var getRolePermission = await _rolePermissionRepository.GetRolePermissionByRoleId((int)role.Id);
+                var getRolePermission = _rolePermissionRepository.GetRolePermissionByRoleId((int)role.Id);
 
 
                 var entity = new RoleResponseModelDTO()
@@ -112,7 +112,7 @@ namespace FAIS.ApplicationCore.Services
                     roleitem.UpdatedBy = role.UpdatedBy;
                     roleitem.UpdatedAt = role.UpdatedAt;
                 }
-                foreach (var permission in await _rolePermissionRepository.GetRolePermissionByRoleId(role.Id))
+                foreach (var permission in _rolePermissionRepository.GetRolePermissionByRoleId(role.Id))
                 {
                     var getModule = _moduleRepository.GetById((int)permission.ModuleId);
                     permissions.Add(new RolePermissionResponseModelDTO()
@@ -135,51 +135,51 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<RoleResponseModelDTO> GetRolePermissionById(int id)
         {
-            var permissions = new List<RolePermissionResponseModelDTO>();
-            var getRoleById = _roleService.GetById(id);
-            var createdBy = _userService.GetById(getRoleById.CreatedBy);
-            var modifiedBy = _userService.GetById(getRoleById.UpdatedBy.Value);
-            var getRolePermission = await _rolePermissionRepository.GetRolePermissionByRoleId((int)id);
+                var permissions = new List<RolePermissionResponseModelDTO>();
+                var getRoleById = _roleService.GetById(id);
+                var createdBy = _userService.GetById(getRoleById.CreatedBy);
+                var modifiedBy = _userService.GetById(getRoleById.UpdatedBy.Value);
+                var getRolePermission = _rolePermissionRepository.GetRolePermissionByRoleId((int)id);
 
-            var entity = new RoleResponseModelDTO()
-            {
-                Id = (int)getRoleById.Id,
-                Name = getRoleById.Name,
-                Description = getRoleById.Description,
-                IsActive = getRoleById.IsActive == 'Y',
-                StatusDate = getRoleById.StatusDate,
-                CreatedBy = string.Format("{0} {1}", createdBy.Result.FirstName, createdBy.Result.LastName),
-                CreatedAt = getRoleById.CreatedAt,
-            };
-
-            if (modifiedBy != null)
-            {
-                entity.UpdatedBy = string.Format("{0} {1}", modifiedBy.Result.FirstName, modifiedBy.Result.LastName);
-                entity.UpdatedAt = getRoleById.UpdatedAt;
-            }
-
-            if (getRolePermission.Count > 0)
-            {
-                foreach (var permission in getRolePermission)
+                var entity = new RoleResponseModelDTO()
                 {
-                    var getModule = _moduleRepository.GetById((int)permission.ModuleId);
-                    permissions.Add(new RolePermissionResponseModelDTO()
-                    {
-                        Id = (int)permission.Id,
-                        ModuleId = (int)permission.ModuleId,
-                        RoleId = (int)permission.RoleId,
-                        ModuleName = getModule.Name,
-                        IsRead = permission.IsRead == 'Y' ? true : false,
-                        IsCreate = permission.IsCreate == 'Y' ? true : false,
-                        IsUpdate = permission.IsUpdate == 'Y' ? true : false,
-                        DateRemoved = permission.DateRemoved
-                    });
-                }
-            }
-            entity.rolePermissionModels = permissions;
-            return entity;
-        }
+                    Id = (int)getRoleById.Id,
+                    Name = getRoleById.Name,
+                    Description = getRoleById.Description,
+                    IsActive = getRoleById.IsActive == 'Y',
+                    StatusDate = getRoleById.StatusDate,
+                    CreatedBy = string.Format("{0} {1}", createdBy.Result.FirstName, createdBy.Result.LastName),
+                    CreatedAt = getRoleById.CreatedAt,
+                };
 
+                if (modifiedBy != null)
+                {
+                    entity.UpdatedBy = string.Format("{0} {1}", modifiedBy.Result.FirstName, modifiedBy.Result.LastName);
+                    entity.UpdatedAt = getRoleById.UpdatedAt;
+                }
+
+                if (getRolePermission.Count > 0)
+                {
+                    foreach (var permission in getRolePermission)
+                    {
+                        var getModule = _moduleRepository.GetById((int)permission.ModuleId);
+                        permissions.Add(new RolePermissionResponseModelDTO()
+                        {
+                            Id = (int)permission.Id,
+                            ModuleId = (int)permission.ModuleId,
+                            RoleId = (int)permission.RoleId,
+                            ModuleName = getModule.Name,
+                            IsRead = permission.IsRead == 'Y' ? true : false,
+                            IsCreate = permission.IsCreate == 'Y' ? true : false,
+                            IsUpdate = permission.IsUpdate == 'Y' ? true : false,
+                            DateRemoved = permission.DateRemoved
+                        });
+                    }
+                }
+                entity.rolePermissionModels = permissions;
+                return entity;
+            }
+        
         public async Task DeletePermission(int id)
         {
             var rolePermission = _rolePermissionRepository.GetById(id);
@@ -196,9 +196,9 @@ namespace FAIS.ApplicationCore.Services
             await _roleRepository.Update(roleItem);
 
             var getRoles = _rolePermissionRepository.GetRolePermissionByRoleId(roleModelDTO.Id);
-            if (getRoles.Result.Count > 0)
+            if (getRoles.Count > 0)
             {
-                await _rolePermissionRepository.DeleteRolePermissionListAsync(getRoles.Result);
+                await _rolePermissionRepository.DeleteRolePermissionListAsync(getRoles);
             }
 
             if (roleModelDTO.rolePermissionModels.Count > 0)

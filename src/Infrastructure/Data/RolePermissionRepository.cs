@@ -1,5 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -34,9 +35,13 @@ namespace FAIS.Infrastructure.Data
             return await UpdateAsync(rolePermission);
         }
 
-        public async Task<List<RolePermission>> GetRolePermissionByRoleId(int roleId)
+        public List<RolePermission> GetRolePermissionByRoleId(int roleId)
         {
-            return await _dbContext.RolePermissions.Where(t => t.RoleId == roleId).ToListAsync();
+            var rolePermissionsQuery = _dbContext.RolePermissions
+                .Where(t => t.RoleId == roleId)
+                .AsEnumerable();
+
+            return rolePermissionsQuery.ToList();
         }
 
         public async Task<RolePermission> AddRolePermission(RolePermission rolePermission)
