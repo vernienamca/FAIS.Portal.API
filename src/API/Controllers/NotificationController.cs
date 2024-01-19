@@ -12,6 +12,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
     [Authorize]
     public class NotificationController : ControllerBase
     {
