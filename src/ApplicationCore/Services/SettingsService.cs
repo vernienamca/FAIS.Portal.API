@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using System;
 using System.Linq;
@@ -33,5 +34,21 @@ namespace FAIS.ApplicationCore.Services
 
             return await _repository.Update(settings);
         }
+
+        public async Task<Settings> UpdateSmtpById(UpdateSmtpRequestDTO updateSmtpRequestDTO)
+        {
+            var settings = _repository.GetById(updateSmtpRequestDTO.Id);
+            settings.SMTPPort = updateSmtpRequestDTO.SMTPPort;
+            settings.SMTPDisplayName = updateSmtpRequestDTO.SMTPDisplayName;
+            settings.SMTPPassword = updateSmtpRequestDTO.SMTPPassword;
+            settings.SMTPFromEmail = updateSmtpRequestDTO.SMTPFromEmail;
+            settings.SMTPEnableSSL = updateSmtpRequestDTO.SMTPEnableSSL;
+            settings.SMTPServerName = updateSmtpRequestDTO.SMTPServerName;
+
+            settings.UpdatedAt = DateTime.Now;
+
+            return await _repository.Update(settings);
+        }
+
     }
 }
