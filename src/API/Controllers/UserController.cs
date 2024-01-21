@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using FAIS.ApplicationCore.Models;
 using System.IO;
+using FAIS.ApplicationCore.Entities.Security;
 
 namespace FAIS.API.Controllers
 {
@@ -98,6 +99,32 @@ namespace FAIS.API.Controllers
             return Ok(permissions);
         }
 
+        /// <summary>
+        /// Gets the list of permissions for the specific user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("settings/{id:int}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApplicationCore.Entities.Structure.Settings), StatusCodes.Status200OK)]
+        public IActionResult GetSettings(int id)
+        {
+            return Ok(_settingsService.GetById(id));
+        }
+
+        /// <summary>
+        /// Gets the user by temporary key.
+        /// </summary>
+        /// <param name="tempKey">The temporary key.</param>
+        /// <returns></returns>
+        [HttpGet("tempkey/{tempKey}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetByTempKey(string tempKey)
+        {
+            return Ok(await _userService.GetByTempKey(tempKey));
+        }
+
         #endregion Get
 
         #region Post
@@ -132,13 +159,29 @@ namespace FAIS.API.Controllers
 
             content = content.Replace("${firstname}", user.FirstName);
             content = content.Replace("${supportemail}", settings.EmailAddress);
-            content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/${tempKey}");
+            content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/{tempKey}");
             content = content.Replace("${baseurl}", $"{settings.BaseUrl}");
 
             if (_emailService.SendEmail(user.EmailAddress, "Forgot Password", content))
                 return Ok(user);
 
             return Ok();
+        }
+
+        /// <summary>
+        /// Puts the reset password.
+        /// </summary>
+        /// <param name="tempKey">The temporary key.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns></returns>
+        [HttpPut("reset-password/{tempKey}/{newPassword}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(string tempKey, string newPassword)
+        {
+            if (string.IsNullOrEmpty(tempKey))
+                throw new ArgumentNullException(nameof(tempKey));
+
+            return Ok(await _userService.ResetPassword(tempKey, newPassword));
         }
 
         [HttpPost("[action]")]

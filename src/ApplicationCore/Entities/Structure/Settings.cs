@@ -51,7 +51,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int PasswordExpiry { get; set; }
 
         [DataMember]
-        public decimal IdleTime { get; set; }
+        public int IdleTime { get; set; }
 
         [DataMember]
         public int EnforcePasswordHistory { get; set; }

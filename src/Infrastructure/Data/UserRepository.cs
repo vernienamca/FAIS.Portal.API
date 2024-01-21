@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Security;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -43,6 +44,11 @@ namespace FAIS.Infrastructure.Data
         public async Task<User> GetByUserName(string userName)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(t => t.UserName == userName);
+        }
+
+        public async Task<User> GetByTempKey(string tempKey)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(t => t.TempKey == tempKey);
         }
 
         public async Task<User> GetByEmailAddress(string emailAddress)
