@@ -22,6 +22,6 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<User> LockAccount(int id);
         Task<User> UpdateSignInAttempts(UserDTO userDto);
         Task<string> SetTemporaryKey(int id);
-        Task<User> Edit(int id, UserDTO userDTO);
+        Task<User> Update(User user);
     }
 }

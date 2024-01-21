@@ -12,6 +12,6 @@ namespace FAIS.ApplicationCore.Interfaces
         public LibraryType GetById(int id);
         Task<LibraryType> Add(LibraryType libraryType);
         Task<LibraryType> Update(LibraryType libraryType);
-        List<string> GetLibraryCodesById(int id, string libraryCode);
+        IReadOnlyCollection<string> GetLibraryCodesById(int id, string libraryCode);
     }
 }

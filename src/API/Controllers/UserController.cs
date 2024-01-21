@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using FAIS.ApplicationCore.DTOs;
-using System.Threading.Tasks;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
 {
@@ -23,6 +24,7 @@ namespace FAIS.API.Controllers
         private readonly ILibraryTypeService _libraryTypeService;
         private readonly IEmailService _emailService;
         private readonly ISettingsService _settingsService;
+        private readonly IUserRepository _userRepository;
 
         #endregion Variables
 
@@ -38,12 +40,14 @@ namespace FAIS.API.Controllers
         public UserController(IUserService userService
             , ILibraryTypeService libraryTypeService
             , IEmailService emailService
-            , ISettingsService settingsService)
+            , ISettingsService settingsService
+            , IUserRepository userRepository)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
             _emailService = emailService;
             _settingsService = settingsService;
+            _userRepository = userRepository;
         }
 
         #endregion Constructor
@@ -71,7 +75,7 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
-           
+
             var user = new UserModel()
             {
                 Id = entity.Id,
@@ -80,7 +84,7 @@ namespace FAIS.API.Controllers
                 Position = _libraryTypeService.GetById(entity.PositionId).Name,
                 Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : null,
                 TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
-                OUFG = _libraryTypeService.GetLibraryCodesById(entity.Id, "OUFG")[0],
+                OUFG = _libraryTypeService.GetLibraryCodesById(entity.Id, "OUFG").FirstOrDefault(),
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,
                 StatusDate = entity.StatusDate,
@@ -88,9 +92,8 @@ namespace FAIS.API.Controllers
                 MobileNumber = entity.MobileNumber,
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
-                Photo = entity.Photo,
+                Photo = entity.Photo
             };
-
             return Ok(user);
         }
 
@@ -107,14 +110,18 @@ namespace FAIS.API.Controllers
 
             return Ok(permissions);
         }
-        
-        [HttpGet("[action]")]
+
+        /// <summary>
+        /// Gets the user last login date.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("user/last-login")]
         public async Task<IActionResult> GetLastLoginDate(int userId)
         {
             var lastLoginDate = await _userService.GetLastLoginDate(userId);
             return Ok(lastLoginDate.Value);
         }
-
 
         #endregion Get
 
@@ -176,19 +183,28 @@ namespace FAIS.API.Controllers
         /// <summary>
         /// Updates the user
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userDTO"></param>
+        /// <param name="id"> The user identifier.</param>
+        /// <param name="userDTO">  Object for updating user information.</param>
         /// <returns></returns>
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO userDTO)
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO, [FromRoute] int id)
         {
-            if (id <= 0 || userDTO == null)
-            {
-                return BadRequest("Invalid input");
-            }
-            var updatedUser = await _userService.Edit(id, userDTO);
+            const string defaultValue = "string";
+            var user = await _userRepository.GetById(id);
+
+            if (id == 0 || userDTO == null)
+                throw new ArgumentNullException(nameof(user));
+
+            user.MiddleName = !string.IsNullOrEmpty(userDTO.MiddleName) && userDTO.MiddleName != defaultValue ? userDTO.MiddleName: user.MiddleName;
+            user.UserName = !string.IsNullOrEmpty(userDTO.UserName) && userDTO.UserName != defaultValue ? userDTO.UserName : user.UserName;
+            user.LastName = !string.IsNullOrEmpty(userDTO.LastName) && userDTO.LastName != defaultValue ? userDTO.LastName : user.LastName;
+            user.FirstName = !string.IsNullOrEmpty(userDTO.FirstName) && userDTO.FirstName != defaultValue ? userDTO.FirstName : user.FirstName;
+            user.MobileNumber = !string.IsNullOrEmpty(userDTO.MobileNumber) && userDTO.MobileNumber != defaultValue ? userDTO.MobileNumber : user.MobileNumber;
+            user.EmailAddress = !string.IsNullOrEmpty(userDTO.EmailAddress) && userDTO.EmailAddress != defaultValue ? userDTO.EmailAddress : user.EmailAddress;
+            var updatedUser = await _userService.Update(user);
+
             return Ok(updatedUser);
         }
         #endregion Put
-    }
+    }   
 }

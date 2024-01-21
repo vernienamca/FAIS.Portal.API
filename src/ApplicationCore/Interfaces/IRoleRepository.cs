@@ -12,6 +12,6 @@ namespace FAIS.ApplicationCore.Interfaces
         Role GetById(int id);
         Task<Role> Add(Role role);
         Task<Role> Update(Role role);
-        List<Role> GetUserRolesById(int id);
+        IReadOnlyCollection<Role> GetUserRolesById(int id);
     }
 }

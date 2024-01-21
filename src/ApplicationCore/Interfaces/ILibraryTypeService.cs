@@ -8,6 +8,6 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IQueryable<LibraryType> Get();
         LibraryType GetById(int id);
-        List<string> GetLibraryCodesById(int id, string libraryCode);
+        IReadOnlyCollection<string> GetLibraryCodesById(int id, string libraryCode);
     }
 }

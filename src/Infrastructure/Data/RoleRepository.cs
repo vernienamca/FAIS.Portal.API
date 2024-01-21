@@ -52,9 +52,9 @@ namespace FAIS.Infrastructure.Data
             return await UpdateAsync(role);
         }
 
-        public List<Role> GetUserRolesById(int id)
+        public IReadOnlyCollection<Role> GetUserRolesById(int id)
         {
-            List<int> UserRolesId = _dbContext.UserRoles.Where(u => u.UserId == id).Select(s => s.RoleId).ToList();
+            IReadOnlyCollection<int> UserRolesId = _dbContext.UserRoles.AsNoTracking().Where(u => u.UserId == id).Select(s => s.RoleId).ToList();
             var UserRoles = _dbContext.Roles.Where(r => UserRolesId.Contains(r.Id))
                 .Select(r => new Role
                 {

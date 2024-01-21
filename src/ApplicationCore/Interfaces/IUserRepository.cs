@@ -15,9 +15,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<User> GetByEmailAddress(string emailAddress);
         Task<List<PermissionModel>> GetPermissions(int id);
         Task<User> Add(User test);
-        Task<User> Update(User test);
-        Task<User> Edit(int id, User user);
-
+        Task <User> Update(User user);
     }
 }
  

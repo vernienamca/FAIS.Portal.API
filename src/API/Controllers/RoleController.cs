@@ -61,15 +61,13 @@ namespace FAIS.API.Controllers
         /// <summary>
         /// Get UserRoles by Id
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="userId"> The user Identifier.</param>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("user-roles/{userId:int}")]
         public IActionResult GetUserRoles(int userId)
         {
-            var userRoles = _roleService.GetUserRolesById(userId);
-            return Ok(userRoles);
+            return Ok(_roleService.GetUserRolesById(userId));
         }
-
         #endregion Get
     }
 }

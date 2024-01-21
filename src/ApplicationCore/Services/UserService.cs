@@ -136,52 +136,9 @@ namespace FAIS.ApplicationCore.Services
             return user.TempKey;
         }
 
-        public async Task<User> Edit(int id, UserDTO userDTO)
+        public async Task<User> Update(User user)
         {
-            var user = await _userRepository.GetById(id);
-
-            if (user != null)
-            {
-                user.Id = id;
-
-                if (!string.IsNullOrEmpty(userDTO.MiddleName) && userDTO.MiddleName != user.MiddleName)
-                {
-                    user.MiddleName = userDTO.MiddleName;
-                }
-
-                if (!string.IsNullOrEmpty(userDTO.UserName) && userDTO.UserName != user.UserName)
-                {
-                    user.UserName = userDTO.UserName;
-                }
-
-                if (!string.IsNullOrEmpty(userDTO.LastName) && userDTO.LastName != user.LastName)
-                {
-                    user.LastName = userDTO.LastName;
-                }
-
-                if (!string.IsNullOrEmpty(userDTO.FirstName) && userDTO.FirstName != user.FirstName)
-                {
-                    user.FirstName = userDTO.FirstName;
-                }
-
-                if (!string.IsNullOrEmpty(userDTO.EmailAddress) && userDTO.EmailAddress != user.EmailAddress)
-                {
-                    user.EmailAddress = userDTO.EmailAddress;
-                }
-
-                if (int.TryParse(userDTO.MobileNumber, out int mobileNumber) && mobileNumber.ToString() != user.MobileNumber)
-                {
-                    user.MobileNumber = mobileNumber.ToString();
-                }
-
-                user.UpdatedBy = userDTO.UpdatedBy;
-
-                return await _userRepository.Edit(id, user);
-            }
-
-            return null;
+            return await _userRepository.Update(user);
         }
-
     }
-
 }

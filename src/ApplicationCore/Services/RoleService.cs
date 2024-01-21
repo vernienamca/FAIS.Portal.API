@@ -61,7 +61,7 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.Update(role);
         }
 
-        public List<Role> GetUserRolesById(int userId)
+        public IReadOnlyCollection<Role> GetUserRolesById(int userId)
         {
             return _repository.GetUserRolesById(userId);
         }

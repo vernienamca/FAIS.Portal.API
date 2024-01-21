@@ -28,8 +28,7 @@ namespace FAIS.Infrastructure.Data
 
         public async Task<DateTime?> GetLastLoginDate(int userId)
         {
-            var lastLogin = await _dbContext.LoginHistory.Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedAt).Select(x => (DateTime?)x.CreatedAt).FirstOrDefaultAsync();
-            return lastLogin;
+            return await _dbContext.LoginHistory.AsNoTracking().Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedAt).Select(x => (DateTime?)x.CreatedAt).FirstOrDefaultAsync();
         }
     }
 }
