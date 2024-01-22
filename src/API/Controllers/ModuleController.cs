@@ -19,7 +19,6 @@ namespace FAIS.API.Controllers
         #region Variables
 
         private readonly IModuleService _moduleService;
-        private readonly IUserService _userService;
 
         #endregion Variables
 
@@ -28,14 +27,8 @@ namespace FAIS.API.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleController"/> class.
         /// <param name="moduleService">The module service.</param>
-        /// <param name="userService">The user service.</param>
         /// </summary>
-        public ModuleController(IModuleService moduleService
-            , IUserService userService)
-        {
-            _moduleService = moduleService;
-            _userService = userService;
-        }
+        public ModuleController(IModuleService moduleService) => _moduleService = moduleService;
 
         #endregion Constructor
 

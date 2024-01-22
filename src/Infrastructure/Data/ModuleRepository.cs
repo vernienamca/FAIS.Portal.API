@@ -56,9 +56,14 @@ namespace FAIS.Infrastructure.Data
             return await AddAsync(module);
         }
 
-        public async Task<Module> Update(Module role)
+        public async Task<Module> Update(Module module)
         {
-            return await UpdateAsync(role);
+            return await UpdateAsync(module);
+        }
+
+        public async Task Delete(Module module)
+        {
+            await DeleteAsync(module);
         }
     }
 }
