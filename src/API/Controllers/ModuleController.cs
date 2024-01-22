@@ -64,6 +64,7 @@ namespace FAIS.API.Controllers
         /// <summary>
         /// Update module.
         /// </summary>
+        /// <param name="id">The module id.</param>
         /// <param name="moduleDTO">The module DTO.</param>
         /// <returns></returns>
         [HttpPut("{id:int}")]
@@ -74,6 +75,11 @@ namespace FAIS.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Delete module.
+        /// </summary>
+        /// <param name="id">The module id.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteModule(int id)
         {
