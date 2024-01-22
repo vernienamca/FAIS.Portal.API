@@ -7,19 +7,17 @@ using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
 {
+    [Produces("application/json")]
+    [Route("permission")]
     [ApiController]
-    [Route("[controller]")]
     [Authorize]
     public class RolePermissionController : Controller
     {
         #region Variables
-
         private readonly IRolePermissionService _rolePermissionService;
-
         #endregion Variables
 
         #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RolePermissionController"/> class.
         /// <param name="rolePermissionService">The role service.</param>
@@ -29,7 +27,6 @@ namespace FAIS.Portal.API.Controllers
         {
             _rolePermissionService = rolePermissionService;
         }
-
         #endregion Constructor
 
         #region get

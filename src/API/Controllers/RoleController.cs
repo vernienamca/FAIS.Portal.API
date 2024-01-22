@@ -15,21 +15,19 @@ namespace FAIS.API.Controllers
     public class RoleController : ControllerBase
     {
         #region Variables
-
         private readonly IRoleService _roleService;
         private readonly IRolePermissionService _rolePermissionService;
-
         #endregion Variables
 
         #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RoleController"/> class.
         /// <param name="roleService">The role service.</param>
         /// <param name="userService">The user service.</param>
         /// <param name="rolePermissionService">The role with permission service.</param>
         /// </summary>
-        public RoleController(IRoleService roleService, IRolePermissionService rolePermissionService)
+        public RoleController(IRoleService roleService, 
+            IRolePermissionService rolePermissionService)
         {
             _roleService = roleService;
             _rolePermissionService= rolePermissionService;
@@ -67,10 +65,10 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="id">The role identifier.</param>
         /// <returns></returns>
-        [HttpGet("[action]/{id:int}")]
+        [HttpGet("permissions/{id:int}")]
         public async Task<IActionResult> GetRolePermissionById(int id)
         {
-            return Ok(await _rolePermissionService.GetRolePermissionById(id));
+            return Ok(await _rolePermissionService.GetListRolePermissionById(id));
         }
         #endregion Get
     }
