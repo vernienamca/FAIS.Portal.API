@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -63,5 +65,30 @@ namespace FAIS.API.Controllers
         }
 
         #endregion Get
+
+        #region Post
+
+        /// <summary>
+        /// Update module.
+        /// </summary>
+        /// <param name="moduleDTO">The module DTO.</param>
+        /// <returns></returns>
+        [HttpPut("[action]")]
+        public async Task<IActionResult> UpdateModule([FromBody] ModuleDTO moduleDTO)
+        {
+            var result = await _moduleService.Update(moduleDTO);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteModule(int id)
+        {
+            await _moduleService.Delete(id);
+
+            return Ok();
+        }
+
+        #endregion
     }
 }
