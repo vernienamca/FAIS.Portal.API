@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using FAIS.ApplicationCore.Models;
 using System.IO;
 using FAIS.ApplicationCore.Entities.Security;
+using Microsoft.Extensions.Configuration;
 
 namespace FAIS.API.Controllers
 {
@@ -141,9 +142,10 @@ namespace FAIS.API.Controllers
             var user = await _userService.GetByEmailAddress(emailAddress);
 
             if (user == null)
-                throw new ArgumentNullException(nameof(user));
+                return Ok("Invalid username or password combination. Please try again.");
 
-            string htmlTemplatePath = Path.Combine($"{Environment.CurrentDirectory}\\Email Templates", "ForgotPassword.html");
+            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                .GetSection("EmailTemplatePath")["ForgotPassword"];
 
             if (!System.IO.File.Exists(htmlTemplatePath))
                 throw new FileNotFoundException(nameof(htmlTemplatePath));
