@@ -66,7 +66,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("update-smpt")]
         [ProducesResponseType(typeof(SettingsDTO), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateSettingSmtp([FromBody] UpdateSmtpRequestDTO updateSmtpRequestDTO)
+        public async Task<IActionResult> UpdateSettingSmtp([FromBody] UpdateSmtpSettingDTO updateSmtpRequestDTO)
         {
             await _settingsService.UpdateSmtpById(updateSmtpRequestDTO);
             return Ok();

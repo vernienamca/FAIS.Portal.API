@@ -35,7 +35,7 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.Update(settings);
         }
 
-        public async Task<Settings> UpdateSmtpById(UpdateSmtpRequestDTO updateSmtpRequestDTO)
+        public async Task<Settings> UpdateSmtpById(UpdateSmtpSettingDTO updateSmtpRequestDTO)
         {
             var settings = _repository.GetById(updateSmtpRequestDTO.Id);
             settings.SMTPPort = updateSmtpRequestDTO.SMTPPort;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FAIS.ApplicationCore.DTOs
 {
-    public class UpdateSmtpRequestDTO
+    public class UpdateSmtpSettingDTO
     {
         public int Id { get; set; }
         public string SMTPFromEmail { get; set; }
