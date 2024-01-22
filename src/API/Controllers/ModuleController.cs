@@ -73,10 +73,10 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="moduleDTO">The module DTO.</param>
         /// <returns></returns>
-        [HttpPut("[action]")]
-        public async Task<IActionResult> UpdateModule([FromBody] ModuleDTO moduleDTO)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateModule(int id, [FromBody] ModuleDTO moduleDTO)
         {
-            var result = await _moduleService.Update(moduleDTO);
+            var result = await _moduleService.Update(id, moduleDTO);
 
             return Ok(result);
         }

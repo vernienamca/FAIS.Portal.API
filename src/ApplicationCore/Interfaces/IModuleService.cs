@@ -2,7 +2,6 @@
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Interfaces
@@ -13,5 +12,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Module GetById(int id);
         Task<Module> Add(ModuleDTO moduleDto);
         Task<Module> Update(int id);
+        Task<Module> Update(int id, ModuleDTO moduleDto);
+        Task Delete(int id);
     }
 }
