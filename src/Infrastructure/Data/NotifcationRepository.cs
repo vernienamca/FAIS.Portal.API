@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -39,23 +40,25 @@ namespace FAIS.Infrastructure.Data
 
         public IReadOnlyCollection<TemplateModel> GetNotificationTemplates()
         {
-            var templates = (from temp in _dbContext.Templates.AsNoTracking()
-                             join usrC in _dbContext.Users.AsNoTracking() on temp.CreatedBy equals usrC.Id
-                             join usrU in _dbContext.Users.AsNoTracking() on temp.UpdatedBy equals usrU.Id into usrUX
+            var templates = (from tmp in _dbContext.Templates.AsNoTracking()
+                             join rol in _dbContext.Roles.AsNoTracking() on tmp.Receiver equals rol.Id
+                             join nft in _dbContext.LibraryTypes.Where(x => x.Code == "NFT").AsNoTracking() on tmp.NotificationType equals nft.Id
+                             join usrC in _dbContext.Users.AsNoTracking() on tmp.CreatedBy equals usrC.Id
+                             join usrU in _dbContext.Users.AsNoTracking() on tmp.UpdatedBy equals usrU.Id into usrUX
                              from usrU in usrUX.DefaultIfEmpty()
                              select new TemplateModel()
                              {
-                                 Id = temp.Id,
-                                 Subject = temp.Subject,
-                                 Content = temp.Content,
-                                 Receiver = temp.Receiver,
-                                 NotificationType = temp.NotificationType,
-                                 IsActive = temp.IsActive,
-                                 StatusDate = temp.StatusDate,
+                                 Id = tmp.Id,
+                                 Subject = tmp.Subject,
+                                 Content = tmp.Content,
+                                 Receiver = rol.Name,
+                                 NotificationType = nft.Name,
+                                 IsActive = tmp.IsActive,
+                                 StatusDate = tmp.StatusDate,
                                  CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
-                                 CreatedAt = temp.CreatedAt,
+                                 CreatedAt = tmp.CreatedAt,
                                  UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                                 UpdatedAt = temp.UpdatedAt
+                                 UpdatedAt = tmp.UpdatedAt
                              }).ToList();
 
             return templates;
