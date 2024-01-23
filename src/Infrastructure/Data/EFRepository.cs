@@ -11,10 +11,6 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace FAIS.Infrastructure.Data
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class EFRepository<EntityType, IdType> : IAsyncRepository<EntityType, IdType> where EntityType : BaseEntity<IdType>
     {
         protected readonly FAISContext _dbContext;
