@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using FAIS.ApplicationCore.Entities.Security;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace FAIS.Infrastructure.Data
 {
