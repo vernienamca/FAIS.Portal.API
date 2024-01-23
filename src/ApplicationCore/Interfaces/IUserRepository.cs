@@ -1,5 +1,6 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<List<PermissionModel>> GetPermissions(int id);
         Task<User> Add(User test);
         Task <User> Update(User user);
+        Task<int> GetLastUserId();
+        Task AddTAFGs(IReadOnlyCollection<UserTAFG> userTAFGs);
     }
 }
  

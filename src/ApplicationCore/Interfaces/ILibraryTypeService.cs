@@ -1,6 +1,7 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Interfaces
 {
@@ -9,5 +10,6 @@ namespace FAIS.ApplicationCore.Interfaces
         IQueryable<LibraryType> Get();
         LibraryType GetById(int id);
         IReadOnlyCollection<string> GetLibraryCodesById(int id, string libraryCode);
+        IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode);
     }
 }

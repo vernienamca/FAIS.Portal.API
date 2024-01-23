@@ -15,7 +15,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -122,7 +122,17 @@ namespace FAIS.API.Controllers
             var lastLoginDate = await _userService.GetLastLoginDate(userId);
             return Ok(lastLoginDate.Value);
         }
-
+        /// <summary>
+        /// Get library codes base on libraryCode
+        /// </summary>
+        /// <param name="libraryCode">The library identifier.</param>
+        /// <returns></returns>
+        [HttpGet("library-codes")]
+        public ActionResult<List<string>> GetLibrarybyCodes([FromQuery] string libraryCode)
+        {
+            var result = _libraryTypeService.GetLibrarybyCodes(libraryCode);
+            return Ok(result);
+        }
         #endregion Get
 
         #region Post
@@ -164,7 +174,7 @@ namespace FAIS.API.Controllers
                 return Ok(user);
 
             return Ok();
-        }
+        } 
 
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)

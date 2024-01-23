@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FAIS.ApplicationCore.DTOs
 {
@@ -28,5 +29,8 @@ namespace FAIS.ApplicationCore.DTOs
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public int LoginStatus { get; set; }
+        public string PositionName { get; set; }
+        public string DivisionName { get; set; }
+        public List<string> Region { get; set; }
     }
 }

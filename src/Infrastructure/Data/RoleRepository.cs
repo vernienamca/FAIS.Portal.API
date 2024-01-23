@@ -1,10 +1,13 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+
+
 
 namespace FAIS.Infrastructure.Data
 {
@@ -65,6 +68,10 @@ namespace FAIS.Infrastructure.Data
                 .ToList();
 
             return UserRoles;
+        }
+        public Role GetRoleIdByName(string rolename)
+        {
+            return _dbContext.Roles.FirstOrDefault(r => r.Name == rolename);
         }
     }
 }

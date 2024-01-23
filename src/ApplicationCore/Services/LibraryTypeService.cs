@@ -62,5 +62,9 @@ namespace FAIS.ApplicationCore.Services
         {
             return _repository.GetLibraryCodesById(id, libraryCode);
         }
+        public IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode)
+        {
+            return _repository.GetLibrarybyCodes(libraryCode);
+        }
     }
 }

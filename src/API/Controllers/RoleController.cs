@@ -1,21 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class RoleController : ControllerBase
     {
         #region Variables
 
         private readonly IRoleService _roleService;
+        private readonly IUserRoleService _userRoleService;
 
         #endregion Variables
 
@@ -26,9 +29,10 @@ namespace FAIS.API.Controllers
         /// <param name="roleService">The role service.</param>
         /// <param name="userService">The user service.</param>
         /// </summary>
-        public RoleController(IRoleService roleService)
+        public RoleController(IRoleService roleService, IUserRoleService userRoleService)
         {
             _roleService = roleService;
+            _userRoleService = userRoleService;
         }
 
         #endregion Constructor
@@ -69,5 +73,17 @@ namespace FAIS.API.Controllers
             return Ok(_roleService.GetUserRolesById(userId));
         }
         #endregion Get
+        /// <summary>
+        /// Add user role 
+        /// </summary>
+        /// <param name="roleDTO">User Role data.</param>
+        /// <returns></returns>
+        [HttpPost("add-user-role")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<RoleModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddUserRole([FromBody] RoleDTO roleDTO)
+        {
+            
+               return Ok( await _userRoleService.Add(roleDTO));        
+           }
     }
 }

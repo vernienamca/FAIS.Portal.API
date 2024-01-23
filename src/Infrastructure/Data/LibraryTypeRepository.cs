@@ -1,5 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Services;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -22,7 +23,15 @@ namespace FAIS.Infrastructure.Data
         {
             return _dbContext.LibraryTypes.FirstOrDefault(t => t.Id == id);
         }
+        public LibraryType GetPositionIdByName(string positionName)
+        {
+            return _dbContext.LibraryTypes.FirstOrDefault(lt => lt.Name == positionName);
+        }
 
+        public LibraryType GetLibraryTypeIdByCode(string description)
+        {
+            return _dbContext.LibraryTypes.AsNoTracking().FirstOrDefault(lt => lt.Description == description);
+        }
         public async Task<LibraryType> Add(LibraryType libraryType)
         {
             return await AddAsync(libraryType);
@@ -44,5 +53,11 @@ namespace FAIS.Infrastructure.Data
 
             return combinedList;
         }
+        public IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode)
+        {
+            List<string> libraryTypeDescriptions = _dbContext.LibraryTypes.AsNoTracking().Where(t => t.Code == libraryCode).Select(t => t.Description).ToList();
+            return libraryTypeDescriptions;
+        }
+
     }
 }

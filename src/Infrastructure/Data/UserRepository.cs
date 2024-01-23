@@ -1,4 +1,5 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -37,7 +38,7 @@ namespace FAIS.Infrastructure.Data
                             Status = usr.StatusCode
                          }).ToList();
 
-            return users;
+            return users;   
         }
 
         public async Task<User> GetByUserName(string userName)
@@ -87,5 +88,24 @@ namespace FAIS.Infrastructure.Data
         {
             return await UpdateAsync(user);
         }
+        public async Task<int> GetLastUserId() 
+        {
+            var lastUserId = await _dbContext.Users.MaxAsync(u => (int?)u.Id) ?? 0;
+            return lastUserId;
+        }
+
+        public async Task AddTAFGs(IReadOnlyCollection<UserTAFG> userTAFGs)
+        {
+            foreach (var userTAFG in userTAFGs)
+            {
+                if (_dbContext.Entry(userTAFG).IsKeySet)
+                {
+                    _dbContext.Entry(userTAFG).State = EntityState.Detached;
+                }
+            }
+            await _dbContext.UserTAFGs.AddRangeAsync(userTAFGs);
+            await _dbContext.SaveChangesAsync();
+        }
+
     }
 }

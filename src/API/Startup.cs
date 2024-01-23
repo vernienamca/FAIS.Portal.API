@@ -36,7 +36,6 @@ namespace FAIS
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -73,7 +72,6 @@ namespace FAIS
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
             services.AddScoped(typeof(INotificationRepository), typeof(NotificationRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
-
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
             services.AddScoped(typeof(ISettingsService), typeof(SettingsService));
@@ -82,6 +80,8 @@ namespace FAIS
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
+            services.AddScoped(typeof(IUserRoleService), typeof(UserRoleService));
+            services.AddScoped(typeof(IUserRoleRepository), typeof(UserRoleRepository));
 
             services.AddSwaggerGen(c =>
             {
