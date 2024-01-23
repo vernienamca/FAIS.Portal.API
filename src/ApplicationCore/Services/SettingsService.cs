@@ -44,7 +44,6 @@ namespace FAIS.ApplicationCore.Services
             settings.Website = updateSetting.Website;
             settings.Address = updateSetting.Address;
             settings.SMTPPort = updateSetting.SMTPPort;
-            settings.SMTPDisplayName = updateSetting.SMTPDisplayName;
             settings.SMTPPassword = updateSetting.SMTPPassword;
             settings.SMTPFromEmail = updateSetting.SMTPFromEmail;
             settings.SMTPEnableSSL = updateSetting.SMTPEnableSSL;
@@ -55,7 +54,6 @@ namespace FAIS.ApplicationCore.Services
             settings.IdleTime = updateSetting.IdleTime;
             settings.EnforcePasswordHistory = updateSetting.EnforcePasswordHistory;
             settings.MaxSignOnAttempts = updateSetting.MaxSignOnAttempts;
-            settings.AuditLogsFilePath = updateSetting.AuditLogsFilePath;
             settings.UpdatedBy = updateSetting.UpdatedBy;
             settings.UpdatedAt = DateTime.Now;
             return await _repository.Update(settings);
