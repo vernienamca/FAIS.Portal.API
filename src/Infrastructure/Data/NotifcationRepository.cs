@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
-using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,28 +13,30 @@ namespace FAIS.Infrastructure.Data
         public NotificationRepository(FAISContext context) : base(context)
         {
         }
-        public IReadOnlyCollection<StringInterpolationModel> GetStringInterpolation()
-        {
-            var stringInterpolation = (from str in _dbContext.StringInterpolations.AsNoTracking()
-                                       join usrC in _dbContext.Users.AsNoTracking() on str.CreatedBy equals usrC.Id
-                                       join usrU in _dbContext.Users.AsNoTracking() on str.UpdatedBy equals usrU.Id into usrUX
-                                       from usrU in usrUX.DefaultIfEmpty()
-                                       select new StringInterpolationModel()
-                                       {
-                                           Id = str.Id,
-                                           TransactionCode = str.TransactionCode,
-                                           Description = str.Description,
-                                           IsActive = str.IsActive,
-                                           StatusDate = str.StatusDate,
-                                           NotificationType = str.NotificationType,
-                                           CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
-                                           CreatedAt = str.CreatedAt,
-                                           UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                                           UpdatedAt = str.UpdatedAt
-                                       }).ToList();
 
-            return stringInterpolation;
+        public IReadOnlyCollection<StringInterpolationModel> GetIntepolations()
+        {
+            var interpolations = (from str in _dbContext.StringInterpolations.AsNoTracking()
+                                  join usrC in _dbContext.Users.AsNoTracking() on str.CreatedBy equals usrC.Id
+                                  join usrU in _dbContext.Users.AsNoTracking() on str.UpdatedBy equals usrU.Id into usrUX
+                                  from usrU in usrUX.DefaultIfEmpty()
+                                  select new StringInterpolationModel()
+                                  {
+                                      Id = str.Id,
+                                      TransactionCode = str.TransactionCode,
+                                      Description = str.Description,
+                                      IsActive = str.IsActive,
+                                      StatusDate = str.StatusDate,
+                                      NotificationType = str.NotificationType,
+                                      CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
+                                      CreatedAt = str.CreatedAt,
+                                      UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                                      UpdatedAt = str.UpdatedAt
+                                  }).ToList();
+
+            return interpolations;
         }
+
         public IReadOnlyCollection<TemplateModel> GetNotificationTemplates()
         {
             var templates = (from temp in _dbContext.Templates.AsNoTracking()
@@ -59,21 +60,25 @@ namespace FAIS.Infrastructure.Data
 
             return templates;
         }
-        public async Task<StringInterpolation> GetStringInterpolationById(int id)
+
+        public async Task<Template> GetTemplateById(int id)
+        {
+            return await _dbContext.Templates.FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<StringInterpolation> GetInterpolationById(int id)
         {
             return await _dbContext.StringInterpolations.FirstOrDefaultAsync(o => o.Id == id);
         }
-        public async Task<Template> GetTemplateById(int id)
+
+        public async Task<StringInterpolation> AddStringInterpolation(StringInterpolation interpolation)
         {
-            return await _dbContext.Templates.FirstOrDefaultAsync(o => o.Id == id);
+            return await AddAsync(interpolation);
         }
-        public async Task<StringInterpolation> AddStringInterpolation(StringInterpolation stringInterpolation)
+
+        public async Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation interpolation)
         {
-            return await AddAsync(stringInterpolation);
-        }
-        public async Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation stringInterpolation)
-        {
-            return await UpdateAsync(stringInterpolation);
+            return await UpdateAsync(interpolation);
         }
     }
 }

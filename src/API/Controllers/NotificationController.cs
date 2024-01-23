@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using FAIS.ApplicationCore.DTOs;
-using System.Threading.Tasks;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +20,7 @@ namespace FAIS.API.Controllers
         #endregion Variables
 
         #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationController"/> class.
         /// </summary>
@@ -33,32 +32,32 @@ namespace FAIS.API.Controllers
         {
             _notificationService = notificationService;
         }
+
         #endregion Constructor
 
-        #region String Interpolation
+        #region Get
+
         /// <summary>
-        /// List the string interpolations
+        /// List the string interpolations.
         /// </summary>
         [HttpGet("interpolations")]
         [ProducesResponseType(typeof(IReadOnlyCollection<StringInterpolationModel>), StatusCodes.Status200OK)]
-        public IActionResult GetStringInterpolations()
+        public IActionResult GetInterpolations()
         {
-            return Ok(_notificationService.GetStringInterpolations());
+            return Ok(_notificationService.GetIntepolations());
         }
-        #endregion
 
-        #region Templates
         /// <summary>
-        /// List the notification templates
+        /// List the notification templates.
         /// </summary>
         /// <returns>Template list</returns>
         [HttpGet("templates")]
-        [ProducesResponseType(typeof(List<NotificationTemplateModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<NotificationTemplateModel>), StatusCodes.Status200OK)]
         public IActionResult GetNotificationTemplates()
         {
             return Ok(_notificationService.GetNotificationTemplates());
-        }           
-        #endregion
+        }
 
+        #endregion Get
     }
 }

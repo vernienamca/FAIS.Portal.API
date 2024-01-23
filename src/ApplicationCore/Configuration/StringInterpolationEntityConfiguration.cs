@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Vml.Office;
-using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Structure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -13,7 +12,7 @@ namespace FAIS.ApplicationCore.Configuration
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            builder.ToTable("STRING_INTERPOLATION", "FAIS");
+            builder.ToTable("STRING_INTERPOLATIONS", "FAIS");
 
             builder.HasKey(e => e.Id);
 
