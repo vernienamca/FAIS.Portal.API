@@ -55,7 +55,6 @@ namespace FAIS.ApplicationCore.Services
             settings.IdleTime = updateSetting.IdleTime;
             settings.EnforcePasswordHistory = updateSetting.EnforcePasswordHistory;
             settings.MaxSignOnAttempts = updateSetting.MaxSignOnAttempts;
-            settings.BaseUrl = updateSetting.BaseUrl;
             settings.AuditLogsFilePath = updateSetting.AuditLogsFilePath;
             settings.UpdatedBy = updateSetting.UpdatedBy;
             settings.UpdatedAt = DateTime.Now;
