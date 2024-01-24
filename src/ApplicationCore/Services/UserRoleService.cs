@@ -11,15 +11,18 @@ namespace FAIS.ApplicationCore.Services
     {
         private readonly IUserRoleRepository _repository;
         private readonly IRoleRepository _roleRepository;
-        public UserRoleService(IUserRoleRepository repository, IRoleRepository roleRepository)
+        private readonly IUserRepository _userRepository;
+        public UserRoleService(IUserRoleRepository repository, IRoleRepository roleRepository, IUserRepository userRepository)
         {
             _repository = repository;
             _roleRepository = roleRepository;
+            _userRepository= userRepository;
         }
 
         public async Task<IReadOnlyCollection<UserRole>> Add(RoleDTO roleDTO)
         {
-                List<UserRole> userRoles = new List<UserRole>();
+            int userId = await _userRepository.GetLastUserId();
+            List<UserRole> userRoles = new List<UserRole>();
 
                 foreach (var roleName in roleDTO.UserRole)
                 {
@@ -27,7 +30,7 @@ namespace FAIS.ApplicationCore.Services
 
                     var userRole = new UserRole()
                     {
-                        UserId = roleDTO.Id,
+                        UserId = userId,
                         RoleId = roleId.Id,
                         IsActive = roleDTO.IsActive,
                         StatusDate = roleDTO.StatusDate,
