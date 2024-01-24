@@ -9,12 +9,12 @@ namespace FAIS.ApplicationCore.Interfaces
 {
     public interface INotificationRepository
     {
-        IReadOnlyCollection<StringInterpolationModel> GetStringInterpolation();
+        IReadOnlyCollection<StringInterpolationModel> GetIntepolations();
         IReadOnlyCollection<TemplateModel> GetNotificationTemplates();
-        Task<StringInterpolation> GetStringInterpolationById(int id);
-        Task<StringInterpolation> AddStringInterpolation(StringInterpolation stringInterpolation);
-        Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation stringInterpolation);
+        Task<StringInterpolation> GetInterpolationById(int id);
         Task<Template> GetTemplateById(int id);
+        Task<StringInterpolation> AddStringInterpolation(StringInterpolation interpolation);
+        Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation interpolation);
 
     }
 }

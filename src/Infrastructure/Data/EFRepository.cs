@@ -3,18 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using FAIS.ApplicationCore.Entities.Security;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace FAIS.Infrastructure.Data
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class EFRepository<EntityType, IdType> : IAsyncRepository<EntityType, IdType> where EntityType : BaseEntity<IdType>
     {
         protected readonly FAISContext _dbContext;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using FAIS.ApplicationCore.DTOs;
@@ -70,7 +69,7 @@ namespace FAIS.Controllers
                 var user = await _userService.GetByUserName(username);
 
                 if (user == null)
-                    return Ok("Invalid username or password combination. Please try again.");
+                    return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
 
                 userDto.Id = user.Id;
 
@@ -135,6 +134,17 @@ namespace FAIS.Controllers
             {
                 return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
             }
+        }
+
+        /// <summary>
+        /// Gets the test end-point value.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("test")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public IActionResult GetTest()
+        {
+            return Ok("This is a test api");
         }
 
         #endregion Get

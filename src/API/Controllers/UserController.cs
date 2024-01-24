@@ -7,15 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using FAIS.ApplicationCore.Entities.Security;
+using Microsoft.Extensions.Configuration;
 
 namespace FAIS.API.Controllers
 {
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -112,6 +112,32 @@ namespace FAIS.API.Controllers
         }
 
         /// <summary>
+        /// Gets the list of permissions for the specific user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("settings/{id:int}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApplicationCore.Entities.Structure.Settings), StatusCodes.Status200OK)]
+        public IActionResult GetSettings(int id)
+        {
+            return Ok(_settingsService.GetById(id));
+        }
+
+        /// <summary>
+        /// Gets the user by temporary key.
+        /// </summary>
+        /// <param name="tempKey">The temporary key.</param>
+        /// <returns></returns>
+        [HttpGet("tempkey/{tempKey}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetByTempKey(string tempKey)
+        {
+            return Ok(await _userService.GetByTempKey(tempKey));
+        }
+
+        /// <summary>
         /// Gets the user last login date.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
@@ -157,9 +183,10 @@ namespace FAIS.API.Controllers
             var user = await _userService.GetByEmailAddress(emailAddress);
 
             if (user == null)
-                throw new ArgumentNullException(nameof(user));
+                return Ok("Invalid username or password combination. Please try again.");
 
-            string htmlTemplatePath = Path.Combine($"{Environment.CurrentDirectory}\\Email Templates", "ForgotPassword.html");
+            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                .GetSection("EmailTemplatePath")["ForgotPassword"];
 
             if (!System.IO.File.Exists(htmlTemplatePath))
                 throw new FileNotFoundException(nameof(htmlTemplatePath));
@@ -175,20 +202,31 @@ namespace FAIS.API.Controllers
 
             content = content.Replace("${firstname}", user.FirstName);
             content = content.Replace("${supportemail}", settings.EmailAddress);
-            content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/${tempKey}");
+            content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/{tempKey}");
             content = content.Replace("${baseurl}", $"{settings.BaseUrl}");
 
             if (_emailService.SendEmail(user.EmailAddress, "Forgot Password", content))
                 return Ok(user);
 
             return Ok();
-        } 
+        }
+
         /// <summary>
-        /// Add user Role, TAFG, and region.
+        /// Puts the reset password.
         /// </summary>
-        /// <param name="userDTO">user data objects.</param>
+        /// <param name="tempKey">The temporary key.</param>
+        /// <param name="newPassword">The new password.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPut("reset-password/{tempKey}/{newPassword}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(string tempKey, string newPassword)
+        {
+            if (string.IsNullOrEmpty(tempKey))
+                throw new ArgumentNullException(nameof(tempKey));
+
+            return Ok(await _userService.ResetPassword(tempKey, newPassword));
+        }
+
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {

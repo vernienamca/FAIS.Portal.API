@@ -74,7 +74,7 @@ namespace FAIS.Portal.API.Controllers
         public IActionResult ExportLogs()
         {
             return File(_auditLogService.ExportAuditLogs(), System.Net.Mime.MediaTypeNames.Application.Octet, 
-                $"logs_{DateTime.Now.Date}.xlsx");
+                $"logs_{DateTime.Now.ToString("MM/dd/yyyy hh:mm tt")}.xlsx");
         }
 
         /// <summary>

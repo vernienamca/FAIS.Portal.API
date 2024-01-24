@@ -47,6 +47,11 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.GetByUserName(userName);
         }
 
+        public async Task<User> GetByTempKey(string tempKey)
+        {
+            return await _userRepository.GetByTempKey(tempKey);
+        }
+
         public async Task<User> GetByEmailAddress(string emailAddress)
         {
             return await _userRepository.GetByEmailAddress(emailAddress);
@@ -129,6 +134,21 @@ namespace FAIS.ApplicationCore.Services
         public async Task<DateTime?> GetLastLoginDate(int userId)
         {
             return await _historyRepository.GetLastLoginDate(userId);
+        }
+
+        public async Task<User> ResetPassword(string tempKey, string newPassword)
+        {
+            var settings = _settingsRepository.GetById(1);
+            var user = await _userRepository.GetByTempKey(tempKey);
+
+            user.Password = EncryptionHelper.HashPassword(newPassword);
+            user.SignInAttempts = 0;
+            user.StatusCode = (int)UserStatusEnum.Active;
+            user.StatusDate = DateTime.Now;
+            user.TempKey = string.Empty;
+            user.DateExpired = DateTime.Now.AddDays(settings.PasswordExpiry);
+
+            return await _userRepository.Update(user);
         }
 
         public async Task<User> LockAccount(int id)
