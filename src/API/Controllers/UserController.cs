@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using FAIS.ApplicationCore.Entities.Security;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace FAIS.API.Controllers
 {
