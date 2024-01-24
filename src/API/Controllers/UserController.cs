@@ -133,6 +133,14 @@ namespace FAIS.API.Controllers
             var result = _libraryTypeService.GetLibrarybyCodes(libraryCode);
             return Ok(result);
         }
+
+           [HttpGet("[action]")]
+        public async Task<IActionResult> GetLastUserId()
+        {
+            var lastUserId = await _userService.GetLastUserId();
+            return Ok(lastUserId);
+        }
+
         #endregion Get
 
         #region Post
@@ -175,7 +183,12 @@ namespace FAIS.API.Controllers
 
             return Ok();
         } 
-
+        /// <summary>
+        /// Add user Role, TAFG, and region.
+        /// </summary>
+        /// <param name="userDTO">user data objects.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
@@ -185,6 +198,19 @@ namespace FAIS.API.Controllers
             var addedUser = await _userService.Add(userDTO);
 
             return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
+        }
+
+        /// <summary>
+        /// Upload the File on the chosen directory.
+        /// </summary>
+        /// <param name="directory"> Upload file path.</param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UploadFile([FromQuery] string directory, IFormFile file)
+        {
+                var result = await _userService.WriteFile(file, directory);
+                return Ok(result);
         }
 
         #endregion Post

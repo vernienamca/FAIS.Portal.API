@@ -6,6 +6,7 @@ using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -60,6 +61,7 @@ namespace FAIS.ApplicationCore.Services
         {
             var positionId =  _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
             var divisionId =  _ILibraryTypeRepository.GetPositionIdByName(userDTO.DivisionName);
+            var oupfgId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.OupFG);
             var settings = _settingsRepository.GetById(1);
 
             var user = new User()
@@ -74,7 +76,7 @@ namespace FAIS.ApplicationCore.Services
                 Password = EncryptionHelper.HashPassword(userDTO.Password),
                 EmailAddress = userDTO.EmailAddress,
                 MobileNumber = userDTO.MobileNumber,
-                OupFgId = userDTO.OupFgId,
+                OupFgId = oupfgId.Id,
                 Photo = userDTO.Photo,
                 SessionId = userDTO.SessionId,
                 SignInAttempts = userDTO.SignInAttempts,
@@ -96,8 +98,7 @@ namespace FAIS.ApplicationCore.Services
                 var tafgId = _ILibraryTypeRepository.GetLibraryTypeIdByCode(region);
                 var userTAFG = new UserTAFG
                 {
-                   
-                    UserId= userId,
+                    UserId = userId,
                     TAFGId = tafgId.Id,
                     IsActive = 'Y',
                     StatusDate = userDTO.StatusDate,
@@ -129,7 +130,6 @@ namespace FAIS.ApplicationCore.Services
         {
             return await _historyRepository.GetLastLoginDate(userId);
         }
-
 
         public async Task<User> LockAccount(int id)
         {
@@ -164,5 +164,14 @@ namespace FAIS.ApplicationCore.Services
         {
             return await _userRepository.Update(user);
         }
+        public async Task<string> WriteFile(IFormFile file, string directory)
+        {
+            return await _userRepository.WriteFile(file, directory);
+        }
+        public async Task<int> GetLastUserId()
+        {
+            return await _userRepository.GetLastUserId();
+        }
+
     }
 }

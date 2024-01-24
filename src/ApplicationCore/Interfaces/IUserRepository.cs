@@ -2,6 +2,7 @@
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task <User> Update(User user);
         Task<int> GetLastUserId();
         Task AddTAFGs(IReadOnlyCollection<UserTAFG> userTAFGs);
+        Task<string> WriteFile(IFormFile file, string directory);
     }
 }
  

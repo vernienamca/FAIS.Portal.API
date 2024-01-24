@@ -2,6 +2,7 @@
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<User> UpdateSignInAttempts(UserDTO userDto);
         Task<string> SetTemporaryKey(int id);
         Task<User> Update(User user);
+        Task<string> WriteFile(IFormFile file, string directory);
+        Task<int> GetLastUserId();
     }
 }

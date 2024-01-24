@@ -3,8 +3,12 @@ using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -105,6 +109,21 @@ namespace FAIS.Infrastructure.Data
             }
             await _dbContext.UserTAFGs.AddRangeAsync(userTAFGs);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<string> WriteFile(IFormFile file, string directory)
+        {
+            string filename = "";
+                filename = file.FileName;
+                var filepath = Path.Combine(Directory.GetCurrentDirectory(), directory);
+
+                var exactpath = Path.Combine(filepath, filename);
+                using (var stream = new FileStream(exactpath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+         
+            return filename;
         }
 
     }

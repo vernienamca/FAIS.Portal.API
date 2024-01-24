@@ -31,6 +31,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int LoginStatus { get; set; }
         public string PositionName { get; set; }
         public string DivisionName { get; set; }
+        public string OupFG { get; set; }
         public List<string> Region { get; set; }
     }
 }

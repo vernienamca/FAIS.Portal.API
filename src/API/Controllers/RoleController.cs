@@ -73,6 +73,8 @@ namespace FAIS.API.Controllers
             return Ok(_roleService.GetUserRolesById(userId));
         }
         #endregion Get
+
+        #region Post
         /// <summary>
         /// Add user role 
         /// </summary>
@@ -82,8 +84,8 @@ namespace FAIS.API.Controllers
         [ProducesResponseType(typeof(IReadOnlyCollection<RoleModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddUserRole([FromBody] RoleDTO roleDTO)
         {
-            
                return Ok( await _userRoleService.Add(roleDTO));        
-           }
+        }
+        #endregion Post
     }
 }
