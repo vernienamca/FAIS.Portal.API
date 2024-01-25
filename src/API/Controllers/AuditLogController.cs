@@ -84,7 +84,7 @@ namespace FAIS.Portal.API.Controllers
         [HttpGet("open-folder")]
         public IActionResult OpenFolder()
         {
-            Process.Start("explorer.exe", _settingsService.GetById(1).AuditLogsFilePath);
+            Process.Start(@"C:\Windows\explorer.exe", _settingsService.GetById(1).AuditLogsFilePath);
 
             return Ok();
         }

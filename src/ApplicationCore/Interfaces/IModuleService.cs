@@ -12,6 +12,6 @@ namespace FAIS.ApplicationCore.Interfaces
         IReadOnlyCollection<ModuleModel> Get();
         Module GetById(int id);
         Task<Module> Add(ModuleDTO moduleDto);
-        Task<Module> Update(int id);
+        Task<Module> Update(ModuleDTO moduleDto);
     }
 }
