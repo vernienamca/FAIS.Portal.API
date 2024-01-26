@@ -1,23 +1,25 @@
 ﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using FAIS.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using FAIS.ApplicationCore.Entities.Security;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace FAIS.API.Controllers
 {
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -27,6 +29,8 @@ namespace FAIS.API.Controllers
         private readonly IEmailService _emailService;
         private readonly ISettingsService _settingsService;
         private readonly IUserRepository _userRepository;
+        private readonly IUserRoleService _userRoleService;
+        private readonly ILibraryTypeRepository _ILibraryTypeRepository;
 
         #endregion Variables
 
@@ -43,13 +47,17 @@ namespace FAIS.API.Controllers
             , ILibraryTypeService libraryTypeService
             , IEmailService emailService
             , ISettingsService settingsService
-            , IUserRepository userRepository)
+            , IUserRepository userRepository
+            , IUserRoleService userRoleService
+            , ILibraryTypeRepository libraryTypeRepository)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
             _emailService = emailService;
             _settingsService = settingsService;
             _userRepository = userRepository;
+            _userRoleService = userRoleService;
+            _ILibraryTypeRepository = libraryTypeRepository;
         }
 
         #endregion Constructor
@@ -235,9 +243,7 @@ namespace FAIS.API.Controllers
             if (userDTO == null)
                 throw new ArgumentNullException(nameof(userDTO));
 
-            var addedUser = await _userService.Add(userDTO);
-
-            return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
+            return Ok(await _userService.Add(userDTO));
         }
 
         /// <summary>
@@ -253,6 +259,18 @@ namespace FAIS.API.Controllers
                 return Ok(result);
         }
 
+        /// <summary>
+        /// Posts the adding of user roles.
+        /// </summary>
+        /// <param name="roleDTO">User Role data.</param>
+        /// <returns></returns>
+        //[HttpPost("add-user-role")]
+        //[ProducesResponseType(typeof(IReadOnlyCollection<UserRoleModel>), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> AddUserRole([FromBody] UserRoleDTO userRoleDTO)
+        //{
+        //    return Ok(await _userRoleService.Add(userRoleDTO));
+        //}
+
         #endregion Post
 
         #region Put
@@ -265,22 +283,39 @@ namespace FAIS.API.Controllers
         [HttpPut("[action]/{id}")]
         public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO, [FromRoute] int id)
         {
+            var positionId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
             const string defaultValue = "string";
             var user = await _userRepository.GetById(id);
-
+        
             if (id == 0 || userDTO == null)
                 throw new ArgumentNullException(nameof(user));
 
             user.MiddleName = !string.IsNullOrEmpty(userDTO.MiddleName) && userDTO.MiddleName != defaultValue ? userDTO.MiddleName: user.MiddleName;
+            user.EmployeeNumber = !string.IsNullOrEmpty(userDTO.EmployeeNumber) && userDTO.EmployeeNumber != defaultValue ? userDTO.EmployeeNumber : user.EmployeeNumber;
             user.UserName = !string.IsNullOrEmpty(userDTO.UserName) && userDTO.UserName != defaultValue ? userDTO.UserName : user.UserName;
             user.LastName = !string.IsNullOrEmpty(userDTO.LastName) && userDTO.LastName != defaultValue ? userDTO.LastName : user.LastName;
             user.FirstName = !string.IsNullOrEmpty(userDTO.FirstName) && userDTO.FirstName != defaultValue ? userDTO.FirstName : user.FirstName;
             user.MobileNumber = !string.IsNullOrEmpty(userDTO.MobileNumber) && userDTO.MobileNumber != defaultValue ? userDTO.MobileNumber : user.MobileNumber;
             user.EmailAddress = !string.IsNullOrEmpty(userDTO.EmailAddress) && userDTO.EmailAddress != defaultValue ? userDTO.EmailAddress : user.EmailAddress;
+
+            user.PositionId = positionId.Id;
             var updatedUser = await _userService.Update(user);
 
             return Ok(updatedUser);
         }
+
+        /// <summary>
+        /// Add user role 
+        /// </summary>
+        /// <param name="roleDTO">User Role data.</param>
+        /// <returns></returns>
+        [HttpPost("add-user-role")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<UserRoleModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddUserRole([FromBody] UserRoleModel userRole)
+        {
+            return Ok(await _userRoleService.Add(userRole));
+        }
+
         #endregion Put
-    }   
+    }
 }

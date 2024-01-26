@@ -61,6 +61,7 @@ namespace FAIS.Infrastructure.Data
             var UserRoles = _dbContext.Roles.Where(r => UserRolesId.Contains(r.Id))
                 .Select(r => new Role
                 {
+                    Id = r.Id,
                     Name = r.Name,
                     Description = r.Description,
                     CreatedAt = r.CreatedAt

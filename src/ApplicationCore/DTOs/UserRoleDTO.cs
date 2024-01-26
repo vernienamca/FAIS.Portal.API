@@ -1,0 +1,25 @@
+﻿using FAIS.ApplicationCore.Entities.Security;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace FAIS.ApplicationCore.DTOs
+{
+    public class UserRoleDTO
+    {
+        public int UserId { get; set; }
+        //public IReadOnlyCollection<Role> UserId { get; set; }
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        //public List<char> IsActive { get; set; }
+        public DateTime StatusDate { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public List<string> UserRole { get; set; }
+
+    }
+}

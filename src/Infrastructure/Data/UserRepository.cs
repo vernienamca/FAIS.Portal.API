@@ -119,18 +119,21 @@ namespace FAIS.Infrastructure.Data
 
         public async Task<string> WriteFile(IFormFile file, string directory)
         {
-            string filename = "";
-                filename = file.FileName;
-                var filepath = Path.Combine(Directory.GetCurrentDirectory(), directory);
+            if (file == null)
+            {
+                return string.Empty;
+            }
 
-                var exactpath = Path.Combine(filepath, filename);
-                using (var stream = new FileStream(exactpath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-         
+            string filename = file.FileName;
+            var filepath = Path.Combine(Directory.GetCurrentDirectory(), directory);
+
+            var exactpath = Path.Combine(filepath, filename);
+            using (var stream = new FileStream(exactpath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
             return filename;
         }
-
     }
 }

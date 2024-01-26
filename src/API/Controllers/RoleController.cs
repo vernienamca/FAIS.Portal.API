@@ -1,18 +1,17 @@
-﻿using FAIS.ApplicationCore.DTOs;
+﻿using System.Collections.Generic;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 
 namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class RoleController : ControllerBase
     {
         #region Variables
@@ -75,17 +74,8 @@ namespace FAIS.API.Controllers
         #endregion Get
 
         #region Post
-        /// <summary>
-        /// Add user role 
-        /// </summary>
-        /// <param name="roleDTO">User Role data.</param>
-        /// <returns></returns>
-        [HttpPost("add-user-role")]
-        [ProducesResponseType(typeof(IReadOnlyCollection<RoleModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddUserRole([FromBody] RoleDTO roleDTO)
-        {
-               return Ok( await _userRoleService.Add(roleDTO));        
-        }
+     
+
         #endregion Post
     }
 }
