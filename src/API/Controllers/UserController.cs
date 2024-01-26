@@ -1,8 +1,8 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
-using FAIS.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace FAIS.API.Controllers
 {
@@ -223,15 +222,19 @@ namespace FAIS.API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Add User and region.
+        /// </summary>
+        /// <param name="userDTO">user object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
             if (userDTO == null)
                 throw new ArgumentNullException(nameof(userDTO));
 
-            var addedUser = await _userService.Add(userDTO);
-
-            return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
+            return Ok(await _userService.Add(userDTO));
         }
 
         #endregion Post
@@ -273,26 +276,7 @@ namespace FAIS.API.Controllers
 
             return Ok(await _userService.ChangePassword(userId, newPassword));
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
-        {
-            if (userDTO == null)
-                throw new ArgumentNullException(nameof(userDTO));
-
-            return Ok(await _userService.Add(userDTO));
-        }
-        /// <summary>
-        /// Posts the adding of user roles.
-        /// </summary>
-        /// <param name="roleDTO">User Role data.</param>
-        /// <returns></returns>
-        //[HttpPost("add-user-role")]
-        //[ProducesResponseType(typeof(IReadOnlyCollection<UserRoleModel>), StatusCodes.Status200OK)]
-        //public async Task<IActionResult> AddUserRole([FromBody] UserRoleDTO userRoleDTO)
-        //{
-        //    return Ok(await _userRoleService.Add(userRoleDTO));
-        //}
-
+      
         #endregion Post
 
         #region Put
