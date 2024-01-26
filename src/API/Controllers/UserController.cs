@@ -19,7 +19,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -102,7 +102,9 @@ namespace FAIS.API.Controllers
                 MobileNumber = entity.MobileNumber,
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
-                Photo = entity.Photo
+          
+                Photo = entity.Photo,
+                Password = EncryptionHelper.HashPassword(entity.Password)
             };
             return Ok(user);
         }
@@ -221,10 +223,25 @@ namespace FAIS.API.Controllers
             return Ok();
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
+        {
+            if (userDTO == null)
+                throw new ArgumentNullException(nameof(userDTO));
+
+            var addedUser = await _userService.Add(userDTO);
+
+            return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
+        }
+
+        #endregion Post
+
+        #region Put
+
         /// <summary>
         /// Puts the reset password.
         /// </summary>
-        /// <param name="tempKey">The temporary key.</param>
+        /// <param name="userId">The user identifier.</param>
         /// <param name="newPassword">The new password.</param>
         /// <returns></returns>
         [HttpPut("reset-password/{tempKey}/{newPassword}")]
@@ -237,6 +254,25 @@ namespace FAIS.API.Controllers
             return Ok(await _userService.ResetPassword(tempKey, newPassword));
         }
 
+        /// <summary>
+        /// Puts the change password.
+        /// </summary>
+        /// <param name="userId">The temporary key.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns></returns>
+        [HttpPut("change-password/{userId:int}/{oldPassword}/{newPassword}")]
+        public async Task<IActionResult> ChangePassword(int userId, string oldPassword, string newPassword)
+        {
+            if (string.IsNullOrEmpty(newPassword))
+                throw new ArgumentNullException(nameof(newPassword));
+
+            var user = await _userService.GetById(userId);
+
+            if (user.Password != EncryptionHelper.HashPassword(oldPassword))
+                return Ok(new { errorDescription = "The old password you entered is incorrect. Please try again." });
+
+            return Ok(await _userService.ChangePassword(userId, newPassword));
+        }
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
@@ -245,20 +281,6 @@ namespace FAIS.API.Controllers
 
             return Ok(await _userService.Add(userDTO));
         }
-
-        /// <summary>
-        /// Upload the File on the chosen directory.
-        /// </summary>
-        /// <param name="directory"> Upload file path.</param>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        [HttpPost("[action]")]
-        public async Task<IActionResult> UploadFile([FromQuery] string directory, IFormFile file)
-        {
-                var result = await _userService.WriteFile(file, directory);
-                return Ok(result);
-        }
-
         /// <summary>
         /// Posts the adding of user roles.
         /// </summary>

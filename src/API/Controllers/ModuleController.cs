@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
+using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -57,11 +61,51 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(Module), StatusCodes.Status200OK)]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            return Ok(_moduleService.GetById(id));
+            var entity = _moduleService.GetById(id);
+            var createdBy = await _userService.GetById(entity.CreatedBy);
+
+            var user = new ModuleModel()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description,
+                Url = entity.Url,
+                GroupName = entity.GroupName,
+                Icon = entity.Icon,
+                IsActive = entity.IsActive,
+                CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}",
+                CreatedAt = entity.CreatedAt
+            };
+
+            if (entity.UpdatedBy != null)
+            {
+                user.UpdatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
+                user.UpdatedAt = entity.UpdatedAt;
+            }
+
+            return Ok(user);
         }
 
         #endregion Get
+
+        #region Put
+
+        /// <summary>
+        /// Puts the update module.
+        /// </summary>
+        /// <param name="data">The module data object.</param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] ModuleDTO data)
+        {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
+            return Ok(await _moduleService.Update(data));
+        }
+
+        #endregion Put
     }
 }

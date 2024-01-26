@@ -22,6 +22,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<LoginHistory> AddLoginHistory(int userId, string username, bool isFailed = false);
         Task<DateTime?> GetLastLoginDate(int userId);
         Task<User> ResetPassword(string tempKey, string newPassword);
+        Task<User> ChangePassword(int userId, string newPassword);
         Task<User> LockAccount(int id);
         Task<User> UpdateSignInAttempts(UserDTO userDto);
         Task<string> SetTemporaryKey(int id);
