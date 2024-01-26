@@ -39,11 +39,11 @@ namespace FAIS.ApplicationCore.Services
                 Debug.WriteLine("ExistingRoleId" + userRoleModel.UserId);
 
                 // Find existing role
-                var existingRole = existingRoles.FirstOrDefault(r => r.RoleId == userRole.RoleId);
+                //var existingRole = existingRoles.FirstOrDefault(r => r.RoleId == userRole.RoleId);
                 if (existingRoles.Any(existingRole => existingRole.RoleId == userRole.RoleId ))
                 {
 
-                    existingRole.IsActive = userRole.IsActive;
+                    //existingRole.IsActive = userRole.IsActive;
                     //await _repository.Update(existingRole);
                     continue;
                 }
