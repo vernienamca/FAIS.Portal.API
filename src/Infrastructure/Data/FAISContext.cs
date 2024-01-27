@@ -19,7 +19,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<Settings> Settings { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Users> Users { get; set; }
         public DbSet<StringInterpolation> StringInterpolations { get; set; }
         public DbSet<Template> Templates { get; set; }
         public DbSet<LoginHistory> LoginHistory { get; set; }
