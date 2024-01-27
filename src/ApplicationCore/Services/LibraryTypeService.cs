@@ -2,6 +2,7 @@
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -56,6 +57,14 @@ namespace FAIS.ApplicationCore.Services
             libraryType.UpdatedAt = DateTime.Now;
 
             return await _repository.Update(libraryType);
+        }
+        public IReadOnlyCollection<string> GetLibraryCodesById (int id, string libraryCode)
+        {
+            return _repository.GetLibraryCodesById(id, libraryCode);
+        }
+        public IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode)
+        {
+            return _repository.GetLibrarybyCodes(libraryCode);
         }
     }
 }

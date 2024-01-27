@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using FAIS.ApplicationCore.DTOs;
-using System.Threading.Tasks;
-using FAIS.ApplicationCore.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using FAIS.ApplicationCore.Models;
-using System.IO;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
-using Microsoft.Extensions.Configuration;
 using FAIS.ApplicationCore.Helpers;
+using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
 {
@@ -26,6 +27,9 @@ namespace FAIS.API.Controllers
         private readonly ILibraryTypeService _libraryTypeService;
         private readonly IEmailService _emailService;
         private readonly ISettingsService _settingsService;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserRoleService _userRoleService;
+        private readonly ILibraryTypeRepository _ILibraryTypeRepository;
 
         #endregion Variables
 
@@ -41,12 +45,18 @@ namespace FAIS.API.Controllers
         public UserController(IUserService userService
             , ILibraryTypeService libraryTypeService
             , IEmailService emailService
-            , ISettingsService settingsService)
+            , ISettingsService settingsService
+            , IUserRepository userRepository
+            , IUserRoleService userRoleService
+            , ILibraryTypeRepository libraryTypeRepository)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
             _emailService = emailService;
             _settingsService = settingsService;
+            _userRepository = userRepository;
+            _userRoleService = userRoleService;
+            _ILibraryTypeRepository = libraryTypeRepository;
         }
 
         #endregion Constructor
@@ -81,10 +91,20 @@ namespace FAIS.API.Controllers
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Position = _libraryTypeService.GetById(entity.PositionId).Name,
+                Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : null,
+                TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
+                OUFG = _libraryTypeService.GetLibraryCodesById(entity.Id, "OUFG").FirstOrDefault(),
+                EmployeeNumber = entity.EmployeeNumber,
+                DateExpired = entity.DateExpired,
+                StatusDate = entity.StatusDate,
+                UserName = entity.UserName,
+                MobileNumber = entity.MobileNumber,
+                Status = entity.StatusCode,
+                EmailAddress = entity.EmailAddress,
+          
                 Photo = entity.Photo,
                 Password = EncryptionHelper.HashPassword(entity.Password)
             };
-
             return Ok(user);
         }
 
@@ -126,6 +146,36 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetByTempKey(string tempKey)
         {
             return Ok(await _userService.GetByTempKey(tempKey));
+        }
+
+        /// <summary>
+        /// Gets the user last login date.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("user/last-login")]
+        public async Task<IActionResult> GetLastLoginDate(int userId)
+        {
+            var lastLoginDate = await _userService.GetLastLoginDate(userId);
+            return Ok(lastLoginDate.Value);
+        }
+        /// <summary>
+        /// Get library codes base on libraryCode
+        /// </summary>
+        /// <param name="libraryCode">The library identifier.</param>
+        /// <returns></returns>
+        [HttpGet("library-codes")]
+        public ActionResult<List<string>> GetLibrarybyCodes([FromQuery] string libraryCode)
+        {
+            var result = _libraryTypeService.GetLibrarybyCodes(libraryCode);
+            return Ok(result);
+        }
+
+           [HttpGet("[action]")]
+        public async Task<IActionResult> GetLastUserId()
+        {
+            var lastUserId = await _userService.GetLastUserId();
+            return Ok(lastUserId);
         }
 
         #endregion Get
@@ -172,15 +222,19 @@ namespace FAIS.API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Add User and region.
+        /// </summary>
+        /// <param name="userDTO">user object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
             if (userDTO == null)
                 throw new ArgumentNullException(nameof(userDTO));
 
-            var addedUser = await _userService.Add(userDTO);
-
-            return CreatedAtAction(nameof(GetById), new { id = addedUser.Id }, addedUser);
+            return Ok(await _userService.Add(userDTO));
         }
 
         #endregion Post
@@ -221,6 +275,51 @@ namespace FAIS.API.Controllers
                 return Ok(new { errorDescription = "The old password you entered is incorrect. Please try again." });
 
             return Ok(await _userService.ChangePassword(userId, newPassword));
+        }
+      
+        #endregion Post
+
+        #region Put
+        /// <summary>
+        /// Updates the user
+        /// </summary>
+        /// <param name="id"> The user identifier.</param>
+        /// <param name="userDTO">  Object for updating user information.</param>
+        /// <returns></returns>
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO, [FromRoute] int id)
+        {
+            var positionId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
+            const string defaultValue = "string";
+            var user = await _userRepository.GetById(id);
+        
+            if (id == 0 || userDTO == null)
+                throw new ArgumentNullException(nameof(user));
+
+            user.MiddleName = !string.IsNullOrEmpty(userDTO.MiddleName) && userDTO.MiddleName != defaultValue ? userDTO.MiddleName: user.MiddleName;
+            user.EmployeeNumber = !string.IsNullOrEmpty(userDTO.EmployeeNumber) && userDTO.EmployeeNumber != defaultValue ? userDTO.EmployeeNumber : user.EmployeeNumber;
+            user.UserName = !string.IsNullOrEmpty(userDTO.UserName) && userDTO.UserName != defaultValue ? userDTO.UserName : user.UserName;
+            user.LastName = !string.IsNullOrEmpty(userDTO.LastName) && userDTO.LastName != defaultValue ? userDTO.LastName : user.LastName;
+            user.FirstName = !string.IsNullOrEmpty(userDTO.FirstName) && userDTO.FirstName != defaultValue ? userDTO.FirstName : user.FirstName;
+            user.MobileNumber = !string.IsNullOrEmpty(userDTO.MobileNumber) && userDTO.MobileNumber != defaultValue ? userDTO.MobileNumber : user.MobileNumber;
+            user.EmailAddress = !string.IsNullOrEmpty(userDTO.EmailAddress) && userDTO.EmailAddress != defaultValue ? userDTO.EmailAddress : user.EmailAddress;
+
+            user.PositionId = positionId.Id;
+            var updatedUser = await _userService.Update(user);
+
+            return Ok(updatedUser);
+        }
+
+        /// <summary>
+        /// Add user role 
+        /// </summary>
+        /// <param name="roleDTO">User Role data.</param>
+        /// <returns></returns>
+        [HttpPost("add-user-role")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<UserRoleModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddUserRole([FromBody] UserRoleModel userRole)
+        {
+            return Ok(await _userRoleService.Add(userRole));
         }
 
         #endregion Put

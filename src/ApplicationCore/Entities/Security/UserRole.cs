@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Security

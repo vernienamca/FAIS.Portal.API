@@ -1,4 +1,5 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Role GetById(int id);
         Task<Role> Add(Role role);
         Task<Role> Update(Role role);
+        IReadOnlyCollection<Role> GetUserRolesById(int id);
+        Role GetRoleIdByName(string RoleName);
     }
 }

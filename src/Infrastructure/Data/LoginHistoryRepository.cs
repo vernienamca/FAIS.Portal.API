@@ -1,5 +1,7 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +24,11 @@ namespace FAIS.Infrastructure.Data
         public async Task<LoginHistory> Add(LoginHistory history)
         {
             return await AddAsync(history);
+        }
+
+        public async Task<DateTime?> GetLastLoginDate(int userId)
+        {
+            return await _dbContext.LoginHistory.AsNoTracking().Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedAt).Select(x => (DateTime?)x.CreatedAt).FirstOrDefaultAsync();
         }
     }
 }

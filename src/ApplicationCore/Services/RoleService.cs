@@ -43,7 +43,6 @@ namespace FAIS.ApplicationCore.Services
                     CreatedBy = roleDto.CreatedBy,
                     CreatedAt = DateTime.Now
                 };
-
                 return await _repository.Add(role);
             }
             catch (Exception ex)
@@ -59,6 +58,11 @@ namespace FAIS.ApplicationCore.Services
             role.UpdatedAt = DateTime.Now;
 
             return await _repository.Update(role);
+        }
+
+        public IReadOnlyCollection<Role> GetUserRolesById(int userId)
+        {
+            return _repository.GetUserRolesById(userId);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace FAIS.Infrastructure.Data
         }
 
         public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<LibraryType> LibraryOptions { get; set; }
+        public DbSet<LibraryOptions> LibraryOptions { get; set; }
         public DbSet<LibraryType> LibraryTypes { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<Role> Roles { get; set; }

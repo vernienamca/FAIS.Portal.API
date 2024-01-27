@@ -6,16 +6,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class RoleController : ControllerBase
     {
         #region Variables
 
         private readonly IRoleService _roleService;
+        private readonly IUserRoleService _userRoleService;
 
         #endregion Variables
 
@@ -26,9 +28,10 @@ namespace FAIS.API.Controllers
         /// <param name="roleService">The role service.</param>
         /// <param name="userService">The user service.</param>
         /// </summary>
-        public RoleController(IRoleService roleService)
+        public RoleController(IRoleService roleService, IUserRoleService userRoleService)
         {
             _roleService = roleService;
+            _userRoleService = userRoleService;
         }
 
         #endregion Constructor
@@ -58,6 +61,21 @@ namespace FAIS.API.Controllers
             return Ok(_roleService.GetById(id));
         }
 
+        /// <summary>
+        /// Get UserRoles by Id
+        /// </summary>
+        /// <param name="userId"> The user Identifier.</param>
+        /// <returns></returns>
+        [HttpGet("user-roles/{userId:int}")]
+        public IActionResult GetUserRoles(int userId)
+        {
+            return Ok(_roleService.GetUserRolesById(userId));
+        }
         #endregion Get
+
+        #region Post
+     
+
+        #endregion Post
     }
 }
