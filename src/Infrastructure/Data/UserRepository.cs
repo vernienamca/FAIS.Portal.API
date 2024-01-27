@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
-    public class UserRepository : EFRepository<User, int>, IUserRepository
+    public class UserRepository : EFRepository<Users, int>, IUserRepository
     {
         public UserRepository(FAISContext context) : base(context)
         {
@@ -41,22 +41,22 @@ namespace FAIS.Infrastructure.Data
             return users;
         }
 
-        public async Task<User> GetByUserName(string userName)
+        public async Task<Users> GetByUserName(string userName)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(t => t.UserName == userName);
         }
 
-        public async Task<User> GetByTempKey(string tempKey)
+        public async Task<Users> GetByTempKey(string tempKey)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(t => t.TempKey == tempKey);
         }
 
-        public async Task<User> GetByEmailAddress(string emailAddress)
+        public async Task<Users> GetByEmailAddress(string emailAddress)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(t => t.EmailAddress == emailAddress);
         }
 
-        public async Task<User> GetById(int id)
+        public async Task<Users> GetById(int id)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(t => t.Id == id);
         }
@@ -85,12 +85,12 @@ namespace FAIS.Infrastructure.Data
             return permissions;
         }
 
-        public async Task<User> Add(User test)
+        public async Task<Users> Add(Users test)
         {
             return await AddAsync(test);
         }
 
-        public async Task<User> Update(User test)
+        public async Task<Users> Update(Users test)
         {
             return await UpdateAsync(test);
         }

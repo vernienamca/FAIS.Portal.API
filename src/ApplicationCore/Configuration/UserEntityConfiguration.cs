@@ -5,9 +5,9 @@ using System;
 
 namespace FAIS.ApplicationCore.Configuration
 {
-    public class UserEntityConfiguration : IEntityTypeConfiguration<User>
+    public class UserEntityConfiguration : IEntityTypeConfiguration<Users>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<Users> builder)
         {
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));

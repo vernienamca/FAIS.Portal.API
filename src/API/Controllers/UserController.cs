@@ -120,7 +120,7 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpGet("tempkey/{tempKey}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Users), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByTempKey(string tempKey)
         {
             return Ok(await _userService.GetByTempKey(tempKey));
