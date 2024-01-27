@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int RoleId { get; set; }
-        public int ModuleId { get; set; }
+        public decimal ModuleId { get; set; }
         public string ModuleName { get; set; }
         public string Url { get; set; }
         public string Icon { get; set; }

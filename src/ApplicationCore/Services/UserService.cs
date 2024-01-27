@@ -31,22 +31,22 @@ namespace FAIS.ApplicationCore.Services
             return _userRepository.Get();
         }
 
-        public async Task<Users> GetById(int id)
+        public async Task<User> GetById(int id)
         {
             return await _userRepository.GetById(id);
         }
 
-        public async Task<Users> GetByUserName(string userName)
+        public async Task<User> GetByUserName(string userName)
         {
             return await _userRepository.GetByUserName(userName);
         }
 
-        public async Task<Users> GetByTempKey(string tempKey)
+        public async Task<User> GetByTempKey(string tempKey)
         {
             return await _userRepository.GetByTempKey(tempKey);
         }
 
-        public async Task<Users> GetByEmailAddress(string emailAddress)
+        public async Task<User> GetByEmailAddress(string emailAddress)
         {
             return await _userRepository.GetByEmailAddress(emailAddress);
         }
@@ -56,13 +56,13 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.GetPermissions(id);
         }
 
-        public async Task<Users> Add(UserDTO userDto)
+        public async Task<User> Add(UserDTO userDto)
         {
             try
             {
                 var settings = _settingsRepository.GetById(1);
 
-                var testData = new Users()
+                var testData = new User()
                 {
                     FirstName = userDto.FirstName,
                     MiddleName = userDto.MiddleName,
@@ -106,7 +106,7 @@ namespace FAIS.ApplicationCore.Services
             return await _historyRepository.Add(history);
         }
 
-        public async Task<Users> ResetPassword(string tempKey, string newPassword)
+        public async Task<User> ResetPassword(string tempKey, string newPassword)
         {
             var settings = _settingsRepository.GetById(1);
             var user = await _userRepository.GetByTempKey(tempKey);
@@ -121,7 +121,7 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.Update(user);
         }
 
-        public async Task<Users> LockAccount(int id)
+        public async Task<User> LockAccount(int id)
         {
             var user = await _userRepository.GetById(id);
 
@@ -130,7 +130,7 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.Update(user);
         }
 
-        public async Task<Users> UpdateSignInAttempts(UserDTO userDto)
+        public async Task<User> UpdateSignInAttempts(UserDTO userDto)
         {
             var user = await _userRepository.GetById(userDto.Id);
 

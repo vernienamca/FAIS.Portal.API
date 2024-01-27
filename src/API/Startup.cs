@@ -14,8 +14,6 @@ using FAIS.ApplicationCore.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.X509.Qualified;
-using AutoMapper;
-using FAIS.ApplicationCore.Mapping;
 
 namespace FAIS
 {
@@ -66,8 +64,6 @@ namespace FAIS
 
             services.Configure<TokenKeys>(Configuration.GetSection("TokenOptions"));
 
-            services.AddAutoMapper(map => map.AddProfile(new AutoMapping()), typeof(AutoMapping));
-
             services.AddScoped(typeof(IAuditLogRepository), typeof(AuditLogRepository));
             services.AddScoped(typeof(IModuleRepository), typeof(ModuleRepository));
             services.AddScoped(typeof(ISettingsRepository), typeof(SettingsRepository));
@@ -76,7 +72,6 @@ namespace FAIS
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
             services.AddScoped(typeof(INotificationRepository), typeof(NotificationRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
-            services.AddScoped(typeof(IPermissionRepository), typeof(PermissionRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
@@ -86,7 +81,6 @@ namespace FAIS
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
-            services.AddScoped(typeof(IPermissionService), typeof(PermissionService));
 
             services.AddSwaggerGen(c =>
             {

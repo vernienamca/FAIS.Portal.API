@@ -2,14 +2,13 @@
 using System.Reflection;
 using FAIS.Portal.API.Models;
 using FAIS.ApplicationCore.Models;
-using FAIS.ApplicationCore.Entities.Security;
 
 namespace FAIS.Portal.API
 {
     /// <summary>
     /// The automapper configuration
     /// </summary>
-    public static class AutoMapperConfig 
+    public static class AutoMapperConfig
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MapperConfiguration"/> class.
@@ -36,7 +35,6 @@ namespace FAIS.Portal.API
         private static void ConfigureModule(IProfileExpression configuration)
         {
             configuration.CreateMap<Module, ModuleModel>();
-            configuration.CreateMap<RolePermission, PermissionModel>();
         }
 
         #endregion ModuleMapping
