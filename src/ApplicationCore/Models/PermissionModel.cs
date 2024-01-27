@@ -1,4 +1,6 @@
-﻿namespace FAIS.ApplicationCore.Models
+﻿using System.Collections.Generic;
+
+namespace FAIS.ApplicationCore.Models
 {
     public class PermissionModel
     {
@@ -12,5 +14,10 @@
         public bool IsCreate { get; set; }
         public bool IsRead { get; set; }
         public bool IsUpdate { get; set; }
+    }
+    public class RolePermissionModel
+    {
+        public RoleModel Role { get; set; }
+        public List<PermissionModel> Permissions { get; set; } 
     }
 }

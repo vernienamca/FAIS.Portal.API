@@ -9,13 +9,13 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface IUserRepository
     {
         IReadOnlyCollection<UserModel> Get();
-        Task<Users> GetById(int id);
-        Task<Users> GetByUserName(string userName);
-        Task<Users> GetByTempKey(string tempKey);
-        Task<Users> GetByEmailAddress(string emailAddress);
+        Task<User> GetById(int id);
+        Task<User> GetByUserName(string userName);
+        Task<User> GetByTempKey(string tempKey);
+        Task<User> GetByEmailAddress(string emailAddress);
         Task<List<PermissionModel>> GetPermissions(int id);
-        Task<Users> Add(Users test);
-        Task<Users> Update(Users test);
+        Task<User> Add(User test);
+        Task<User> Update(User test);
     }
 }
  

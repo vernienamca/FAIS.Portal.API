@@ -30,9 +30,12 @@ namespace FAIS.Infrastructure.Data
                              RoleId = perm.RoleId,
                              ModuleId = perm.ModuleId,
                              ModuleName = mod.Name,
+                             GroupName = mod.GroupName,
                              IsCreate = perm.IsCreate == 'Y'? true : false,
                              IsRead = perm.IsRead == 'Y' ? true : false,
-                             IsUpdate = perm.IsUpdate == 'Y' ? true : false
+                             IsUpdate = perm.IsUpdate == 'Y' ? true : false,
+                             Url = mod.Url,
+                             Icon = mod.Icon
                          }).ToList();
 
             return permission;
@@ -55,7 +58,7 @@ namespace FAIS.Infrastructure.Data
         public async Task<RolePermission> Update(RolePermission permission)
         {
             return await UpdateAsync(permission);
-        }
+        } 
         public async Task Delete(RolePermission permission)
         {
             await DeleteAsync(permission);
