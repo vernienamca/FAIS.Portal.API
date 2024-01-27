@@ -10,6 +10,7 @@ using FAIS.ApplicationCore.Models;
 using System.IO;
 using FAIS.ApplicationCore.Entities.Security;
 using Microsoft.Extensions.Configuration;
+using FAIS.ApplicationCore.Helpers;
 
 namespace FAIS.API.Controllers
 {
@@ -80,7 +81,8 @@ namespace FAIS.API.Controllers
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Position = _libraryTypeService.GetById(entity.PositionId).Name,
-                Photo = entity.Photo
+                Photo = entity.Photo,
+                Password = EncryptionHelper.HashPassword(entity.Password)
             };
 
             return Ok(user);
@@ -170,22 +172,6 @@ namespace FAIS.API.Controllers
             return Ok();
         }
 
-        /// <summary>
-        /// Puts the reset password.
-        /// </summary>
-        /// <param name="tempKey">The temporary key.</param>
-        /// <param name="newPassword">The new password.</param>
-        /// <returns></returns>
-        [HttpPut("reset-password/{tempKey}/{newPassword}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword(string tempKey, string newPassword)
-        {
-            if (string.IsNullOrEmpty(tempKey))
-                throw new ArgumentNullException(nameof(tempKey));
-
-            return Ok(await _userService.ResetPassword(tempKey, newPassword));
-        }
-
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
@@ -198,5 +184,45 @@ namespace FAIS.API.Controllers
         }
 
         #endregion Post
+
+        #region Put
+
+        /// <summary>
+        /// Puts the reset password.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns></returns>
+        [HttpPut("reset-password/{tempKey}/{newPassword}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(string tempKey, string newPassword)
+        {
+            if (string.IsNullOrEmpty(tempKey))
+                throw new ArgumentNullException(nameof(tempKey));
+
+            return Ok(await _userService.ResetPassword(tempKey, newPassword));
+        }
+
+        /// <summary>
+        /// Puts the change password.
+        /// </summary>
+        /// <param name="userId">The temporary key.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns></returns>
+        [HttpPut("change-password/{userId:int}/{oldPassword}/{newPassword}")]
+        public async Task<IActionResult> ChangePassword(int userId, string oldPassword, string newPassword)
+        {
+            if (string.IsNullOrEmpty(newPassword))
+                throw new ArgumentNullException(nameof(newPassword));
+
+            var user = await _userService.GetById(userId);
+
+            if (user.Password != EncryptionHelper.HashPassword(oldPassword))
+                return Ok(new { errorDescription = "The old password you entered is incorrect. Please try again." });
+
+            return Ok(await _userService.ChangePassword(userId, newPassword));
+        }
+
+        #endregion Put
     }
 }

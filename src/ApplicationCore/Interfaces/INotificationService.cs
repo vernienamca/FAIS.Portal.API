@@ -9,8 +9,8 @@ namespace FAIS.ApplicationCore.Interfaces
 {
     public interface INotificationService
     {
-        IReadOnlyCollection<StringInterpolationModel> GetStringInterpolations();
-        Task<StringInterpolation> GetStringInterpolationById(int id);
+        IReadOnlyCollection<StringInterpolationModel> GetIntepolations();
+        Task<StringInterpolation> GetInterpolationById(int id);
         IReadOnlyCollection<TemplateModel> GetNotificationTemplates();
         Task<Template> GetTemplateById(int id);
     }

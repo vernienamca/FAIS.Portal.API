@@ -30,11 +30,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("CONTENT");
 
             builder.Property(e => e.Receiver)
-                .HasMaxLength(250)
+                .IsRequired()
                 .HasColumnName("RECEIVER");
 
             builder.Property(e => e.NotificationType)
-                .HasMaxLength(50)
+                .IsRequired(false)
                 .HasColumnName("NOTIFICATION_TYPE");
 
             builder.Property(e => e.IsActive)

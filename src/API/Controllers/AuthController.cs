@@ -69,7 +69,7 @@ namespace FAIS.Controllers
                 var user = await _userService.GetByUserName(username);
 
                 if (user == null)
-                    return Ok("Invalid username or password combination. Please try again.");
+                    return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
 
                 userDto.Id = user.Id;
 

@@ -74,7 +74,7 @@ namespace FAIS.Portal.API.Controllers
         public IActionResult ExportLogs()
         {
             return File(_auditLogService.ExportAuditLogs(), System.Net.Mime.MediaTypeNames.Application.Octet, 
-                $"logs_{DateTime.Now.Date}.xlsx");
+                $"logs_{DateTime.Now.ToString("MM/dd/yyyy hh:mm tt")}.xlsx");
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace FAIS.Portal.API.Controllers
         [HttpGet("open-folder")]
         public IActionResult OpenFolder()
         {
-            Process.Start("explorer.exe", _settingsService.GetById(1).AuditLogsFilePath);
+            Process.Start(@"C:\Windows\explorer.exe", _settingsService.GetById(1).AuditLogsFilePath);
 
             return Ok();
         }

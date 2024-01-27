@@ -121,6 +121,21 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.Update(user);
         }
 
+        public async Task<User> ChangePassword(int userId, string newPassword)
+        {
+            var settings = _settingsRepository.GetById(1);
+            var user = await _userRepository.GetById(userId);
+
+            user.Password = EncryptionHelper.HashPassword(newPassword);
+            user.SignInAttempts = 0;
+            user.StatusCode = (int)UserStatusEnum.Active;
+            user.StatusDate = DateTime.Now;
+            user.DateExpired = DateTime.Now.AddDays(settings.PasswordExpiry);
+
+            return await _userRepository.Update(user);
+        }
+
+        public async Task<User> LockAccount(int id)
         public async Task<Users> LockAccount(int id)
         {
             var user = await _userRepository.GetById(id);
