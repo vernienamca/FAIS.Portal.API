@@ -56,8 +56,7 @@ namespace FAIS.API.Controllers
         public IActionResult GetNotificationTemplates()
         {
             return Ok(_notificationService.GetNotificationTemplates());
-        }
-
-        #endregion Get
+        }           
+        #endregion
     }
 }

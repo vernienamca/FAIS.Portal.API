@@ -1,4 +1,5 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,5 +9,6 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IQueryable<LoginHistory> Get();
         Task<LoginHistory> Add(LoginHistory history);
+        Task<DateTime?> GetLastLoginDate(int id);
     }
 }

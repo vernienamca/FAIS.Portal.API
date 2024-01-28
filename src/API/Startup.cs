@@ -86,6 +86,8 @@ namespace FAIS
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
+            services.AddScoped(typeof(IUserRoleService), typeof(UserRoleService));
+            services.AddScoped(typeof(IUserRoleRepository), typeof(UserRoleRepository));
             services.AddScoped(typeof(IPermissionService), typeof(PermissionService));
 
             services.AddSwaggerGen(c =>
