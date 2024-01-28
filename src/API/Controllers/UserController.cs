@@ -92,8 +92,6 @@ namespace FAIS.API.Controllers
                 LastName = entity.LastName,
                 Position = _libraryTypeService.GetById(entity.PositionId).Name,
                 Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : null,
-                TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
-                OUFG = _libraryTypeService.GetLibraryCodesById(entity.Id, "OUFG").FirstOrDefault(),
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,
                 StatusDate = entity.StatusDate,
@@ -146,36 +144,6 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetByTempKey(string tempKey)
         {
             return Ok(await _userService.GetByTempKey(tempKey));
-        }
-
-        /// <summary>
-        /// Gets the user last login date.
-        /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <returns></returns>
-        [HttpGet("user/last-login")]
-        public async Task<IActionResult> GetLastLoginDate(int userId)
-        {
-            var lastLoginDate = await _userService.GetLastLoginDate(userId);
-            return Ok(lastLoginDate.Value);
-        }
-        /// <summary>
-        /// Get library codes base on libraryCode
-        /// </summary>
-        /// <param name="libraryCode">The library identifier.</param>
-        /// <returns></returns>
-        [HttpGet("library-codes")]
-        public ActionResult<List<string>> GetLibrarybyCodes([FromQuery] string libraryCode)
-        {
-            var result = _libraryTypeService.GetLibrarybyCodes(libraryCode);
-            return Ok(result);
-        }
-
-           [HttpGet("[action]")]
-        public async Task<IActionResult> GetLastUserId()
-        {
-            var lastUserId = await _userService.GetLastUserId();
-            return Ok(lastUserId);
         }
 
         #endregion Get
@@ -280,6 +248,7 @@ namespace FAIS.API.Controllers
         #endregion Post
 
         #region Put
+
         /// <summary>
         /// Updates the user
         /// </summary>
@@ -289,7 +258,7 @@ namespace FAIS.API.Controllers
         [HttpPut("[action]/{id}")]
         public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO, [FromRoute] int id)
         {
-            var positionId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
+            //var positionId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
             const string defaultValue = "string";
             var user = await _userRepository.GetById(id);
         
@@ -304,10 +273,10 @@ namespace FAIS.API.Controllers
             user.MobileNumber = !string.IsNullOrEmpty(userDTO.MobileNumber) && userDTO.MobileNumber != defaultValue ? userDTO.MobileNumber : user.MobileNumber;
             user.EmailAddress = !string.IsNullOrEmpty(userDTO.EmailAddress) && userDTO.EmailAddress != defaultValue ? userDTO.EmailAddress : user.EmailAddress;
 
-            user.PositionId = positionId.Id;
-            var updatedUser = await _userService.Update(user);
+            user.PositionId = 1;
+            //var updatedUser = await _userService.Update(user);
 
-            return Ok(updatedUser);
+            return Ok(null);
         }
 
         /// <summary>
