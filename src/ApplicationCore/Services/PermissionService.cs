@@ -3,6 +3,7 @@ using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,11 +37,31 @@ namespace FAIS.ApplicationCore.Services
             await _permissionRepository.Delete(rolePermission);
         }
 
-        public async Task AddPermission(PermissionDTO permissionDTO)
+        public async Task AddPermission(AddPermissionDTO permissionDTO)
         {
             var permissionDto = _mapper.Map<RolePermission>(permissionDTO);
             await _permissionRepository.Add(permissionDto);
         }
+        public async Task UpdatePermission(PermissionDTO permissionDTO)
+        {
+            var permissionDto = _mapper.Map<RolePermission>(permissionDTO);
+            await _permissionRepository.Update(permissionDto);
+        }
+
+        public async Task UpdateRoleAddPermission(UpdateRolePermissionDTO rolePermission)
+        {
+            var role = _roleRepository.GetById(rolePermission.RoleId);
+            role.Description = rolePermission.Description;
+            role.Name = rolePermission.Name;
+            role.UpdatedAt = DateTime.Now;
+            role.IsActive = rolePermission.IsActive ? 'Y' : 'N';
+            role.UpdatedBy = rolePermission.UpdatedBy;
+            await _roleRepository.Update(role);
+
+            var permissionMapping = _mapper.Map<List<RolePermission>>(rolePermission.rolePermissionModel);
+            await _permissionRepository.AddList(rolePermission.RoleId, permissionMapping);
+        }
+
         public RolePermissionModel GetRolePermissionListByRoleId(int roleId)
         {
             var getRole = _roleRepository.GetById(roleId);

@@ -64,9 +64,9 @@ namespace FAIS.Infrastructure.Data
             await DeleteAsync(permission);
         }
 
-        public async Task<List<RolePermission>> AddList(int roleId, List<RolePermission> permissionList)
+        public async Task AddList(int roleId, List<RolePermission> permissionList)
         {
-            var perm = await _dbContext.RolePermissions.Where(perm => perm.RoleId == roleId).ToListAsync();
+            var perm = _dbContext.RolePermissions.Where(perm => perm.RoleId == roleId).ToList();
             if(perm.Count != 0)
             {
                 _dbContext.RolePermissions.RemoveRange(perm);
@@ -75,8 +75,6 @@ namespace FAIS.Infrastructure.Data
 
             _dbContext.RolePermissions.AddRange(permissionList);
             await _dbContext.SaveChangesAsync();
-
-            return await _dbContext.RolePermissions.Where(x=>x.RoleId == roleId).ToListAsync();
         }
     }
 }

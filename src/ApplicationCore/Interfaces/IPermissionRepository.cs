@@ -1,5 +1,4 @@
-﻿
-using FAIS.ApplicationCore.Entities.Security;
+﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,6 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<RolePermission> Add(RolePermission permission);
         Task<RolePermission> Update(RolePermission permission);
         Task Delete(RolePermission permission);
-        Task<List<RolePermission>> AddList(int roleId, List<RolePermission> permissionList);
+        Task AddList(int roleId, List<RolePermission> permissionList);
     }
 }
