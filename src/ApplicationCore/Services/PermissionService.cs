@@ -31,6 +31,11 @@ namespace FAIS.ApplicationCore.Services
         }
         #endregion
 
+        public IReadOnlyCollection<PermissionModel> Get()
+        {
+            return _permissionRepository.Get();
+        }
+
         public async Task DeletePermission(int id)
         {
             var rolePermission = _permissionRepository.GetById(id);

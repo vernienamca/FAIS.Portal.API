@@ -1,7 +1,10 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace FAIS.Portal.API.Controllers
 {
@@ -30,6 +33,17 @@ namespace FAIS.Portal.API.Controllers
         #endregion Constructor
 
         #region get
+        /// <summary>
+        /// List the roles.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<PermissionModel>), StatusCodes.Status200OK)]
+        public IActionResult Get()
+        {
+            return Ok(_permissionService.Get());
+        }
+
         /// <summary>
         /// Gets the permission by unique identifier.
         /// </summary>
