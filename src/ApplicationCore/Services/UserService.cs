@@ -164,6 +164,7 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.Update(user);
         }
 
+      //  public async Task<User> LockAccount(int id)
         public async Task<User> LockAccount(int id)
         {
             var user = await _userRepository.GetById(id);
