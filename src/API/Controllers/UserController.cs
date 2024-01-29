@@ -18,7 +18,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -99,7 +99,9 @@ namespace FAIS.API.Controllers
                 MobileNumber = entity.MobileNumber,
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
-          
+                TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
+                OUFG = entity.OupFgId.HasValue ? _libraryTypeService.GetById(entity.OupFgId.Value)?.Name : null,
+                LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
                 Photo = entity.Photo,
                 Password = EncryptionHelper.HashPassword(entity.Password)
             };
@@ -258,7 +260,7 @@ namespace FAIS.API.Controllers
         [HttpPut("[action]/{id}")]
         public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO, [FromRoute] int id)
         {
-            //var positionId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
+            var positionId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
             const string defaultValue = "string";
             var user = await _userRepository.GetById(id);
         
@@ -273,8 +275,7 @@ namespace FAIS.API.Controllers
             user.MobileNumber = !string.IsNullOrEmpty(userDTO.MobileNumber) && userDTO.MobileNumber != defaultValue ? userDTO.MobileNumber : user.MobileNumber;
             user.EmailAddress = !string.IsNullOrEmpty(userDTO.EmailAddress) && userDTO.EmailAddress != defaultValue ? userDTO.EmailAddress : user.EmailAddress;
 
-            user.PositionId = 1;
-            //var updatedUser = await _userService.Update(user);
+            var updatedUser = await _userService.Update(user);
 
             return Ok(null);
         }
