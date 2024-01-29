@@ -18,7 +18,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -275,9 +275,8 @@ namespace FAIS.API.Controllers
             user.MobileNumber = !string.IsNullOrEmpty(userDTO.MobileNumber) && userDTO.MobileNumber != defaultValue ? userDTO.MobileNumber : user.MobileNumber;
             user.EmailAddress = !string.IsNullOrEmpty(userDTO.EmailAddress) && userDTO.EmailAddress != defaultValue ? userDTO.EmailAddress : user.EmailAddress;
 
-            var updatedUser = await _userService.Update(user);
+          return Ok(await _userService.Update(user));
 
-            return Ok(null);
         }
 
         /// <summary>
