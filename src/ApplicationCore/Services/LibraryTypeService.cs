@@ -66,5 +66,15 @@ namespace FAIS.ApplicationCore.Services
         {
             return _repository.GetLibrarybyCodes(libraryCode);
         }
+
+        public Task Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<LibraryType> Add(LibraryType libraryType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
