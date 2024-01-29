@@ -23,6 +23,9 @@ namespace FAIS.Infrastructure.Data
         {
             var permission = (from perm in _dbContext.RolePermissions.AsNoTracking()
                               join mod in _dbContext.Modules.AsNoTracking() on perm.ModuleId equals mod.Id
+                              join usrC in _dbContext.Users.AsNoTracking() on perm.CreatedBy equals usrC.Id
+                              join usrU in _dbContext.Users.AsNoTracking() on perm.UpdatedBy equals usrU.Id into usrUX
+                              from usrU in usrUX.DefaultIfEmpty()
                               orderby perm.Id descending
                          select new PermissionModel()
                          {
@@ -35,7 +38,13 @@ namespace FAIS.Infrastructure.Data
                              IsRead = perm.IsRead == 'Y' ? true : false,
                              IsUpdate = perm.IsUpdate == 'Y' ? true : false,
                              Url = mod.Url,
-                             Icon = mod.Icon
+                             Icon = mod.Icon,
+                             CreatedBy = perm.CreatedBy,
+                             CreatedByName = $"{usrC.FirstName} {usrC.LastName}",
+                             CreatedAt = perm.CreatedAt,
+                             UpdatedBy = perm.UpdatedBy,
+                             UpdatedByName = perm.UpdatedBy.HasValue ? $"{usrU.FirstName} {usrU.LastName}" : "",
+                             UpdatedAt = perm.UpdatedAt != null ? perm.UpdatedAt : null,
                          }).ToList();
 
             return permission;

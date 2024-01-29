@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FAIS.ApplicationCore.Models
 {
@@ -14,6 +15,12 @@ namespace FAIS.ApplicationCore.Models
         public bool IsCreate { get; set; }
         public bool IsRead { get; set; }
         public bool IsUpdate { get; set; }
+        public int CreatedBy { get; set; }
+        public string CreatedByName {get;set; }
+        public DateTime CreatedAt { get; set; }
+        public int? UpdatedBy { get; set; }
+        public string UpdatedByName { get; set; }
+        public DateTime? UpdatedAt { get; set;}
     }
     public class RolePermissionModel
     {
