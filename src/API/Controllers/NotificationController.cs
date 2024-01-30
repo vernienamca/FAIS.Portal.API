@@ -4,6 +4,8 @@ using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Services;
 
 namespace FAIS.API.Controllers
 {
@@ -56,7 +58,31 @@ namespace FAIS.API.Controllers
         public IActionResult GetNotificationTemplates()
         {
             return Ok(_notificationService.GetNotificationTemplates());
-        }           
+        }
+        #endregion
+
+        #region post
+        /// <summary>
+        /// Add string interpolation
+        /// </summary>
+        /// <param name="interpolation">The interpolation identifier.</param>
+        /// <returns></returns>
+        [HttpPost("AddStringInterpolation")]
+        public IActionResult AddStringInterpolation(AddStringInterpolationDTO interpolation)
+        {
+            return Ok(_notificationService.AddStringInterpolation(interpolation));
+        }
+
+        /// <summary>
+        /// Update interpolation
+        /// </summary>
+        /// <param name="interpolation">The interpolation identifier.</param>
+        /// <returns></returns>
+        [HttpPost("UpdateStringInterpolation")]
+        public IActionResult UpdateStringInterpolation(StringInterpolationDTO interpolation)
+        {
+            return Ok(_notificationService.UpdateStringInterpolation(interpolation));
+        }
         #endregion
     }
 }

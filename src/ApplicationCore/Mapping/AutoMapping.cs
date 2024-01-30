@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
 
 namespace FAIS.ApplicationCore.Mapping
@@ -23,6 +24,9 @@ namespace FAIS.ApplicationCore.Mapping
                 .ForMember(x => x.IsCreate, opt => opt.MapFrom(s => s.IsCreate ? 'Y' :'N'))
                 .ForMember(x => x.IsUpdate, opt => opt.MapFrom(s => s.IsUpdate ? 'Y' : 'N'))
                 .ForMember(x => x.IsRead, opt => opt.MapFrom(s => s.IsRead ? 'Y' : 'N')).ReverseMap();
+
+            CreateMap<StringInterpolationDTO, StringInterpolation>();
+            CreateMap<AddStringInterpolationDTO, StringInterpolation>();
         }        
     }
 }

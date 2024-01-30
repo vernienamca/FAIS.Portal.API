@@ -1,6 +1,10 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using AutoMapper;
+using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,10 +13,12 @@ namespace FAIS.ApplicationCore.Services
     public class NotificationService : INotificationService
     {
         private readonly INotificationRepository _repository;
+        private readonly IMapper _mapper;
 
-        public NotificationService(INotificationRepository repository)
+        public NotificationService(INotificationRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public IReadOnlyCollection<StringInterpolationModel> GetIntepolations()
@@ -33,6 +39,18 @@ namespace FAIS.ApplicationCore.Services
         public async Task<StringInterpolation> GetInterpolationById(int id)
         {
             return await _repository.GetInterpolationById(id);
+        }
+
+        public async Task AddStringInterpolation(AddStringInterpolationDTO dto)
+        {
+            var interpolationDto = _mapper.Map<StringInterpolation>(dto);
+            await _repository.AddStringInterpolation(interpolationDto);
+        }
+
+        public async Task UpdateStringInterpolation(StringInterpolationDTO dto)
+        {
+            var interpolationDto = _mapper.Map<StringInterpolation>(dto);
+            await _repository.UpdateStringInterpolation(interpolationDto);
         }
     }
 }
