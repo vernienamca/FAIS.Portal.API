@@ -12,7 +12,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class NotificationController : ControllerBase
     {
         #region Variables
@@ -67,7 +67,7 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="interpolation">The interpolation identifier.</param>
         /// <returns></returns>
-        [HttpPost("AddStringInterpolation")]
+        [HttpPut("Interpolation")]
         public IActionResult AddStringInterpolation(AddStringInterpolationDTO interpolation)
         {
             return Ok(_notificationService.AddStringInterpolation(interpolation));
@@ -78,7 +78,7 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="interpolation">The interpolation identifier.</param>
         /// <returns></returns>
-        [HttpPost("UpdateStringInterpolation")]
+        [HttpPost]
         public IActionResult UpdateStringInterpolation(StringInterpolationDTO interpolation)
         {
             return Ok(_notificationService.UpdateStringInterpolation(interpolation));

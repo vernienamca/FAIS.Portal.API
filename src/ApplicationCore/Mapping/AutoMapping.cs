@@ -26,7 +26,8 @@ namespace FAIS.ApplicationCore.Mapping
                 .ForMember(x => x.IsRead, opt => opt.MapFrom(s => s.IsRead ? 'Y' : 'N')).ReverseMap();
 
             CreateMap<StringInterpolationDTO, StringInterpolation>();
-            CreateMap<AddStringInterpolationDTO, StringInterpolation>();
+            CreateMap<AddStringInterpolationDTO, StringInterpolation>()
+                .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
         }        
     }
 }
