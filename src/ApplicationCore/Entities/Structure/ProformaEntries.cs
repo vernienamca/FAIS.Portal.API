@@ -93,8 +93,5 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public int? UpdatedBy { get; set; }
-
-        //public virtual PlantInformation PlantCodeNavigation { get; set; }
-        //public virtual TransactionTypes TranTypeSeqNavigation { get; set; }
     }
 }
