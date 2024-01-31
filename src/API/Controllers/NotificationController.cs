@@ -26,9 +26,6 @@ namespace FAIS.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationController"/> class.
-        /// </summary>
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NotificationController"/> class.
         /// <param name="notificationService">The notification service.</param>
         /// </summary>
         public NotificationController(INotificationService notificationService)
