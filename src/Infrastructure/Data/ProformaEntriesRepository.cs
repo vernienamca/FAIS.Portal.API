@@ -22,9 +22,9 @@ namespace FAIS.Infrastructure.Data
             return _dbContext.ProformaEntries.FirstOrDefault(t => t.Id == id);
         }
 
-        public async Task<ProformaEntries> Update(ProformaEntries role)
+        public async Task<ProformaEntries> Update(ProformaEntries proforma)
         {
-            return await UpdateAsync(role);
+            return await UpdateAsync(proforma);
         }
     }
 }
