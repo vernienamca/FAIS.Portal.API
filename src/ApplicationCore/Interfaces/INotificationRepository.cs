@@ -1,4 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
