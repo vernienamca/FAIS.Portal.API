@@ -41,16 +41,16 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.GetInterpolationById(id);
         }
 
-        public async Task AddStringInterpolation(AddStringInterpolationDTO dto)
+        public async Task<StringInterpolation> AddStringInterpolation(AddStringInterpolationDTO dto)
         {
             var interpolationDto = _mapper.Map<StringInterpolation>(dto);
-            await _repository.AddStringInterpolation(interpolationDto);
+            return await _repository.AddStringInterpolation(interpolationDto);
         }
 
-        public async Task UpdateStringInterpolation(StringInterpolationDTO dto)
+        public async Task<StringInterpolation> UpdateStringInterpolation(StringInterpolationDTO dto)
         {
             var interpolationDto = _mapper.Map<StringInterpolation>(dto);
-            await _repository.UpdateStringInterpolation(interpolationDto);
+            return await _repository.UpdateStringInterpolation(interpolationDto);
         }
     }
 }

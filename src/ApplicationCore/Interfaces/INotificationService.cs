@@ -13,7 +13,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<StringInterpolation> GetInterpolationById(int id);
         IReadOnlyCollection<TemplateModel> GetNotificationTemplates();
         Task<Template> GetTemplateById(int id);
-        Task AddStringInterpolation(AddStringInterpolationDTO dto);
-        Task UpdateStringInterpolation(StringInterpolationDTO dto);
+        Task<StringInterpolation> AddStringInterpolation(AddStringInterpolationDTO dto);
+        Task<StringInterpolation> UpdateStringInterpolation(StringInterpolationDTO dto);
     }
 }

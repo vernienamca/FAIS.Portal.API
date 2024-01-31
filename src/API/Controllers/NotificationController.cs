@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Services;
+using FAIS.ApplicationCore.Entities.Structure;
 
 namespace FAIS.API.Controllers
 {
@@ -66,7 +67,7 @@ namespace FAIS.API.Controllers
         /// <param name="interpolationDto">The interpolation data object.</param>
         /// <returns></returns>
         [HttpPost("add/interpolation")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
         public IActionResult AddStringInterpolation(AddStringInterpolationDTO interpolationDto)
         {
             return Ok(_notificationService.AddStringInterpolation(interpolationDto));
@@ -76,8 +77,8 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="interpolationDto">The interpolation data object.</param>
         /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpPut("interpolation/{id:int}")]
+        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
         public IActionResult UpdateStringInterpolation(StringInterpolationDTO interpolationDto)
         {
             return Ok(_notificationService.UpdateStringInterpolation(interpolationDto));
