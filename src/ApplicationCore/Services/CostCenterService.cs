@@ -49,9 +49,6 @@ namespace FAIS.ApplicationCore.Services
             costCenter.Number = costCenterDTO.Number;
             costCenter.ShortName = costCenterDTO.ShortName;
 
-            //costCenter.UpdatedBy = costCenterDTO.UpdatedBy;
-            //costCenter.UpdatedAt = DateTime.Now;
-
             return await _repository.Update(costCenter);
         }
     }
