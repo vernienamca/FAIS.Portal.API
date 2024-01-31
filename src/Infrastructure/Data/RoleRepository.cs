@@ -31,9 +31,11 @@ namespace FAIS.Infrastructure.Data
                             Description = rol.Description,
                             IsActive = rol.IsActive,
                             StatusDate = rol.StatusDate,
-                            CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
+                            CreatedBy = rol.CreatedBy,
+                            CreatedByName = $"{usrC.FirstName} {usrC.LastName}",
                             CreatedAt = rol.CreatedAt,
-                            UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                            UpdatedBy = rol.UpdatedBy,
+                            UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
                             UpdatedAt = rol.UpdatedBy != null ? rol.UpdatedAt : null,
                         }).ToList();
 

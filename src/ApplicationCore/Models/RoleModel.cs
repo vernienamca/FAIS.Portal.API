@@ -9,9 +9,11 @@ namespace FAIS.ApplicationCore.Models
         public string Description { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
-        public string CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
+        public string CreatedByName { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
+        public string UpdatedByName { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
 }

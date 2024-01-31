@@ -27,7 +27,8 @@ namespace FAIS.Infrastructure.Data
                          join pst in _dbContext.LibraryTypes.Where(x => x.Code == "PST").AsNoTracking() on usr.PositionId equals pst.Id into pstX
                          from pst in pstX.DefaultIfEmpty()
                          join div in _dbContext.LibraryTypes.Where(x => x.Code == "DIV").AsNoTracking() on usr.DivisionId equals div.Id
-                         join ofg in _dbContext.LibraryTypes.Where(t => t.Code == "OUFG").AsNoTracking() on usr.OupFgId equals ofg.Id
+                         join ofg in _dbContext.LibraryTypes.Where(t => t.Code == "OUFG").AsNoTracking() on usr.OupFgId equals ofg.Id into ofgX
+                         from ofg in ofgX.DefaultIfEmpty()
                          orderby usr.Id descending
                          select new UserModel()
                          {

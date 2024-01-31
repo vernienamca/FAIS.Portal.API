@@ -69,8 +69,7 @@ namespace FAIS.ApplicationCore.Services
 
         public RolePermissionModel GetRolePermissionListByRoleId(int roleId)
         {
-            var getRole = _roleRepository.GetById(roleId);
-            var roleModel = _mapper.Map<RoleModel>(getRole);
+            var roleModel = _roleRepository.Get().FirstOrDefault(x=>x.Id == roleId);
             var getPermission = _permissionRepository.Get().Where(perm => perm.RoleId == roleId).ToList();
             var permissionModel = _mapper.Map<List<PermissionModel>>(getPermission);
 

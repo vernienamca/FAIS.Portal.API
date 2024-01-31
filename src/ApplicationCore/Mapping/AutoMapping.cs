@@ -27,6 +27,10 @@ namespace FAIS.ApplicationCore.Mapping
 
             CreateMap<ProformaEntriesDTO, ProformaEntries>();
             CreateMap<UpdateProformaEntriesDTO, ProformaEntries>();
-        }
+
+            CreateMap<StringInterpolationDTO, StringInterpolation>();
+            CreateMap<AddStringInterpolationDTO, StringInterpolation>()
+                .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
+        }        
     }
 }
