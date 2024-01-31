@@ -38,7 +38,6 @@ namespace FAIS.API.Controllers
         #endregion Constructor
 
         #region Get
-
         /// <summary>
         /// List the string interpolations.
         /// </summary>
@@ -48,7 +47,6 @@ namespace FAIS.API.Controllers
         {
             return Ok(_notificationService.GetIntepolations());
         }
-
         /// <summary>
         /// List the notification templates.
         /// </summary>
@@ -63,25 +61,26 @@ namespace FAIS.API.Controllers
 
         #region post
         /// <summary>
-        /// Add string interpolation
+        /// Posts the create interpolation.
         /// </summary>
-        /// <param name="interpolation">The interpolation identifier.</param>
+        /// <param name="interpolationDto">The interpolation data object.</param>
         /// <returns></returns>
-        [HttpPut("Interpolation")]
-        public IActionResult AddStringInterpolation(AddStringInterpolationDTO interpolation)
+        [HttpPost("add/interpolation")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult AddStringInterpolation(AddStringInterpolationDTO interpolationDto)
         {
-            return Ok(_notificationService.AddStringInterpolation(interpolation));
+            return Ok(_notificationService.AddStringInterpolation(interpolationDto));
         }
-
         /// <summary>
-        /// Update interpolation
+        /// Puts the update string interpolation.
         /// </summary>
-        /// <param name="interpolation">The interpolation identifier.</param>
+        /// <param name="interpolationDto">The interpolation data object.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult UpdateStringInterpolation(StringInterpolationDTO interpolation)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult UpdateStringInterpolation(StringInterpolationDTO interpolationDto)
         {
-            return Ok(_notificationService.UpdateStringInterpolation(interpolation));
+            return Ok(_notificationService.UpdateStringInterpolation(interpolationDto));
         }
         #endregion
     }

@@ -26,5 +26,4 @@ namespace FAIS.ApplicationCore.DTOs
         public int CreatedBy { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
     }
-
 }
