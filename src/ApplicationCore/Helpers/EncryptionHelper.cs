@@ -6,6 +6,10 @@ namespace FAIS.ApplicationCore.Helpers
 {
     public class EncryptionHelper
     {
+        /// <summary>
+        /// Gets the client ip address.
+        /// <param name="password">The password.</param>
+        /// </summary>
         public static string HashPassword(string password)
         {
             try

@@ -40,7 +40,8 @@ namespace FAIS.Infrastructure.Data
                             TAFGs = _dbContext.UserTAFGs.Where(x => x.UserId == usr.Id).AsNoTracking().Join(_dbContext.LibraryTypes.AsNoTracking(), fgs => fgs.TAFGId, lib => lib.Id,
                                 (fgs, lib) => new { fgs, lib }).Select(t => t.lib.Name).ToList(),
                             OUFG = ofg.Name,
-                            Status = usr.StatusCode
+                            Status = usr.StatusCode,
+                            Photo = usr.Photo
                          }).ToList();
 
             return users;   
