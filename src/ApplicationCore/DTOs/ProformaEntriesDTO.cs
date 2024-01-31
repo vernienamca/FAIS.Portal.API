@@ -35,9 +35,6 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime? DeletedAt { get; set; }
         public int CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
-
-        //public virtual PlantInformation PlantCodeNavigation { get; set; }
-        //public virtual TransactionTypes TranTypeSeqNavigation { get; set; }
     }
 
     public class UpdateProformaEntriesDTO
