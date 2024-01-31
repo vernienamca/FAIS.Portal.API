@@ -18,26 +18,32 @@ namespace FAIS.Portal.API.Controllers
     [Authorize]
     public class ProformaEntriesController : ControllerBase
     {
+    
         #region Variables
+        
         private readonly IProformaEntriesService _proformaEntriesService;
+        
         #endregion Variables
 
         #region Constructor
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ProformaEntriesController"/> class.
-        /// <param name="proformaEntriesService">The module service.</param>
+        /// <param name="proformaEntriesService">The Proforma Entries service.</param>
         /// </summary>
         public ProformaEntriesController(IProformaEntriesService proformaEntriesService)
         {
             _proformaEntriesService = proformaEntriesService;
         }
+        
         #endregion Constructor
 
         #region Put
+        
         /// <summary>
-        /// Handles the update for Proforma Entries.
+        /// Puts the update of Proforma Entries.
         /// </summary>
-        /// <param name="data">The module data object.</param>
+        /// <param name="data">The Proforma Entries data object.</param>
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(typeof(ProformaEntries), StatusCodes.Status200OK)]
@@ -48,6 +54,7 @@ namespace FAIS.Portal.API.Controllers
 
             return Ok(await _proformaEntriesService.Update(data));
         }
+        
         #endregion Put
     }
 }
