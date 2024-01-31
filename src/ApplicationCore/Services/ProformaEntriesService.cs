@@ -30,6 +30,7 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ProformaEntries> Update(UpdateProformaEntriesDTO proformaEntriesDTO)
         {
             var proformaEntries = _mapper.Map<ProformaEntries>(proformaEntriesDTO);
+            
             return await _repository.Update(proformaEntries);
         }
     }
