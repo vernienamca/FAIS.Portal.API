@@ -10,6 +10,6 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface IProformaEntriesRepository
     {
         ProformaEntries GetById(int id);
-        Task<ProformaEntries> Update(ProformaEntries role);
+        Task<ProformaEntries> Update(ProformaEntries proforma);
     }
 }
