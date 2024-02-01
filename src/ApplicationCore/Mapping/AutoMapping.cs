@@ -32,6 +32,8 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<AddStringInterpolationDTO, StringInterpolation>()
                 .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
 
+            CreateMap<CostCenterDTO, CostCenter>();
+
             CreateMap<VersionModel, Versions>().ReverseMap();
             CreateMap<VersionDTO, Versions>().ReverseMap();
             CreateMap<AddVersionDTO, Versions>().ReverseMap();

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FAIS.ApplicationCore.DTOs;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
 {
@@ -65,7 +65,7 @@ namespace FAIS.API.Controllers
             var entity = _moduleService.GetById(id);
             var createdBy = await _userService.GetById(entity.CreatedBy);
 
-            var user = new ModuleModel()
+            var module = new ModuleModel()
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -80,11 +80,11 @@ namespace FAIS.API.Controllers
 
             if (entity.UpdatedBy != null)
             {
-                user.UpdatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
-                user.UpdatedAt = entity.UpdatedAt;
+                module.UpdatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
+                module.UpdatedAt = entity.UpdatedAt;
             }
 
-            return Ok(user);
+            return Ok(module);
         }
 
         #endregion Get
