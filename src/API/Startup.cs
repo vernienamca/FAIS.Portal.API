@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 using AutoMapper;
 using FAIS.ApplicationCore.Mapping;
+using FAIS.ApplicationCore.Interfaces.Services;
 
 namespace FAIS
 {
@@ -78,6 +79,7 @@ namespace FAIS
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IPermissionRepository), typeof(PermissionRepository));
             services.AddScoped(typeof(IProformaEntriesRepository), typeof(ProformaEntriesRepository));
+            services.AddScoped(typeof(ICostCenterRepository), typeof(CostCenterRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
@@ -91,6 +93,7 @@ namespace FAIS
             services.AddScoped(typeof(IUserRoleRepository), typeof(UserRoleRepository));
             services.AddScoped(typeof(IPermissionService), typeof(PermissionService));
             services.AddScoped(typeof(IProformaEntriesService), typeof(ProformaEntriesService));
+            services.AddScoped(typeof(ICostCenterService), typeof(CostCenterService));
 
             services.AddSwaggerGen(c =>
             {

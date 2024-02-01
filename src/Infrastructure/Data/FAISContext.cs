@@ -26,6 +26,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserTAFG> UserTAFGs { get; set; }
         public DbSet<ProformaEntries> ProformaEntries { get; set; }
+        public DbSet<CostCenter> CostCenters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -35,6 +36,7 @@ namespace FAIS.Infrastructure.Data
                 return;
 
             builder.ApplyConfiguration(new AuditLogEntityConfiguration());
+            builder.ApplyConfiguration(new CostCenterEntityConfiguration());
             builder.ApplyConfiguration(new LibraryOptionsEntityConfiguration());
             builder.ApplyConfiguration(new LibraryTypeEntityConfiguration());
             builder.ApplyConfiguration(new LoginHistoryEntityConfiguration());
