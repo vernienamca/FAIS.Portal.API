@@ -65,7 +65,7 @@ namespace FAIS.Portal.API.Controllers
         /// <param name="version">The version identifier.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Add(AddVersionDTO version)
+        public IActionResult Add([FromBody] AddVersionDTO version)
         {
             return Ok(_versionService.Add(version));
         }

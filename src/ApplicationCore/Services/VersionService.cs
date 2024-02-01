@@ -30,7 +30,7 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<List<VersionModel>> GetListVersion()
         {
-            var result = _versionsRepository.Get();
+            var result = _versionsRepository.Get().OrderByDescending(x=>x.VersionDate);
             var versionList = _mapper.Map<List<VersionModel>>(result);
 
             return versionList;
@@ -48,7 +48,7 @@ namespace FAIS.ApplicationCore.Services
 
             if(result != null)
             {
-                var versionRes = _versionsRepository.Get();
+                var versionRes = _versionsRepository.Get().OrderByDescending(x => x.VersionDate);
                 return _mapper.Map<List<VersionModel>>(versionRes);
             }
 
