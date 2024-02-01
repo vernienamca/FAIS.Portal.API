@@ -13,9 +13,7 @@ namespace FAIS.Infrastructure.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="CostCenterRepository"/> class.
         /// </summary>
-        public CostCenterRepository(FAISContext context) : base(context)
-        {
-        }
+        public CostCenterRepository(FAISContext context) : base(context) { }
 
         public async Task<CostCenter> Add(CostCenter costCenter)
         {
