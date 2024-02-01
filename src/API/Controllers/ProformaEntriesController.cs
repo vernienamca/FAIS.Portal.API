@@ -18,7 +18,6 @@ namespace FAIS.Portal.API.Controllers
     [Authorize]
     public class ProformaEntriesController : ControllerBase
     {
-    
         #region Variables
         
         private readonly IProformaEntriesService _proformaEntriesService;
@@ -29,7 +28,7 @@ namespace FAIS.Portal.API.Controllers
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ProformaEntriesController"/> class.
-        /// <param name="proformaEntriesService">The Proforma Entries service.</param>
+        /// <param name="proformaEntriesService">The proforma entries service.</param>
         /// </summary>
         public ProformaEntriesController(IProformaEntriesService proformaEntriesService)
         {
