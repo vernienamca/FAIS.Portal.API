@@ -13,7 +13,7 @@ namespace FAIS.ApplicationCore.Configuration
                 throw new ArgumentNullException(nameof(builder));
 
 
-            builder.ToTable("VERSION", "FAIS");
+            builder.ToTable("VERSIONS", "FAIS");
 
             builder.HasKey(e => e.Id);
 

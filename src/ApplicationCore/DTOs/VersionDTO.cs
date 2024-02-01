@@ -11,4 +11,13 @@ namespace FAIS.ApplicationCore.DTOs
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
     }
+
+    public class AddVersionDTO
+    {
+        public string VersionNo { get; set; }
+        public DateTime VersionDate { get; set; }
+        public string Amendment { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
 }

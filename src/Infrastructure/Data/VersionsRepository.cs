@@ -10,32 +10,44 @@ namespace FAIS.Infrastructure.Data
 {
     public class VersionsRepository : EFRepository<Versions, int>, IVersionsRepository
     {
-        public VersionsRepository(FAISContext context) : base(context)
+        public VersionsRepository(FAISContext context) : base(context) { }
+
+        public IReadOnlyCollection<VersionModel> Get()
         {
-        }
-        public IQueryable<VersionModel> Get()
-        {
-            return _dbContext.Versions.AsNoTracking();
+            var versions = (from ver in _dbContext.Versions.AsNoTracking()
+                         join usrC in _dbContext.Users.AsNoTracking() on ver.CreatedBy equals usrC.Id
+                         orderby ver.Id descending
+                         select new VersionModel()
+                         {
+                             Id = ver.Id,
+                             Amendment = ver.Amendment,
+                             VersionNo = ver.VersionNo,
+                             CreatedBy = ver.CreatedBy,
+                             CreatedByName = $"{usrC.FirstName} {usrC.LastName}",
+                             CreatedAt = ver.CreatedAt
+                         }).ToList();
+
+            return versions;
         }
 
-        public async Task<Versions> Add(Versions userRole)
+        public async Task<Versions> Add(Versions version)
         {
-            return await AddAsync(userRole);
+            return await AddAsync(version);
         }
 
-        public async Task<Versions> Update(Versions userRole)
+        public async Task<Versions> Update(Versions version)
         {
-            return await UpdateAsync(userRole);
+            return await UpdateAsync(version);
+        }
+        public async Task Delete(int id)
+        {
+            var result = _dbContext.Versions.FirstOrDefault(x=> x.Id == id);
+            await DeleteAsync(result);
         }
 
-        IReadOnlyCollection<RoleModel> IVersionsRepository.Get()
+        public async Task<Versions> GetById(int id)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Versions GetById(int id)
-        {
-            throw new System.NotImplementedException();
+            return await _dbContext.Versions.FirstAsync(x => x.Id == id);
         }
     }
 }
