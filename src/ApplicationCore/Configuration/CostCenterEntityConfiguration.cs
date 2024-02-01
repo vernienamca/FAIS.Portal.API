@@ -26,18 +26,18 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(5);
 
             builder.Property(e => e.Number)
-               .IsRequired()
-               .HasColumnName("COST_CENTER_NUMBER");
+                .IsRequired()
+                .HasColumnName("COST_CENTER_NUMBER");
 
             builder.Property(e => e.Name)
-             .IsRequired()
-             .HasColumnName("COST_CENTER_NAME")
-             .HasMaxLength(50);
+                .IsRequired()
+                .HasColumnName("COST_CENTER_NAME")
+                .HasMaxLength(50);
 
             builder.Property(e => e.ShortName)
-             .IsRequired()
-             .HasColumnName("SHORT_NAME")
-             .HasMaxLength(50);
+                .IsRequired()
+                .HasColumnName("SHORT_NAME")
+                .HasMaxLength(50);
 
             builder.Property(e => e.CreatedBy)
                 .IsRequired()

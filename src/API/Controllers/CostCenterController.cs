@@ -63,12 +63,13 @@ namespace FAIS.Portal.API.Controllers
         #region Post
 
         /// <summary>
-        /// Add cost center.
+        /// Posts the create cost center.
         /// </summary>
         /// <param name="costCenterDTO">cost centere object.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        [HttpPost]
+        [HttpPost("add/costcenter")]
+        [ProducesResponseType(typeof(CostCenter), StatusCodes.Status200OK)]
         public async Task<IActionResult> Add([FromBody] CostCenterDTO costCenterDTO)
         {
             if (costCenterDTO == null)
@@ -82,11 +83,12 @@ namespace FAIS.Portal.API.Controllers
         #region Put
 
         /// <summary>
-        /// Update the cost center.
+        /// Puts the update cost center.
         /// </summary>
         /// <param name="data">The cost center data object.</param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("costcenter/{id:int}")]
+        [ProducesResponseType(typeof(CostCenter), StatusCodes.Status200OK)]
         public async Task<IActionResult> Update([FromBody] CostCenterDTO data)
         {
             if (data == null)
