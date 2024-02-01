@@ -91,7 +91,7 @@ namespace FAIS.API.Controllers
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Position = _libraryTypeService.GetById(entity.PositionId).Name,
-                Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : null,
+                Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : string.Empty,
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,
                 StatusDate = entity.StatusDate,
@@ -100,7 +100,7 @@ namespace FAIS.API.Controllers
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
                 TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
-                OUFG = entity.OupFgId.HasValue ? _libraryTypeService.GetById(entity.OupFgId.Value)?.Name : null,
+                OUFG = entity.OupFgId.HasValue ? _libraryTypeService.GetById(entity.OupFgId.Value)?.Name : string.Empty,
                 LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
                 Photo = entity.Photo,
                 Password = EncryptionHelper.HashPassword(entity.Password)

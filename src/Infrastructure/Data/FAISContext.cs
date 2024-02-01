@@ -25,6 +25,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<LoginHistory> LoginHistory { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserTAFG> UserTAFGs { get; set; }
+        public DbSet<ProformaEntries> ProformaEntries { get; set; }
         public DbSet<Versions> Versions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -47,6 +48,7 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new UserEntityConfiguration());
             builder.ApplyConfiguration(new UserRoleEntityConfiguration());
             builder.ApplyConfiguration(new UserTAFGEntityConfiguration());
+            builder.ApplyConfiguration(new ProformaEntriesEntityConfiguration());
             builder.ApplyConfiguration(new VersionEntityConfiguration());
 
             OnModelCreatingPartial(builder);
