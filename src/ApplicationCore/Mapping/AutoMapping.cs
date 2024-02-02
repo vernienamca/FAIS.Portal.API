@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
@@ -37,6 +38,7 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<VersionModel, Versions>().ReverseMap();
             CreateMap<VersionDTO, Versions>().ReverseMap();
             CreateMap<AddVersionDTO, Versions>().ReverseMap();
+            CreateMap<ChartOfAccountsDTO, ChartOfAccounts>();
         }        
     }
 }

@@ -1,21 +1,23 @@
-using System.Text;
+using AutoMapper;
+using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Interfaces.Repository;
+using FAIS.ApplicationCore.Interfaces.Service;
+using FAIS.ApplicationCore.Interfaces.Services;
+using FAIS.ApplicationCore.Mapping;
+using FAIS.ApplicationCore.Services;
+using FAIS.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.EntityFrameworkCore;
-using FAIS.Infrastructure.Data;
-using FAIS.ApplicationCore.Interfaces;
-using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Services;
-using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Logging;
-using AutoMapper;
-using FAIS.ApplicationCore.Mapping;
-using FAIS.ApplicationCore.Interfaces.Services;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace FAIS
 {
@@ -79,6 +81,7 @@ namespace FAIS
             services.AddScoped(typeof(IPermissionRepository), typeof(PermissionRepository));
             services.AddScoped(typeof(IProformaEntriesRepository), typeof(ProformaEntriesRepository));
             services.AddScoped(typeof(ICostCenterRepository), typeof(CostCenterRepository));
+            services.AddScoped(typeof(IChartOfAccountsRepository), typeof(ChartOfAccountsRepository));
             services.AddScoped(typeof(IVersionsRepository), typeof(VersionsRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
@@ -94,6 +97,7 @@ namespace FAIS
             services.AddScoped(typeof(IPermissionService), typeof(PermissionService));
             services.AddScoped(typeof(IProformaEntriesService), typeof(ProformaEntriesService));
             services.AddScoped(typeof(ICostCenterService), typeof(CostCenterService));
+            services.AddScoped(typeof(IChartOfAccountsService), typeof(ChartOfAccountsService));
             services.AddScoped(typeof(IVersionService), typeof(VersionService));
 
             services.AddSwaggerGen(c =>

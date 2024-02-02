@@ -28,6 +28,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<ProformaEntries> ProformaEntries { get; set; }
         public DbSet<CostCenter> CostCenters { get; set; }
         public DbSet<Versions> Versions { get; set; }
+        public DbSet<ChartOfAccounts> ChartOfAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -38,6 +39,7 @@ namespace FAIS.Infrastructure.Data
 
             builder.ApplyConfiguration(new AuditLogEntityConfiguration());
             builder.ApplyConfiguration(new CostCenterEntityConfiguration());
+            builder.ApplyConfiguration(new ChartOfAccountsEntityConfiguration());
             builder.ApplyConfiguration(new LibraryOptionsEntityConfiguration());
             builder.ApplyConfiguration(new LibraryTypeEntityConfiguration());
             builder.ApplyConfiguration(new LoginHistoryEntityConfiguration());
