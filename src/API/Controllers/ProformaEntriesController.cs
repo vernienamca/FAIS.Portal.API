@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FAIS.ApplicationCore.DTOs;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
-using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
 {
@@ -34,24 +33,59 @@ namespace FAIS.Portal.API.Controllers
         {
             _proformaEntriesService = proformaEntriesService;
         }
-        
+
         #endregion Constructor
 
-        #region Put
-        
+        #region Get
+
         /// <summary>
-        /// Puts the update of Proforma Entries.
+        /// List the proforma entries.
         /// </summary>
-        /// <param name="data">The Proforma Entries data object.</param>
+        /// <returns></returns>
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<ProformaEntriesModel>), StatusCodes.Status200OK)]
+        public IActionResult Get()
+        {
+            return Ok(_proformaEntriesService.Get());
+        }
+
+        #endregion
+
+        #region Post
+
+        /// <summary>
+        /// Post the add proforma entry.
+        /// </summary>
+        /// <param name="proformaEntriesDto">The proforma entry data object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPost]
+        [ProducesResponseType(typeof(ProformaEntries), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Add([FromBody] ProformaEntriesDTO proformaEntriesDto)
+        {
+            if (proformaEntriesDto == null)
+                throw new ArgumentNullException(nameof(proformaEntriesDto));
+
+            return Ok(await _proformaEntriesService.Add(proformaEntriesDto));
+        }
+
+        #endregion Post
+
+        #region Put
+
+        /// <summary>
+        /// Puts the update proforma entry.
+        /// </summary>
+        /// <param name="proformaEntriesDto">The proforma entry data object.</param>
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(typeof(ProformaEntries), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update([FromBody] UpdateProformaEntriesDTO data)
+        public async Task<IActionResult> Update([FromBody] UpdateProformaEntriesDTO proformaEntriesDto)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            if (proformaEntriesDto == null)
+                throw new ArgumentNullException(nameof(proformaEntriesDto));
 
-            return Ok(await _proformaEntriesService.Update(data));
+            return Ok(await _proformaEntriesService.Update(proformaEntriesDto));
         }
         
         #endregion Put
