@@ -4,7 +4,6 @@ using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services

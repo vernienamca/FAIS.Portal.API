@@ -1,6 +1,4 @@
-﻿using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Entities.Structure;
-using FAIS.ApplicationCore.Helpers;
+﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
@@ -56,9 +54,9 @@ namespace FAIS.Infrastructure.Data
             return await AddAsync(module);
         }
 
-        public async Task<Module> Update(Module role)
+        public async Task<Module> Update(Module module)
         {
-            return await UpdateAsync(role);
+            return await UpdateAsync(module);
         }
     }
 }

@@ -26,6 +26,8 @@ namespace FAIS.Infrastructure.Data
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserTAFG> UserTAFGs { get; set; }
         public DbSet<ProformaEntries> ProformaEntries { get; set; }
+        public DbSet<CostCenter> CostCenters { get; set; }
+        public DbSet<Versions> Versions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -35,6 +37,7 @@ namespace FAIS.Infrastructure.Data
                 return;
 
             builder.ApplyConfiguration(new AuditLogEntityConfiguration());
+            builder.ApplyConfiguration(new CostCenterEntityConfiguration());
             builder.ApplyConfiguration(new LibraryOptionsEntityConfiguration());
             builder.ApplyConfiguration(new LibraryTypeEntityConfiguration());
             builder.ApplyConfiguration(new LoginHistoryEntityConfiguration());
@@ -48,6 +51,7 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new UserRoleEntityConfiguration());
             builder.ApplyConfiguration(new UserTAFGEntityConfiguration());
             builder.ApplyConfiguration(new ProformaEntriesEntityConfiguration());
+            builder.ApplyConfiguration(new VersionEntityConfiguration());
 
             OnModelCreatingPartial(builder);
         }

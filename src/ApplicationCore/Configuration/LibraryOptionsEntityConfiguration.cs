@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Vml.Office;
-using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Structure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
