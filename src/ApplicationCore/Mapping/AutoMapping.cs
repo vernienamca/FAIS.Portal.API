@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
@@ -33,6 +34,7 @@ namespace FAIS.ApplicationCore.Mapping
                 .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
 
             CreateMap<CostCenterDTO, CostCenter>();
+            CreateMap<ChartOfAccountsDTO, ChartOfAccounts>();
         }        
     }
 }
