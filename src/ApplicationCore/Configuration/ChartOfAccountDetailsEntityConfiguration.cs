@@ -37,7 +37,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("LEDGER_TITLE");
 
             builder.Property(e => e.DateRemoved)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("DATE_REMOVED");
 
             builder.Property(e => e.CreatedBy)

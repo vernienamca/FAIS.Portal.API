@@ -33,7 +33,7 @@ namespace FAIS.Infrastructure.Data
                                        LedgerTitle = ca.LedgerTitle,
                                        SL = ca.SL,
                                        GL = ca.GL,
-                                       DateRemoved = ca.DateRemoved,
+                                       DateRemoved = ca.DateRemoved.GetValueOrDefault(),
                                        CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                        CreatedAt = ca.CreatedAt,
                                        UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",

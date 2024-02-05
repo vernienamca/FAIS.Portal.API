@@ -16,7 +16,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public string LedgerTitle { get; set; }
         [DataMember]
-        public DateTime DateRemoved { get; set; }
+        public DateTime? DateRemoved { get; set; }
         [DataMember]
         public int CreatedBy { get; set; }
         [DataMember]

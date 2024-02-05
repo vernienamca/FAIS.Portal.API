@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public long GL { get; set; }
         public long SL { get; set; }
         public string LedgerTitle { get; set; }
-        public DateTime DateRemoved { get; set; }
+        public DateTime? DateRemoved { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? UpdatedBy { get; set; }

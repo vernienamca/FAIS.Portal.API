@@ -24,7 +24,6 @@ namespace FAIS.Infrastructure.Data
         {
             var chartOfAccounts = (from ca in _dbContext.ChartOfAccounts.AsNoTracking()
                                join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
-                               join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id
                                orderby ca.Id descending
                                select new ChartOfAccountModel()
                                {
@@ -38,8 +37,6 @@ namespace FAIS.Infrastructure.Data
                                    SubAcountGroup = ca.SubAcountGroup,
                                    CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                    CreatedAt = ca.CreatedAt,
-                                   UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                                   UpdatedAt = ca.UpdatedAt,
                                }).ToList();
 
             return chartOfAccounts;
