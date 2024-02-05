@@ -24,6 +24,12 @@ namespace FAIS.Infrastructure.Data
         {
             var chartOfAccounts = (from ca in _dbContext.ChartOfAccounts.AsNoTracking()
                                join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
+                               join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id
+                               into joinedUsers
+                               from usrU in joinedUsers.DefaultIfEmpty()
+                               join detail in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals detail.ChartOfAccountsId
+                               into joinedAccounts
+                               from detail in joinedAccounts.DefaultIfEmpty()
                                orderby ca.Id descending
                                select new ChartOfAccountModel()
                                {
@@ -37,6 +43,21 @@ namespace FAIS.Infrastructure.Data
                                    SubAcountGroup = ca.SubAcountGroup,
                                    CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                    CreatedAt = ca.CreatedAt,
+                                   UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                                   UpdatedAt = ca.UpdatedAt,
+                                   ChartOfAccountDetailModel = new ChartOfAccountDetailModel
+                                   {
+                                       Id = detail.Id,
+                                       ChartOfAccountsId = detail.ChartOfAccountsId,
+                                       CreatedAt = detail.CreatedAt,
+                                       CreatedBy = $"{usr.FirstName} {usr.LastName}",
+                                       DateRemoved = detail.DateRemoved.GetValueOrDefault(),
+                                       GL = detail.GL,
+                                       LedgerTitle = detail.LedgerTitle,
+                                       SL = detail.SL,
+                                       UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                                       UpdatedAt = ca.UpdatedAt,
+                                   }
                                }).ToList();
 
             return chartOfAccounts;
