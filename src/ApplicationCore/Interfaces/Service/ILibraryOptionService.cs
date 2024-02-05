@@ -1,7 +1,9 @@
-﻿using FAIS.ApplicationCore.Models;
+﻿using FAIS.ApplicationCore.DTOs.Structure;
+using FAIS.ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Interfaces.Service
 {
@@ -9,6 +11,8 @@ namespace FAIS.ApplicationCore.Interfaces.Service
     {
         IReadOnlyCollection<LibraryOptionModel> Get();
         LibraryOptionModel GetById(int id);
-
+        Task Delete(int id);
+        Task Add(LibraryOptionAddDto model);
+        Task Update(LibraryOptionUpdateDto model);
     }
 }

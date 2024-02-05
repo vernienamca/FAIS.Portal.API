@@ -44,15 +44,15 @@ namespace FAIS.Infrastructure.Data
             return libraryOption;
         }
 
+        public async Task Delete(int libraryOptionid)
+        {
+            var result = await _dbContext.LibraryOptions.FirstOrDefaultAsync(res => res.Id.Equals(libraryOptionid));
+            await DeleteAsync(result);
+        }
 
         public async Task<LibraryOptions> Add(LibraryOptions libraryOptionType)
         {
             return await AddAsync(libraryOptionType);
-        }
-
-        public async Task Delete(LibraryOptions libraryOptions)
-        {
-            await DeleteAsync(libraryOptions);
         }
 
         public async Task<LibraryOptions> Update(LibraryOptions libraryOptionType)

@@ -39,6 +39,9 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<VersionDTO, Versions>().ReverseMap();
             CreateMap<AddVersionDTO, Versions>().ReverseMap();
             CreateMap<ChartOfAccountsDTO, ChartOfAccounts>();
+
+            CreateMap<LibraryOptions, LibraryOptionAddDto>().ReverseMap();
+            CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap();
         }        
     }
 }

@@ -10,6 +10,6 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
         IReadOnlyCollection<LibraryOptionModel> GetAll();
         Task<LibraryOptions> Add(LibraryOptions libraryOptionType);
         Task<LibraryOptions> Update(LibraryOptions libraryOptionType);
-        Task Delete(LibraryOptions LibraryOptions);
+        Task Delete(int libraryOptionid);
     }
 }

@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Interfaces.Service;
+﻿using FAIS.ApplicationCore.DTOs.Structure;
+using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +38,7 @@ namespace FAIS.Portal.API.Controllers
         /// List the LibraryTypeOption.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet]
         [ProducesResponseType(typeof(List<LibraryOptionModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
@@ -48,11 +49,47 @@ namespace FAIS.Portal.API.Controllers
         /// List the LibraryTypeOption.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{id:int}")]
+        [HttpGet("[action]/{id:int}")]
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_libraryOptionTypeService.GetById(id));
+        }
+        #endregion
+
+        #region post
+        /// <summary>
+        /// Add LibraryTypeOption.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult Add([FromBody] LibraryOptionAddDto libraryOptionAddDto)
+        {
+            return Ok(_libraryOptionTypeService.Add(libraryOptionAddDto));
+        }
+        #endregion
+
+        #region put
+        /// <summary>
+        /// Update LibraryTypeOption by id.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public IActionResult Update([FromBody] LibraryOptionUpdateDto libraryOptionUpdateDto)
+        {
+            return Ok(_libraryOptionTypeService.Update(libraryOptionUpdateDto));
+        }
+        #endregion
+
+        #region delete
+        /// <summary>
+        /// Delete LibraryTypeOption by id.
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public IActionResult Delete([FromBody] int id)
+        {
+            return Ok(_libraryOptionTypeService.Delete(id));
         }
         #endregion
     }
