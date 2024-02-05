@@ -17,6 +17,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
+using AutoMapper;
+using FAIS.ApplicationCore.Mapping;
+using FAIS.ApplicationCore.Interfaces.Services;
+using FAIS.ApplicationCore.Interfaces.Repository;
+using FAIS.ApplicationCore.Interfaces.Service;
 using System.Collections.Generic;
 using System.Text;
 
@@ -76,6 +82,7 @@ namespace FAIS
             services.AddScoped(typeof(ISettingsRepository), typeof(SettingsRepository));
             services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
             services.AddScoped(typeof(ILibraryTypeRepository), typeof(LibraryTypeRepository));
+            services.AddScoped(typeof(ILibraryOptionRepository), typeof(LibraryOptionRepository));
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
             services.AddScoped(typeof(INotificationRepository), typeof(NotificationRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
@@ -90,6 +97,7 @@ namespace FAIS
             services.AddScoped(typeof(ISettingsService), typeof(SettingsService));
             services.AddScoped(typeof(IRoleService), typeof(RoleService));
             services.AddScoped(typeof(ILibraryTypeService), typeof(LibraryTypeService));
+            services.AddScoped(typeof(ILibraryOptionService), typeof(LibraryOptionService));
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));

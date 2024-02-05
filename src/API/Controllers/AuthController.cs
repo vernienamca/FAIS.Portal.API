@@ -131,7 +131,7 @@ namespace FAIS.Controllers
 
                 return Ok(new { userId = user.Id, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
             }
