@@ -1,10 +1,7 @@
-﻿using DocumentFormat.OpenXml.Vml.Office;
-using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Structure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FAIS.ApplicationCore.Configuration
 {
@@ -16,6 +13,8 @@ namespace FAIS.ApplicationCore.Configuration
                 throw new ArgumentNullException(nameof(builder));
 
             builder.ToTable("PROFORMA_ENTRIES", "FAIS");
+
+            builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
                 .IsRequired()
