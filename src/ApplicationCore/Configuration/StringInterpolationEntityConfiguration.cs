@@ -49,7 +49,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("DATE_CREATED");
 
             builder.Property(e => e.UpdatedBy)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("USER_MODIFIED");
 
             builder.Property(e => e.UpdatedAt)
