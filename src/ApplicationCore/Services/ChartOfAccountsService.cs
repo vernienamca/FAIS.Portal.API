@@ -33,9 +33,12 @@ namespace FAIS.ApplicationCore.Services
 
             if (chartofAccountResult != null)
             {
-                chartOfAccountDetails.ChartOfAccountsId = chartofAccountResult.Id;
-                await _detailsRepository.Add(chartOfAccountDetails);
-            }
+                if(chartOfAccountDetails != null)
+                {
+                    chartOfAccountDetails.ChartOfAccountsId = chartofAccountResult.Id;
+                    await _detailsRepository.Add(chartOfAccountDetails);
+                }
+            }   
 
             return chartofAccountResult;
         }
