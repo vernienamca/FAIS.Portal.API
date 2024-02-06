@@ -83,14 +83,16 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
+            if(entity == null)
+                throw new ArgumentNullException(nameof(entity));
 
             var user = new UserModel()
             {
                 Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
-                Position = _libraryTypeService.GetById(entity.PositionId).Name,
-                Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : string.Empty,
+                Position = _libraryTypeService.GetById(entity.PositionId)?.Result.Name,
+                Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Result.Name : string.Empty,
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,
                 StatusDate = entity.StatusDate,
@@ -99,7 +101,7 @@ namespace FAIS.API.Controllers
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
                 TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
-                OUFG = entity.OupFgId.HasValue ? _libraryTypeService.GetById(entity.OupFgId.Value)?.Name : string.Empty,
+                OUFG = entity.OupFgId.HasValue ? _libraryTypeService.GetById(entity.OupFgId.Value)?.Result.Name : string.Empty,
                 LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
                 Photo = entity.Photo,
                 Password = EncryptionHelper.HashPassword(entity.Password)

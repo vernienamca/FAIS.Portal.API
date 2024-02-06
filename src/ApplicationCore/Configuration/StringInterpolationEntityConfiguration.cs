@@ -53,6 +53,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("USER_MODIFIED");
 
             builder.Property(e => e.UpdatedAt)
+                .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
         }

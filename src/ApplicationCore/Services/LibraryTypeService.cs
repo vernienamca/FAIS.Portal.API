@@ -1,6 +1,8 @@
-﻿using FAIS.ApplicationCore.DTOs;
+﻿using AutoMapper;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,60 +13,42 @@ namespace FAIS.ApplicationCore.Services
     public class LibraryTypeService : ILibraryTypeService
     {
         private readonly ILibraryTypeRepository _repository;
-
-        public LibraryTypeService(ILibraryTypeRepository repository)
+        private readonly IMapper _mapper;
+        public LibraryTypeService(ILibraryTypeRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public IQueryable<LibraryType> Get()
+        public IReadOnlyCollection<LibraryTypeModel> Get()
         {
             return _repository.Get();
         }
 
-        public LibraryType GetById(int id)
+        public async Task<LibraryType> GetById(int id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetById(id);
         }
 
-        public async Task<LibraryType> Add(LibraryTypeDTO libraryTypeDto)
-        {
-            try
-            {
-                var libraryType = new LibraryType()
-                {
-                    Name = libraryTypeDto.Name,
-                    Code = libraryTypeDto.Code,
-                    Description = libraryTypeDto.Description,
-                    IsActive = libraryTypeDto.IsActive,
-                    StatusDate = DateTime.Now,
-                    CreatedBy = libraryTypeDto.CreatedBy,
-                    CreatedAt = DateTime.Now
-                };
-
-                return await _repository.Add(libraryType);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<LibraryType> Update(int id)
-        {
-            var libraryType = _repository.GetById(id);
-
-            libraryType.UpdatedAt = DateTime.Now;
-
-            return await _repository.Update(libraryType);
-        }
         public IReadOnlyCollection<string> GetLibraryCodesById (int id, string libraryCode)
         {
             return _repository.GetLibraryCodesById(id, libraryCode);
         }
+
         public IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode)
         {
             return _repository.GetLibrarybyCodes(libraryCode);
+        }
+        public async Task<LibraryType> Add(AddLibraryTypeDTO dto)
+        {
+            var libraryTypeDto = _mapper.Map<LibraryType>(dto);
+            return await _repository.Add(libraryTypeDto);
+        }
+
+        public async Task<LibraryType> Update(LibraryTypeDTO dto)
+        {
+            var libraryTypeDto = _mapper.Map<LibraryType>(dto);
+            return await _repository.Update(libraryTypeDto);
         }
     }
 }
