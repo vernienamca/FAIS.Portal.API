@@ -83,6 +83,7 @@ namespace FAIS
             services.AddScoped(typeof(IProformaEntriesRepository), typeof(ProformaEntriesRepository));
             services.AddScoped(typeof(ICostCenterRepository), typeof(CostCenterRepository));
             services.AddScoped(typeof(IChartOfAccountsRepository), typeof(ChartOfAccountsRepository));
+            services.AddScoped(typeof(IChartOfAccountDetailsRepository), typeof(ChartOfAccountDetailsRepository));
             services.AddScoped(typeof(IVersionsRepository), typeof(VersionsRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
