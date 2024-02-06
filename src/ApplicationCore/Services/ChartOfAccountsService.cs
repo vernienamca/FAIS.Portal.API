@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using ArrayToExcel;
+using AutoMapper;
 using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
@@ -54,6 +55,10 @@ namespace FAIS.ApplicationCore.Services
         {
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
             return await _repository.Update(chartOfAccount);
+        }
+        public byte[] ExportChartofAccounts()
+        {
+            return _repository.Get().ToExcel();
         }
     }
 }
