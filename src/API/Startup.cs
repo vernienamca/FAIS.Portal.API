@@ -90,6 +90,7 @@ namespace FAIS
             services.AddScoped(typeof(IProformaEntriesRepository), typeof(ProformaEntriesRepository));
             services.AddScoped(typeof(ICostCenterRepository), typeof(CostCenterRepository));
             services.AddScoped(typeof(IChartOfAccountsRepository), typeof(ChartOfAccountsRepository));
+            services.AddScoped(typeof(IChartOfAccountDetailsRepository), typeof(ChartOfAccountDetailsRepository));
             services.AddScoped(typeof(IVersionsRepository), typeof(VersionsRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
@@ -143,6 +144,8 @@ namespace FAIS
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var x = 0;
+
             app.UseCors(builder => builder
               .AllowAnyHeader()
               .AllowAnyMethod()

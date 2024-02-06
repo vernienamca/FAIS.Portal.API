@@ -34,11 +34,11 @@ namespace FAIS.ApplicationCore.Mapping
                 .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
 
             CreateMap<CostCenterDTO, CostCenter>();
-
             CreateMap<VersionModel, Versions>().ReverseMap();
             CreateMap<VersionDTO, Versions>().ReverseMap();
             CreateMap<AddVersionDTO, Versions>().ReverseMap();
             CreateMap<ChartOfAccountsDTO, ChartOfAccounts>();
+            CreateMap<ChartOfAccountDetailsDTO, ChartOfAccountDetails>();
 
             CreateMap<LibraryOptions, LibraryOptionAddDto>().ReverseMap();
             CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap();

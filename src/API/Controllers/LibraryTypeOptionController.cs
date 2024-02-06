@@ -23,17 +23,18 @@ namespace FAIS.Portal.API.Controllers
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModuleController"/> class.
-        /// <param name="libraryOptionTypeService">The module service.</param>
+        /// Initializes a new instance of the <see cref="LibraryTypeOptionController"/> class.
+        /// <param name="libraryOptionService">The library option service.</param>
         /// </summary>
-        public LibraryTypeOptionController(ILibraryOptionService libraryOptionTypeService)
+        public LibraryTypeOptionController(ILibraryOptionService libraryOptionService)
         {
-            _libraryOptionTypeService = libraryOptionTypeService;
+            _libraryOptionTypeService = libraryOptionService;
         }
 
         #endregion Constructor
 
-        #region get
+        #region Get
+
         /// <summary>
         /// List the LibraryTypeOption.
         /// </summary>
@@ -55,42 +56,51 @@ namespace FAIS.Portal.API.Controllers
         {
             return Ok(_libraryOptionTypeService.GetById(id));
         }
+
         #endregion
 
-        #region post
+        #region Post
+
         /// <summary>
         /// Add LibraryTypeOption.
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
         public IActionResult Add([FromBody] LibraryOptionAddDto libraryOptionAddDto)
         {
             return Ok(_libraryOptionTypeService.Add(libraryOptionAddDto));
         }
+
         #endregion
 
-        #region put
+        #region Put
+
         /// <summary>
-        /// Update LibraryTypeOption by id.
+        /// Puts the update library option.
         /// </summary>
         /// <returns></returns>
         [HttpPut]
+        [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
         public IActionResult Update([FromBody] LibraryOptionUpdateDto libraryOptionUpdateDto)
         {
             return Ok(_libraryOptionTypeService.Update(libraryOptionUpdateDto));
         }
+
         #endregion
 
-        #region delete
+        #region Delete
+
         /// <summary>
         /// Delete LibraryTypeOption by id.
         /// </summary>
         /// <returns></returns>
-        [HttpDelete]
-        public IActionResult Delete([FromBody] int id)
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
         {
             return Ok(_libraryOptionTypeService.Delete(id));
         }
+
         #endregion
     }
 }

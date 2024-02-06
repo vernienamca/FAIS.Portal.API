@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using ArrayToExcel;
+using AutoMapper;
 using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
@@ -12,18 +13,32 @@ namespace FAIS.ApplicationCore.Services
     public class ChartOfAccountsService : IChartOfAccountsService
     {
         private readonly IChartOfAccountsRepository _repository;
+        private readonly IChartOfAccountDetailsRepository _detailsRepository;
         private readonly IMapper _mapper;
 
-        public ChartOfAccountsService(IChartOfAccountsRepository repository, IMapper mapper)
+        public ChartOfAccountsService(
+            IChartOfAccountsRepository repository, 
+            IChartOfAccountDetailsRepository detailsRepository, 
+            IMapper mapper)
         {
             _repository = repository;
+            _detailsRepository = detailsRepository;
             _mapper = mapper;
         }
 
         public async Task<ChartOfAccounts> Add(ChartOfAccountsDTO chartOfAccountsDTO)
         {
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
-            return await _repository.Add(chartOfAccount);
+            var chartOfAccountDetails = _mapper.Map<ChartOfAccountDetails>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
+            var chartofAccountResult = await _repository.Add(chartOfAccount);
+
+            if (chartofAccountResult != null)
+            {
+                chartOfAccountDetails.ChartOfAccountsId = chartofAccountResult.Id;
+                await _detailsRepository.Add(chartOfAccountDetails);
+            }
+
+            return chartofAccountResult;
         }
 
         public IReadOnlyCollection<ChartOfAccountModel> Get()
@@ -40,6 +55,10 @@ namespace FAIS.ApplicationCore.Services
         {
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
             return await _repository.Update(chartOfAccount);
+        }
+        public byte[] ExportChartofAccounts()
+        {
+            return _repository.Get().ToExcel();
         }
     }
 }

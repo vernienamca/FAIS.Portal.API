@@ -16,5 +16,7 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public DateTime CreatedAt { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+
+        public ChartOfAccountDetailsDTO ChartOfAccountDetailsDTO { get; set; }
     }
 }

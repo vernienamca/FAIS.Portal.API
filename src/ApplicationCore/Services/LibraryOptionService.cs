@@ -16,8 +16,7 @@ namespace FAIS.ApplicationCore.Services
         private readonly ILibraryOptionRepository _repository;
         private readonly IMapper _mapper;
 
-        public LibraryOptionService(ILibraryOptionRepository repository,
-            IMapper mapper)
+        public LibraryOptionService(ILibraryOptionRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

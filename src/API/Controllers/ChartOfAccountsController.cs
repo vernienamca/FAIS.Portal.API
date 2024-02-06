@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
@@ -56,6 +57,17 @@ namespace FAIS.Portal.API.Controllers
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             return Ok(_chartOfAccountsService.GetById(id));
+        }
+        /// <summary>
+        /// Gets the exported logs file in bytes.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("export")]
+        [ProducesResponseType(typeof(File), StatusCodes.Status200OK)]
+        public IActionResult ExportChartofAccounts()
+        {
+            return File(_chartOfAccountsService.ExportChartofAccounts(), System.Net.Mime.MediaTypeNames.Application.Octet,
+                $"logs_{DateTime.Now.ToString("MM/dd/yyyy hh:mm tt")}.xlsx");
         }
 
         #endregion Get
