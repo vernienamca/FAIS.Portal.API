@@ -8,7 +8,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     public interface IChartOfAccountsRepository
     {
         IReadOnlyCollection<ChartOfAccountModel> Get();
-        ChartOfAccounts GetById(int id);
+        ChartOfAccountModel GetById(int id);
         Task<ChartOfAccounts> Add(ChartOfAccounts chartOfAccounts);
         Task<ChartOfAccounts> Update(ChartOfAccounts chartOfAccounts);
     }

@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.Interfaces.Service
     public interface IChartOfAccountsService
     {
         IReadOnlyCollection<ChartOfAccountModel> Get();
-        ChartOfAccounts GetById(int id);
+        ChartOfAccountModel GetById(int id);
         Task<ChartOfAccounts> Add(ChartOfAccountsDTO chartOfAccountsDTO);
         Task<ChartOfAccounts> Update(ChartOfAccountsDTO chartOfAccountsDTO);
     }
