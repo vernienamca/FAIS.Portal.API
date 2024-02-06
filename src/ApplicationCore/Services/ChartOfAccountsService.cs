@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using ArrayToExcel;
+using AutoMapper;
 using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
@@ -65,6 +66,10 @@ namespace FAIS.ApplicationCore.Services
             }
 
             return chartofAccountResult;
+        }
+        public byte[] ExportChartofAccounts()
+        {
+            return _repository.Get().ToExcel();
         }
     }
 }

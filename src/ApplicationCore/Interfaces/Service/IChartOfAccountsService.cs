@@ -12,5 +12,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         ChartOfAccountModel GetById(int id);
         Task<ChartOfAccounts> Add(ChartOfAccountsDTO chartOfAccountsDTO);
         Task<ChartOfAccounts> Update(ChartOfAccountsDTO chartOfAccountsDTO);
+        byte[] ExportChartofAccounts();
     }
 }
