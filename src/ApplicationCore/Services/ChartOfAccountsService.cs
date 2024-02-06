@@ -5,7 +5,6 @@ using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
@@ -16,7 +15,10 @@ namespace FAIS.ApplicationCore.Services
         private readonly IChartOfAccountDetailsRepository _detailsRepository;
         private readonly IMapper _mapper;
 
-        public ChartOfAccountsService(IChartOfAccountsRepository repository, IChartOfAccountDetailsRepository detailsRepository, IMapper mapper)
+        public ChartOfAccountsService(
+            IChartOfAccountsRepository repository, 
+            IChartOfAccountDetailsRepository detailsRepository, 
+            IMapper mapper)
         {
             _repository = repository;
             _detailsRepository = detailsRepository;
