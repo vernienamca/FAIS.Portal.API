@@ -1,7 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
-using FAIS.ApplicationCore.Services;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -38,9 +37,9 @@ namespace FAIS.Infrastructure.Data
             return libraryTypes;
         }
 
-        public async Task<LibraryType> GetById(int id)
+        public LibraryType GetById(int id)
         {
-            return await _dbContext.LibraryTypes.FirstOrDefaultAsync(o => o.Id == id);
+            return _dbContext.LibraryTypes.FirstOrDefault(o => o.Id == id);
         }
 
         public LibraryType GetPositionIdByName(string positionName)

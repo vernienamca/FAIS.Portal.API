@@ -14,7 +14,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class LibraryTypeController : ControllerBase
     {
         #region Variables
@@ -59,10 +59,10 @@ namespace FAIS.API.Controllers
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var entity = await _libraryTypeService.GetById(id);
+            var entity = _libraryTypeService.GetById(id);
             var createdBy = await _userService.GetById(entity.CreatedBy);
 
-            var module = new LibraryTypeModel()
+            var lib = new LibraryTypeModel()
             {
                 Id = entity.Id,
                 Code = entity.Code,
@@ -76,13 +76,13 @@ namespace FAIS.API.Controllers
 
             if (entity.UpdatedBy != null)
             {
-                module.UpdatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
-                module.UpdatedAt = entity.UpdatedAt;
+                lib.UpdatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
+                lib.UpdatedAt = entity.UpdatedAt;
             }
 
-            return Ok(module);
+            return Ok(lib);
         }
-        
+
         #endregion
 
         #region post

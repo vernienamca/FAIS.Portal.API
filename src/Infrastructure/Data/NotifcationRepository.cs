@@ -1,5 +1,4 @@
-﻿using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;

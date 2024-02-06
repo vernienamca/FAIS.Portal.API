@@ -10,7 +10,7 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface ILibraryTypeService
     {
         IReadOnlyCollection<LibraryTypeModel> Get();
-        Task<LibraryType> GetById(int id);
+        LibraryType GetById(int id);
         IReadOnlyCollection<string> GetLibraryCodesById(int id, string libraryCode);
         IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode);
         Task<LibraryType> Add(AddLibraryTypeDTO dto);

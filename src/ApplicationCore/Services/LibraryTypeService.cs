@@ -25,9 +25,9 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public async Task<LibraryType> GetById(int id)
+        public LibraryType GetById(int id)
         {
-            return await _repository.GetById(id);
+            return _repository.GetById(id);
         }
 
         public IReadOnlyCollection<string> GetLibraryCodesById (int id, string libraryCode)
