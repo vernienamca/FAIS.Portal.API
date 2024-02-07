@@ -8,9 +8,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public int Id { get; set; }
         [DataMember]
-        public long AcountGroup { get; set; }
+        public long AccountGroupId { get; set; }
         [DataMember]
-        public long SubAcountGroup { get; set; }
+        public long SubAccountGroupId { get; set; }
         [DataMember]
         public long RcaGL { get; set; }
         [DataMember]

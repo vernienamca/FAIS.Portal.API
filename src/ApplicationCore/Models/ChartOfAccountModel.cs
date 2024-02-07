@@ -5,8 +5,8 @@ namespace FAIS.ApplicationCore.Models
     public class ChartOfAccountModel
     {
         public int Id { get; set; }
-        public long AcountGroup { get; set; }
-        public long SubAcountGroup { get; set; }
+        public string AcountGroup { get; set; }
+        public string SubAcountGroup { get; set; }
         public long RcaGL { get; set; }
         public long RcaSL { get; set; }
         public string RcaLedgerTitle { get; set; }
