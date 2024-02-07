@@ -45,6 +45,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("USER_CREATED");
 
             builder.Property(e => e.CreatedAt)
+                .IsRequired()
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_CREATED");
 
@@ -53,6 +54,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("USER_MODIFIED");
 
             builder.Property(e => e.UpdatedAt)
+                .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
         }

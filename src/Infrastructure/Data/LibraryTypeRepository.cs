@@ -13,15 +13,34 @@ namespace FAIS.Infrastructure.Data
         {
         }
 
-        public IQueryable<LibraryType> Get()
+        public IReadOnlyCollection<LibraryTypeModel> Get()
         {
-            return _dbContext.LibraryTypes.AsNoTracking();
+            var libraryTypes = (from lib in _dbContext.LibraryTypes.AsNoTracking()
+                                  join usrC in _dbContext.Users.AsNoTracking() on lib.CreatedBy equals usrC.Id
+                                  join usrU in _dbContext.Users.AsNoTracking() on lib.UpdatedBy equals usrU.Id into usrUX
+                                  from usrU in usrUX.DefaultIfEmpty()
+                                  select new LibraryTypeModel()
+                                  {
+                                      Id = lib.Id,
+                                      Name = lib.Name,
+                                      Code = lib.Code,
+                                      Description = lib.Description,
+                                      IsActive = lib.IsActive,
+                                      StatusDate = lib.StatusDate,
+                                      CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
+                                      CreatedAt = lib.CreatedAt,
+                                      UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                                      UpdatedAt = lib.UpdatedAt
+                                  }).ToList();
+
+            return libraryTypes;
         }
 
         public LibraryType GetById(int id)
         {
-            return _dbContext.LibraryTypes.FirstOrDefault(t => t.Id == id);
+            return _dbContext.LibraryTypes.FirstOrDefault(o => o.Id == id);
         }
+
         public LibraryType GetPositionIdByName(string positionName)
         {
             return _dbContext.LibraryTypes.FirstOrDefault(lt => lt.Name == positionName);
