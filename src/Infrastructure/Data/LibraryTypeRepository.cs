@@ -1,5 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;

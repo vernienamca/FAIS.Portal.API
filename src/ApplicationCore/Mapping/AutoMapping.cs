@@ -39,7 +39,7 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<LibraryTypeDTO, LibraryType>();
             CreateMap<AddLibraryTypeDTO, LibraryType>()
                 .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
-        }
+        
 
             CreateMap<LibraryOptions, LibraryOptionAddDto>().ReverseMap();
             CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap();
