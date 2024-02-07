@@ -34,9 +34,12 @@ namespace FAIS.ApplicationCore.Services
 
             if (chartofAccountResult != null)
             {
-                chartOfAccountDetails.ChartOfAccountsId = chartofAccountResult.Id;
-                await _detailsRepository.Add(chartOfAccountDetails);
-            }
+                if(chartOfAccountDetails != null)
+                {
+                    chartOfAccountDetails.ChartOfAccountsId = chartofAccountResult.Id;
+                    await _detailsRepository.Add(chartOfAccountDetails);
+                }
+            }   
 
             return chartofAccountResult;
         }
@@ -46,7 +49,7 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public ChartOfAccounts GetById(int id)
+        public ChartOfAccountModel GetById(int id)
         {
             return _repository.GetById(id);
         }
@@ -54,7 +57,15 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ChartOfAccounts> Update(ChartOfAccountsDTO chartOfAccountsDTO)
         {
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
-            return await _repository.Update(chartOfAccount);
+            var chartOfAccountDetails = _mapper.Map<ChartOfAccountDetails>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
+            var chartofAccountResult = await _repository.Update(chartOfAccount);
+
+            if (chartofAccountResult != null)
+            {
+                await _detailsRepository.Update(chartOfAccountDetails);
+            }
+
+            return chartofAccountResult;
         }
         public byte[] ExportChartofAccounts()
         {

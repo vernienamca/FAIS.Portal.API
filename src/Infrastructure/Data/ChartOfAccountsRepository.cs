@@ -63,9 +63,47 @@ namespace FAIS.Infrastructure.Data
             return chartOfAccounts;
         }
 
-        public ChartOfAccounts GetById(int id)
+        public ChartOfAccountModel GetById(int id)
         {
-            return _dbContext.ChartOfAccounts.FirstOrDefault(t => t.Id == id);
+            var chartOfAccount = (from ca in _dbContext.ChartOfAccounts.AsNoTracking()
+                                   join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
+                                   join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id
+                                   into joinedUsers
+                                   from usrU in joinedUsers.DefaultIfEmpty()
+                                   join detail in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals detail.ChartOfAccountsId
+                                   into joinedAccounts
+                                   from detail in joinedAccounts.DefaultIfEmpty()
+                                   orderby ca.Id descending
+                                   select new ChartOfAccountModel()
+                                   {
+                                       Id = ca.Id,
+                                       AcountGroup = ca.AcountGroup,
+                                       IsActive = ca.IsActive == "Y" ? true : false,
+                                       RcaGL = ca.RcaGL,
+                                       RcaLedgerTitle = ca.RcaLedgerTitle,
+                                       RcaSL = ca.RcaSL,
+                                       StatusDate = ca.StatusDate,
+                                       SubAcountGroup = ca.SubAcountGroup,
+                                       CreatedBy = $"{usr.FirstName} {usr.LastName}",
+                                       CreatedAt = ca.CreatedAt,
+                                       UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                                       UpdatedAt = ca.UpdatedAt,
+                                       ChartOfAccountDetailModel = new ChartOfAccountDetailModel
+                                       {
+                                           Id = detail.Id,
+                                           ChartOfAccountsId = detail.ChartOfAccountsId,
+                                           CreatedAt = detail.CreatedAt,
+                                           CreatedBy = $"{usr.FirstName} {usr.LastName}",
+                                           DateRemoved = detail.DateRemoved.GetValueOrDefault(),
+                                           GL = detail.GL,
+                                           LedgerTitle = detail.LedgerTitle,
+                                           SL = detail.SL,
+                                           UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                                           UpdatedAt = ca.UpdatedAt,
+                                       }
+                                   }).FirstOrDefault(t => t.Id == id);
+
+            return chartOfAccount;
         }
 
         public async Task<ChartOfAccounts> Update(ChartOfAccounts chartOfAccounts)
