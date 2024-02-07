@@ -24,23 +24,25 @@ namespace FAIS.Infrastructure.Data
         {
             var chartOfAccounts = (from ca in _dbContext.ChartOfAccounts.AsNoTracking()
                                join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
-                               join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id
-                               into joinedUsers
-                               from usrU in joinedUsers.DefaultIfEmpty()
-                               join detail in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals detail.ChartOfAccountsId
-                               into joinedAccounts
-                               from detail in joinedAccounts.DefaultIfEmpty()
+                               join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id 
+                                    into joinedUsers from usrU in joinedUsers.DefaultIfEmpty()
+                               join detail in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals detail.ChartOfAccountsId 
+                                    into joinedAccounts from detail in joinedAccounts.DefaultIfEmpty()
+                               join libType in _dbContext.LibraryTypes.AsNoTracking() on ca.AccountGroupId equals libType.Id 
+                                    into joinedTypes from libType in joinedTypes.DefaultIfEmpty()
+                               join libOptions in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libOptions.Id 
+                                    into joinedOptions from libOptions in joinedOptions.DefaultIfEmpty()
                                orderby ca.Id descending
                                select new ChartOfAccountModel()
                                {
                                    Id = ca.Id,
-                                   AcountGroup = ca.AcountGroup,
+                                   AcountGroup = libType.Name,
                                    IsActive = ca.IsActive == "Y" ? true : false,
                                    RcaGL = ca.RcaGL,
                                    RcaLedgerTitle = ca.RcaLedgerTitle,
                                    RcaSL = ca.RcaSL,
                                    StatusDate = ca.StatusDate,
-                                   SubAcountGroup = ca.SubAcountGroup,
+                                   SubAcountGroup = libOptions.Description,
                                    CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                    CreatedAt = ca.CreatedAt,
                                    UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
@@ -67,23 +69,26 @@ namespace FAIS.Infrastructure.Data
         {
             var chartOfAccount = (from ca in _dbContext.ChartOfAccounts.AsNoTracking()
                                    join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
-                                   join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id
-                                   into joinedUsers
-                                   from usrU in joinedUsers.DefaultIfEmpty()
-                                   join detail in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals detail.ChartOfAccountsId
-                                   into joinedAccounts
-                                   from detail in joinedAccounts.DefaultIfEmpty()
+                                   join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id 
+                                        into joinedUsers from usrU in joinedUsers.DefaultIfEmpty()
+                                   join detail in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals detail.ChartOfAccountsId 
+                                        into joinedAccounts from detail in joinedAccounts.DefaultIfEmpty()
+                                   join libType in _dbContext.LibraryTypes.AsNoTracking() on ca.AccountGroupId equals libType.Id 
+                                        into joinedTypes from libType in joinedTypes.DefaultIfEmpty()
+                                   join libOptions in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libOptions.Id 
+                                        into joinedOptions from libOptions in joinedOptions.DefaultIfEmpty()
+                                   orderby ca.Id descending
                                    orderby ca.Id descending
                                    select new ChartOfAccountModel()
                                    {
                                        Id = ca.Id,
-                                       AcountGroup = ca.AcountGroup,
+                                       AcountGroup = libType.Name,
                                        IsActive = ca.IsActive == "Y" ? true : false,
                                        RcaGL = ca.RcaGL,
                                        RcaLedgerTitle = ca.RcaLedgerTitle,
                                        RcaSL = ca.RcaSL,
                                        StatusDate = ca.StatusDate,
-                                       SubAcountGroup = ca.SubAcountGroup,
+                                       SubAcountGroup = libOptions.Description,
                                        CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                        CreatedAt = ca.CreatedAt,
                                        UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",

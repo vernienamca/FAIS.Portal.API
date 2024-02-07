@@ -20,11 +20,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("CHART_ACC_SEQ");
 
-            builder.Property(e => e.AcountGroup)
+            builder.Property(e => e.AccountGroupId)
                 .IsRequired()
                 .HasColumnName("ACCOUNT_GROUP");
 
-            builder.Property(e => e.SubAcountGroup)
+            builder.Property(e => e.SubAccountGroupId)
                 .IsRequired()
                 .HasColumnName("SUB_ACCOUNT_GROUP");
 
