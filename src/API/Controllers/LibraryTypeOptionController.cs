@@ -16,7 +16,7 @@ namespace FAIS.Portal.API.Controllers
     {
         #region Variables
 
-        private readonly ILibraryOptionService _libraryOptionTypeService;
+        private readonly ILibraryOptionService _libraryOptionService;
 
         #endregion Variables
 
@@ -28,7 +28,7 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         public LibraryTypeOptionController(ILibraryOptionService libraryOptionService)
         {
-            _libraryOptionTypeService = libraryOptionService;
+            _libraryOptionService = libraryOptionService;
         }
 
         #endregion Constructor
@@ -43,7 +43,7 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(List<LibraryOptionModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            return Ok(_libraryOptionTypeService.Get());
+            return Ok(_libraryOptionService.Get());
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
-            return Ok(_libraryOptionTypeService.GetById(id));
+            return Ok(_libraryOptionService.GetById(id));
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
         public IActionResult Add([FromBody] LibraryOptionAddDto libraryOptionAddDto)
         {
-            return Ok(_libraryOptionTypeService.Add(libraryOptionAddDto));
+            return Ok(_libraryOptionService.Add(libraryOptionAddDto));
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
         public IActionResult Update([FromBody] LibraryOptionUpdateDto libraryOptionUpdateDto)
         {
-            return Ok(_libraryOptionTypeService.Update(libraryOptionUpdateDto));
+            return Ok(_libraryOptionService.Update(libraryOptionUpdateDto));
         }
 
         #endregion
@@ -98,7 +98,7 @@ namespace FAIS.Portal.API.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            return Ok(_libraryOptionTypeService.Delete(id));
+            return Ok(_libraryOptionService.Delete(id));
         }
 
         #endregion
