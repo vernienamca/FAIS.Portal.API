@@ -1,5 +1,4 @@
-﻿using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +10,7 @@ namespace FAIS.Infrastructure.Data
 {
     public class NotificationRepository : EFRepository<StringInterpolation, int>, INotificationRepository
     {
-        public NotificationRepository(FAISContext context) : base(context)
-        {
-        }
+        public NotificationRepository(FAISContext context) : base(context){ }
 
         public IReadOnlyCollection<StringInterpolationModel> GetIntepolations()
         {

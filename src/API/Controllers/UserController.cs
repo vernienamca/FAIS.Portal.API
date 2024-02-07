@@ -83,13 +83,15 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
+            if(entity == null)
+                throw new ArgumentNullException(nameof(entity));
 
             var user = new UserModel()
             {
                 Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
-                Position = _libraryTypeService.GetById(entity.PositionId).Name,
+                Position = _libraryTypeService.GetById(entity.PositionId)?.Name,
                 Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : string.Empty,
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,

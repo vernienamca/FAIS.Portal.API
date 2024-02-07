@@ -37,8 +37,8 @@ namespace FAIS.ApplicationCore.Configuration
 
             builder.Property(e => e.IsActive)
                 .IsRequired()
-                .HasColumnName("IS_ACTIVE")
-                .HasMaxLength(1);
+                .HasMaxLength(1)
+                .HasColumnName("IS_ACTIVE");
 
             builder.Property(e => e.StatusDate)
                 .IsRequired()
@@ -50,7 +50,6 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("USER_CREATED");
 
             builder.Property(e => e.CreatedAt)
-                .IsRequired()
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_CREATED");
 
