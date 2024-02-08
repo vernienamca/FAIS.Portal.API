@@ -22,13 +22,13 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<VersionModel> GetById(int id)
         {
-            var result = _versionsRepository.Get().FirstOrDefault(x => x.Id == id);
+            var result = await _versionsRepository.GetById(id);
             var versionDto = _mapper.Map<VersionModel>(result);
 
             return versionDto;
         }
 
-        public async Task<List<VersionModel>> GetListVersion()
+        public IReadOnlyCollection<VersionModel> GetListVersion()
         {
             var result = _versionsRepository.Get().OrderByDescending(x=>x.VersionDate);
             var versionList = _mapper.Map<List<VersionModel>>(result);
