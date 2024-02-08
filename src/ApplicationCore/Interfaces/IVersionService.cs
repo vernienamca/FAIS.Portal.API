@@ -8,7 +8,7 @@ namespace FAIS.ApplicationCore.Interfaces
 {
     public interface IVersionService
     {
-        Task<List<VersionModel>> GetListVersion();
+        IReadOnlyCollection<VersionModel> GetListVersion();
         Task<VersionModel> GetById(int id);
         Task<List<VersionModel>> Add(AddVersionDTO version);
         Task Delete(int id);
