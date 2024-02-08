@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FAIS.ApplicationCore.DTOs.Structure;
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
@@ -29,5 +31,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int? UpdatedBy { get; set; }
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
+
+        public IEnumerable<ChartOfAccountDetails> ChartOfAccountDetails { get; set; }
     }
 }

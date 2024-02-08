@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FAIS.ApplicationCore.DTOs.Structure
 {
     public class ChartOfAccountsDTO
     {
         public int Id { get; set; }
-        public long AcountGroup { get; set; }
-        public long SubAcountGroup { get; set; }
+        public long AccountGroupId { get; set; }
+        public long SubAccountGroupId { get; set; }
         public long RcaGL { get; set; }
         public long RcaSL { get; set; }
         public string RcaLedgerTitle { get; set; }
@@ -17,6 +18,6 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
-        public ChartOfAccountDetailsDTO ChartOfAccountDetailsDTO { get; set; }
+        public IEnumerable<ChartOfAccountDetailsDTO> ChartOfAccountDetailsDTO { get; set; }
     }
 }
