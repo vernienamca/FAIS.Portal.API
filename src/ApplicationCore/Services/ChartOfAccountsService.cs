@@ -29,15 +29,18 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ChartOfAccounts> Add(ChartOfAccountsDTO chartOfAccountsDTO)
         {
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
-            var chartOfAccountDetails = _mapper.Map<ChartOfAccountDetails>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
+            var chartOfAccountDetails = _mapper.Map<List<ChartOfAccountDetails>>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
             var chartofAccountResult = await _repository.Add(chartOfAccount);
 
             if (chartofAccountResult != null)
             {
                 if(chartOfAccountDetails != null)
                 {
-                    chartOfAccountDetails.ChartOfAccountsId = chartofAccountResult.Id;
-                    await _detailsRepository.Add(chartOfAccountDetails);
+                    foreach (var detail in chartOfAccountDetails)
+                    {
+                        detail.ChartOfAccountsId = chartofAccountResult.Id;
+                        await _detailsRepository.Add(detail);
+                    }
                 }
             }   
 
@@ -57,16 +60,21 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ChartOfAccounts> Update(ChartOfAccountsDTO chartOfAccountsDTO)
         {
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
-            var chartOfAccountDetails = _mapper.Map<ChartOfAccountDetails>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
+            var chartOfAccountDetails = _mapper.Map<List<ChartOfAccountDetails>>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
             var chartofAccountResult = await _repository.Update(chartOfAccount);
 
             if (chartofAccountResult != null)
             {
-                await _detailsRepository.Update(chartOfAccountDetails);
+                foreach (var detail in chartOfAccountDetails)
+                {
+                    detail.ChartOfAccountsId = chartofAccountResult.Id;
+                    await _detailsRepository.Update(detail);
+                }
             }
 
             return chartofAccountResult;
         }
+
         public byte[] ExportChartofAccounts()
         {
             return _repository.Get().ToExcel();
