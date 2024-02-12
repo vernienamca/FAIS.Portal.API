@@ -1,7 +1,13 @@
-﻿using FAIS.ApplicationCore.Configuration;
+﻿using FAIS.ApplicationCore.AuditTrail;
+using FAIS.ApplicationCore.Configuration;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -61,6 +67,61 @@ namespace FAIS.Infrastructure.Data
         }
 
         partial void OnModelCreatingPartial(ModelBuilder builder);
-    }
 
+        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            IEnumerable<AuditEntry> entityAudits = OnBeforeSaveChanges();
+            int result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+            await OnAfterSaveChangesAsync(entityAudits);
+
+            return result;
+        }
+
+        private IEnumerable<AuditEntry> OnBeforeSaveChanges()
+        {
+            ChangeTracker.DetectChanges();
+            List<AuditEntry> auditEntries = new List<AuditEntry>();
+            foreach(EntityEntry entry in ChangeTracker.Entries())
+            {
+                if (!entry.ShouldBeAudited())
+                {
+                    continue;
+                }
+
+                auditEntries.Add(new AuditEntry(entry));
+            }
+
+            BeginTrackingAuditEntries(auditEntries);
+
+            return auditEntries;
+        }
+
+        private async Task OnAfterSaveChangesAsync(IEnumerable<AuditEntry> auditEntries)
+        {
+            if (auditEntries == null || auditEntries.Count() == 0)
+                return;
+
+            await BeginTrackingAuditEntriesAsync(auditEntries);
+
+            await base.SaveChangesAsync();
+        }
+
+        private void BeginTrackingAuditEntries(IEnumerable<AuditEntry> auditEntries)
+        {
+            foreach (var auditEntry in auditEntries)
+            {
+                auditEntry.Update();
+                Add(auditEntry.ToAuditLog());
+            }
+        }
+
+        private async Task BeginTrackingAuditEntriesAsync(IEnumerable<AuditEntry> auditEntries)
+        {
+            foreach(var auditEntry in auditEntries) 
+            {
+                auditEntry.Update();
+                Add(auditEntry.ToAuditLog());
+            }
+        }
+    }
 }
