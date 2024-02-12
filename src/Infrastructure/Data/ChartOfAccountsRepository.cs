@@ -24,37 +24,39 @@ namespace FAIS.Infrastructure.Data
         {
             var chartOfAccounts = (from ca in _dbContext.ChartOfAccounts.AsNoTracking()
                                join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
-                               join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id
-                               into joinedUsers
-                               from usrU in joinedUsers.DefaultIfEmpty()
-                               join detail in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals detail.ChartOfAccountsId
-                               into joinedAccounts
-                               from detail in joinedAccounts.DefaultIfEmpty()
+                               join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id 
+                                    into joinedUsers from usrU in joinedUsers.DefaultIfEmpty()
+                               join dtl in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals dtl.ChartOfAccountsId 
+                                    into joinedAccounts from dtl in joinedAccounts.DefaultIfEmpty()
+                               join libT in _dbContext.LibraryTypes.AsNoTracking() on ca.AccountGroupId equals libT.Id 
+                                    into joinedTypes from libT in joinedTypes.DefaultIfEmpty()
+                               join libO in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libO.LibraryTypeId 
+                                    into joinedOptions from libO in joinedOptions.DefaultIfEmpty()
                                orderby ca.Id descending
                                select new ChartOfAccountModel()
                                {
                                    Id = ca.Id,
-                                   AcountGroup = ca.AcountGroup,
+                                   AcountGroup = libT.Name,
                                    IsActive = ca.IsActive == "Y" ? true : false,
                                    RcaGL = ca.RcaGL,
                                    RcaLedgerTitle = ca.RcaLedgerTitle,
                                    RcaSL = ca.RcaSL,
                                    StatusDate = ca.StatusDate,
-                                   SubAcountGroup = ca.SubAcountGroup,
+                                   SubAcountGroup = libO.Description,
                                    CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                    CreatedAt = ca.CreatedAt,
                                    UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                    UpdatedAt = ca.UpdatedAt,
                                    ChartOfAccountDetailModel = new ChartOfAccountDetailModel
                                    {
-                                       Id = detail.Id,
-                                       ChartOfAccountsId = detail.ChartOfAccountsId,
-                                       CreatedAt = detail.CreatedAt,
+                                       Id = dtl.Id,
+                                       ChartOfAccountsId = dtl.ChartOfAccountsId,
+                                       CreatedAt = dtl.CreatedAt,
                                        CreatedBy = $"{usr.FirstName} {usr.LastName}",
-                                       DateRemoved = detail.DateRemoved.GetValueOrDefault(),
-                                       GL = detail.GL,
-                                       LedgerTitle = detail.LedgerTitle,
-                                       SL = detail.SL,
+                                       DateRemoved = dtl.DateRemoved.GetValueOrDefault(),
+                                       GL = dtl.GL,
+                                       LedgerTitle = dtl.LedgerTitle,
+                                       SL = dtl.SL,
                                        UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                        UpdatedAt = ca.UpdatedAt,
                                    }
@@ -67,37 +69,40 @@ namespace FAIS.Infrastructure.Data
         {
             var chartOfAccount = (from ca in _dbContext.ChartOfAccounts.AsNoTracking()
                                    join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
-                                   join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id
-                                   into joinedUsers
-                                   from usrU in joinedUsers.DefaultIfEmpty()
-                                   join detail in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals detail.ChartOfAccountsId
-                                   into joinedAccounts
-                                   from detail in joinedAccounts.DefaultIfEmpty()
+                                   join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id 
+                                        into joinedUsers from usrU in joinedUsers.DefaultIfEmpty()
+                                   join dtl in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals dtl.ChartOfAccountsId 
+                                        into joinedAccounts from dtl in joinedAccounts.DefaultIfEmpty()
+                                   join libT in _dbContext.LibraryTypes.AsNoTracking() on ca.AccountGroupId equals libT.Id 
+                                        into joinedTypes from libT in joinedTypes.DefaultIfEmpty()
+                                   join libO in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libO.LibraryTypeId 
+                                        into joinedOptions from libO in joinedOptions.DefaultIfEmpty()
+                                   orderby ca.Id descending
                                    orderby ca.Id descending
                                    select new ChartOfAccountModel()
                                    {
                                        Id = ca.Id,
-                                       AcountGroup = ca.AcountGroup,
+                                       AcountGroup = libT.Name,
                                        IsActive = ca.IsActive == "Y" ? true : false,
                                        RcaGL = ca.RcaGL,
                                        RcaLedgerTitle = ca.RcaLedgerTitle,
                                        RcaSL = ca.RcaSL,
                                        StatusDate = ca.StatusDate,
-                                       SubAcountGroup = ca.SubAcountGroup,
+                                       SubAcountGroup = libO.Description,
                                        CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                        CreatedAt = ca.CreatedAt,
                                        UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                        UpdatedAt = ca.UpdatedAt,
                                        ChartOfAccountDetailModel = new ChartOfAccountDetailModel
                                        {
-                                           Id = detail.Id,
-                                           ChartOfAccountsId = detail.ChartOfAccountsId,
-                                           CreatedAt = detail.CreatedAt,
+                                           Id = dtl.Id,
+                                           ChartOfAccountsId = dtl.ChartOfAccountsId,
+                                           CreatedAt = dtl.CreatedAt,
                                            CreatedBy = $"{usr.FirstName} {usr.LastName}",
-                                           DateRemoved = detail.DateRemoved.GetValueOrDefault(),
-                                           GL = detail.GL,
-                                           LedgerTitle = detail.LedgerTitle,
-                                           SL = detail.SL,
+                                           DateRemoved = dtl.DateRemoved.GetValueOrDefault(),
+                                           GL = dtl.GL,
+                                           LedgerTitle = dtl.LedgerTitle,
+                                           SL = dtl.SL,
                                            UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                            UpdatedAt = ca.UpdatedAt,
                                        }
