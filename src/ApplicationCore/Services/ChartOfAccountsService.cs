@@ -65,10 +65,20 @@ namespace FAIS.ApplicationCore.Services
 
             if (chartofAccountResult != null)
             {
-                foreach (var detail in chartOfAccountDetails)
+                if (chartOfAccountDetails != null)
                 {
-                    detail.ChartOfAccountsId = chartofAccountResult.Id;
-                    await _detailsRepository.Update(detail);
+                    foreach (var detail in chartOfAccountDetails)
+                    {
+                        if (detail.ChartOfAccountsId > 0)
+                        {
+                            await _detailsRepository.Update(detail);
+                        }
+                        else 
+                        {
+                            detail.ChartOfAccountsId = chartofAccountResult.Id;
+                            await _detailsRepository.Add(detail);
+                        }
+                    }
                 }
             }
 
