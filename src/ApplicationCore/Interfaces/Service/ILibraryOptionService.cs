@@ -1,4 +1,5 @@
 ﻿using FAIS.ApplicationCore.DTOs.Structure;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         LibraryOptionModel GetById(int id);
         Task Delete(int id);
         Task Add(LibraryOptionAddDto model);
-        Task Update(LibraryOptionUpdateDto model);
+        Task<LibraryOptions> Update(LibraryOptionUpdateDto model);
     }
 }

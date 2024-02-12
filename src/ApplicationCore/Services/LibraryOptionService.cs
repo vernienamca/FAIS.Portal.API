@@ -42,7 +42,7 @@ namespace FAIS.ApplicationCore.Services
             await _repository.Add(_mapper.Map<LibraryOptions>(model));
         }
 
-        public async Task Update(LibraryOptionUpdateDto model)
+        public async Task<LibraryOptions> Update(LibraryOptionUpdateDto model)
         {
             var libraryOption = _repository.GetAll().FirstOrDefault(libraryOption => libraryOption.Id == model.Id);            
             if (libraryOption == null)
@@ -50,14 +50,7 @@ namespace FAIS.ApplicationCore.Services
                 throw new Exception("LibraryOptionId is not exist");
             }
             var mapper = _mapper.Map<LibraryOptions>(libraryOption);
-            mapper.UpdatedBy = model.UpdatedBy;
-            mapper.UpdatedAt = DateTime.Now;
-
-            mapper.Description = model.Description;
-            mapper.IsActive = model.IsActive;
-            mapper.Code = model.Code;
-            mapper.Remarks = model.Remark;
-            await _repository.Update(mapper);
+            return await _repository.Update(mapper);
         }
     }
 }

@@ -4,6 +4,7 @@ using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace FAIS.Portal.API.Controllers
@@ -36,7 +37,7 @@ namespace FAIS.Portal.API.Controllers
         #region Get
 
         /// <summary>
-        /// List the LibraryTypeOption.
+        /// List the library options.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -50,7 +51,7 @@ namespace FAIS.Portal.API.Controllers
         /// List the LibraryTypeOption.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("[action]/{id:int}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
@@ -84,6 +85,9 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
         public IActionResult Update([FromBody] LibraryOptionUpdateDto libraryOptionUpdateDto)
         {
+            if (libraryOptionUpdateDto == null)
+                throw new ArgumentNullException(nameof(libraryOptionUpdateDto));
+
             return Ok(_libraryOptionService.Update(libraryOptionUpdateDto));
         }
 
