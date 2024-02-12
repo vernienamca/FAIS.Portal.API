@@ -44,12 +44,13 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<LibraryOptions> Update(LibraryOptionUpdateDto model)
         {
-            var libraryOption = _repository.GetAll().FirstOrDefault(libraryOption => libraryOption.Id == model.Id);            
+            var libraryOption = _repository.GetAll().FirstOrDefault(libraryOption => libraryOption.Id == model.Id) ?? throw new Exception("LibraryOptionId is not exist");
+            
             if (libraryOption == null)
-            {
-                throw new Exception("LibraryOptionId is not exist");
-            }
+                throw new ArgumentNullException("Library Option not exist.");
+
             var mapper = _mapper.Map<LibraryOptions>(libraryOption);
+
             return await _repository.Update(mapper);
         }
     }

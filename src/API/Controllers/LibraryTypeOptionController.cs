@@ -37,7 +37,7 @@ namespace FAIS.Portal.API.Controllers
         #region Get
 
         /// <summary>
-        /// List the library options.
+        /// List the library type options.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -48,8 +48,9 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// List the LibraryTypeOption.
+        /// Gets the library type options by unique identifier.
         /// </summary>
+        /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
@@ -63,8 +64,9 @@ namespace FAIS.Portal.API.Controllers
         #region Post
 
         /// <summary>
-        /// Add LibraryTypeOption.
+        /// Add Library Type Option.
         /// </summary>
+        /// <param name="libraryOptionAddDto">The library type option data object.</param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
@@ -78,8 +80,9 @@ namespace FAIS.Portal.API.Controllers
         #region Put
 
         /// <summary>
-        /// Puts the update library option.
+        /// Puts the update library type option.
         /// </summary>
+        /// <param name="libraryOptionUpdateDto">The library type option data object.</param>
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(typeof(LibraryOptionModel), StatusCodes.Status200OK)]
@@ -96,8 +99,9 @@ namespace FAIS.Portal.API.Controllers
         #region Delete
 
         /// <summary>
-        /// Delete LibraryTypeOption by id.
+        /// Delete Library Type Option by id.
         /// </summary>
+        /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)

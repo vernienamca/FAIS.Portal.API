@@ -25,7 +25,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsController"/> class.
-        /// <param name="settingsService">The module service.</param>
+        /// <param name="settingsService">The settings service.</param>
         /// </summary>
         public SettingsController(ISettingsService settingsService)
         {
@@ -49,6 +49,7 @@ namespace FAIS.Portal.API.Controllers
         /// <summary>
         /// Get by Id.
         /// </summary>
+        /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(IReadOnlyCollection<SettingModel>), StatusCodes.Status200OK)]
@@ -60,11 +61,12 @@ namespace FAIS.Portal.API.Controllers
 
         #region update
         /// <summary>
-        /// Updates the smptp only.
+        /// Updates the system settings.
         /// </summary>
-        /// <param name="update-smpt"></param>
+        /// <param name="updateSmtpRequestDTO">The settings data object</param>
         /// <returns></returns>
         [HttpPut]
+        [ProducesResponseType(typeof(IReadOnlyCollection<SettingModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Update([FromBody] SettingsDTO updateSmtpRequestDTO)
         {
             await _settingsService.UpdateSettings(updateSmtpRequestDTO);
