@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FAIS.ApplicationCore.Models
 {
@@ -16,6 +17,6 @@ namespace FAIS.ApplicationCore.Models
         public DateTime CreatedAt { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public ChartOfAccountDetailModel ChartOfAccountDetailModel { get; set; }
+        public List<ChartOfAccountDetailModel> ChartOfAccountDetailModel { get; set; }
     }
 }
