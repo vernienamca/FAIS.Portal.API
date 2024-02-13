@@ -1,5 +1,4 @@
-﻿
-using FAIS.ApplicationCore.Entities.Security;
+﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

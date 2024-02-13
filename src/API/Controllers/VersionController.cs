@@ -1,7 +1,6 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
-using FAIS.ApplicationCore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +46,7 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// List the version.
+        /// Gets the version by unique identifier.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]/{id:int}")]
@@ -62,9 +61,10 @@ namespace FAIS.Portal.API.Controllers
         /// <summary>
         /// Add Version
         /// </summary>
-        /// <param name="version">The version identifier.</param>
+        /// <param name="version">The version object.</param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(typeof(List<VersionModel>), StatusCodes.Status200OK)]
         public IActionResult Add([FromBody] AddVersionDTO version)
         {
             return Ok(_versionService.Add(version));
@@ -75,7 +75,7 @@ namespace FAIS.Portal.API.Controllers
         /// <summary>
         /// Delete Version
         /// </summary>
-        /// <param name="version">The version identifier.</param>
+        /// <param name="id">The version identifier.</param>
         /// <returns></returns>
         [HttpDelete("[action]/{id:int}")]
         public IActionResult Delete(int id)

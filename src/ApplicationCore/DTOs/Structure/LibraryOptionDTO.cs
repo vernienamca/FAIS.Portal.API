@@ -1,0 +1,28 @@
+﻿using System;
+
+namespace FAIS.ApplicationCore.DTOs.Structure
+{
+    public class LibraryOptionAddDto
+    {
+        public int LibraryTypeId { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+        public string Remark { get; set; }
+        public char IsActive { get; set; }
+        public DateTime StatusDate { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+    public class LibraryOptionUpdateDto
+    {
+        public int Id { get; set; }
+        public int LibraryTypeId { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+        public string Remark { get; set; }
+        public char IsActive { get; set; }
+        public DateTime StatusDate { get; set; }
+        public int UpdatedBy { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+}

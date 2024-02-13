@@ -38,6 +38,7 @@ namespace FAIS.ApplicationCore.Services
         public async Task<Settings> UpdateSettings(SettingsDTO updateSetting)
         {
             var settings = _repository.GetById(updateSetting.Id);
+
             settings.CompanyName = updateSetting.CompanyName;
             settings.PhoneNumber = updateSetting.PhoneNumber;
             settings.EmailAddress = updateSetting.EmailAddress;
@@ -56,6 +57,7 @@ namespace FAIS.ApplicationCore.Services
             settings.MaxSignOnAttempts = updateSetting.MaxSignOnAttempts;
             settings.UpdatedBy = updateSetting.UpdatedBy;
             settings.UpdatedAt = DateTime.Now;
+
             return await _repository.Update(settings);
         }
     }
