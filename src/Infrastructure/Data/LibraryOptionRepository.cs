@@ -32,7 +32,7 @@ namespace FAIS.Infrastructure.Data
                                             LibraryTypeId = lo.LibraryTypeId,
                                             LibraryTypeName = lto.Name,
                                             Code = lo.Code,
-                                            Description = lto.Description,
+                                            Description = lo.Description,
                                             IsActive = lo.IsActive,
                                             Remark = lo.Remarks,
                                             StatusDate = lo.StatusDate,
