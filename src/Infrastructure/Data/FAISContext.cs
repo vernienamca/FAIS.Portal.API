@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.AuditTrail;
+﻿
+using FAIS.ApplicationCore.AuditTrail;
 using FAIS.ApplicationCore.Configuration;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
@@ -68,18 +69,28 @@ namespace FAIS.Infrastructure.Data
 
         partial void OnModelCreatingPartial(ModelBuilder builder);
 
-        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        //public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        //{
+        //    IEnumerable<AuditEntry> entityAudits = OnBeforeSaveChanges();
+        //    int result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        //    await OnAfterSaveChangesAsync(entityAudits);
+
+        //    return result;
+        //}
+
+        public virtual async Task<int> SaveChangesAsync(int? userId = null)
         {
-            IEnumerable<AuditEntry> entityAudits = OnBeforeSaveChanges();
-            int result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+            IEnumerable<AuditEntry> entityAudits = OnBeforeSaveChanges(userId);
+            int result = await base.SaveChangesAsync();
             await OnAfterSaveChangesAsync(entityAudits);
 
             return result;
         }
 
-        private IEnumerable<AuditEntry> OnBeforeSaveChanges()
+        private IEnumerable<AuditEntry> OnBeforeSaveChanges(int? userId)
         {
             ChangeTracker.DetectChanges();
+
             List<AuditEntry> auditEntries = new List<AuditEntry>();
             foreach(EntityEntry entry in ChangeTracker.Entries())
             {
@@ -88,7 +99,7 @@ namespace FAIS.Infrastructure.Data
                     continue;
                 }
 
-                auditEntries.Add(new AuditEntry(entry));
+                auditEntries.Add(new AuditEntry(entry, userId));
             }
 
             BeginTrackingAuditEntries(auditEntries);
@@ -110,7 +121,7 @@ namespace FAIS.Infrastructure.Data
         {
             foreach (var auditEntry in auditEntries)
             {
-                auditEntry.Update();
+                //auditEntry.Update();
                 Add(auditEntry.ToAuditLog());
             }
         }
@@ -119,7 +130,7 @@ namespace FAIS.Infrastructure.Data
         {
             foreach(var auditEntry in auditEntries) 
             {
-                auditEntry.Update();
+                //auditEntry.Update();
                 Add(auditEntry.ToAuditLog());
             }
         }
