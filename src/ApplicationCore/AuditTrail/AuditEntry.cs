@@ -36,11 +36,9 @@ namespace FAIS.ApplicationCore.AuditTrail
                         case EntityState.Added:
                             NewValues[propertyName] = property.CurrentValue;
                             break;
-
                         case EntityState.Deleted:
                             OldValues[propertyName] = property.OriginalValue;
                             break;
-
                         case EntityState.Modified:
                             if(property.IsModified)
                             {
