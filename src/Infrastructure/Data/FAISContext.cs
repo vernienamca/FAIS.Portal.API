@@ -1,7 +1,12 @@
-﻿using FAIS.ApplicationCore.Configuration;
+﻿
+using FAIS.ApplicationCore.AuditTrail;
+using FAIS.ApplicationCore.Configuration;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -61,6 +66,40 @@ namespace FAIS.Infrastructure.Data
         }
 
         partial void OnModelCreatingPartial(ModelBuilder builder);
-    }
 
+        public virtual async Task<int> SaveChangesAsync(int? userId = null)
+        {
+            IEnumerable<AuditEntry> entityAudits = OnBeforeSaveChanges(userId);
+            int result = await base.SaveChangesAsync();
+            return result;
+        }
+
+        private IEnumerable<AuditEntry> OnBeforeSaveChanges(int? userId)
+        {
+            ChangeTracker.DetectChanges();
+
+            List<AuditEntry> auditEntries = new List<AuditEntry>();
+            foreach(EntityEntry entry in ChangeTracker.Entries())
+            {
+                if (!entry.ShouldBeAudited())
+                {
+                    continue;
+                }
+
+                auditEntries.Add(new AuditEntry(entry, userId));
+            }
+
+            BeginTrackingAuditEntries(auditEntries);
+
+            return auditEntries;
+        }
+
+        private void BeginTrackingAuditEntries(IEnumerable<AuditEntry> auditEntries)
+        {
+            foreach (var auditEntry in auditEntries)
+            {
+                AuditLogs.Add(auditEntry.ToAuditLog());
+            }
+        }
+    }
 }

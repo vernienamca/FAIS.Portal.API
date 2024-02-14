@@ -1,8 +1,10 @@
-﻿using System;
+﻿using FAIS.ApplicationCore.AuditTrail;
+using System;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
+    [Auditable]
     public class CostCenter : BaseEntity<int>
     {
         [DataMember]
