@@ -1,6 +1,7 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -29,7 +30,10 @@ namespace FAIS.Infrastructure.Data
                                  IpAddress = log.IpAddress,
                                  CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                  CreatedAt = log.CreatedAt
-                             }).OrderByDescending(t => t.CreatedAt).Take(100).ToList();
+                             })
+                             .OrderByDescending(t => t.CreatedAt)
+                             .Where(l => l.CreatedAt.Date == DateTime.Now.Date)
+                             .ToList();
 
             return auditLogs;
         }
