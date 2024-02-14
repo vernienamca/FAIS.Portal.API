@@ -30,7 +30,7 @@ namespace FAIS.Infrastructure.Data
                                     into joinedAccounts from dtl in joinedAccounts.DefaultIfEmpty()
                                join libT in _dbContext.LibraryTypes.AsNoTracking() on ca.AccountGroupId equals libT.Id 
                                     into joinedTypes from libT in joinedTypes.DefaultIfEmpty()
-                               join libO in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libO.LibraryTypeId 
+                               join libO in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libO.Id 
                                     into joinedOptions from libO in joinedOptions.DefaultIfEmpty()
                                orderby ca.Id descending
                                select new ChartOfAccountModel()
@@ -60,7 +60,7 @@ namespace FAIS.Infrastructure.Data
                                         into joinedUsers from usrU in joinedUsers.DefaultIfEmpty()
                                    join libT in _dbContext.LibraryTypes.AsNoTracking() on ca.AccountGroupId equals libT.Id 
                                         into joinedTypes from libT in joinedTypes.DefaultIfEmpty()
-                                   join libO in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libO.LibraryTypeId 
+                                   join libO in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libO.Id 
                                         into joinedOptions from libO in joinedOptions.DefaultIfEmpty()
                                    orderby ca.Id descending
                                    select new ChartOfAccountModel()
