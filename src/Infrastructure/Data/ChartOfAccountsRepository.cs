@@ -26,8 +26,6 @@ namespace FAIS.Infrastructure.Data
                                join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
                                join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id 
                                     into joinedUsers from usrU in joinedUsers.DefaultIfEmpty()
-                               join dtl in _dbContext.ChartOfAccountDetails.AsNoTracking() on ca.Id equals dtl.ChartOfAccountsId 
-                                    into joinedAccounts from dtl in joinedAccounts.DefaultIfEmpty()
                                join libT in _dbContext.LibraryTypes.AsNoTracking() on ca.AccountGroupId equals libT.Id 
                                     into joinedTypes from libT in joinedTypes.DefaultIfEmpty()
                                join libO in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libO.Id 
