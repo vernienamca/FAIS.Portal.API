@@ -47,6 +47,7 @@ namespace FAIS.API.Controllers
         {
             return Ok(_notificationService.GetIntepolations());
         }
+
         /// <summary>
         /// List the notification templates.
         /// </summary>
@@ -105,6 +106,7 @@ namespace FAIS.API.Controllers
         {
             return Ok(_notificationService.AddStringInterpolation(interpolationDto));
         }
+
         /// <summary>
         /// Puts the update string interpolation.
         /// </summary>
@@ -115,6 +117,30 @@ namespace FAIS.API.Controllers
         public IActionResult UpdateStringInterpolation(StringInterpolationDTO interpolationDto)
         {
             return Ok(_notificationService.UpdateStringInterpolation(interpolationDto));
+        }
+
+        /// <summary>
+        /// Posts the create template.
+        /// </summary>
+        /// <param name="templateDto">The template data object.</param>
+        /// <returns></returns>
+        [HttpPost("add/template")]
+        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
+        public IActionResult AddTemplate(AddTemplateDto templateDto)
+        {
+            return Ok(_notificationService.AddTemplate(templateDto));
+        }
+
+        /// <summary>
+        /// Puts the update template.
+        /// </summary>
+        /// <param name="template">The template data object.</param>
+        /// <returns></returns>
+        [HttpPut("template")]
+        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
+        public IActionResult UpdateTemplate(TemplateDto templatedto)
+        {
+            return Ok(_notificationService.UpdateTemplate(templatedto));
         }
         #endregion
     }
