@@ -65,11 +65,11 @@ namespace FAIS.ApplicationCore.Services
 
             if (chartofAccountResult != null)
             {
-                if (chartOfAccountDetails != null)
+                if (chartOfAccountDetails != null && chartOfAccountDetails.Count > 0)
                 {
                     foreach (var detail in chartOfAccountDetails)
                     {
-                        if (detail.ChartOfAccountsId > 0)
+                        if (detail.Id > 0)
                         {
                             await _detailsRepository.Update(detail);
                         }
