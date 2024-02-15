@@ -17,12 +17,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Logging;
-using AutoMapper;
-using FAIS.ApplicationCore.Mapping;
-using FAIS.ApplicationCore.Interfaces.Services;
-using FAIS.ApplicationCore.Interfaces.Repository;
-using FAIS.ApplicationCore.Interfaces.Service;
 using System.Collections.Generic;
 using System.Text;
 
@@ -85,6 +79,8 @@ namespace FAIS
             services.AddScoped(typeof(ILibraryOptionRepository), typeof(LibraryOptionRepository));
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
             services.AddScoped(typeof(INotificationRepository), typeof(NotificationRepository));
+            services.AddScoped(typeof(IStringInterpolationRepository), typeof(StringInterpolationRepository));
+            services.AddScoped(typeof(ITemplateRepository), typeof(TemplateRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IPermissionRepository), typeof(PermissionRepository));
             services.AddScoped(typeof(IProformaEntriesRepository), typeof(ProformaEntriesRepository));

@@ -15,5 +15,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<Template> GetTemplateById(int id);
         Task<StringInterpolation> AddStringInterpolation(AddStringInterpolationDTO dto);
         Task<StringInterpolation> UpdateStringInterpolation(StringInterpolationDTO dto);
+        Task<Template> AddTemplate(AddTemplateDto dto);
+        Task<Template> UpdateTemplate(TemplateDto dto);
     }
 }
