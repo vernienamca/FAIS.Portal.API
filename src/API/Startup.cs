@@ -17,12 +17,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Logging;
-using AutoMapper;
-using FAIS.ApplicationCore.Mapping;
-using FAIS.ApplicationCore.Interfaces.Services;
-using FAIS.ApplicationCore.Interfaces.Repository;
-using FAIS.ApplicationCore.Interfaces.Service;
 using System.Collections.Generic;
 using System.Text;
 
