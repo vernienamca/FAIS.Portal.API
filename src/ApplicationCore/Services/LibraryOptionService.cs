@@ -49,7 +49,9 @@ namespace FAIS.ApplicationCore.Services
             if (libraryOption == null)
                 throw new ArgumentNullException("Library Option not exist.");
 
-            var mapper = _mapper.Map<LibraryOptions>(libraryOption);
+            var mapper = _mapper.Map<LibraryOptions>(model);
+            mapper.CreatedBy = libraryOption.CreatedBy;
+            mapper.CreatedAt = libraryOption.CreatedAt;
 
             return await _repository.Update(mapper);
         }
