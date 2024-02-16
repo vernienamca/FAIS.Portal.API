@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.Models
         public long GL { get; set; }
         public long SL { get; set; }
         public string LedgerTitle { get; set; }
-        public DateTime DateRemoved { get; set; }
+        public DateTime? DateRemoved { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public string UpdatedBy { get; set; }

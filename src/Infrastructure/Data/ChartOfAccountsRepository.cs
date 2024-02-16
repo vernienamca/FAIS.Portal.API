@@ -91,14 +91,14 @@ namespace FAIS.Infrastructure.Data
                                                  ChartOfAccountsId = d.ChartOfAccountsId,
                                                  CreatedAt = d.CreatedAt,
                                                  CreatedBy = $"{usr.FirstName} {usr.LastName}",
-                                                 DateRemoved = d.DateRemoved.GetValueOrDefault(),
+                                                 DateRemoved = d.DateRemoved,
                                                  GL = d.GL,
                                                  LedgerTitle = d.LedgerTitle,
                                                  SL = d.SL,
                                                  UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                                  UpdatedAt = d.UpdatedAt,
                                              })
-                                             .Where(d => d.ChartOfAccountsId == chartOfAccount.Id)
+                                             .Where(d => d.ChartOfAccountsId == chartOfAccount.Id && d.DateRemoved == null)
                                              .ToList();
 
                 chartOfAccount.ChartOfAccountDetailModel = chartOfAccountDetails.ToList();

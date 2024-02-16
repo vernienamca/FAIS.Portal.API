@@ -48,9 +48,9 @@ namespace FAIS.Infrastructure.Data
             return _dbContext.ChartOfAccountDetails.FirstOrDefault(t => t.Id == id);
         }
 
-        public ChartOfAccountDetails GetByChartOfAccountId(int id)
+        public List<ChartOfAccountDetails> GetByChartOfAccountId(int id)
         {
-            return _dbContext.ChartOfAccountDetails.FirstOrDefault(t => t.ChartOfAccountsId == id);
+            return _dbContext.ChartOfAccountDetails.Where(t => t.ChartOfAccountsId == id).ToList();
         }
 
         public async Task<ChartOfAccountDetails> Update(ChartOfAccountDetails chartOfAccountDetails)
