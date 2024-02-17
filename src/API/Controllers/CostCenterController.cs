@@ -53,7 +53,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns>The cost center.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(CostCenter), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public IActionResult GetById(int id)
         {
             return Ok(_costCenterService.GetById(id));
         }
