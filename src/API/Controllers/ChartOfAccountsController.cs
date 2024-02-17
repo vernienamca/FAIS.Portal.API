@@ -54,7 +54,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns>The chart of accounts.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(ChartOfAccounts), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public IActionResult GetById(int id)
         {
             return Ok(_chartOfAccountsService.GetById(id));
         }
