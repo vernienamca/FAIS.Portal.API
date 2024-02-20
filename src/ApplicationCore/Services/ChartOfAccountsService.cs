@@ -5,7 +5,9 @@ using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
@@ -65,18 +67,34 @@ namespace FAIS.ApplicationCore.Services
 
             if (chartofAccountResult != null)
             {
+                var details = _detailsRepository.GetByChartOfAccountId(chartOfAccount.Id).ToList();
+                if (details != null)
+                {
+                    if (details.Count > 0 && details.Count != chartOfAccountDetails.Count)
+                    {
+                        foreach (var detail in details.Where(o => !chartOfAccountDetails.Select(a => a.Id).Contains(o.Id)))
+                        {
+                            if (detail.DateRemoved != null)
+                            {
+                                detail.DateRemoved = DateTime.Now;
+                                await _detailsRepository.Update(detail);
+                            }
+                        }
+                    }
+                }
+
                 if (chartOfAccountDetails != null && chartOfAccountDetails.Count > 0)
                 {
-                    foreach (var detail in chartOfAccountDetails)
+                    foreach (var item in chartOfAccountDetails)
                     {
-                        if (detail.Id > 0)
+                        if (item.Id > 0 && item.DateRemoved != null)
                         {
-                            await _detailsRepository.Update(detail);
+                            await _detailsRepository.Update(item);
                         }
                         else 
                         {
-                            detail.ChartOfAccountsId = chartofAccountResult.Id;
-                            await _detailsRepository.Add(detail);
+                            item.ChartOfAccountsId = chartofAccountResult.Id;
+                            await _detailsRepository.Add(item);
                         }
                     }
                 }

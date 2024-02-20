@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     {
         IReadOnlyCollection<ChartOfAccountDetailModel> Get();
         ChartOfAccountDetails GetById(int id);
-        ChartOfAccountDetails GetByChartOfAccountId(int id);
+        List<ChartOfAccountDetails> GetByChartOfAccountId(int id);
         Task<ChartOfAccountDetails> Add(ChartOfAccountDetails chartOfAccountDetails);
         Task<ChartOfAccountDetails> Update(ChartOfAccountDetails chartOfAccountDetails);
     }
