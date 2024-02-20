@@ -50,7 +50,7 @@ namespace FAIS.Infrastructure.Data
 
         public List<ChartOfAccountDetails> GetByChartOfAccountId(int id)
         {
-            return _dbContext.ChartOfAccountDetails.Where(t => t.ChartOfAccountsId == id).ToList();
+            return _dbContext.ChartOfAccountDetails.Where(t => t.ChartOfAccountsId == id).AsNoTracking().ToList();
         }
 
         public async Task<ChartOfAccountDetails> Update(ChartOfAccountDetails chartOfAccountDetails)
