@@ -1,5 +1,6 @@
 ﻿using ArrayToExcel;
 using AutoMapper;
+using FAIS.ApplicationCore.BusinessRules;
 using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
@@ -7,6 +8,7 @@ using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,6 +32,15 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<ChartOfAccounts> Add(ChartOfAccountsDTO chartOfAccountsDTO)
         {
+            var accounts = _repository.Get();
+            if (accounts != null)
+            {
+                if (accounts.Any(d => d.RcaGL == chartOfAccountsDTO.RcaGL || d.RcaSL == chartOfAccountsDTO.RcaSL))
+                {
+                    throw new LedgerAlreadyExistException();
+                }
+            }
+
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
             var chartOfAccountDetails = _mapper.Map<List<ChartOfAccountDetails>>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
             var chartofAccountResult = await _repository.Add(chartOfAccount);
@@ -64,7 +75,7 @@ namespace FAIS.ApplicationCore.Services
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
             var chartOfAccountDetails = _mapper.Map<List<ChartOfAccountDetails>>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
             var chartofAccountResult = await _repository.Update(chartOfAccount);
-
+           
             if (chartofAccountResult != null)
             {
                 var details = _detailsRepository.GetByChartOfAccountId(chartOfAccount.Id).ToList();
@@ -91,8 +102,16 @@ namespace FAIS.ApplicationCore.Services
                         {
                             await _detailsRepository.Update(item);
                         }
-                        else 
+                        else
                         {
+                            if (details != null)
+                            {
+                                if (details.Any(d => d.GL == item.GL || d.SL == item.SL))
+                                {
+                                    throw new LedgerAlreadyExistException();
+                                }
+                            }
+
                             item.ChartOfAccountsId = chartofAccountResult.Id;
                             await _detailsRepository.Add(item);
                         }
