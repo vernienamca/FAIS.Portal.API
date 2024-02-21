@@ -74,7 +74,7 @@ namespace FAIS.ApplicationCore.Services
                     {
                         foreach (var detail in details.Where(o => !chartOfAccountDetails.Select(a => a.Id).Contains(o.Id)))
                         {
-                            if (detail.DateRemoved != null)
+                            if (detail.DateRemoved == null)
                             {
                                 detail.DateRemoved = DateTime.Now;
                                 await _detailsRepository.Update(detail);
@@ -87,7 +87,7 @@ namespace FAIS.ApplicationCore.Services
                 {
                     foreach (var item in chartOfAccountDetails)
                     {
-                        if (item.Id > 0 && item.DateRemoved != null)
+                        if (item.Id > 0)
                         {
                             await _detailsRepository.Update(item);
                         }
