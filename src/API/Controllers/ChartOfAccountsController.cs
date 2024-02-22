@@ -87,7 +87,15 @@ namespace FAIS.Portal.API.Controllers
             if (chartOfAccountsDTO == null)
                 throw new ArgumentNullException(nameof(chartOfAccountsDTO));
 
-            return Ok(await _chartOfAccountsService.Add(chartOfAccountsDTO));
+            try
+            {
+                var result = await _chartOfAccountsService.Add(chartOfAccountsDTO);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { errorDescription = ex.Message });
+            }
         }
 
         #endregion
@@ -106,7 +114,15 @@ namespace FAIS.Portal.API.Controllers
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            return Ok(await _chartOfAccountsService.Update(data));
+            try
+            {
+                var result = await _chartOfAccountsService.Update(data);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { errorDescription = ex.Message });
+            }
         }
 
         #endregion Put
