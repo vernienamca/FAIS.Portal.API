@@ -44,6 +44,7 @@ namespace FAIS.ApplicationCore.Services
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
             var chartOfAccountDetails = _mapper.Map<List<ChartOfAccountDetails>>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
             var chartofAccountResult = await _repository.Add(chartOfAccount);
+            var details = _detailsRepository.GetByChartOfAccountId(chartOfAccount.Id).ToList();
 
             if (chartofAccountResult != null)
             {
@@ -51,6 +52,13 @@ namespace FAIS.ApplicationCore.Services
                 {
                     foreach (var detail in chartOfAccountDetails)
                     {
+                        if (details != null)
+                        {
+                            if (details.Any(d => d.GL == detail.GL || d.SL == detail.SL))
+                            {
+                                throw new LedgerAlreadyExistException();
+                            }
+                        }
                         detail.ChartOfAccountsId = chartofAccountResult.Id;
                         await _detailsRepository.Add(detail);
                     }
