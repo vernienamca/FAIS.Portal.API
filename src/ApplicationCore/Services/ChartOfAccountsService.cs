@@ -44,7 +44,7 @@ namespace FAIS.ApplicationCore.Services
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
             var chartOfAccountDetails = _mapper.Map<List<ChartOfAccountDetails>>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
             var chartofAccountResult = await _repository.Add(chartOfAccount);
-            var details = _detailsRepository.GetByChartOfAccountId(chartOfAccount.Id).ToList();
+            var details = _detailsRepository.Get();
 
             if (chartofAccountResult != null)
             {
