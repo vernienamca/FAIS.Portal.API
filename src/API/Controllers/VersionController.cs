@@ -1,10 +1,13 @@
 ﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
 {
@@ -16,7 +19,7 @@ namespace FAIS.Portal.API.Controllers
     {
         #region Variables
 
-        private readonly IVersionService _versionService;
+        private readonly IVersionService _service;
 
         #endregion Variables
 
@@ -26,23 +29,24 @@ namespace FAIS.Portal.API.Controllers
         /// Initializes a new instance of the <see cref="VersionController"/> class.
         /// <param name="versionService">The version entries service.</param>
         /// </summary>
-        public VersionController(IVersionService versionService)
+        public VersionController(IVersionService service)
         {
-            _versionService = versionService;
+            _service = service;
         }
 
         #endregion Constructor
 
         #region Get
+
         /// <summary>
-        /// List the version.
+        /// List the application versions.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
-        [ProducesResponseType(typeof(List<VersionModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<VersionModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            return Ok(_versionService.GetListVersion());
+            return Ok(_service.Get());
         }
 
         /// <summary>
@@ -50,38 +54,31 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]/{id:int}")]
-        [ProducesResponseType(typeof(List<VersionModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Versions), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
-            return Ok(_versionService.GetById(id));
+            return Ok(_service.GetById(id));
         }
+
         #endregion
 
-        #region post
+        #region Post
+
         /// <summary>
-        /// Add Version
+        /// Posts the create application version.
         /// </summary>
-        /// <param name="version">The version object.</param>
+        /// <param name="versionDTO">The version data object.</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException">command</exception>
         [HttpPost]
-        [ProducesResponseType(typeof(List<VersionModel>), StatusCodes.Status200OK)]
-        public IActionResult Add([FromBody] AddVersionDTO version)
+        public async Task<IActionResult> PostCreateVersion([FromBody] AddVersionDTO versionDTO)
         {
-            return Ok(_versionService.Add(version));
-        }
-        #endregion
+            if (versionDTO == null)
+                throw new ArgumentNullException(nameof(versionDTO));
 
-        #region delete
-        /// <summary>
-        /// Delete Version
-        /// </summary>
-        /// <param name="id">The version identifier.</param>
-        /// <returns></returns>
-        [HttpDelete("[action]/{id:int}")]
-        public IActionResult Delete(int id)
-        {
-            return Ok(_versionService.Delete(id));
+            return Ok(await _service.Add(versionDTO));
         }
-        #endregion
+
+        #endregion Post
     }
 }

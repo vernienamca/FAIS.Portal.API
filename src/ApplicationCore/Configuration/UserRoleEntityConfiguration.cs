@@ -34,7 +34,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(1);
 
             builder.Property(e => e.StatusDate)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("STATUS_DATE");
 

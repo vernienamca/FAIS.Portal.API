@@ -15,17 +15,15 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<VersionModel> Get()
         {
             var versions = (from ver in _dbContext.Versions.AsNoTracking()
-                         join usrC in _dbContext.Users.AsNoTracking() on ver.CreatedBy equals usrC.Id
-                         orderby ver.Id descending
-                         select new VersionModel()
-                         {
-                             Id = ver.Id,
-                             Amendment = ver.Amendment,
-                             VersionNo = ver.VersionNo,
-                             CreatedBy = ver.CreatedBy,
-                             CreatedByName = $"{usrC.FirstName} {usrC.LastName}",
-                             CreatedAt = ver.CreatedAt
-                         }).ToList();
+                            join usrC in _dbContext.Users.AsNoTracking() on ver.CreatedBy equals usrC.Id
+                            orderby ver.Id descending
+                            select new VersionModel()
+                            {
+                                Id = ver.Id,
+                                VersionNo = ver.VersionNo,
+                                VersionDate = ver.VersionDate,
+                                Amendment = ver.Amendment,
+                            }).ToList();
 
             return versions;
         }
@@ -39,6 +37,7 @@ namespace FAIS.Infrastructure.Data
         {
             return await UpdateAsync(version);
         }
+
         public async Task Delete(int id)
         {
             var result = _dbContext.Versions.FirstOrDefault(x=> x.Id == id);

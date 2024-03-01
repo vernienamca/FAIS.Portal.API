@@ -33,8 +33,8 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<UpdateProformaEntriesDTO, ProformaEntries>();
 
             CreateMap<StringInterpolationDTO, StringInterpolation>();
-            CreateMap<AddStringInterpolationDTO, StringInterpolation>()
-                .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
+            //CreateMap<StringInterpolationDTO, StringInterpolation>()
+            //    .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
 
             CreateMap<CostCenterDTO, CostCenter>();
 
@@ -56,8 +56,8 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap()
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
 
-            CreateMap<TemplateDto, Template>();
-            CreateMap<AddTemplateDto, Template>();
+            //CreateMap<TemplateDto, Template>();
+            //CreateMap<AddTemplateDto, Template>();
         }        
     }
 }

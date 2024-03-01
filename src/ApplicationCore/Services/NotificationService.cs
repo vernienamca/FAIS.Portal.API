@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Wordprocessing;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
@@ -14,13 +15,11 @@ namespace FAIS.ApplicationCore.Services
     {
         private readonly IStringInterpolationRepository _interpolationRepository;
         private readonly ITemplateRepository _templateRepository;
-        private readonly IMapper _mapper;
 
-        public NotificationService(IStringInterpolationRepository interpolationRepository, ITemplateRepository templateRepository, IMapper mapper)
+        public NotificationService(IStringInterpolationRepository interpolationRepository, ITemplateRepository templateRepository)
         {
             _interpolationRepository = interpolationRepository;
             _templateRepository = templateRepository;
-            _mapper = mapper;
         }
 
         public IReadOnlyCollection<StringInterpolationModel> GetIntepolations()
@@ -43,28 +42,47 @@ namespace FAIS.ApplicationCore.Services
             return await _interpolationRepository.GetById(id);
         }
 
-        public async Task<StringInterpolation> AddStringInterpolation(AddStringInterpolationDTO dto)
+        public async Task<StringInterpolation> AddInterpolation(StringInterpolationDTO interpolationDTO)
         {
-            var interpolationDto = _mapper.Map<StringInterpolation>(dto);
-            return await _interpolationRepository.Add(interpolationDto);
+            var interpolation = new StringInterpolation()
+            {
+                TransactionCode = interpolationDTO.TransactionCode,
+                Description = interpolationDTO.Description,
+                IsActive = interpolationDTO.IsActive,
+                StatusDate = DateTime.Now,
+                NotificationType = interpolationDTO.NotificationType,
+                CreatedBy = interpolationDTO.CreatedBy,
+                CreatedAt = DateTime.Now
+            };
+
+            return await _interpolationRepository.Add(interpolation);
         }
 
-        public async Task<StringInterpolation> UpdateStringInterpolation(StringInterpolationDTO dto)
+        public async Task<Template> AddTemplate(TemplateDto templateDTO)
         {
-            var interpolationDto = _mapper.Map<StringInterpolation>(dto);
-            return await _interpolationRepository.Update(interpolationDto);
+            var template = new Template()
+            {
+                Subject = templateDTO.Subject,
+                Content = templateDTO.Content,
+                Receiver = templateDTO.Receiver,
+                NotificationType = templateDTO.NotificationType,
+                IsActive = templateDTO.IsActive,
+                StatusDate = DateTime.Now,
+                CreatedBy = templateDTO.CreatedBy,
+                CreatedAt = DateTime.Now
+            };
+
+            return await _templateRepository.Add(template);
         }
 
-        public async Task<Template> AddTemplate(AddTemplateDto dto)
+        public async Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation interpolation)
         {
-            var templateDto = _mapper.Map<Template>(dto);
-            return await _templateRepository.Add(templateDto);
+            return await _interpolationRepository.Update(interpolation);
         }
 
-        public async Task<Template> UpdateTemplate(TemplateDto dto)
+        public async Task<Template> UpdateTemplate(Template template)
         {
-            var templateDto = _mapper.Map<Template>(dto);
-            return await _templateRepository.Update(templateDto);
+            return await _templateRepository.Update(template);
         }
     }
 }

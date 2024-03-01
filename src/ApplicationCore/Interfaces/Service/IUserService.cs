@@ -18,6 +18,8 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<User> GetByTempKey(string tempKey);
         Task<User> GetByEmailAddress(string emailAddress);
         Task<List<PermissionModel>> GetPermissions(int id);
+        Task<List<UserRoleModel>> GetUserRoles(int userId);
+        string GeneratePassword();
         Task<User> Add(UserDTO userDto);
         Task<LoginHistory> AddLoginHistory(int userId, string username, bool isFailed = false);
         Task<DateTime?> GetLastLoginDate(int userId);
@@ -29,5 +31,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<User> Update(User user);
         Task<string> WriteFile(IFormFile file, string directory);
         Task<int> GetLastUserId();
+        void SetTAFGs(int userId, IReadOnlyCollection<string> userTAFGs);
+        void SetUserRoles(int userId, IReadOnlyCollection<UserRoleDTO> userRoles);
     }
 }

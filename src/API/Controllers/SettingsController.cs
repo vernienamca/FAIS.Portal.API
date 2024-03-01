@@ -4,6 +4,7 @@ using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace FAIS.Portal.API.Controllers
     {
         #region Variables
 
-        private readonly ISettingsService _settingsService;
+        private readonly ISettingsService _service;
 
         #endregion Variables
 
@@ -25,29 +26,30 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsController"/> class.
-        /// <param name="settingsService">The settings service.</param>
+        /// <param name="service">The settings service.</param>
         /// </summary>
-        public SettingsController(ISettingsService settingsService)
+        public SettingsController(ISettingsService service)
         {
-            _settingsService = settingsService;
+            _service = service;
         }
 
         #endregion Constructor
 
-        #region get
+        #region Get
+
         /// <summary>
-        /// List the Settings.
+        /// List the settings.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
         [ProducesResponseType(typeof(IReadOnlyCollection<SettingModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            return Ok(_settingsService.Get());
+            return Ok(_service.Get());
         }
 
         /// <summary>
-        /// Get by Id.
+        /// Gets the settings by unique identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
@@ -55,23 +57,45 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(IReadOnlyCollection<SettingModel>), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
-            return Ok(_settingsService.GetById(id));
+            return Ok(_service.GetById(id));
         }
-        #endregion
 
-        #region update
+        #endregion Get
+
+        #region Put
+
         /// <summary>
-        /// Updates the system settings.
+        /// Puts the update system settings.
         /// </summary>
-        /// <param name="updateSmtpRequestDTO">The settings data object</param>
+        /// <param name="settingsDTO">The settings data object.</param>
         /// <returns></returns>
         [HttpPut]
-        [ProducesResponseType(typeof(IReadOnlyCollection<SettingModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update([FromBody] SettingsDTO updateSmtpRequestDTO)
+        public async Task<IActionResult> PutUpdateSettings([FromBody] SettingsDTO settingsDTO)
         {
-            await _settingsService.UpdateSettings(updateSmtpRequestDTO);
-            return Ok();
+            var settings = _service.GetById(1);
+
+            settings.CompanyName = settingsDTO.CompanyName;
+            settings.PhoneNumber = settingsDTO.PhoneNumber;
+            settings.EmailAddress = settingsDTO.EmailAddress;
+            settings.Website = settingsDTO.Website;
+            settings.Address = settingsDTO.Address;
+            settings.MinPasswordLength = settingsDTO.MinPasswordLength;
+            settings.MinSpecialCharacters = settingsDTO.MinSpecialCharacters;
+            settings.PasswordExpiry = settingsDTO.PasswordExpiry;
+            settings.IdleTime = settingsDTO.IdleTime;
+            settings.MaxSignOnAttempts = settingsDTO.MaxSignOnAttempts;
+            settings.EnforcePasswordHistory = settingsDTO.EnforcePasswordHistory;
+            settings.SMTPServerName = settingsDTO.SMTPServerName;
+            settings.SMTPPort = settingsDTO.SMTPPort;
+            settings.SMTPFromEmail = settingsDTO.SMTPFromEmail;
+            settings.SMTPPassword = settingsDTO.SMTPPassword;
+            settings.SMTPEnableSSL = settingsDTO.SMTPEnableSSL;
+            settings.UpdatedBy = settingsDTO.UpdatedBy;
+            settings.UpdatedAt = DateTime.Now;
+
+            return Ok(await _service.Update(settings));
         }
-        #endregion
+
+        #endregion Put
     }
 }

@@ -72,10 +72,5 @@ namespace FAIS.API.Controllers
             return Ok(_roleService.GetUserRolesById(userId));
         }
         #endregion Get
-
-        #region Post
-     
-
-        #endregion Post
     }
 }

@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.DTOs;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Enumeration;
@@ -6,10 +7,12 @@ using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static ApplicationCore.Enumeration.LoginEnum;
+using Password.Core;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -61,11 +64,30 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.GetPermissions(id);
         }
 
+        public async Task<List<UserRoleModel>> GetUserRoles(int userId)
+        {
+            return await _userRepository.GetUserRoles(userId);
+        }
+
+        public string GeneratePassword()
+        {
+            var settings = _settingsRepository.GetById(1);
+            var passwordGenerator = PasswordGeneratorFactory.GetGenerator();
+
+            string password = passwordGenerator.Generate(new Password.Core.PasswordOptions
+            {
+                Length = settings.MinPasswordLength,
+                IncludeLowerCaseLetters = true,
+                IncludeUpperCaseLetters = true,
+                IncludeDigits = false,
+                IncludeSymbols = false
+            });
+
+            return password;
+        }
+
         public async Task<User> Add(UserDTO userDTO)
         {
-            var positionId =  _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
-            var divisionId =  _ILibraryTypeRepository.GetPositionIdByName(userDTO.DivisionName);
-            var oupfgId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.OupFG);
             var settings = _settingsRepository.GetById(1);
 
             var user = new User()
@@ -75,46 +97,28 @@ namespace FAIS.ApplicationCore.Services
                 LastName = userDTO.LastName,
                 EmployeeNumber = userDTO.EmployeeNumber,
                 UserName = userDTO.UserName,
-                PositionId = positionId.Id,
-                DivisionId = divisionId.Id,
-                Password = EncryptionHelper.HashPassword(userDTO.Password),
+                PositionId = int.Parse(userDTO.Position),
+                Password = userDTO.Password,
                 EmailAddress = userDTO.EmailAddress,
                 MobileNumber = userDTO.MobileNumber,
-                OupFgId = oupfgId.Id,
                 Photo = userDTO.Photo,
                 SessionId = userDTO.SessionId,
                 SignInAttempts = userDTO.SignInAttempts,
-                StatusCode = userDTO.StatusCode,
-                StatusDate = userDTO.StatusDate,
+                StatusCode = int.Parse(userDTO.AccountStatus),
+                StatusDate = DateTime.Now,
                 DateExpired = DateTime.Now.AddDays(settings.PasswordExpiry),
                 CreatedBy = userDTO.CreatedBy,
                 CreatedAt = DateTime.Now,
-                UpdatedBy = userDTO?.UpdatedBy,
-                UpdatedAt = DateTime.Now,
                 TempKey = userDTO.TempKey,
             };
-            var addedUser = await _userRepository.Add(user);
-            int userId = await _userRepository.GetLastUserId();
 
-            var userTAFGs = new List<UserTAFG>();
-            foreach (var region in userDTO.Region)
-            {
-                var tafgId = _ILibraryTypeRepository.GetLibraryTypeIdByCode(region);
-                var userTAFG = new UserTAFG
-                {
-                    UserId = userId,
-                    TAFGId = tafgId.Id,
-                    IsActive = 'Y',
-                    StatusDate = userDTO.StatusDate,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    CreatedBy = userDTO.CreatedBy,
-                    UpdatedBy = userDTO.UpdatedBy,
-                };
-                userTAFGs.Add(userTAFG);
-            }
-            await _userRepository.AddTAFGs(userTAFGs);
-            return addedUser;
+            if (!string.IsNullOrEmpty(userDTO.OupFG))
+                user.OupFgId = int.Parse(userDTO.OupFG);
+
+            if (!string.IsNullOrEmpty(userDTO.Division))
+                user.DivisionId = int.Parse(userDTO.Division);
+
+            return await _userRepository.Add(user);
         }
 
         public async Task<LoginHistory> AddLoginHistory(int userId, string username, bool isFailed = false)
@@ -164,7 +168,6 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.Update(user);
         }
 
-      //  public async Task<User> LockAccount(int id)
         public async Task<User> LockAccount(int id)
         {
             var user = await _userRepository.GetById(id);
@@ -198,14 +201,25 @@ namespace FAIS.ApplicationCore.Services
         {
             return await _userRepository.Update(user);
         }
+
+        public void SetUserRoles(int userId, IReadOnlyCollection<UserRoleDTO> userRoles)
+        {
+            _userRepository.SetUserRoles(userId, userRoles);
+        }
+
+        public void SetTAFGs(int userId, IReadOnlyCollection<string> userTAFGs)
+        {
+            _userRepository.SetTAFGs(userId, userTAFGs);
+        }
+
         public async Task<string> WriteFile(IFormFile file, string directory)
         {
             return await _userRepository.WriteFile(file, directory);
         }
+
         public async Task<int> GetLastUserId()
         {
             return await _userRepository.GetLastUserId();
         }
-
     }
 }

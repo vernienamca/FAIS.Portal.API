@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Spreadsheet;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,48 +14,41 @@ namespace FAIS.ApplicationCore.Services
 {
     public class VersionService : IVersionService
     {
-        private readonly IVersionsRepository _versionsRepository;
-        private readonly IMapper _mapper;
+        private readonly IVersionsRepository _repository;
 
-        public VersionService(IVersionsRepository versionsRepository, IMapper mapper)
+        public VersionService(IVersionsRepository repository)
         {
-            _versionsRepository = versionsRepository;
-            _mapper = mapper;
+            _repository = repository;
         }
 
-        public async Task<VersionModel> GetById(int id)
+        public IReadOnlyCollection<VersionModel> Get()
         {
-            var result = await _versionsRepository.GetById(id);
-            var versionDto = _mapper.Map<VersionModel>(result);
-
-            return versionDto;
+            return _repository.Get();
         }
 
-        public IReadOnlyCollection<VersionModel> GetListVersion()
+        public async Task<Versions> GetById(int id)
         {
-            var result = _versionsRepository.Get().OrderByDescending(x=>x.VersionDate);
-            var versionList = _mapper.Map<List<VersionModel>>(result);
+            return await _repository.GetById(id);
+        }
 
-            return versionList;
+        public async Task<Versions> Add(AddVersionDTO versionDTO)
+        {
+            var version = new Versions()
+            {
+                VersionNo = versionDTO.VersionNo,
+                VersionDate = DateTime.Now,
+                Amendment = versionDTO.Amendment,
+                CreatedBy = versionDTO.CreatedBy,
+                CreatedAt = DateTime.Now
+            };
+
+            return await _repository.Add(version);
         }
 
         public async Task Delete(int id)
         {
-            await _versionsRepository.Delete(id);
-        }       
-
-        public async Task<List<VersionModel>> Add(AddVersionDTO versionDto)
-        {
-            var version = _mapper.Map<Versions>(versionDto);
-            var result = await _versionsRepository.Add(version);
-
-            if(result != null)
-            {
-                var versionRes = _versionsRepository.Get().OrderByDescending(x => x.VersionDate);
-                return _mapper.Map<List<VersionModel>>(versionRes);
-            }
-
-            return null;
+            await _repository.Delete(id);
         }
+
     }
 }

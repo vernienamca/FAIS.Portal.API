@@ -2,7 +2,6 @@
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Interfaces
@@ -13,9 +12,9 @@ namespace FAIS.ApplicationCore.Interfaces
         IReadOnlyCollection<TemplateModel> GetNotificationTemplates();
         Task<StringInterpolation> GetInterpolationById(int id);
         Task<Template> GetTemplateById(int id);
-        Task<StringInterpolation> AddStringInterpolation(AddStringInterpolationDTO dto);
-        Task<StringInterpolation> UpdateStringInterpolation(StringInterpolationDTO dto);
-        Task<Template> AddTemplate(AddTemplateDto dto);
-        Task<Template> UpdateTemplate(TemplateDto dto);
+        Task<StringInterpolation> AddInterpolation(StringInterpolationDTO interpolationDTO);
+        Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation interpolation);
+        Task<Template> AddTemplate(TemplateDto templateDTO);
+        Task<Template> UpdateTemplate(Template template);
     }
 }

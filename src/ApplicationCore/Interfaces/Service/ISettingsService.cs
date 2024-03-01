@@ -9,7 +9,6 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IQueryable<Settings> Get();
         Settings GetById(int id);
-        Task<Settings> Update(int id);
-        Task<Settings> UpdateSettings(SettingsDTO updateSmtpRequestDTO);
+        Task<Settings> Update(Settings settings);
     }
 }

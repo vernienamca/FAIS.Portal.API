@@ -1,14 +1,16 @@
 ﻿using FAIS.ApplicationCore.DTOs;
-using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -26,7 +28,6 @@ namespace FAIS.API.Controllers
         private readonly ILibraryTypeService _libraryTypeService;
         private readonly IEmailService _emailService;
         private readonly ISettingsService _settingsService;
-        private readonly IUserRepository _userRepository;
         private readonly IUserRoleService _userRoleService;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
 
@@ -45,7 +46,6 @@ namespace FAIS.API.Controllers
             , ILibraryTypeService libraryTypeService
             , IEmailService emailService
             , ISettingsService settingsService
-            , IUserRepository userRepository
             , IUserRoleService userRoleService
             , ILibraryTypeRepository libraryTypeRepository)
         {
@@ -53,7 +53,6 @@ namespace FAIS.API.Controllers
             _libraryTypeService = libraryTypeService;
             _emailService = emailService;
             _settingsService = settingsService;
-            _userRepository = userRepository;
             _userRoleService = userRoleService;
             _ILibraryTypeRepository = libraryTypeRepository;
         }
@@ -83,7 +82,9 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
-            if(entity == null)
+            var createdBy = await _userService.GetById(entity.CreatedBy);
+
+            if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             var user = new UserModel()
@@ -91,8 +92,9 @@ namespace FAIS.API.Controllers
                 Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
-                Position = _libraryTypeService.GetById(entity.PositionId)?.Name,
-                Division = entity.DivisionId.HasValue ? _libraryTypeService.GetById(entity.DivisionId.Value)?.Name : string.Empty,
+                Position = entity.PositionId.ToString(),
+                PositionDescription = _libraryTypeService.GetById(entity.PositionId)?.Name,
+                Division = entity.DivisionId.HasValue ? entity.DivisionId.ToString() : string.Empty,
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,
                 StatusDate = entity.StatusDate,
@@ -101,11 +103,22 @@ namespace FAIS.API.Controllers
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
                 TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
-                OUFG = entity.OupFgId.HasValue ? _libraryTypeService.GetById(entity.OupFgId.Value)?.Name : string.Empty,
+                OUFG = entity.OupFgId.HasValue ? entity.OupFgId.Value.ToString() : string.Empty,
                 LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
                 Photo = entity.Photo,
-                Password = EncryptionHelper.HashPassword(entity.Password)
+                Password = EncryptionHelper.HashPassword(entity.Password),
+                CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}",
+                CreatedAt = entity.CreatedAt
             };
+
+            if (entity.UpdatedAt != null)
+            {
+                var updatedBy = await _userService.GetById(entity.UpdatedBy.Value);
+
+                user.UpdatedBy = $"{updatedBy.FirstName} {updatedBy.LastName}";
+                user.UpdatedAt = entity.UpdatedAt;
+            }
+
             return Ok(user);
         }
 
@@ -121,6 +134,20 @@ namespace FAIS.API.Controllers
             var permissions = await _userService.GetPermissions(userId);
 
             return Ok(permissions);
+        }
+
+        /// <summary>
+        /// Gets the list of roles for the specific user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("roles/{userId:int}")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<UserRoleModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserRoles(int userId)
+        {
+            var userRoles = await _userService.GetUserRoles(userId);
+
+            return Ok(userRoles);
         }
 
         /// <summary>
@@ -143,10 +170,21 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpGet("tempkey/{tempKey}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApplicationCore.Entities.Security.User), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByTempKey(string tempKey)
         {
             return Ok(await _userService.GetByTempKey(tempKey));
+        }
+
+        /// <summary>
+        /// Gets the generated password based on criteria.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("generate")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public IActionResult GetGeneratedPassword()
+        {
+            return Ok(_userService.GeneratePassword());
         }
 
         #endregion Get
@@ -158,9 +196,10 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException">command</exception>
         [HttpPost("forgot-password/{emailAddress}")]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword(string emailAddress)
+        public async Task<IActionResult> PostForgotPassword(string emailAddress)
         {
             var user = await _userService.GetByEmailAddress(emailAddress);
 
@@ -194,18 +233,62 @@ namespace FAIS.API.Controllers
         }
 
         /// <summary>
-        /// Add User and region.
+        /// Posts the create user.
         /// </summary>
-        /// <param name="userDTO">user object.</param>
+        /// <param name="userDTO">The user data object.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        [HttpPost("[action]")]
-        public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
+        /// <exception cref="ArgumentNullException">command</exception>
+        [HttpPost]
+        public async Task<IActionResult> PostCreateUser([FromBody] UserDTO userDTO)
         {
             if (userDTO == null)
                 throw new ArgumentNullException(nameof(userDTO));
 
-            return Ok(await _userService.Add(userDTO));
+            if (!string.IsNullOrEmpty(userDTO.Photo))
+            {
+                string photoPath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AssetsPath")["PhotoPath"];
+                byte[] imageBytes = Convert.FromBase64String(userDTO.Photo);
+                string fileName = $"{Guid.NewGuid()}.png";
+
+                using (MemoryStream ms = new MemoryStream(imageBytes))
+                {
+                    Image image = Image.FromStream(ms);
+                    image.Save(Path.Combine(photoPath, fileName), ImageFormat.Png);
+
+                    userDTO.Photo = fileName;
+                }
+            }
+            else
+                userDTO.Photo = "default.png";
+
+            string generatedPassword = _userService.GeneratePassword();
+
+            userDTO.Password = EncryptionHelper.HashPassword(generatedPassword);
+            userDTO.CreatedAt = DateTime.Now;
+
+            var user = await _userService.Add(userDTO);
+
+            if (userDTO.TAFG.Count > 0)
+                _userService.SetTAFGs(user.Id, userDTO.TAFG);
+
+            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                .GetSection("EmailTemplatePath")["UserCredential"];
+
+            if (!System.IO.File.Exists(htmlTemplatePath))
+                throw new FileNotFoundException(nameof(htmlTemplatePath));
+
+            string content = System.IO.File.ReadAllText(htmlTemplatePath);
+
+            var settings = _settingsService.GetById(1);
+
+            content = content.Replace("${firstname}", user.FirstName);
+            content = content.Replace("${username}", user.UserName);
+            content = content.Replace("${password}", generatedPassword);
+            content = content.Replace("${baseurl}", settings.BaseUrl);
+
+            _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
+
+            return Ok(user);
         }
 
         #endregion Post
@@ -213,14 +296,79 @@ namespace FAIS.API.Controllers
         #region Put
 
         /// <summary>
+        /// Puts the update user.
+        /// </summary>
+        /// <param name="id">The user identifier.</param>
+        /// <param name="isMyProfile">The is my profile flag.</param>
+        /// <param name="userDTO">The user data object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">command</exception>
+        [HttpPut("{id:int}/{isMyProfile}")]
+        public async Task<IActionResult> PutUpdateUser(int id, bool isMyProfile, [FromBody] UserDTO userDTO)
+        {
+            var user = await _userService.GetById(id);
+
+            user.LastName = userDTO.LastName;
+            user.MobileNumber = userDTO.MobileNumber;
+
+            if (!isMyProfile)
+            {
+                user.EmployeeNumber = userDTO.EmployeeNumber;
+                user.PositionId = int.Parse(userDTO.Position);
+                user.FirstName = userDTO.FirstName;
+                user.EmailAddress = userDTO.EmailAddress;
+
+                if (userDTO.TAFG.Count > 0)
+                    _userService.SetTAFGs(user.Id, userDTO.TAFG);
+
+                if (!string.IsNullOrEmpty(userDTO.OupFG))
+                    user.OupFgId = int.Parse(userDTO.OupFG);
+
+                if (!string.IsNullOrEmpty(userDTO.Division))
+                    user.DivisionId = int.Parse(userDTO.Division);
+
+                if (int.Parse(userDTO.AccountStatus) != user.StatusCode)
+                {
+                    user.StatusCode = int.Parse(userDTO.AccountStatus);
+                    user.StatusDate = DateTime.Now;
+                }
+
+                user.DateExpired = userDTO.AccountExpiration;
+
+                if (!string.IsNullOrEmpty(userDTO.Photo))
+                {
+                    string photoPath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AssetsPath")["PhotoPath"];
+                    byte[] imageBytes = Convert.FromBase64String(userDTO.Photo);
+                    string fileName = $"{Guid.NewGuid()}.png";
+
+                    using (MemoryStream ms = new MemoryStream(imageBytes))
+                    {
+                        Image image = Image.FromStream(ms);
+                        image.Save(Path.Combine(photoPath, fileName), ImageFormat.Png);
+
+                        user.Photo = fileName;
+                    }
+                }
+
+                if (userDTO.UserRoles.Count > 0)
+                    _userService.SetUserRoles(user.Id, userDTO.UserRoles);
+            }
+
+            user.UpdatedBy = userDTO.UpdatedBy;
+            user.UpdatedAt = DateTime.Now;
+
+            return Ok(await _userService.Update(user));
+        }
+
+        /// <summary>
         /// Puts the reset password.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
+        /// <param name="tempKey">The temporary key.</param>
         /// <param name="newPassword">The new password.</param>
         /// <returns></returns>
         [HttpPut("reset-password/{tempKey}/{newPassword}")]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword(string tempKey, string newPassword)
+        public async Task<IActionResult> PutResetPassword(string tempKey, string newPassword)
         {
             if (string.IsNullOrEmpty(tempKey))
                 throw new ArgumentNullException(nameof(tempKey));
@@ -235,7 +383,7 @@ namespace FAIS.API.Controllers
         /// <param name="newPassword">The new password.</param>
         /// <returns></returns>
         [HttpPut("change-password/{userId:int}/{oldPassword}/{newPassword}")]
-        public async Task<IActionResult> ChangePassword(int userId, string oldPassword, string newPassword)
+        public async Task<IActionResult> PutChangePassword(int userId, string oldPassword, string newPassword)
         {
             if (string.IsNullOrEmpty(newPassword))
                 throw new ArgumentNullException(nameof(newPassword));
@@ -247,49 +395,18 @@ namespace FAIS.API.Controllers
 
             return Ok(await _userService.ChangePassword(userId, newPassword));
         }
-      
-        #endregion Post
-
-        #region Put
 
         /// <summary>
-        /// Updates the user
+        /// Puts the reset password.
         /// </summary>
-        /// <param name="id"> The user identifier.</param>
-        /// <param name="userDTO">  Object for updating user information.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="newPassword">The new password.</param>
         /// <returns></returns>
-        [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO, [FromRoute] int id)
+        [HttpPut("reset-password/{userId:int}/{newPassword}")]
+        [ProducesResponseType(typeof(ApplicationCore.Entities.Security.User), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PutResetPassword(int userId, string newPassword)
         {
-            var positionId = _ILibraryTypeRepository.GetPositionIdByName(userDTO.PositionName);
-            const string defaultValue = "string";
-            var user = await _userRepository.GetById(id);
-        
-            if (id == 0 || userDTO == null)
-                throw new ArgumentNullException(nameof(user));
-
-            user.MiddleName = !string.IsNullOrEmpty(userDTO.MiddleName) && userDTO.MiddleName != defaultValue ? userDTO.MiddleName: user.MiddleName;
-            user.EmployeeNumber = !string.IsNullOrEmpty(userDTO.EmployeeNumber) && userDTO.EmployeeNumber != defaultValue ? userDTO.EmployeeNumber : user.EmployeeNumber;
-            user.UserName = !string.IsNullOrEmpty(userDTO.UserName) && userDTO.UserName != defaultValue ? userDTO.UserName : user.UserName;
-            user.LastName = !string.IsNullOrEmpty(userDTO.LastName) && userDTO.LastName != defaultValue ? userDTO.LastName : user.LastName;
-            user.FirstName = !string.IsNullOrEmpty(userDTO.FirstName) && userDTO.FirstName != defaultValue ? userDTO.FirstName : user.FirstName;
-            user.MobileNumber = !string.IsNullOrEmpty(userDTO.MobileNumber) && userDTO.MobileNumber != defaultValue ? userDTO.MobileNumber : user.MobileNumber;
-            user.EmailAddress = !string.IsNullOrEmpty(userDTO.EmailAddress) && userDTO.EmailAddress != defaultValue ? userDTO.EmailAddress : user.EmailAddress;
-
-          return Ok(await _userService.Update(user));
-
-        }
-
-        /// <summary>
-        /// Add user role 
-        /// </summary>
-        /// <param name="roleDTO">User Role data.</param>
-        /// <returns></returns>
-        [HttpPost("add-user-role")]
-        [ProducesResponseType(typeof(IReadOnlyCollection<UserRoleModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddUserRole([FromBody] UserRoleModel userRole)
-        {
-            return Ok(await _userRoleService.Add(userRole));
+            return Ok(await _userService.ChangePassword(userId, newPassword));
         }
 
         #endregion Put

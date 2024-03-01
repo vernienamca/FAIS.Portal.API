@@ -20,7 +20,7 @@ namespace FAIS.ApplicationCore.Entities.Security
         public char IsActive { get; set; }
 
         [DataMember]
-        public DateTime StatusDate { get; set; }
+        public DateTime? StatusDate { get; set; }
 
         [DataMember]
         public int CreatedBy { get; set; }

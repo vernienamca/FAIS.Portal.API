@@ -39,22 +39,24 @@ namespace FAIS.Infrastructure.Data
 
         public IReadOnlyCollection<UserRoleModel> GetUserRolesById(int id)
         {
-            var userRoles = _dbContext.UserRoles.AsNoTracking()
-                .Where(u => u.UserId == id)
-                .Join(
-                    _dbContext.Roles.AsNoTracking(),
-                    userRole => userRole.RoleId,
-                    role => role.Id,
-                    (userRole, role) => new UserRoleModel
-                    {
-                        Id = userRole.Id,
-                        UserId = userRole.UserId,
-                        RoleId = userRole.RoleId,
-                        IsActive = userRole.IsActive,
-                       
-                        Name = role.Name, 
-                    })
-                .ToList();
+            List<UserRoleModel> userRoles = new List<UserRoleModel>();
+
+            //var userRoles = _dbContext.UserRoles.AsNoTracking()
+            //    .Where(u => u.UserId == id)
+            //    .Join(
+            //        _dbContext.Roles.AsNoTracking(),
+            //        userRole => userRole.RoleId,
+            //        role => role.Id,
+            //        (userRole, role) => new UserRoleModel
+            //        {
+            //            Id = userRole.Id,
+            //            UserId = userRole.UserId,
+            //            RoleId = userRole.RoleId,
+            //            IsActive = userRole.IsActive,
+
+            //            Name = role.Name, 
+            //        })
+            //    .ToList();
 
             return userRoles;
         }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using System.Threading.Tasks;
+using System;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace FAIS.API.Controllers
 {
@@ -65,8 +67,8 @@ namespace FAIS.API.Controllers
         /// <param name="id">The string interpolation identifier.</param>
         /// <returns></returns>
         [HttpGet("interpolation/{id:int}")]
-        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        [ProducesResponseType(typeof(StringInterpolationModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetById(int id)
         {
             var entity = await _notificationService.GetInterpolationById(id);
             var createdBy = await _userService.GetById(entity.CreatedBy);
@@ -79,8 +81,7 @@ namespace FAIS.API.Controllers
                 IsActive = entity.IsActive,
                 StatusDate = entity.StatusDate,
                 NotificationType = entity.NotificationType,
-                CreatedByDisplay = $"{createdBy.FirstName} {createdBy.LastName}",
-                CreatedBy = entity.CreatedBy,
+                CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}",
                 CreatedAt = entity.CreatedAt
             };
 
@@ -94,29 +95,21 @@ namespace FAIS.API.Controllers
         }
         #endregion
 
-        #region post
+        #region Post
+
         /// <summary>
         /// Posts the create interpolation.
         /// </summary>
         /// <param name="interpolationDto">The interpolation data object.</param>
         /// <returns></returns>
-        [HttpPost("add/interpolation")]
+        [HttpPost("interpolation")]
         [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
-        public IActionResult AddStringInterpolation(AddStringInterpolationDTO interpolationDto)
+        public async Task<IActionResult> PostCreateInterpolation(StringInterpolationDTO interpolationDTO)
         {
-            return Ok(_notificationService.AddStringInterpolation(interpolationDto));
-        }
+            if (interpolationDTO == null)
+                throw new ArgumentNullException(nameof(interpolationDTO));
 
-        /// <summary>
-        /// Puts the update string interpolation.
-        /// </summary>
-        /// <param name="interpolationDto">The interpolation data object.</param>
-        /// <returns></returns>
-        [HttpPut("interpolation")]
-        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
-        public IActionResult UpdateStringInterpolation(StringInterpolationDTO interpolationDto)
-        {
-            return Ok(_notificationService.UpdateStringInterpolation(interpolationDto));
+            return Ok(await _notificationService.AddInterpolation(interpolationDTO));
         }
 
         /// <summary>
@@ -124,24 +117,65 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="templateDto">The template data object.</param>
         /// <returns></returns>
-        [HttpPost("add/template")]
+        [HttpPost("template")]
         [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
-        public IActionResult AddTemplate(AddTemplateDto templateDto)
+        public async Task<IActionResult> PostCreateTemplate(TemplateDto templateDTO)
         {
-            return Ok(_notificationService.AddTemplate(templateDto));
+            if (templateDTO == null)
+                throw new ArgumentNullException(nameof(templateDTO));
+
+            return Ok(await _notificationService.AddTemplate(templateDTO));
+        }
+
+        #endregion
+
+        #region Put
+
+        /// <summary>
+        /// Puts the update string interpolation.
+        /// </summary>
+        /// <param name="id">The string interpolation identifier.</param>
+        /// <param name="interpolationDTO">The interpolation data object.</param>
+        /// <returns></returns>
+        [HttpPut("interpolation/{id:int}")]
+        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PutUpdateInterpolation(int id, StringInterpolationDTO interpolationDTO)
+        {
+            var interpolation = await _notificationService.GetInterpolationById(id);
+
+            if (interpolationDTO.IsActive != interpolation.IsActive)
+            {
+                interpolation.IsActive = interpolationDTO.IsActive;
+                interpolation.StatusDate = DateTime.Now;
+            }
+
+            interpolation.UpdatedBy = interpolationDTO.UpdatedBy;
+            interpolation.UpdatedAt = DateTime.Now;
+
+            return Ok(_notificationService.UpdateStringInterpolation(interpolation));
         }
 
         /// <summary>
         /// Puts the update template.
         /// </summary>
-        /// <param name="template">The template data object.</param>
+        /// <param name="id">The template identifier.</param>
+        /// <param name="templateDTO">The interpolation data object.</param>
         /// <returns></returns>
-        [HttpPut("template")]
-        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
-        public IActionResult UpdateTemplate(TemplateDto templatedto)
+        [HttpPut("template/{id:int}")]
+        [ProducesResponseType(typeof(Template), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PutUpdateTemplate(int id, TemplateDto templateDTO)
         {
-            return Ok(_notificationService.UpdateTemplate(templatedto));
+            var template = await _notificationService.GetTemplateById(id);
+
+            if (templateDTO.IsActive != template.IsActive)
+            {
+                template.IsActive = templateDTO.IsActive;
+                template.StatusDate = DateTime.Now;
+            }
+
+            return Ok(_notificationService.UpdateTemplate(template));
         }
+
         #endregion
     }
 }

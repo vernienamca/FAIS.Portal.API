@@ -22,6 +22,7 @@ namespace FAIS.ApplicationCore.Models
         public string UpdatedByName { get; set; }
         public DateTime? UpdatedAt { get; set;}
     }
+
     public class RolePermissionModel
     {
         public RoleModel Role { get; set; }
