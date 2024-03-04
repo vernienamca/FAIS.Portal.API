@@ -1,13 +1,10 @@
-﻿using FAIS.ApplicationCore.DTOs;
-using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Services;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
 {
@@ -59,44 +56,5 @@ namespace FAIS.Portal.API.Controllers
         }
 
         #endregion Get
-
-        #region Post
-
-        /// <summary>
-        /// Posts the create cost center.
-        /// </summary>
-        /// <param name="costCenterDTO">cost centere object.</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        [HttpPost]
-        [ProducesResponseType(typeof(CostCenter), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add([FromBody] CostCenterDTO costCenterDTO)
-        {
-            if (costCenterDTO == null)
-                throw new ArgumentNullException(nameof(costCenterDTO));
-
-            return Ok(await _costCenterService.Add(costCenterDTO));
-        }
-
-        #endregion
-
-        #region Put
-
-        /// <summary>
-        /// Puts the update cost center.
-        /// </summary>
-        /// <param name="data">The cost center data object.</param>
-        /// <returns></returns>
-        [HttpPut("{id:int}")]
-        [ProducesResponseType(typeof(CostCenter), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update([FromBody] CostCenterDTO data)
-        {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-
-            return Ok(await _costCenterService.Update(data));
-        }
-
-        #endregion Put
     }
 }
