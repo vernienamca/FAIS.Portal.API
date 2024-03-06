@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.DTOs.Structure;
+using FAIS.ApplicationCore.Entities;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Models;
@@ -55,6 +56,8 @@ namespace FAIS.ApplicationCore.Mapping
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
             CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap()
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
+
+            CreateMap<TransLineProfileModel, TransLineProfile>().ReverseMap();
 
             //CreateMap<TemplateDto, Template>();
             //CreateMap<AddTemplateDto, Template>();

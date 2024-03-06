@@ -35,7 +35,7 @@ namespace FAIS.Infrastructure.Data
                                {
                                    Id = ca.Id,
                                    AcountGroup = libT.Name,
-                                   IsActive = ca.IsActive == "Y" ? true : false,
+                                   IsActive = ca.IsActive == "Y",
                                    RcaGL = ca.RcaGL,
                                    RcaLedgerTitle = ca.RcaLedgerTitle,
                                    RcaSL = ca.RcaSL,

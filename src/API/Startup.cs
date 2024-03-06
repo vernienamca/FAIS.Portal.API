@@ -88,6 +88,7 @@ namespace FAIS
             services.AddScoped(typeof(IChartOfAccountsRepository), typeof(ChartOfAccountsRepository));
             services.AddScoped(typeof(IChartOfAccountDetailsRepository), typeof(ChartOfAccountDetailsRepository));
             services.AddScoped(typeof(IVersionsRepository), typeof(VersionsRepository));
+            services.AddScoped(typeof(ITransLineProfileRepository), typeof(TransLineProfileRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
@@ -105,6 +106,7 @@ namespace FAIS
             services.AddScoped(typeof(ICostCenterService), typeof(CostCenterService));
             services.AddScoped(typeof(IChartOfAccountsService), typeof(ChartOfAccountsService));
             services.AddScoped(typeof(IVersionService), typeof(VersionService));
+            services.AddScoped(typeof(ITransLineProfileService), typeof(TransLineProfileService));
 
             services.AddSwaggerGen(c =>
             {
