@@ -10,7 +10,10 @@ namespace FAIS.ApplicationCore.Services
     {
         private readonly ICostCenterRepository _repository;
 
-        public CostCenterService(ICostCenterRepository repository) => _repository = repository;
+        public CostCenterService(ICostCenterRepository repository)
+        {
+            _repository = repository;
+        }
 
         public IReadOnlyCollection<CostCenterModel> Get()
         {
