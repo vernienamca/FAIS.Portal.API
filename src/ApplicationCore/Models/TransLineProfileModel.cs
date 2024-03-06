@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.Models
         public string LineStretch { get; set; }
         public long VoltageId { get; set; }
         public long TotalStructures { get; set; }
-        public int NoOfCircuit { get; set; }
+        public long NoOfCircuit { get; set; }
         public long RouteLength { get; set; }
         public Year InstallationYear { get; set; }
         public bool IsActive { get; set; }

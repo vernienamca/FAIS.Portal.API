@@ -45,8 +45,20 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("WP");
 
             builder.Property(e => e.IsActive)
-               .IsRequired()
-               .HasColumnName("IS_ACTIVE");
+                .IsRequired()
+                .HasColumnName("IS_ACTIVE");
+
+            builder.Property(e => e.TotalStructures)
+                .HasColumnName("NO_CONDUCTOR");
+
+            builder.Property(e => e.NoOfCircuit)
+                .HasColumnName("NO_CIRCUIT_SEQ");
+
+            builder.Property(e => e.RouteLength)
+                .HasColumnName("ROUTE_LENGTH");
+
+            //builder.Property(e => e.InstallationYear)
+            //   .HasColumnName("COMM_DATE");
 
             builder.Property(e => e.StatusDate)
                 .IsRequired()

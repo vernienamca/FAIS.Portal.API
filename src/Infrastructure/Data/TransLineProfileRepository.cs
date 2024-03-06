@@ -28,7 +28,7 @@ namespace FAIS.Infrastructure.Data
                                select new TransLineProfileModel()
                                {
                                    Id = cc.Id,
-                                   InstallationYear = cc.InstallationYear,
+                                   //InstallationYear = cc.InstallationYear,
                                    LineStretch = cc.LineStretch,
                                    NoOfCircuit = cc.NoOfCircuit,
                                    RouteLength = cc.RouteLength,

@@ -8,7 +8,6 @@ namespace FAIS.ApplicationCore.Entities
     {
         [DataMember]
         public int Id { get; set; }
-       
         [DataMember]
         public string LineStretch { get; set; }
         [DataMember]
@@ -24,11 +23,11 @@ namespace FAIS.ApplicationCore.Entities
         [DataMember]
         public long TotalStructures { get; set; }
         [DataMember]
-        public int NoOfCircuit { get; set; }
+        public long NoOfCircuit { get; set; }
         [DataMember]
         public long RouteLength { get; set; }
-        [DataMember]
-        public Year InstallationYear { get; set; }
+        //[DataMember]
+        //public Year InstallationYear { get; set; }
         [DataMember]
         public string IsActive { get; set; }
         [DataMember]
