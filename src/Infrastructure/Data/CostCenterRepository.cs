@@ -4,7 +4,6 @@ using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -14,11 +13,6 @@ namespace FAIS.Infrastructure.Data
         /// Initializes a new instance of the <see cref="CostCenterRepository"/> class.
         /// </summary>
         public CostCenterRepository(FAISContext context) : base(context) { }
-
-        public async Task<CostCenter> Add(CostCenter costCenter)
-        {
-            return await AddAsync(costCenter);
-        }
 
         public IReadOnlyCollection<CostCenterModel> Get()
         {
@@ -42,11 +36,6 @@ namespace FAIS.Infrastructure.Data
         public CostCenter GetById(int id)
         {
             return _dbContext.CostCenters.FirstOrDefault(t => t.Id == id);
-        }
-
-        public async Task<CostCenter> Update(CostCenter costCenter)
-        {
-            return await UpdateAsync(costCenter);
         }
     }
 }
