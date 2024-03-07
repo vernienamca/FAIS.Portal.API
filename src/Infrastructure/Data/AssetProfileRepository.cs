@@ -21,12 +21,12 @@ namespace FAIS.Infrastructure.Data
                                 join usrU in _dbContext.Users.AsNoTracking() on prf.UpdatedBy equals usrU.Id
                                      into joinedUsers
                                 from usrU in joinedUsers.DefaultIfEmpty()
-                                join opt in _dbContext.LibraryOptions.AsNoTracking() on prf.AssetCategoryId equals opt.Id into optX
+                                join opt in _dbContext.LibraryTypes.AsNoTracking() on prf.AssetCategoryId equals opt.Id into optX
                                 from opt in optX.DefaultIfEmpty()
                                 join ca in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaGLId equals ca.Id  into caX 
                                 from ca in caX.DefaultIfEmpty()
-                                join ch in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaSLId equals ch.Id into chX from ch in chX.DefaultIfEmpty()
-                      
+                                join ch in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaSLId equals ch.Id into chX 
+                                from ch in chX.DefaultIfEmpty()
                                 orderby prf.Id descending
                                 select new AssetProfileModel()
                                 {
@@ -37,6 +37,7 @@ namespace FAIS.Infrastructure.Data
                                     Description = prf.Description,
                                     RcaGLId = ca.RcaGL,
                                     RCASLId = ca.RcaSL,
+                                    AssetClass = prf.AssetClassId ?? 0,
                                     CostCenter = prf.CostCenter,
                                     IsActive = prf.IsActive == "Y" ? true : false,
                                     EconomicLife = prf.EconomicLife,
@@ -45,7 +46,6 @@ namespace FAIS.Infrastructure.Data
                                     CreatedAt = prf.CreatedAt,
                                     UpdatedBy = $" {usrU.FirstName} {usrU.LastName}",
                                     UpdatedAt = prf.UpdatedAt
-
                                 }).ToList();
             return assetProfile;
         }

@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
-        public string Class { get; set; }
+        public int? AssetClass { get; set; }
         public string Description { get; set; } 
         public long RcaGLId { get; set; }
         public long RCASLId { get; set; } 

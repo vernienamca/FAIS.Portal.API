@@ -36,7 +36,7 @@ namespace FAIS.ApplicationCore.Configuration
      
 
             builder.Property(e => e.Description)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("DESCRIPTION");
 
 

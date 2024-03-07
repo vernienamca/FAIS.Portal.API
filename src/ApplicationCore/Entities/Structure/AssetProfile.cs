@@ -12,7 +12,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public int AssetCategoryId { get; set; }
         [DataMember]
-        public int AssetClassId { get; set; }
+        public int? AssetClassId { get; set; }
         [DataMember]
         public string Description { get; set; }
         [DataMember]

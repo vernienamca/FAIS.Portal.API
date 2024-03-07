@@ -11,7 +11,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class AssetProfileController : ControllerBase
     {
         #region Variables
@@ -43,6 +43,5 @@ namespace FAIS.Portal.API.Controllers
             return Ok(_assetProfileService.Get());
         }
         #endregion Get
-
     }
 }  
