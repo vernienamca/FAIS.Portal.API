@@ -6,36 +6,26 @@ using System.Threading.Tasks;
 
 namespace FAIS.Infrastructure.Data
 {
-    public class ProformaEntriesRepository : EFRepository<ProformaEntry, int>, IProformaEntriesRepository
+    public class ProformaEntriesRepository : EFRepository<ProformaEntries, int>, IProformaEntriesRepository
     {
         public ProformaEntriesRepository(FAISContext context) : base(context)
         {
         }
-        public IReadOnlyCollection<ProformaEntry> Get()
+        public IReadOnlyCollection<ProformaEntries> Get()
         {
             return _dbContext.ProformaEntries.ToList();
         }
 
-        public ProformaEntry GetById(int id)
+        public ProformaEntries GetById(int id)
         {
-            var proformaEntry = _dbContext.ProformaEntries.FirstOrDefault(t => t.Id == id);
-
-            if(proformaEntry != null) {
-
-                var proformaDetails = _dbContext.ProformaEntryDetails.Where(t => t.ProformaEntryId == id && t.DeletedAt == null).ToList();
-                proformaEntry.ProformaEntryDetails = proformaDetails;
-
-                return proformaEntry;
-            }
-
-            return null;
+            return _dbContext.ProformaEntries.FirstOrDefault(t => t.Id == id);
         }
-        public async Task<ProformaEntry> Add(ProformaEntry proforma)
+        public async Task<ProformaEntries> Add(ProformaEntries proforma)
         {
             return await AddAsync(proforma);
         }
 
-        public async Task<ProformaEntry> Update(ProformaEntry proforma)
+        public async Task<ProformaEntries> Update(ProformaEntries proforma)
         {
             return await UpdateAsync(proforma);
         }
