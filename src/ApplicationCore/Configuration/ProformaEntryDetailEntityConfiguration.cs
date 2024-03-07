@@ -5,20 +5,24 @@ using System;
 
 namespace FAIS.ApplicationCore.Configuration
 {
-    public class ProformaEntriesEntityConfiguration : IEntityTypeConfiguration<ProformaEntries>
+    public class ProformaEntryDetailEntityConfiguration : IEntityTypeConfiguration<ProformaEntryDetail>
     {
-        public void Configure(EntityTypeBuilder<ProformaEntries> builder) 
+        public void Configure(EntityTypeBuilder<ProformaEntryDetail> builder) 
         {
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            builder.ToTable("PROFORMA_ENTRIES", "FAIS");
+            builder.ToTable("PROFORMA_ENTRIES_DETAILS", "FAIS");
 
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
                 .IsRequired()
-                .HasColumnName("PROFORMA_ENTRY_SEQ");
+                .HasColumnName("PROFORMA_ENTRY_DET_SEQ");
+
+            builder.Property(e => e.ProformaEntryId)
+            .IsRequired()
+            .HasColumnName("PROFORMA_ENTRY_SEQ");
 
             builder.Property(e => e.AYyyy)
                 .IsRequired(false)

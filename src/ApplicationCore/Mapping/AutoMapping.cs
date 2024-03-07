@@ -28,9 +28,12 @@ namespace FAIS.ApplicationCore.Mapping
                 .ForMember(x => x.IsUpdate, opt => opt.MapFrom(s => s.IsUpdate ? 'Y' : 'N'))
                 .ForMember(x => x.IsRead, opt => opt.MapFrom(s => s.IsRead ? 'Y' : 'N')).ReverseMap();
 
-            CreateMap<ProformaEntriesDTO, ProformaEntries>();
+      
 
-            CreateMap<UpdateProformaEntriesDTO, ProformaEntries>();
+            CreateMap<ProformaEntryDTO, ProformaEntry>();
+            CreateMap<ProformaEntryDetailDTO, ProformaEntryDetail>();
+
+            //CreateMap<UpdateProformaEntriesDTO, ProformaEntryDetail>();
 
             CreateMap<StringInterpolationDTO, StringInterpolation>();
             //CreateMap<StringInterpolationDTO, StringInterpolation>()
