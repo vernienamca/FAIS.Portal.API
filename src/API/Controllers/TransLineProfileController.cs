@@ -1,9 +1,12 @@
-﻿using FAIS.ApplicationCore.Entities;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
 {
@@ -23,7 +26,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransLineProfileController"/> class.
-        /// <param name="transLineProfileService">The cost center service.</param>
+        /// <param name="transLineProfileService">The transmission line profile service.</param>
         /// </summary>
         public TransLineProfileController(ITransLineProfileService transLineProfileService) => _transLineProfileService = transLineProfileService;
 
@@ -32,7 +35,7 @@ namespace FAIS.Portal.API.Controllers
         #region Get
 
         /// <summary>
-        /// Retrieve the list of cost centers.
+        /// Retrieve the list of transmission line profile.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -55,5 +58,60 @@ namespace FAIS.Portal.API.Controllers
         }
 
         #endregion Get
+
+        #region Post
+
+        /// <summary>
+        /// Posts the create transmission line profile.
+        /// </summary>
+        /// <param name="transLineProfileDTO">transmission line profile object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPost]
+        [ProducesResponseType(typeof(TransLineProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Add([FromBody] TransLineProfileDTO transLineProfileDTO)
+        {
+            if (transLineProfileDTO == null)
+                throw new ArgumentNullException(nameof(transLineProfileDTO));
+
+            try
+            {
+                var result = await _transLineProfileService.Add(transLineProfileDTO);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { errorDescription = ex.Message });
+            }
+        }
+
+        #endregion
+
+        #region Put
+
+        /// <summary>
+        /// Puts the update transmission line profile.
+        /// </summary>
+        /// <param name="data">The transmissionline profile data object.</param>
+        /// <returns></returns>
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(typeof(TransLineProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update([FromBody] TransLineProfileDTO data)
+        {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
+            try
+            {
+                var result = await _transLineProfileService.Update(data);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { errorDescription = ex.Message });
+            }
+        }
+
+        #endregion Put
     }
 }

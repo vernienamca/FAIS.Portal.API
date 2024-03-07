@@ -57,9 +57,6 @@ namespace FAIS.ApplicationCore.Configuration
             builder.Property(e => e.RouteLength)
                 .HasColumnName("ROUTE_LENGTH");
 
-            //builder.Property(e => e.InstallationYear)
-            //   .HasColumnName("COMM_DATE");
-
             builder.Property(e => e.StatusDate)
                 .IsRequired()
                 .HasColumnName("STATUS_DATE");

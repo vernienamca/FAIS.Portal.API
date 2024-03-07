@@ -58,6 +58,7 @@ namespace FAIS.ApplicationCore.Mapping
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
 
             CreateMap<TransLineProfileModel, TransLineProfile>().ReverseMap();
+            CreateMap<TransLineProfileDTO, TransLineProfile>().ReverseMap();
 
             //CreateMap<TemplateDto, Template>();
             //CreateMap<AddTemplateDto, Template>();
