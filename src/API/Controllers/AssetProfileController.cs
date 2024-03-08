@@ -16,31 +16,33 @@ namespace FAIS.Portal.API.Controllers
     {
         #region Variables
 
-        private readonly IAssetProfileService _assetProfileService;
+        private readonly IAssetProfileService _service;
 
         #endregion Variables
 
         #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetProfileController"/> class.
-        /// <param name="assetProfileService">The asset profile service.</param>
+        /// <param name="assetProfileService">List the asset profiles.</param>
         /// </summary>
         public AssetProfileController(IAssetProfileService assetProfileService) 
         {
-            _assetProfileService= assetProfileService;
+            _service = assetProfileService;
         }
+
         #endregion Constructor
 
         #region Get
         /// <summary>
         /// Retrieve the list of asset profile.
         /// </summary>
-        /// <returns>List of asset profile.</returns>
+        /// <returns></returns>
         [HttpGet("[action]")]
         [ProducesResponseType(typeof(IReadOnlyCollection<AssetProfileModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            return Ok(_assetProfileService.Get());
+            return Ok(_service.Get());
         }
         #endregion Get
     }

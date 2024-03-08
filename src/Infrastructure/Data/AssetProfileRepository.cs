@@ -18,9 +18,8 @@ namespace FAIS.Infrastructure.Data
         {
             var assetProfile = (from prf in _dbContext.AssetProfile.AsNoTracking()
                                 join usr in _dbContext.Users.AsNoTracking() on prf.CreatedBy equals usr.Id
-                                join usrU in _dbContext.Users.AsNoTracking() on prf.UpdatedBy equals usrU.Id
-                                     into joinedUsers
-                                from usrU in joinedUsers.DefaultIfEmpty()
+                                join usrU in _dbContext.Users.AsNoTracking() on prf.UpdatedBy equals usrU.Id into usrUX
+                                from usrU in usrUX.DefaultIfEmpty()
                                 join opt in _dbContext.LibraryTypes.AsNoTracking() on prf.AssetCategoryId equals opt.Id into optX
                                 from opt in optX.DefaultIfEmpty()
                                 join ca in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaGLId equals ca.Id  into caX 
@@ -42,9 +41,9 @@ namespace FAIS.Infrastructure.Data
                                     IsActive = prf.IsActive == "Y" ? true : false,
                                     EconomicLife = prf.EconomicLife,
                                     ResidualLife= prf.ResidualLife,
-                                    CreatedBy = $" {usr.FirstName} {usr.LastName}",
+                                    CreatedBy = $"{usr.FirstName} {usr.LastName}",
                                     CreatedAt = prf.CreatedAt,
-                                    UpdatedBy = $" {usrU.FirstName} {usrU.LastName}",
+                                    UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                     UpdatedAt = prf.UpdatedAt
                                 }).ToList();
             return assetProfile;
