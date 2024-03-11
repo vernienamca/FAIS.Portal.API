@@ -84,6 +84,8 @@ namespace FAIS
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IPermissionRepository), typeof(PermissionRepository));
             services.AddScoped(typeof(IProformaEntriesRepository), typeof(ProformaEntriesRepository));
+            services.AddScoped(typeof(IProformaEntryDetailsRepository), typeof(ProformaEntryDetailsRepository));
+
             services.AddScoped(typeof(ICostCenterRepository), typeof(CostCenterRepository));
             services.AddScoped(typeof(IChartOfAccountsRepository), typeof(ChartOfAccountsRepository));
             services.AddScoped(typeof(IChartOfAccountDetailsRepository), typeof(ChartOfAccountDetailsRepository));
@@ -102,6 +104,7 @@ namespace FAIS
             services.AddScoped(typeof(IUserRoleRepository), typeof(UserRoleRepository));
             services.AddScoped(typeof(IPermissionService), typeof(PermissionService));
             services.AddScoped(typeof(IProformaEntriesService), typeof(ProformaEntriesService));
+            services.AddScoped(typeof(IProformaEntryDetailsService), typeof(ProformaEntryDetailsService));
             services.AddScoped(typeof(ICostCenterService), typeof(CostCenterService));
             services.AddScoped(typeof(IChartOfAccountsService), typeof(ChartOfAccountsService));
             services.AddScoped(typeof(IVersionService), typeof(VersionService));
