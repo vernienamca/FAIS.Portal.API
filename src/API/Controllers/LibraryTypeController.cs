@@ -30,6 +30,7 @@ namespace FAIS.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LibraryTypeController"/> class.
+        /// Add mapper for LibraryTypeModel 
         /// <param name="libraryTypeService">The library type service.</param>
         /// </summary>
         public LibraryTypeController(ILibraryTypeService libraryTypeService, IUserService userService, IMapper mapper)
@@ -62,16 +63,16 @@ namespace FAIS.API.Controllers
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var entity = _libraryTypeService.GetById(id);
-            var createdBy = await _userService.GetById(entity.CreatedBy);
-            var libraryTypeMapper = _mapper.Map<LibraryTypeModel>(entity);
+            var data = _libraryTypeService.GetById(id);
+            var createdBy = await _userService.GetById(data.CreatedBy);
+            var libraryTypeMapper = _mapper.Map<LibraryTypeModel>(data);
             libraryTypeMapper.CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
 
-            if (entity.UpdatedBy.HasValue)
+            if (data.UpdatedBy.HasValue)
             {
-                var updatedBy = await _userService.GetById(entity.UpdatedBy.Value);
+                var updatedBy = await _userService.GetById(data.UpdatedBy.Value);
                 libraryTypeMapper.UpdatedBy = $"{updatedBy.FirstName} {updatedBy.LastName}";
-                libraryTypeMapper.UpdatedAt = entity.UpdatedAt;
+                libraryTypeMapper.UpdatedAt = data.UpdatedAt;
             }
 
             return Ok(libraryTypeMapper);
@@ -88,7 +89,7 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
-        public IActionResult Add(AddLibraryTypeDTO dto)
+        public IActionResult Add([FromBody] AddLibraryTypeDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -105,9 +106,9 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="dto">The library type data object.</param>
         /// <returns></returns>
-        [HttpPut("{id:int}")]
+        [HttpPut]
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
-        public IActionResult Update(LibraryTypeDTO dto)
+        public IActionResult Update([FromBody] LibraryTypeDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
