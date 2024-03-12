@@ -36,6 +36,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<Versions> Versions { get; set; }
         public DbSet<ChartOfAccounts> ChartOfAccounts { get; set; }
         public DbSet<ChartOfAccountDetails> ChartOfAccountDetails { get; set; }
+        public DbSet<AssetProfile> AssetProfile { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -63,6 +64,7 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new ProformaEntryEntityConfiguration());
             builder.ApplyConfiguration(new ProformaEntryDetailEntityConfiguration());
             builder.ApplyConfiguration(new VersionEntityConfiguration());
+            builder.ApplyConfiguration(new AssetProfileEntityConfiguration());
 
             OnModelCreatingPartial(builder);
         }
