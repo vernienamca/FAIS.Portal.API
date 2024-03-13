@@ -15,7 +15,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ChartOfAccountsController : ControllerBase
     {
         #region Variables

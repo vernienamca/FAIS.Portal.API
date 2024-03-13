@@ -19,7 +19,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -409,6 +409,53 @@ namespace FAIS.API.Controllers
             return Ok(await _userService.ChangePassword(userId, newPassword));
         }
 
+
+        [HttpPost("asset-profile-notif/{role}")]
+        public  async Task<IActionResult> PostNotifRole(string role)
+        {
+            
+            var emails =  _userRoleService.GetUserEmailsByRole(role);
+
+            if (emails == null)
+                return Ok("Email doesnt exist for that Role.");
+
+            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                .GetSection("EmailTemplatePath")["NotifRole"];
+
+            if (!System.IO.File.Exists(htmlTemplatePath))
+                throw new FileNotFoundException(nameof(htmlTemplatePath));
+
+            string content = System.IO.File.ReadAllText(htmlTemplatePath);
+
+            var settings = _settingsService.GetById(1);
+
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
+            content = content.Replace("${role}", role);
+            content = content.Replace("${supportemail}", settings.EmailAddress);
+            content = content.Replace("${baseurl}", $"{settings.BaseUrl}");
+
+
+            foreach (var email in emails)
+            {
+                if (!_emailService.SendEmail(email, "Notification Role", content))
+
+                {
+                    return Ok("Some emails are not sent!");
+                }
+            }
+            return Ok(emails);
+        }
+
+
+
+        [HttpGet("emails/{role}")]
+        public IActionResult GetUserEmailByRole(string role)
+        {
+            var emails = _userRoleService.GetUserEmailsByRole(role);
+            return Ok(emails);
+        }
         #endregion Put
     }
 }

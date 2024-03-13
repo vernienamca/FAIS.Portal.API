@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.Infrastructure.Data;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -70,6 +71,13 @@ namespace FAIS.API.Controllers
         public IActionResult GetUserRoles(int userId)
         {
             return Ok(_roleService.GetUserRolesById(userId));
+        }
+
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<UserRole>), StatusCodes.Status200OK)]
+        public IActionResult GetAllUserRole()
+        {
+            return Ok(_userRoleService.Get());
         }
         #endregion Get
     }

@@ -15,24 +15,31 @@ namespace FAIS.Infrastructure.Data
         {
         }
 
-        public IReadOnlyCollection<UserRole> Get()
+        public IReadOnlyCollection<UserRoleModel> Get()
         {
-            var roles = (from rol in _dbContext.UserRoles.AsNoTracking()
-                         join usrC in _dbContext.Users.AsNoTracking() on rol.CreatedBy equals usrC.Id
-                         join usrU in _dbContext.Users.AsNoTracking() on rol.UpdatedBy equals usrU.Id into usrUX
+            var roles = (from ur in _dbContext.UserRoles.AsNoTracking()
+                         join rol in _dbContext.Roles.AsNoTracking() on ur.RoleId equals rol.Id into rolX
+                         from rol in rolX.DefaultIfEmpty()
+                         join usrN in _dbContext.Users.AsNoTracking() on ur.UserId equals usrN.Id into usrNX
+                         from usrN in usrNX.DefaultIfEmpty()
+                         join usrC in _dbContext.Users.AsNoTracking() on ur.CreatedBy equals usrC.Id
+                         join usrU in _dbContext.Users.AsNoTracking() on ur.UpdatedBy equals usrU.Id into usrUX
                          from usrU in usrUX.DefaultIfEmpty()
-                         orderby rol.Id descending
-                         select new UserRole()
+
+                         orderby ur.UserId descending
+                         select new UserRoleModel()
                          {
-                             Id = rol.Id,
-                             UserId = rol.UserId,
-                             RoleId = rol.RoleId,
-                             IsActive = rol.IsActive,
-                             StatusDate = rol.StatusDate,
-                             CreatedAt = rol.CreatedAt,
-                             UpdatedAt = rol.UpdatedAt,
-                      
+                             Id = ur.UserId,
+                             Name = usrN.LastName + usrN.FirstName,
+                             Roles = new List<string> { rol.Description },
+                             IsActive = ur.IsActive == 'Y',
+                             StatusDate = ur.IsActive == 'Y' ? ur.StatusDate.ToString() : string.Empty,
+                             CreatedAt = ur.CreatedAt,
+                             UpdatedAt = ur.UpdatedAt,
+                             Email = usrN.EmailAddress
+
                          }).ToList();
+
 
             return roles;
         }
@@ -71,5 +78,13 @@ namespace FAIS.Infrastructure.Data
         {
             return await UpdateAsync(userRole);
         }
+        public IReadOnlyCollection<string> GetUserEmailsByRole(string role)
+        {
+            var userRoles = Get(); 
+            IReadOnlyCollection<string> emails = userRoles.Where(ur => ur.Roles.Contains(role)).Select(ur => ur.Email).ToList();
+
+            return emails;
+        }
+
     }
 }
