@@ -1,17 +1,22 @@
-﻿using FAIS.ApplicationCore.Interfaces.Service;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
+using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
 using FAIS.ApplicationCore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
 {
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AssetProfileController : ControllerBase
     {
         #region Variables
@@ -44,6 +49,59 @@ namespace FAIS.Portal.API.Controllers
         {
             return Ok(_service.Get());
         }
+
+        /// <summary>
+        /// Retrieve the asset profile by id
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(AssetProfileModel), StatusCodes.Status200OK)]
+        public IActionResult GetById(int id)
+        {
+            return Ok(_service.GetById(id));
+        }
         #endregion Get
+
+        #region Post
+        /// <summary>
+        /// Posts the create asset profile.
+        /// </summary>
+        /// <param name="assetProfileDTO">The asset profile data object.</param>
+        /// <returns></returns>
+        [HttpPost("asset-profile")]
+        [ProducesResponseType(typeof(AssetProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PostCreateInterpolation(AddAssetProfileDTO assetProfileDTO)
+        {
+            if (assetProfileDTO == null)
+                throw new ArgumentNullException(nameof(assetProfileDTO));
+
+            return Ok(await _service.Add(assetProfileDTO));
+        }
+        #endregion
+
+        #region Put
+        /// <summary>
+        /// Puts the update asset profile
+        /// </summary>
+        /// <param name="id">The asset profile identifier.</param>
+        /// <param name="assetProfileDTO">The asset profile data object.</param>
+        /// <returns></returns>
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(typeof(AssetProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update(int id, AssetProfileDTO assetProfileDTO)
+        {
+            var assetProfile = await _service.GetById(id);
+
+            if (assetProfileDTO.IsActive != assetProfile.IsActive)
+            {
+                assetProfile.IsActive = assetProfileDTO.IsActive;
+                assetProfileDTO.StatusDate = DateTime.Now;
+            }
+
+            assetProfileDTO.UpdatedAt = DateTime.Now;
+
+            return Ok(_service.Update(assetProfileDTO));
+        }
+        #endregion
     }
 }  
