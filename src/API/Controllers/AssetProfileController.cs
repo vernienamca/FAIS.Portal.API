@@ -83,24 +83,26 @@ namespace FAIS.Portal.API.Controllers
         /// <summary>
         /// Puts the update asset profile
         /// </summary>
-        /// <param name="id">The asset profile identifier.</param>
-        /// <param name="assetProfileDTO">The asset profile data object.</param>
+        /// <param name="dto">The asset profile data object.</param>
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(AssetProfile), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(int id, AssetProfileDTO assetProfileDTO)
+        public async Task<IActionResult> Update(AssetProfileDTO dto)
         {
-            var assetProfile = await _service.GetById(id);
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            if (assetProfileDTO.IsActive != assetProfile.IsActive)
+            var assetProfile = await _service.GetById(dto.Id);
+
+            if (dto.IsActive != assetProfile.IsActive)
             {
-                assetProfile.IsActive = assetProfileDTO.IsActive;
-                assetProfileDTO.StatusDate = DateTime.Now;
+                assetProfile.IsActive = dto.IsActive;
+                dto.StatusDate = DateTime.Now;
             }
 
-            assetProfileDTO.UpdatedAt = DateTime.Now;
+            dto.UpdatedAt = DateTime.Now;
 
-            return Ok(_service.Update(assetProfileDTO));
+            return Ok(_service.Update(dto));
         }
         #endregion
     }
