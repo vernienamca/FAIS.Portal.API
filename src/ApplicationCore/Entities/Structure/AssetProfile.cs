@@ -26,7 +26,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember] 
         public string ResidualLife { get; set; }
         [DataMember]
-        public string IsActive { get; set; }
+        public char IsActive { get; set; }
         [DataMember]
         public DateTime StatusDate { get; set; }
         [DataMember]

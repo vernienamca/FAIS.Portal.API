@@ -15,7 +15,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int CostCenter { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
-        public string IsActive { get; set; }
+        public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -33,7 +33,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int CostCenter { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
-        public bool IsActive { get; set; }
+        public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
