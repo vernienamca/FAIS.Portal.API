@@ -32,7 +32,7 @@ namespace FAIS.Infrastructure.Data
                                       CreatedAt = lib.CreatedAt,
                                       UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                       UpdatedAt = lib.UpdatedAt
-                                  }).ToList();
+                                  }).AsNoTracking().ToList();
 
             return libraryTypes;
         }
