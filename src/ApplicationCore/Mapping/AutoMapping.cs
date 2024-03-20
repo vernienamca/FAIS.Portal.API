@@ -65,8 +65,6 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<AssetProfileDTO, AssetProfile>();
             CreateMap<AddAssetProfileDTO, AssetProfile>();
 
-            //CreateMap<TemplateDto, Template>();
-            //CreateMap<AddTemplateDto, Template>();
         }        
     }
 }
