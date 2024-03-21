@@ -19,7 +19,7 @@ namespace FAIS.ApplicationCore.Models
         public int? AdProvSeq { get; set; }
         public int? AdMunSeq { get; set; }
         public int? AdBrgySeq { get; set; }
-        public string IsActive { get; set; }
+        public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

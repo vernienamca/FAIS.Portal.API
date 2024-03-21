@@ -69,7 +69,9 @@ namespace FAIS.ApplicationCore.Configuration
 
             builder.Property(e => e.IsActive)
                 .IsRequired()
+                .HasMaxLength(1)
                 .HasColumnName("IS_ACTIVE");
+
 
             builder.Property(e => e.StatusDate)
                 .IsRequired()

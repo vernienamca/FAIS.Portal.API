@@ -12,7 +12,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class MeteringProfileController : ControllerBase
     {
         #region Variables
@@ -24,8 +24,8 @@ namespace FAIS.Portal.API.Controllers
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AssetProfileController"/> class.
-        /// <param name="meteringProfileService">List the asset profiles.</param>
+        /// Initializes a new instance of the <see cref="MeteringProfileController"/> class.
+        /// <param name="meteringProfileService">List the metering profiles.</param>
         /// </summary>
         public MeteringProfileController(IMeteringProfileService meteringProfileService) 
         {
@@ -36,7 +36,7 @@ namespace FAIS.Portal.API.Controllers
 
         #region Get
         /// <summary>
-        /// Retrieve the list of asset profile.
+        /// Retrieve the list of metering profile.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
