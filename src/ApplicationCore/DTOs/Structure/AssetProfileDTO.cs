@@ -1,41 +1,41 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace FAIS.ApplicationCore.Entities.Structure
+namespace FAIS.ApplicationCore.DTOs
 {
-    public class AssetProfile : BaseEntity<int>
+    public class AssetProfileDTO
     {
-        [DataMember]
         public int Id { get; set; }
-        [DataMember]
         public string Name { get; set; }
-        [DataMember]
         public int AssetCategoryId { get; set; }
-        [DataMember]
         public int? AssetClassId { get; set; }
-        [DataMember]
         public string Description { get; set; }
-        [DataMember]
         public int RcaGLId { get; set; }
-        [DataMember]
         public int RcaSLId { get; set; }
-        [DataMember]
         public int CostCenter { get; set; }
-        [DataMember]
         public string EconomicLife { get; set; }
-        [DataMember] 
         public string ResidualLife { get; set; }
-        [DataMember]
         public char IsActive { get; set; }
-        [DataMember]
         public DateTime StatusDate { get; set; }
-        [DataMember]
         public int CreatedBy { get; set; }
-        [DataMember]
         public DateTime CreatedAt { get; set; }
-        [DataMember]
         public int? UpdatedBy { get; set; }
-        [DataMember]
         public DateTime? UpdatedAt { get; set; }
+    }
+    public class AddAssetProfileDTO
+    {
+        public string Name { get; set; }
+        public int AssetCategoryId { get; set; }
+        public int? AssetClassId { get; set; }
+        public string Description { get; set; }
+        public int RcaGLId { get; set; }
+        public int RcaSLId { get; set; }
+        public int CostCenter { get; set; }
+        public string EconomicLife { get; set; }
+        public string ResidualLife { get; set; }
+        public char IsActive { get; set; }
+        public DateTime StatusDate { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

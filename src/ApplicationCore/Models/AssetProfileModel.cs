@@ -16,7 +16,7 @@ namespace FAIS.ApplicationCore.Models
         public int CostCenter { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
-        public bool IsActive { get; set; }
+        public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
