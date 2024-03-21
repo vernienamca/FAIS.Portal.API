@@ -8,6 +8,7 @@ using FAIS.ApplicationCore.Entities.Structure;
 using System.Threading.Tasks;
 using FAIS.ApplicationCore.Models;
 using System;
+using AutoMapper;
 
 namespace FAIS.API.Controllers
 {
@@ -21,6 +22,7 @@ namespace FAIS.API.Controllers
 
         private readonly ILibraryTypeService _libraryTypeService;
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
         #endregion Variables
 
@@ -28,12 +30,14 @@ namespace FAIS.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LibraryTypeController"/> class.
+        /// Add mapper for LibraryTypeModel 
         /// <param name="libraryTypeService">The library type service.</param>
         /// </summary>
-        public LibraryTypeController(ILibraryTypeService libraryTypeService, IUserService userService)
+        public LibraryTypeController(ILibraryTypeService libraryTypeService, IUserService userService, IMapper mapper)
         {
             _libraryTypeService = libraryTypeService;
             _userService = userService;
+            _mapper = mapper;
         }
 
         #endregion Constructor
@@ -59,28 +63,19 @@ namespace FAIS.API.Controllers
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var entity = _libraryTypeService.GetById(id);
-            var createdBy = await _userService.GetById(entity.CreatedBy);
+            var data = _libraryTypeService.GetById(id);
+            var createdBy = await _userService.GetById(data.CreatedBy);
+            var libraryTypeMapper = _mapper.Map<LibraryTypeModel>(data);
+            libraryTypeMapper.CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
 
-            var lib = new LibraryTypeModel()
+            if (data.UpdatedBy.HasValue)
             {
-                Id = entity.Id,
-                Code = entity.Code,
-                Name = entity.Name,
-                Description = entity.Description,
-                IsActive = entity.IsActive,
-                StatusDate = entity.StatusDate,
-                CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}",
-                CreatedAt = entity.CreatedAt
-            };
-
-            if (entity.UpdatedBy != null)
-            {
-                lib.UpdatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
-                lib.UpdatedAt = entity.UpdatedAt;
+                var updatedBy = await _userService.GetById(data.UpdatedBy.Value);
+                libraryTypeMapper.UpdatedBy = $"{updatedBy.FirstName} {updatedBy.LastName}";
+                libraryTypeMapper.UpdatedAt = data.UpdatedAt;
             }
 
-            return Ok(lib);
+            return Ok(libraryTypeMapper);
         }
 
         #endregion
@@ -94,7 +89,7 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
-        public IActionResult Add(AddLibraryTypeDTO dto)
+        public IActionResult Add([FromBody] AddLibraryTypeDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -111,9 +106,9 @@ namespace FAIS.API.Controllers
         /// </summary>
         /// <param name="dto">The library type data object.</param>
         /// <returns></returns>
-        [HttpPut("{id:int}")]
+        [HttpPut]
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
-        public IActionResult Update(LibraryTypeDTO dto)
+        public IActionResult Update([FromBody] LibraryTypeDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
