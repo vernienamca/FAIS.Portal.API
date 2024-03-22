@@ -13,6 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         IReadOnlyCollection<AssetProfileModel> Get();
         Task<AssetProfileModel> GetById(int id);
         Task<AssetProfile> Add(AddAssetProfileDTO assetProfileDTO);
-        Task<AssetProfile> Update(AssetProfileDTO assetProfile);
+        Task<AssetProfile> Update(UpdateAssetProfileDTO assetProfile);
     }
 }

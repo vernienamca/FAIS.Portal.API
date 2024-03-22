@@ -87,20 +87,17 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(AssetProfile), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(AssetProfileDTO dto)
+        public async Task<IActionResult> Update(UpdateAssetProfileDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
             var assetProfile = await _service.GetById(dto.Id);
-
             if (dto.IsActive != assetProfile.IsActive)
             {
                 assetProfile.IsActive = dto.IsActive;
                 dto.StatusDate = DateTime.Now;
             }
-
-            dto.UpdatedAt = DateTime.Now;
 
             return Ok(_service.Update(dto));
         }
