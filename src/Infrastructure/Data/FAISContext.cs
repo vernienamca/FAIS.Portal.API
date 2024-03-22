@@ -31,6 +31,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserTAFG> UserTAFGs { get; set; }
         public DbSet<ProformaEntry> ProformaEntries { get; set; }
+        public DbSet<MeteringProfile> MeteringProfiles { get; set; }
         public DbSet<ProformaEntryDetail> ProformaEntryDetails { get; set; }
         public DbSet<CostCenter> CostCenters { get; set; }
         public DbSet<Versions> Versions { get; set; }
@@ -62,6 +63,7 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new UserRoleEntityConfiguration());
             builder.ApplyConfiguration(new UserTAFGEntityConfiguration());
             builder.ApplyConfiguration(new ProformaEntryEntityConfiguration());
+            builder.ApplyConfiguration(new MeteringProfileEntityConfiguration());
             builder.ApplyConfiguration(new ProformaEntryDetailEntityConfiguration());
             builder.ApplyConfiguration(new VersionEntityConfiguration());
             builder.ApplyConfiguration(new AssetProfileEntityConfiguration());
