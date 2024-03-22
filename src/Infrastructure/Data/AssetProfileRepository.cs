@@ -37,9 +37,11 @@ namespace FAIS.Infrastructure.Data
                                     IsActive = prf.IsActive,
                                     EconomicLife = prf.EconomicLife,
                                     ResidualLife= prf.ResidualLife,
-                                    CreatedBy = $"{usr.FirstName} {usr.LastName}",
+                                    CreatedBy = prf.CreatedBy,
+                                    CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                     CreatedAt = prf.CreatedAt,
-                                    UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                                    UpdatedBy = prf.UpdatedBy,
+                                    UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
                                     UpdatedAt = prf.UpdatedAt
                                 }).ToList();
             return assetProfile;
@@ -72,9 +74,9 @@ namespace FAIS.Infrastructure.Data
                                              IsActive = prf.IsActive,
                                              EconomicLife = prf.EconomicLife,
                                              ResidualLife = prf.ResidualLife,
-                                             CreatedBy = $"{usr.FirstName} {usr.LastName}",
+                                             CreatedBy = prf.CreatedBy,
+                                             CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                              CreatedAt = prf.CreatedAt,
-                                             UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
                                              UpdatedAt = prf.UpdatedAt
                                          }).FirstOrDefaultAsync(t => t.Id == id);
             return await assetProfile;

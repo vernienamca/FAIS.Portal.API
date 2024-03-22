@@ -39,10 +39,18 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.Add(assetProfileDto);
         }
 
-        public async Task<AssetProfile> Update(AssetProfileDTO dto)
+        public async Task<AssetProfile> Update(UpdateAssetProfileDTO dto)
         {
             var assetProfileDto = _mapper.Map<AssetProfile>(dto);
-            return await _repository.Update(assetProfileDto);
+            var assetProfile = _repository.GetById(dto.Id) ?? throw new Exception("AssetProfileId does not exist");
+
+            if (assetProfile == null)
+                throw new ArgumentNullException("Asset Profile not exist.");
+
+            var mapper = _mapper.Map<AssetProfile>(dto);
+            mapper.CreatedBy = assetProfile.Result.CreatedBy;
+            mapper.CreatedAt = assetProfile.Result.CreatedAt;
+            return await _repository.Update(mapper);
         }
     }
 }
