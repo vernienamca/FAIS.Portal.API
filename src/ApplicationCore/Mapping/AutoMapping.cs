@@ -59,13 +59,17 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap()
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
 
+            CreateMap<LibraryType, LibraryOptionAddDto>().ReverseMap();
+            CreateMap<LibraryType, LibraryTypeModel>().ReverseMap();
+
             CreateMap<AssetProfileDTO, AssetProfile>();
             CreateMap<AddAssetProfileDTO, AssetProfile>();
+            CreateMap<UpdateAssetProfileDTO, AssetProfile>();
 
             //CreateMap<TemplateDto, Template>();
             //CreateMap<AddTemplateDto, Template>();
-            CreateMap<LibraryType, LibraryOptionAddDto>().ReverseMap();
-            CreateMap<LibraryType, LibraryTypeModel>().ReverseMap();
+=========
+
         }        
     }
 }
