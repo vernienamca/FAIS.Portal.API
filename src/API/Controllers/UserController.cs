@@ -1,4 +1,5 @@
 ﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
@@ -58,7 +59,7 @@ namespace FAIS.API.Controllers
             _settingsService = settingsService;
             _userRoleService = userRoleService;
             _ILibraryTypeRepository = libraryTypeRepository;
-            _roleService= roleService;
+            _roleService = roleService;
         }
 
         #endregion Constructor
@@ -280,7 +281,7 @@ namespace FAIS.API.Controllers
 
             if (!System.IO.File.Exists(htmlTemplatePath))
                 throw new FileNotFoundException(nameof(htmlTemplatePath));
-                                         
+
             string content = System.IO.File.ReadAllText(htmlTemplatePath);
 
             var settings = _settingsService.GetById(1);
@@ -288,7 +289,7 @@ namespace FAIS.API.Controllers
             content = content.Replace("${firstname}", user.FirstName);
             content = content.Replace("${username}", user.UserName);
             content = content.Replace("${password}", generatedPassword);
-            content = content.Replace("${baseurl}", settings.BaseUrl);                                                                                                                                                                              
+            content = content.Replace("${baseurl}", settings.BaseUrl);
 
             _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
 
@@ -422,8 +423,8 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        [HttpPost("asset-profile-notif/{roleId:int}/{id}/{assetName}")]
-        public IActionResult PostNotifRole(int roleId, int? id, string? assetName)
+        [HttpPost("asset-profile-notif/{roleId:int}/{id}/{assetName}/{editMode:bool?}")]
+        public IActionResult PostNotifRole(int roleId, int? id, string? assetName, bool? editMode)
         {
             var emails = _userRoleService.GetUserEmailsByRole(roleId);
             var role = _roleService.GetById(roleId);
@@ -436,7 +437,7 @@ namespace FAIS.API.Controllers
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
 
-            string content = GenerateEmailContent(roleId, role?.Name, assetName, id, settings.EmailAddress, settings.BaseUrl);
+            string content = GenerateEmailContent(roleId, role?.Name, assetName, id, settings.EmailAddress, settings.BaseUrl, editMode ?? false);
 
             foreach (var email in emails)
             {
@@ -448,19 +449,34 @@ namespace FAIS.API.Controllers
             return Ok(emails);
         }
 
-
-        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl)
+        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode)
         {
             string content;
-            //should i compare it on a roleName? and use ENUMS 
-            if (roleId == 12)
+            RoleEnum role = (RoleEnum)roleId;
+            if (role == RoleEnum.ARMDLibrarian)
             {
-               
-                content = $"Hi Armd, information for {assetName} was added. You can now view the additional data.";
+
+                content = $"<h3>Dear {roleName},</h3><br/>" +
+                  $"Hi Armd, information for {assetName} was added. You can now view the additional data.<br/><br/>" +
+                  $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                  $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                  "Thank you,<br/>" + "Site Admin";
+
+
+            }
+
+            else if ((role == RoleEnum.PADLibrarian || role == RoleEnum.ARMDLibrarian) && editMode)
+            {
+                content = $"<h3>Dear {roleName}!,</h3><br/>" +
+                   $"The asset {assetName} has been updated. Please review the changes.<br/><br/>" +
+                   $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                   $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                   "Thank you,<br/>" + "Site Admin";
+
+
             }
             else
             {
-               
                 string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
                     .GetSection("EmailTemplatePath")["NotifRole"];
 
@@ -468,36 +484,13 @@ namespace FAIS.API.Controllers
                     throw new FileNotFoundException(nameof(htmlTemplatePath));
 
                 content = System.IO.File.ReadAllText(htmlTemplatePath);
-
-                // Replace placeholders with actual values
                 content = content.Replace("${role}", roleName);
                 content = content.Replace("${supportemail}", supportEmail);
                 content = content.Replace("${baseurl}", baseUrl);
                 content = content.Replace("${url}", $"{baseUrl}/apps/asset-profile/edit/{id}");
                 content = content.Replace("${assetname}", assetName);
             }
-
             return content;
-        }
-
-
-        [HttpGet("GetUserEmailsByRole/{roleId}")]
-        public IActionResult GetUserEmailsByRole(int roleId)
-        {
-            try
-            {
-                var emails = _userRoleService.GetUserEmailsByRole(roleId);
-                if (emails == null || !emails.Any())
-                {
-                    return NotFound("No users found for this role.");
-                }
-                return Ok(emails);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(500, "Internal server error: " + ex.Message);
-            }
         }
     }
     #endregion Put
