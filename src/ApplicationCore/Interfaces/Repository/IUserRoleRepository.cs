@@ -11,6 +11,6 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<UserRole> Add(UserRole userRole);
         Task<UserRole> Update(UserRole userRole);
         IReadOnlyCollection<UserRoleModel> GetUserRolesById(int id);
-        IReadOnlyCollection<string> GetUserEmailsByRole(string role);
+        IReadOnlyCollection<string> GetUserEmailsByRole(int roleId);
     }
 }

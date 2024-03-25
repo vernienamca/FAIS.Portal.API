@@ -1,4 +1,5 @@
 ﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -30,6 +31,7 @@ namespace FAIS.API.Controllers
         private readonly ISettingsService _settingsService;
         private readonly IUserRoleService _userRoleService;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
+        private readonly IRoleService _roleService;
 
         #endregion Variables
 
@@ -47,7 +49,8 @@ namespace FAIS.API.Controllers
             , IEmailService emailService
             , ISettingsService settingsService
             , IUserRoleService userRoleService
-            , ILibraryTypeRepository libraryTypeRepository)
+            , ILibraryTypeRepository libraryTypeRepository
+            , IRoleService roleService)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
@@ -55,6 +58,7 @@ namespace FAIS.API.Controllers
             _settingsService = settingsService;
             _userRoleService = userRoleService;
             _ILibraryTypeRepository = libraryTypeRepository;
+            _roleService= roleService;
         }
 
         #endregion Constructor
@@ -276,7 +280,7 @@ namespace FAIS.API.Controllers
 
             if (!System.IO.File.Exists(htmlTemplatePath))
                 throw new FileNotFoundException(nameof(htmlTemplatePath));
-
+                                         
             string content = System.IO.File.ReadAllText(htmlTemplatePath);
 
             var settings = _settingsService.GetById(1);
@@ -284,7 +288,7 @@ namespace FAIS.API.Controllers
             content = content.Replace("${firstname}", user.FirstName);
             content = content.Replace("${username}", user.UserName);
             content = content.Replace("${password}", generatedPassword);
-            content = content.Replace("${baseurl}", settings.BaseUrl);
+            content = content.Replace("${baseurl}", settings.BaseUrl);                                                                                                                                                                              
 
             _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
 
@@ -296,7 +300,7 @@ namespace FAIS.API.Controllers
         #region Put
 
         /// <summary>
-        /// Puts the update user.
+        /// Puts the update user.                                                                                                                                                                                                                                                                      
         /// </summary>
         /// <param name="id">The user identifier.</param>
         /// <param name="isMyProfile">The is my profile flag.</param>
@@ -409,38 +413,34 @@ namespace FAIS.API.Controllers
             return Ok(await _userService.ChangePassword(userId, newPassword));
         }
 
-
-        [HttpPost("asset-profile-notif/{role}")]
-        public  async Task<IActionResult> PostNotifRole(string role)
+        /// <summary>
+        /// Sends notification for the role.
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <param name="id"></param>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPost("asset-profile-notif/{roleId:int}/{id}/{assetName}")]
+        public IActionResult PostNotifRole(int roleId, int? id, string? assetName)
         {
-            
-            var emails =  _userRoleService.GetUserEmailsByRole(role);
+            var emails = _userRoleService.GetUserEmailsByRole(roleId);
+            var role = _roleService.GetById(roleId);
 
             if (emails == null)
-                return Ok("Email doesnt exist for that Role.");
-
-            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
-                .GetSection("EmailTemplatePath")["NotifRole"];
-
-            if (!System.IO.File.Exists(htmlTemplatePath))
-                throw new FileNotFoundException(nameof(htmlTemplatePath));
-
-            string content = System.IO.File.ReadAllText(htmlTemplatePath);
+                return Ok("Email doesn't exist for that Role.");
 
             var settings = _settingsService.GetById(1);
 
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
 
-            content = content.Replace("${role}", role);
-            content = content.Replace("${supportemail}", settings.EmailAddress);
-            content = content.Replace("${baseurl}", $"{settings.BaseUrl}");
-
+            string content = GenerateEmailContent(roleId, role?.Name, assetName, id, settings.EmailAddress, settings.BaseUrl);
 
             foreach (var email in emails)
             {
                 if (!_emailService.SendEmail(email, "Notification Role", content))
-
                 {
                     return Ok("Some emails are not sent!");
                 }
@@ -449,13 +449,57 @@ namespace FAIS.API.Controllers
         }
 
 
-
-        [HttpGet("emails/{role}")]
-        public IActionResult GetUserEmailByRole(string role)
+        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl)
         {
-            var emails = _userRoleService.GetUserEmailsByRole(role);
-            return Ok(emails);
+            string content;
+            //should i compare it on a roleName? and use ENUMS 
+            if (roleId == 12)
+            {
+               
+                content = $"Hi Armd, information for {assetName} was added. You can now view the additional data.";
+            }
+            else
+            {
+               
+                string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                    .GetSection("EmailTemplatePath")["NotifRole"];
+
+                if (!System.IO.File.Exists(htmlTemplatePath))
+                    throw new FileNotFoundException(nameof(htmlTemplatePath));
+
+                content = System.IO.File.ReadAllText(htmlTemplatePath);
+
+                // Replace placeholders with actual values
+                content = content.Replace("${role}", roleName);
+                content = content.Replace("${supportemail}", supportEmail);
+                content = content.Replace("${baseurl}", baseUrl);
+                content = content.Replace("${url}", $"{baseUrl}/apps/asset-profile/edit/{id}");
+                content = content.Replace("${assetname}", assetName);
+            }
+
+            return content;
         }
-        #endregion Put
+
+
+        [HttpGet("GetUserEmailsByRole/{roleId}")]
+        public IActionResult GetUserEmailsByRole(int roleId)
+        {
+            try
+            {
+                var emails = _userRoleService.GetUserEmailsByRole(roleId);
+                if (emails == null || !emails.Any())
+                {
+                    return NotFound("No users found for this role.");
+                }
+                return Ok(emails);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
     }
+    #endregion Put
 }
+

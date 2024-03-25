@@ -68,8 +68,7 @@ namespace FAIS.ApplicationCore.Mapping
 
             //CreateMap<TemplateDto, Template>();
             //CreateMap<AddTemplateDto, Template>();
-=========
-
+     
         }        
     }
 }

@@ -30,9 +30,9 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-       public IReadOnlyCollection<string> GetUserEmailsByRole(string role)
+       public IReadOnlyCollection<string> GetUserEmailsByRole(int roleId)
         {
-            return _repository.GetUserEmailsByRole(role);
+            return _repository.GetUserEmailsByRole(roleId);
         }
     }
 }

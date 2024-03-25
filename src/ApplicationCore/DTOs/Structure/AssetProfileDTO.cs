@@ -53,6 +53,7 @@ namespace FAIS.ApplicationCore.DTOs
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public int UpdatedBy { get; set; }
+        public int UpdatedAt { get; set; }
         public DateTime UpdatedDate { get; set; } = DateTime.Now;
     }
 }
