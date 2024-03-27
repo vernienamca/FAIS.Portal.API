@@ -78,7 +78,8 @@ namespace FAIS.Infrastructure.Data
                                              CreatedBy = prf.CreatedBy,
                                              CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                              CreatedAt = prf.CreatedAt,
-                                             UpdatedAt = prf.UpdatedAt
+                                             UpdatedAt = prf.UpdatedAt,
+                                             UpdatedByName = $"{usrU.FirstName} {usrU.LastName}"
                                          }).FirstOrDefaultAsync(t => t.Id == id);
             return await assetProfile;
         }

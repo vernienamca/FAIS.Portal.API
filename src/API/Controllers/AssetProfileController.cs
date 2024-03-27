@@ -1,9 +1,7 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
-using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
-using FAIS.ApplicationCore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +14,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class AssetProfileController : ControllerBase
     {
         #region Variables

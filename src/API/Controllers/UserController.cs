@@ -21,7 +21,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -455,14 +455,11 @@ namespace FAIS.API.Controllers
             RoleEnum role = (RoleEnum)roleId;
             if (role == RoleEnum.ARMDLibrarian)
             {
-
                 content = $"<h3>Dear {roleName},</h3><br/>" +
                   $"Hi Armd, information for {assetName} was added. You can now view the additional data.<br/><br/>" +
                   $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
                   $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
                   "Thank you,<br/>" + "Site Admin";
-
-
             }
 
             else if ((role == RoleEnum.PADLibrarian || role == RoleEnum.ARMDLibrarian) && editMode)
@@ -472,8 +469,6 @@ namespace FAIS.API.Controllers
                    $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
                    $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
                    "Thank you,<br/>" + "Site Admin";
-
-
             }
             else
             {
