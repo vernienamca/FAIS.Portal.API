@@ -448,7 +448,7 @@ namespace FAIS.API.Controllers
             }
             return Ok(emails);
         }
-
+        #endregion Put
         private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode)
         {
             string content;
@@ -488,6 +488,5 @@ namespace FAIS.API.Controllers
             return content;
         }
     }
-    #endregion Put
 }
 

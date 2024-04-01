@@ -73,12 +73,6 @@ namespace FAIS.API.Controllers
             return Ok(_roleService.GetUserRolesById(userId));
         }
 
-        //[HttpGet("[action]")]
-        //[ProducesResponseType(typeof(IReadOnlyCollection<UserRole>), StatusCodes.Status200OK)]
-        //public IActionResult GetAllUserRole()
-        //{
-        //    return Ok(_userRoleService.Get());
-        //}
         #endregion Get
     }
 }

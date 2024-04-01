@@ -26,7 +26,7 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<UpdatePermissionDTO, RolePermission>()
                 .ForMember(x => x.IsCreate, opt => opt.MapFrom(s => s.IsCreate ? 'Y' : 'N'))
                 .ForMember(x => x.IsUpdate, opt => opt.MapFrom(s => s.IsUpdate ? 'Y' : 'N'))
-                .ForMember(x => x.IsRead, opt => opt.MapFrom(s => s.IsRead ? 'Y' : 'N')).ReverseMap();
+                .ForMember(x => x.IsRead, opt => opt.MapFrom(s => s.IsRead ? 'Y' : 'N')).ReverseMap(); 
 
       
 
@@ -65,10 +65,6 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<AssetProfileDTO, AssetProfile>();
             CreateMap<AddAssetProfileDTO, AssetProfile>();
             CreateMap<UpdateAssetProfileDTO, AssetProfile>();
-
-            //CreateMap<TemplateDto, Template>();
-            //CreateMap<AddTemplateDto, Template>();
-     
         }        
     }
 }
