@@ -1,10 +1,10 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Service;
-using FAIS.ApplicationCore.Models;
-using FAIS.ApplicationCore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace FAIS.Portal.API.Controllers
@@ -46,5 +46,43 @@ namespace FAIS.Portal.API.Controllers
             return Ok(_service.Get());
         }
         #endregion Get
+
+        #region post
+
+        /// <summary>
+        /// Posts the create metering profile.
+        /// </summary>
+        /// <param name="dto">The metering profile data object.</param>
+        /// <returns></returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(MeteringProfile), StatusCodes.Status200OK)]
+        public IActionResult Add([FromBody] MeteringProfileDTO dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            return Ok(_service.Add(dto));
+        }
+
+        #endregion
+
+        #region Put
+
+        /// <summary>
+        /// Puts the update metering profile.
+        /// </summary>
+        /// <param name="dto">The metering profile data object.</param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(typeof(MeteringProfile), StatusCodes.Status200OK)]
+        public IActionResult Update([FromBody] MeteringProfileDTO dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            return Ok(_service.Update(dto));
+        }
+
+        #endregion
     }
 }  
