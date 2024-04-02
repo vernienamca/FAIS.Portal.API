@@ -15,6 +15,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace FAIS.API.Controllers
 {
@@ -33,6 +34,7 @@ namespace FAIS.API.Controllers
         private readonly IUserRoleService _userRoleService;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
         private readonly IRoleService _roleService;
+        private readonly IConfiguration _configuration;
 
         #endregion Variables
 
@@ -51,7 +53,8 @@ namespace FAIS.API.Controllers
             , ISettingsService settingsService
             , IUserRoleService userRoleService
             , ILibraryTypeRepository libraryTypeRepository
-            , IRoleService roleService)
+            , IRoleService roleService
+            , IConfiguration configuration)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
@@ -60,6 +63,7 @@ namespace FAIS.API.Controllers
             _userRoleService = userRoleService;
             _ILibraryTypeRepository = libraryTypeRepository;
             _roleService = roleService;
+            _configuration = configuration;
         }
 
         #endregion Constructor
@@ -424,6 +428,9 @@ namespace FAIS.API.Controllers
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("asset-profile-notif/{roleId:int}/{id}/{assetName}/{editMode:bool?}")]
+
+        //TODO FIX THE NULLABLES?? DOUBLE CHECK, TEST ON LOCAL
+        // FIX OTHER USER VIEW ,, FOR VIEWING ONLY 
         public IActionResult PostNotifRole(int roleId, int? id, string? assetName, bool? editMode)
         {
             var emails = _userRoleService.GetUserEmailsByRole(roleId);
@@ -470,18 +477,17 @@ namespace FAIS.API.Controllers
                    $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
                    "Thank you,<br/>" + "Site Admin";
             }
+
             else
             {
-                string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
-                    .GetSection("EmailTemplatePath")["NotifRole"];
-
-                if (!System.IO.File.Exists(htmlTemplatePath))
+                string htmlTemplatePath = _configuration.GetSection("EmailTemplatePath")["NotifRole"];
+                if (!System.IO.File.Exists(htmlTemplatePath))                                                                                                                                                                          
                     throw new FileNotFoundException(nameof(htmlTemplatePath));
 
                 content = System.IO.File.ReadAllText(htmlTemplatePath);
                 content = content.Replace("${role}", roleName);
                 content = content.Replace("${supportemail}", supportEmail);
-                content = content.Replace("${baseurl}", baseUrl);
+                content = content.Replace("${baseurl}", baseUrl);                                                          
                 content = content.Replace("${url}", $"{baseUrl}/apps/asset-profile/edit/{id}");
                 content = content.Replace("${assetname}", assetName);
             }
