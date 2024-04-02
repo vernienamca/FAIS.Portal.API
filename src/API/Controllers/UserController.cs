@@ -428,9 +428,6 @@ namespace FAIS.API.Controllers
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("asset-profile-notif/{roleId:int}/{id}/{assetName}/{editMode:bool?}")]
-
-        //TODO FIX THE NULLABLES?? DOUBLE CHECK, TEST ON LOCAL
-        // FIX OTHER USER VIEW ,, FOR VIEWING ONLY 
         public IActionResult PostNotifRole(int roleId, int? id, string? assetName, bool? editMode)
         {
             var emails = _userRoleService.GetUserEmailsByRole(roleId);
