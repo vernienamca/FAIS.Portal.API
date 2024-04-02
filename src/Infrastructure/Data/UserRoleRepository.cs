@@ -1,5 +1,6 @@
 ﻿using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
+using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
@@ -15,24 +16,31 @@ namespace FAIS.Infrastructure.Data
         {
         }
 
-        public IReadOnlyCollection<UserRole> Get()
+        public IReadOnlyCollection<UserRoleModel> Get()
         {
-            var roles = (from rol in _dbContext.UserRoles.AsNoTracking()
-                         join usrC in _dbContext.Users.AsNoTracking() on rol.CreatedBy equals usrC.Id
-                         join usrU in _dbContext.Users.AsNoTracking() on rol.UpdatedBy equals usrU.Id into usrUX
+            var roles = (from ur in _dbContext.UserRoles.AsNoTracking()
+                         join rol in _dbContext.Roles.AsNoTracking() on ur.RoleId equals rol.Id into rolX
+                         from rol in rolX.DefaultIfEmpty()
+                         join usrN in _dbContext.Users.AsNoTracking() on ur.UserId equals usrN.Id into usrNX
+                         from usrN in usrNX.DefaultIfEmpty()
+                         join usrC in _dbContext.Users.AsNoTracking() on ur.CreatedBy equals usrC.Id
+                         join usrU in _dbContext.Users.AsNoTracking() on ur.UpdatedBy equals usrU.Id into usrUX
                          from usrU in usrUX.DefaultIfEmpty()
-                         orderby rol.Id descending
-                         select new UserRole()
+
+                         orderby ur.UserId descending
+                         select new UserRoleModel()
                          {
-                             Id = rol.Id,
-                             UserId = rol.UserId,
-                             RoleId = rol.RoleId,
-                             IsActive = rol.IsActive,
-                             StatusDate = rol.StatusDate,
-                             CreatedAt = rol.CreatedAt,
-                             UpdatedAt = rol.UpdatedAt,
-                      
+                             Id = ur.UserId,
+                             Name = usrN.LastName + usrN.FirstName,
+                             Roles = new List<string> { rol.Description },
+                             IsActive = ur.IsActive == 'Y',
+                             StatusDate = ur.IsActive == 'Y' ? ur.StatusDate.ToString() : string.Empty,
+                             CreatedAt = ur.CreatedAt,
+                             UpdatedAt = ur.UpdatedAt,
+                             Email = usrN.EmailAddress
+
                          }).ToList();
+
 
             return roles;
         }
@@ -51,13 +59,10 @@ namespace FAIS.Infrastructure.Data
             //        {
             //            Id = userRole.Id,
             //            UserId = userRole.UserId,
-            //            RoleId = userRole.RoleId,
+            //            RoleId = userRole.RoleId,                                                                                                                                                                                                               
             //            IsActive = userRole.IsActive,
 
-            //            Name = role.Name, 
-            //        })
-            //    .ToList();
-
+            //            Name = role.Name,                                                     
             return userRoles;
         }
 
@@ -69,7 +74,20 @@ namespace FAIS.Infrastructure.Data
 
         public async Task<UserRole> Update(UserRole userRole)
         {
-            return await UpdateAsync(userRole);
+            return await UpdateAsync(userRole);              
         }
+      
+        public IReadOnlyCollection<string> GetUserEmailsByRole(int roleId)
+        {
+             IReadOnlyCollection<string> emailAddresses = (from ur in _dbContext.UserRoles.AsNoTracking()
+                                                           join usrN in _dbContext.Users.AsNoTracking() on ur.UserId equals usrN.Id
+                                                           where ur.RoleId == roleId
+                                                           join ro in _dbContext.Roles.AsNoTracking() on ur.RoleId equals ro.Id
+                                                           select usrN.EmailAddress)
+                                                          .ToList();
+
+            return emailAddresses;
+        }
+
     }
 }

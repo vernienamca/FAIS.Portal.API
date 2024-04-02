@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.Infrastructure.Data;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -71,6 +72,7 @@ namespace FAIS.API.Controllers
         {
             return Ok(_roleService.GetUserRolesById(userId));
         }
+
         #endregion Get
     }
 }

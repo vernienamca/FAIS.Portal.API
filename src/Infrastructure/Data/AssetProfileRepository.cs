@@ -65,10 +65,11 @@ namespace FAIS.Infrastructure.Data
                                              Id = prf.Id,
                                              Name = prf.Name,
                                              Category = opt.Description,
+                                             CategoryId = prf.AssetCategoryId,
                                              StatusDate = opt.StatusDate,
                                              Description = prf.Description,
-                                             RcaGLId = ca.RcaGL,
-                                             RCASLId = ca.RcaSL,
+                                             RcaGLId = prf.RcaGLId,
+                                             RCASLId = prf.RcaSLId,
                                              AssetClass = prf.AssetClassId ?? 0,
                                              CostCenter = prf.CostCenter,
                                              IsActive = prf.IsActive,
@@ -77,7 +78,8 @@ namespace FAIS.Infrastructure.Data
                                              CreatedBy = prf.CreatedBy,
                                              CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                              CreatedAt = prf.CreatedAt,
-                                             UpdatedAt = prf.UpdatedAt
+                                             UpdatedAt = prf.UpdatedAt,
+                                             UpdatedByName = $"{usrU.FirstName} {usrU.LastName}"
                                          }).FirstOrDefaultAsync(t => t.Id == id);
             return await assetProfile;
         }

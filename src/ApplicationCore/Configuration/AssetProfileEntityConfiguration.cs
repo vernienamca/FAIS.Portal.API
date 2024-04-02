@@ -22,7 +22,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("ASSET_SEQ");
 
             builder.Property(e => e.Name)
-                .IsRequired()
+                .IsRequired()   
                 .HasColumnName("ASSET_NAME");
 
             builder.Property(e => e.AssetCategoryId)
@@ -50,11 +50,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("COST_CENTER");
 
             builder.Property(e => e.EconomicLife)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("ECONOMIC_LIFE");
 
             builder.Property(e => e.ResidualLife)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("RESIDUAL_LIFE");
 
             builder.Property(e => e.IsActive)
