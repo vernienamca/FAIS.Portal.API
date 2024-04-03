@@ -15,11 +15,13 @@ namespace FAIS.ApplicationCore.Services
     {
         private readonly IStringInterpolationRepository _interpolationRepository;
         private readonly ITemplateRepository _templateRepository;
+        private readonly IMapper _mapper;
 
-        public NotificationService(IStringInterpolationRepository interpolationRepository, ITemplateRepository templateRepository)
+        public NotificationService(IStringInterpolationRepository interpolationRepository, ITemplateRepository templateRepository, IMapper mapper)
         {
             _interpolationRepository = interpolationRepository;
             _templateRepository = templateRepository;
+            _mapper = mapper;
         }
 
         public IReadOnlyCollection<StringInterpolationModel> GetIntepolations()
@@ -42,20 +44,10 @@ namespace FAIS.ApplicationCore.Services
             return await _interpolationRepository.GetById(id);
         }
 
-        public async Task<StringInterpolation> AddInterpolation(StringInterpolationDTO interpolationDTO)
+        public async Task<StringInterpolation> AddInterpolation(AddStringInterpolationDTO dto)
         {
-            var interpolation = new StringInterpolation()
-            {
-                TransactionCode = interpolationDTO.TransactionCode,
-                Description = interpolationDTO.Description,
-                IsActive = interpolationDTO.IsActive,
-                StatusDate = DateTime.Now,
-                NotificationType = interpolationDTO.NotificationType,
-                CreatedBy = interpolationDTO.CreatedBy,
-                CreatedAt = DateTime.Now
-            };
-
-            return await _interpolationRepository.Add(interpolation);
+            var stringInterpolationDto = _mapper.Map<StringInterpolation>(dto);
+            return await _interpolationRepository.Add(stringInterpolationDto);
         }
 
         public async Task<Template> AddTemplate(TemplateDto templateDTO)
@@ -75,9 +67,17 @@ namespace FAIS.ApplicationCore.Services
             return await _templateRepository.Add(template);
         }
 
-        public async Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation interpolation)
+        public async Task<StringInterpolation> UpdateStringInterpolation(UpdateStringInterpolationDTO dto)
         {
-            return await _interpolationRepository.Update(interpolation);
+            var stringInterpolation = _interpolationRepository.GetById(dto.Id) ?? throw new Exception("StringInterpolationId does not exist");
+
+            if (stringInterpolation == null)
+                throw new ArgumentNullException("String Interpolation not exist.");
+
+            var mapper = _mapper.Map<StringInterpolation>(dto);
+            mapper.CreatedBy = stringInterpolation.Result.CreatedBy;
+            mapper.CreatedAt = stringInterpolation.Result.CreatedAt;
+            return await _interpolationRepository.Update(mapper);
         }
 
         public async Task<Template> UpdateTemplate(Template template)

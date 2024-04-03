@@ -104,7 +104,7 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpPost("interpolation")]
         [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
-        public async Task<IActionResult> PostCreateInterpolation(StringInterpolationDTO interpolationDTO)
+        public async Task<IActionResult> PostCreateInterpolation(AddStringInterpolationDTO interpolationDTO)
         {
             if (interpolationDTO == null)
                 throw new ArgumentNullException(nameof(interpolationDTO));
@@ -135,24 +135,23 @@ namespace FAIS.API.Controllers
         /// Puts the update string interpolation.
         /// </summary>
         /// <param name="id">The string interpolation identifier.</param>
-        /// <param name="interpolationDTO">The interpolation data object.</param>
+        /// <param name="dto">The interpolation data object.</param>
         /// <returns></returns>
         [HttpPut("interpolation/{id:int}")]
         [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
-        public async Task<IActionResult> PutUpdateInterpolation(int id, StringInterpolationDTO interpolationDTO)
+        public async Task<IActionResult> PutUpdateInterpolation(UpdateStringInterpolationDTO dto)
         {
-            var interpolation = await _notificationService.GetInterpolationById(id);
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            if (interpolationDTO.IsActive != interpolation.IsActive)
+            var interpolation = await _notificationService.GetInterpolationById(dto.Id);
+            if (dto.IsActive != interpolation.IsActive)
             {
-                interpolation.IsActive = interpolationDTO.IsActive;
-                interpolation.StatusDate = DateTime.Now;
+                interpolation.IsActive = dto.IsActive;
+                dto.StatusDate = DateTime.Now;
             }
 
-            interpolation.UpdatedBy = interpolationDTO.UpdatedBy;
-            interpolation.UpdatedAt = DateTime.Now;
-
-            return Ok(_notificationService.UpdateStringInterpolation(interpolation));
+            return Ok(_notificationService.UpdateStringInterpolation(dto));
         }
 
         /// <summary>

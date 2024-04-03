@@ -27,7 +27,9 @@ namespace FAIS.ApplicationCore.Mapping
                 .ForMember(x => x.IsRead, opt => opt.MapFrom(s => s.IsRead ? 'Y' : 'N')).ReverseMap();
             CreateMap<ProformaEntryDTO, ProformaEntry>();
             CreateMap<ProformaEntryDetailDTO, ProformaEntryDetail>();
-            CreateMap<StringInterpolationDTO, StringInterpolation>();
+            CreateMap<StringInterpolationDTO, StringInterpolation>().ReverseMap();
+            CreateMap<AddStringInterpolationDTO, StringInterpolation>().ReverseMap();
+            CreateMap<UpdateStringInterpolationDTO, StringInterpolation>().ReverseMap();
             CreateMap<CostCenterDTO, CostCenter>();
             CreateMap<VersionModel, Versions>().ReverseMap();
             CreateMap<VersionDTO, Versions>().ReverseMap();
