@@ -9,6 +9,7 @@ using FAIS.ApplicationCore.Entities.Structure;
 using System.Threading.Tasks;
 using System;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using FAIS.ApplicationCore.Models;
 
 namespace FAIS.API.Controllers
 {
@@ -68,7 +69,7 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpGet("interpolation/{id:int}")]
         [ProducesResponseType(typeof(StringInterpolationModel), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetInterpolationById(int id)
         {
             var entity = await _notificationService.GetInterpolationById(id);
             var createdBy = await _userService.GetById(entity.CreatedBy);
@@ -92,6 +93,18 @@ namespace FAIS.API.Controllers
             }
 
             return Ok(module);
+        }
+
+        /// <summary>
+        /// Gets the template by unique identifier.
+        /// </summary>
+        /// <param name="id">The template identifier.</param>
+        /// <returns></returns>
+        [HttpGet("template/{id:int}")]
+        [ProducesResponseType(typeof(TemplateModel), StatusCodes.Status200OK)]
+        public IActionResult GetTemplateById(int id)
+        {
+            return Ok(_notificationService.GetTemplateById(id));
         }
         #endregion
 
@@ -119,7 +132,7 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpPost("template")]
         [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
-        public async Task<IActionResult> PostCreateTemplate(TemplateDto templateDTO)
+        public async Task<IActionResult> PostCreateTemplate(AddTemplateDTO templateDTO)
         {
             if (templateDTO == null)
                 throw new ArgumentNullException(nameof(templateDTO));
@@ -158,21 +171,24 @@ namespace FAIS.API.Controllers
         /// Puts the update template.
         /// </summary>
         /// <param name="id">The template identifier.</param>
-        /// <param name="templateDTO">The interpolation data object.</param>
+        /// <param name="templateDTO">The template data object.</param>
         /// <returns></returns>
         [HttpPut("template/{id:int}")]
         [ProducesResponseType(typeof(Template), StatusCodes.Status200OK)]
-        public async Task<IActionResult> PutUpdateTemplate(int id, TemplateDto templateDTO)
+        public async Task<IActionResult> PutUpdateTemplate(UpdateTemplateDTO dto)
         {
-            var template = await _notificationService.GetTemplateById(id);
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            if (templateDTO.IsActive != template.IsActive)
+            var template = await _notificationService.GetTemplateById(dto.Id);
+            if (dto.IsActive != template.IsActive)
             {
-                template.IsActive = templateDTO.IsActive;
-                template.StatusDate = DateTime.Now;
+                template.IsActive = dto.IsActive;
+                dto.StatusDate = DateTime.Now;
             }
 
-            return Ok(_notificationService.UpdateTemplate(template));
+            return Ok(_notificationService.UpdateTemplate(dto));
+
         }
 
         #endregion

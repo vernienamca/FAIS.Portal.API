@@ -30,6 +30,9 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<StringInterpolationDTO, StringInterpolation>().ReverseMap();
             CreateMap<AddStringInterpolationDTO, StringInterpolation>().ReverseMap();
             CreateMap<UpdateStringInterpolationDTO, StringInterpolation>().ReverseMap();
+            CreateMap<TemplateDTO, Template>().ReverseMap();
+            CreateMap<AddTemplateDTO, Template>().ReverseMap();
+            CreateMap<UpdateTemplateDTO, Template>().ReverseMap();
             CreateMap<CostCenterDTO, CostCenter>();
             CreateMap<VersionModel, Versions>().ReverseMap();
             CreateMap<VersionDTO, Versions>().ReverseMap();

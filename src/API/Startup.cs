@@ -78,7 +78,6 @@ namespace FAIS
             services.AddScoped(typeof(ILibraryTypeRepository), typeof(LibraryTypeRepository));
             services.AddScoped(typeof(ILibraryOptionRepository), typeof(LibraryOptionRepository));
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
-            services.AddScoped(typeof(INotificationRepository), typeof(NotificationRepository));
             services.AddScoped(typeof(IStringInterpolationRepository), typeof(StringInterpolationRepository));
             services.AddScoped(typeof(ITemplateRepository), typeof(TemplateRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
