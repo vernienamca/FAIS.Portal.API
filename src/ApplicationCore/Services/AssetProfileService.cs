@@ -41,7 +41,6 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<AssetProfile> Update(UpdateAssetProfileDTO dto)
         {
-            var assetProfileDto = _mapper.Map<AssetProfile>(dto);
             var assetProfile = _repository.GetById(dto.Id) ?? throw new Exception("AssetProfileId does not exist");
 
             if (assetProfile == null)
