@@ -32,7 +32,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int CreatedBy { get; set; }
 
         [DataMember]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [DataMember]
         public int? UpdatedBy { get; set; }
