@@ -14,8 +14,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace FAIS.API.Controllers
 {
@@ -427,37 +427,62 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        [HttpPost("asset-profile-notif/{roleId:int}/{id}/{assetName}/{editMode:bool?}")]
-        public IActionResult PostNotifRole(int roleId, int? id, string? assetName, bool? editMode)
+        [HttpPost("asset-profile-notif")]
+        public IActionResult PostNotifRole([FromBody] NotifRoleDTO notifRoleDTO)
         {
-            var emails = _userRoleService.GetUserEmailsByRole(roleId);
-            var role = _roleService.GetById(roleId);
-
-            if (emails == null)
-                return Ok("Email doesn't exist for that Role.");
+            List<string> allEmails = new List<string>();
 
             var settings = _settingsService.GetById(1);
-
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
 
-            string content = GenerateEmailContent(roleId, role?.Name, assetName, id, settings.EmailAddress, settings.BaseUrl, editMode ?? false);
-
-            foreach (var email in emails)
+            foreach (var roleId in notifRoleDTO.RoleIds)
             {
-                if (!_emailService.SendEmail(email, "Notification Role", content))
+                var emails = _userRoleService.GetUserEmailsByRole(roleId);
+                var role = _roleService.GetById(roleId);
+                if (emails == null)
+                    return Ok($"Email doesn't exist for role ID {roleId}.");
+
+                allEmails.AddRange(emails);
+                string content = GenerateEmailContent(roleId, role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, notifRoleDTO.isAdmin);
+
+                foreach (var email in allEmails.Distinct())
                 {
-                    return Ok("Some emails are not sent!");
+                    if (!_emailService.SendEmail(email, "Notification Role", content))
+                    {
+                        return Ok($"Email failed!");
+                    }
                 }
             }
-            return Ok(emails);
+
+            return Ok(allEmails.Distinct());
         }
+
         #endregion Put
-        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode)
+
+        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode, bool isAdmin)
         {
             string content;
             RoleEnum role = (RoleEnum)roleId;
-            if (role == RoleEnum.ARMDLibrarian)
+
+            if ((role == RoleEnum.ARMDLibrarian && isAdmin || role == RoleEnum.PADLibrarian) && isAdmin && !editMode )
+            {
+                content = $"<h3>Dear {roleName},</h3><br/>" +
+              $"Hi Librarian, information for {assetName} was added by Administrator. You can now view the additional data.<br/><br/>" +
+              $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+              $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+              "Thank you,<br/>" + "Site Admin";
+            }
+
+            else if ((role == RoleEnum.ARMDLibrarian || role == RoleEnum.PADLibrarian) && isAdmin && editMode)
+            {
+                content = $"<h3>Dear {roleName}!,</h3><br/>" +
+              $"The asset {assetName} has been updated by Administrator. Please review the changes.<br/><br/>" +
+              $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+              $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+              "Thank you,<br/>" + "Site Admin";
+            }
+            else if (role == RoleEnum.ARMDLibrarian)
             {
                 content = $"<h3>Dear {roleName},</h3><br/>" +
                   $"Hi Armd, information for {assetName} was added. You can now view the additional data.<br/><br/>" +
@@ -474,17 +499,16 @@ namespace FAIS.API.Controllers
                    $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
                    "Thank you,<br/>" + "Site Admin";
             }
-
             else
             {
                 string htmlTemplatePath = _configuration.GetSection("EmailTemplatePath")["NotifRole"];
-                if (!System.IO.File.Exists(htmlTemplatePath))                                                                                                                                                                          
+                if (!System.IO.File.Exists(htmlTemplatePath))
                     throw new FileNotFoundException(nameof(htmlTemplatePath));
 
                 content = System.IO.File.ReadAllText(htmlTemplatePath);
                 content = content.Replace("${role}", roleName);
                 content = content.Replace("${supportemail}", supportEmail);
-                content = content.Replace("${baseurl}", baseUrl);                                                          
+                content = content.Replace("${baseurl}", baseUrl);
                 content = content.Replace("${url}", $"{baseUrl}/apps/asset-profile/edit/{id}");
                 content = content.Replace("${assetname}", assetName);
             }
