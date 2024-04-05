@@ -464,56 +464,45 @@ namespace FAIS.API.Controllers
         {
             string content;
             RoleEnum role = (RoleEnum)roleId;
+            var state = (role, isAdmin, editMode);
 
-            if ((role == RoleEnum.ARMDLibrarian && isAdmin || role == RoleEnum.PADLibrarian) && isAdmin && !editMode )
+            switch (state)
             {
-                content = $"<h3>Dear {roleName},</h3><br/>" +
-              $"Hi Librarian, information for {assetName} was added by Administrator. You can now view the additional data.<br/><br/>" +
-              $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-              $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-              "Thank you,<br/>" + "Site Admin";
-            }
+                case (RoleEnum.ARMDLibrarian, true, false):
+                case (RoleEnum.PADLibrarian, true, false):
+                    content = $"<h3>Dear {roleName},</h3><br/>" +
+                      $"Hi Librarian, information for {assetName} was added by Administrator. You can now view the additional data.<br/><br/>" +
+                      $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                      $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                      "Thank you,<br/>" + "Site Admin";
+                    break;
 
-            else if ((role == RoleEnum.ARMDLibrarian || role == RoleEnum.PADLibrarian) && isAdmin && editMode)
-            {
-                content = $"<h3>Dear {roleName}!,</h3><br/>" +
-              $"The asset {assetName} has been updated by Administrator. Please review the changes.<br/><br/>" +
-              $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-              $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-              "Thank you,<br/>" + "Site Admin";
-            }
-            else if (role == RoleEnum.ARMDLibrarian)
-            {
-                content = $"<h3>Dear {roleName},</h3><br/>" +
-                  $"Hi Armd, information for {assetName} was added. You can now view the additional data.<br/><br/>" +
-                  $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                  $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                  "Thank you,<br/>" + "Site Admin";
-            }
+                case (RoleEnum.ARMDLibrarian, true, true):
+                case (RoleEnum.PADLibrarian, true, true):
+                    content = $"<h3>Dear {roleName}!,</h3><br/>" +
+                       $"The asset {assetName} has been updated by Administrator. Please review the changes.<br/><br/>" +
+                       $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                       $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                      "Thank you,<br/>" + "Site Admin";
+                    break;
 
-            else if ((role == RoleEnum.PADLibrarian || role == RoleEnum.ARMDLibrarian) && editMode)
-            {
-                content = $"<h3>Dear {roleName}!,</h3><br/>" +
-                   $"The asset {assetName} has been updated. Please review the changes.<br/><br/>" +
-                   $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                   $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                   "Thank you,<br/>" + "Site Admin";
-            }
-            else
-            {
-                string htmlTemplatePath = _configuration.GetSection("EmailTemplatePath")["NotifRole"];
-                if (!System.IO.File.Exists(htmlTemplatePath))
-                    throw new FileNotFoundException(nameof(htmlTemplatePath));
+                case (RoleEnum.PADLibrarian, false, false):
+                    content = $"<h3>Dear {roleName},</h3><br/>" +
+                     $"Hi {roleName}, a new asset {assetName} was added. You can now view the additional data.<br/><br/>" +
+                     $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                     $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                     "Thank you,<br/>" + "Site Admin";
+                    break;
 
-                content = System.IO.File.ReadAllText(htmlTemplatePath);
-                content = content.Replace("${role}", roleName);
-                content = content.Replace("${supportemail}", supportEmail);
-                content = content.Replace("${baseurl}", baseUrl);
-                content = content.Replace("${url}", $"{baseUrl}/apps/asset-profile/edit/{id}");
-                content = content.Replace("${assetname}", assetName);
+                default: 
+                    content = $"<h3>Dear {roleName},</h3><br/>" +
+                    $"Hi {role}, information for {assetName} was updated. You can now view the additional data.<br/><br/>" +
+                    $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                    $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                    "Thank you,<br/>" + "Site Admin";
+                    break;
             }
             return content;
         }
     }
 }
-
