@@ -66,7 +66,7 @@ namespace FAIS.Infrastructure.Data
                                              Name = prf.Name,
                                              Category = opt.Description,
                                              CategoryId = prf.AssetCategoryId,
-                                             StatusDate = opt.StatusDate,
+                                             StatusDate = prf.StatusDate,
                                              Description = prf.Description,
                                              RcaGLId = prf.RcaGLId,
                                              RCASLId = prf.RcaSLId,
