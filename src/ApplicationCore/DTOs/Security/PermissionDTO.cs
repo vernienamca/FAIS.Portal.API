@@ -27,6 +27,8 @@ namespace FAIS.ApplicationCore.DTOs
         public bool IsCreate { get; set; }
         public bool IsRead { get; set; }
         public bool IsUpdate { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public int CreatedBy { get; set; }
     }
 
     public class UpdatePermissionDTO
