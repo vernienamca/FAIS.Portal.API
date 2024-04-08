@@ -14,6 +14,5 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime CreatedAt { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        //public List<string> UserRole { get; set; }
     }
 }
