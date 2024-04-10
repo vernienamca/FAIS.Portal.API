@@ -6,6 +6,8 @@ namespace FAIS.ApplicationCore.Models
     public class UserRoleModel
     {
         public int Id { get; set; }
+        public int UserRoleId { get; set; }
+        
         public string Name { get; set; }
         public string Description { get; set; }
         public IReadOnlyCollection<string> Roles { get; set; }
