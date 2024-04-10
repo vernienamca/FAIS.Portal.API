@@ -1,13 +1,11 @@
-﻿using FAIS.ApplicationCore.Entities.Security;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace FAIS.ApplicationCore.DTOs
 {
     public class UserRoleDTO
     {
         public int Id { get; set; }
+        public int UserRoleId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }

@@ -266,29 +266,36 @@ namespace FAIS.API.Controllers
             userDTO.Password = EncryptionHelper.HashPassword(generatedPassword);
             userDTO.CreatedAt = DateTime.Now;
 
-            var user = await _userService.Add(userDTO);
+            try
+            {
+                var user = await _userService.Add(userDTO);
 
-            if (userDTO.TAFG.Count > 0)
-                _userService.SetTAFGs(user.Id, userDTO.TAFG);
+                if (userDTO.TAFG.Count > 0)
+                    _userService.SetTAFGs(user.Id, userDTO.TAFG);
 
-            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
-                .GetSection("EmailTemplatePath")["UserCredential"];
+                string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                    .GetSection("EmailTemplatePath")["UserCredential"];
 
-            if (!System.IO.File.Exists(htmlTemplatePath))
-                throw new FileNotFoundException(nameof(htmlTemplatePath));
+                if (!System.IO.File.Exists(htmlTemplatePath))
+                    throw new FileNotFoundException(nameof(htmlTemplatePath));
 
-            string content = System.IO.File.ReadAllText(htmlTemplatePath);
+                string content = System.IO.File.ReadAllText(htmlTemplatePath);
 
-            var settings = _settingsService.GetById(1);
+                var settings = _settingsService.GetById(1);
 
-            content = content.Replace("${firstname}", user.FirstName);
-            content = content.Replace("${username}", user.UserName);
-            content = content.Replace("${password}", generatedPassword);
-            content = content.Replace("${baseurl}", settings.BaseUrl);
+                content = content.Replace("${firstname}", user.FirstName);
+                content = content.Replace("${username}", user.UserName);
+                content = content.Replace("${password}", generatedPassword);
+                content = content.Replace("${baseurl}", settings.BaseUrl);
 
-            _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
+                _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
 
-            return Ok(user);
+                return Ok(user);
+            } 
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         #endregion Post

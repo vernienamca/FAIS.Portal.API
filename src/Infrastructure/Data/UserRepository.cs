@@ -106,7 +106,8 @@ namespace FAIS.Infrastructure.Data
                                    orderby urr.CreatedAt
                                    select new UserRoleModel()
                                    {
-                                       Id = urr.Id,
+                                       Id = rol.Id,
+                                       UserRoleId = urr.Id,
                                        Name = rol.Name,
                                        Description = rol.Description,
                                        IsActive = urr.IsActive == 'Y',
@@ -149,7 +150,7 @@ namespace FAIS.Infrastructure.Data
                 } 
                 else
                 {
-                    var data = _dbContext.UserRoles.FirstOrDefault(t => t.UserId == userId && t.Id == role.Id);
+                    var data = _dbContext.UserRoles.FirstOrDefault(t => t.UserId == userId && t.Id == role.UserRoleId);
 
                     if ((data.IsActive == 'Y') != role.IsActive)
                     {

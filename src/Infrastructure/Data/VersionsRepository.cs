@@ -16,7 +16,7 @@ namespace FAIS.Infrastructure.Data
         {
             var versions = (from ver in _dbContext.Versions.AsNoTracking()
                             join usrC in _dbContext.Users.AsNoTracking() on ver.CreatedBy equals usrC.Id
-                            orderby ver.Id descending
+                            orderby ver.VersionDate descending
                             select new VersionModel()
                             {
                                 Id = ver.Id,
