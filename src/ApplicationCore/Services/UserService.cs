@@ -22,16 +22,19 @@ namespace FAIS.ApplicationCore.Services
         private readonly ILoginHistoryRepository _historyRepository;
         private readonly ISettingsRepository _settingsRepository;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
 
         public UserService(IUserRepository testRepository
             , ISettingsRepository settingsRepository
             , ILoginHistoryRepository historyRepository
-            , ILibraryTypeRepository iLibraryTypeRepository)
+            , ILibraryTypeRepository iLibraryTypeRepository,
+            IUserRoleRepository userRoleRepository)
         {
             _userRepository = testRepository;
             _settingsRepository = settingsRepository;
             _historyRepository = historyRepository;
             _ILibraryTypeRepository = iLibraryTypeRepository;
+            _userRoleRepository = userRoleRepository;
         }
 
         public IReadOnlyCollection<UserModel> Get()

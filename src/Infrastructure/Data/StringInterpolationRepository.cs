@@ -37,7 +37,7 @@ namespace FAIS.Infrastructure.Data
 
         public async Task<StringInterpolation> GetById(int id)
         {
-            return await _dbContext.StringInterpolations.FirstOrDefaultAsync(o => o.Id == id);
+            return await _dbContext.StringInterpolations.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<StringInterpolation> Add(StringInterpolation interpolation)

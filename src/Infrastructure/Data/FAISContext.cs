@@ -30,11 +30,14 @@ namespace FAIS.Infrastructure.Data
         public DbSet<LoginHistory> LoginHistory { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserTAFG> UserTAFGs { get; set; }
-        public DbSet<ProformaEntries> ProformaEntries { get; set; }
+        public DbSet<ProformaEntry> ProformaEntries { get; set; }
+        public DbSet<MeteringProfile> MeteringProfiles { get; set; }
+        public DbSet<ProformaEntryDetail> ProformaEntryDetails { get; set; }
         public DbSet<CostCenter> CostCenters { get; set; }
         public DbSet<Versions> Versions { get; set; }
         public DbSet<ChartOfAccounts> ChartOfAccounts { get; set; }
         public DbSet<ChartOfAccountDetails> ChartOfAccountDetails { get; set; }
+        public DbSet<AssetProfile> AssetProfile { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -59,8 +62,11 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new UserEntityConfiguration());
             builder.ApplyConfiguration(new UserRoleEntityConfiguration());
             builder.ApplyConfiguration(new UserTAFGEntityConfiguration());
-            builder.ApplyConfiguration(new ProformaEntriesEntityConfiguration());
+            builder.ApplyConfiguration(new ProformaEntryEntityConfiguration());
+            builder.ApplyConfiguration(new MeteringProfileEntityConfiguration());
+            builder.ApplyConfiguration(new ProformaEntryDetailEntityConfiguration());
             builder.ApplyConfiguration(new VersionEntityConfiguration());
+            builder.ApplyConfiguration(new AssetProfileEntityConfiguration());
 
             OnModelCreatingPartial(builder);
         }

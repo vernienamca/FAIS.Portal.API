@@ -15,11 +15,13 @@ namespace FAIS.ApplicationCore.Services
     {
         private readonly IStringInterpolationRepository _interpolationRepository;
         private readonly ITemplateRepository _templateRepository;
+        private readonly IMapper _mapper;
 
-        public NotificationService(IStringInterpolationRepository interpolationRepository, ITemplateRepository templateRepository)
+        public NotificationService(IStringInterpolationRepository interpolationRepository, ITemplateRepository templateRepository, IMapper mapper)
         {
             _interpolationRepository = interpolationRepository;
             _templateRepository = templateRepository;
+            _mapper = mapper;
         }
 
         public IReadOnlyCollection<StringInterpolationModel> GetIntepolations()
@@ -32,7 +34,7 @@ namespace FAIS.ApplicationCore.Services
             return _templateRepository.Get();
         }
 
-        public async Task<Template> GetTemplateById(int id)
+        public async Task<TemplateModel> GetTemplateById(int id)
         {
             return await _templateRepository.GetById(id);
         }
@@ -42,47 +44,42 @@ namespace FAIS.ApplicationCore.Services
             return await _interpolationRepository.GetById(id);
         }
 
-        public async Task<StringInterpolation> AddInterpolation(StringInterpolationDTO interpolationDTO)
+        public async Task<StringInterpolation> AddInterpolation(AddStringInterpolationDTO dto)
         {
-            var interpolation = new StringInterpolation()
-            {
-                TransactionCode = interpolationDTO.TransactionCode,
-                Description = interpolationDTO.Description,
-                IsActive = interpolationDTO.IsActive,
-                StatusDate = DateTime.Now,
-                NotificationType = interpolationDTO.NotificationType,
-                CreatedBy = interpolationDTO.CreatedBy,
-                CreatedAt = DateTime.Now
-            };
-
-            return await _interpolationRepository.Add(interpolation);
+            var stringInterpolationDto = _mapper.Map<StringInterpolation>(dto);
+            return await _interpolationRepository.Add(stringInterpolationDto);
         }
 
-        public async Task<Template> AddTemplate(TemplateDto templateDTO)
+        public async Task<Template> AddTemplate(AddTemplateDTO dto)
         {
-            var template = new Template()
-            {
-                Subject = templateDTO.Subject,
-                Content = templateDTO.Content,
-                Receiver = templateDTO.Receiver,
-                NotificationType = templateDTO.NotificationType,
-                IsActive = templateDTO.IsActive,
-                StatusDate = DateTime.Now,
-                CreatedBy = templateDTO.CreatedBy,
-                CreatedAt = DateTime.Now
-            };
-
+            var template = _mapper.Map<Template>(dto);
             return await _templateRepository.Add(template);
         }
 
-        public async Task<StringInterpolation> UpdateStringInterpolation(StringInterpolation interpolation)
+        public async Task<StringInterpolation> UpdateStringInterpolation(UpdateStringInterpolationDTO dto)
         {
-            return await _interpolationRepository.Update(interpolation);
+            var stringInterpolation = _interpolationRepository.GetById(dto.Id) ?? throw new Exception("StringInterpolationId does not exist");
+
+            if (stringInterpolation == null)
+                throw new ArgumentNullException("String Interpolation not exist.");
+
+            var mapper = _mapper.Map<StringInterpolation>(dto);
+            mapper.CreatedBy = stringInterpolation.Result.CreatedBy;
+            mapper.CreatedAt = stringInterpolation.Result.CreatedAt;
+            return await _interpolationRepository.Update(mapper);
         }
 
-        public async Task<Template> UpdateTemplate(Template template)
+        public async Task<Template> UpdateTemplate(UpdateTemplateDTO dto)
         {
-            return await _templateRepository.Update(template);
+            var template = _templateRepository.GetById(dto.Id) ?? throw new Exception("NotificationTemplateId does not exist");
+
+            if (template == null)
+                throw new ArgumentNullException("Notification Template not exist.");
+
+            var mapper = _mapper.Map<Template>(dto);
+            mapper.CreatedBy = template.Result.CreatedBy;
+            mapper.CreatedAt = template.Result.CreatedAt;
+            return await _templateRepository.Update(mapper);
         }
     }
 }

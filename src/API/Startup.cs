@@ -78,16 +78,19 @@ namespace FAIS
             services.AddScoped(typeof(ILibraryTypeRepository), typeof(LibraryTypeRepository));
             services.AddScoped(typeof(ILibraryOptionRepository), typeof(LibraryOptionRepository));
             services.AddScoped(typeof(ILoginHistoryRepository), typeof(LoginHistoryRepository));
-            services.AddScoped(typeof(INotificationRepository), typeof(NotificationRepository));
             services.AddScoped(typeof(IStringInterpolationRepository), typeof(StringInterpolationRepository));
             services.AddScoped(typeof(ITemplateRepository), typeof(TemplateRepository));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IPermissionRepository), typeof(PermissionRepository));
             services.AddScoped(typeof(IProformaEntriesRepository), typeof(ProformaEntriesRepository));
+            services.AddScoped(typeof(IProformaEntryDetailsRepository), typeof(ProformaEntryDetailsRepository));
+
             services.AddScoped(typeof(ICostCenterRepository), typeof(CostCenterRepository));
             services.AddScoped(typeof(IChartOfAccountsRepository), typeof(ChartOfAccountsRepository));
             services.AddScoped(typeof(IChartOfAccountDetailsRepository), typeof(ChartOfAccountDetailsRepository));
             services.AddScoped(typeof(IVersionsRepository), typeof(VersionsRepository));
+            services.AddScoped(typeof(IAssetProfileRepository), typeof(AssetProfileRepository));
+            services.AddScoped(typeof(IMeteringProfileRepository), typeof(MeteringProfilesRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
@@ -102,9 +105,12 @@ namespace FAIS
             services.AddScoped(typeof(IUserRoleRepository), typeof(UserRoleRepository));
             services.AddScoped(typeof(IPermissionService), typeof(PermissionService));
             services.AddScoped(typeof(IProformaEntriesService), typeof(ProformaEntriesService));
+            services.AddScoped(typeof(IProformaEntryDetailsService), typeof(ProformaEntryDetailsService));
             services.AddScoped(typeof(ICostCenterService), typeof(CostCenterService));
             services.AddScoped(typeof(IChartOfAccountsService), typeof(ChartOfAccountsService));
             services.AddScoped(typeof(IVersionService), typeof(VersionService));
+            services.AddScoped(typeof(IAssetProfileService), typeof(AssetProfileService));
+            services.AddScoped(typeof(IMeteringProfileService), typeof(MeteringProfileService));
 
             services.AddSwaggerGen(c =>
             {

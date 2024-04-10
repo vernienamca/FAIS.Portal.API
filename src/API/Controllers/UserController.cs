@@ -1,4 +1,6 @@
 ﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -12,6 +14,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
@@ -30,6 +33,8 @@ namespace FAIS.API.Controllers
         private readonly ISettingsService _settingsService;
         private readonly IUserRoleService _userRoleService;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
+        private readonly IRoleService _roleService;
+        private readonly IConfiguration _configuration;
 
         #endregion Variables
 
@@ -47,7 +52,9 @@ namespace FAIS.API.Controllers
             , IEmailService emailService
             , ISettingsService settingsService
             , IUserRoleService userRoleService
-            , ILibraryTypeRepository libraryTypeRepository)
+            , ILibraryTypeRepository libraryTypeRepository
+            , IRoleService roleService
+            , IConfiguration configuration)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
@@ -55,6 +62,8 @@ namespace FAIS.API.Controllers
             _settingsService = settingsService;
             _userRoleService = userRoleService;
             _ILibraryTypeRepository = libraryTypeRepository;
+            _roleService = roleService;
+            _configuration = configuration;
         }
 
         #endregion Constructor
@@ -303,7 +312,7 @@ namespace FAIS.API.Controllers
         #region Put
 
         /// <summary>
-        /// Puts the update user.
+        /// Puts the update user.                                                                                                                                                                                                                                                                      
         /// </summary>
         /// <param name="id">The user identifier.</param>
         /// <param name="isMyProfile">The is my profile flag.</param>
@@ -416,6 +425,91 @@ namespace FAIS.API.Controllers
             return Ok(await _userService.ChangePassword(userId, newPassword));
         }
 
+        /// <summary>
+        /// Sends notification for the role.
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <param name="id"></param>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPost("asset-profile-notif")]
+        public IActionResult PostNotifRole([FromBody] NotifRoleDTO notifRoleDTO)
+        {
+            List<string> allEmails = new List<string>();
+
+            var settings = _settingsService.GetById(1);
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
+            foreach (var roleId in notifRoleDTO.RoleIds)
+            {
+                var emails = _userRoleService.GetUserEmailsByRole(roleId);
+                var role = _roleService.GetById(roleId);
+                if (emails == null)
+                    return Ok($"Email doesn't exist for role ID {roleId}.");
+
+                allEmails.AddRange(emails);
+                string content = GenerateEmailContent(roleId, role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, notifRoleDTO.isAdmin);
+
+                foreach (var email in allEmails.Distinct())
+                {
+                    if (!_emailService.SendEmail(email, "Notification Role", content))
+                    {
+                        return Ok($"Email failed!");
+                    }
+                }
+            }
+
+            return Ok(allEmails.Distinct());
+        }
+
         #endregion Put
+
+        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode, bool isAdmin)
+        {
+            string content;
+            RoleEnum role = (RoleEnum)roleId;
+            var state = (role, isAdmin, editMode);
+
+            switch (state)
+            {
+                case (RoleEnum.ARMDLibrarian, true, false):
+                case (RoleEnum.PADLibrarian, true, false):
+                    content = $"<h3>Dear {roleName},</h3><br/>" +
+                      $"Hi Librarian, information for {assetName} was added by Administrator. You can now view the additional data.<br/><br/>" +
+                      $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                      $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                      "Thank you,<br/>" + "Site Admin";
+                    break;
+
+                case (RoleEnum.ARMDLibrarian, true, true):
+                case (RoleEnum.PADLibrarian, true, true):
+                    content = $"<h3>Dear {roleName}!,</h3><br/>" +
+                       $"The asset {assetName} has been updated by Administrator. Please review the changes.<br/><br/>" +
+                       $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                       $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                      "Thank you,<br/>" + "Site Admin";
+                    break;
+
+                case (RoleEnum.PADLibrarian, false, false):
+                    content = $"<h3>Dear {roleName},</h3><br/>" +
+                     $"Hi {roleName}, a new asset {assetName} was added. You can now view the additional data.<br/><br/>" +
+                     $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                     $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                     "Thank you,<br/>" + "Site Admin";
+                    break;
+
+                default: 
+                    content = $"<h3>Dear {roleName},</h3><br/>" +
+                    $"Hi {role}, information for {assetName} was updated. You can now view the additional data.<br/><br/>" +
+                    $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
+                    $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
+                    "Thank you,<br/>" + "Site Admin";
+                    break;
+            }
+            return content;
+        }
     }
 }

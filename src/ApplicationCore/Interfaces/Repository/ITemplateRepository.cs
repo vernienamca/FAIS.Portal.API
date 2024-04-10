@@ -8,7 +8,7 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface ITemplateRepository
     {
         IReadOnlyCollection<TemplateModel> Get();
-        Task<Template> GetById(int id);
+        Task<TemplateModel> GetById(int id);
         Task<Template> Add(Template interpolation);
         Task<Template> Update(Template interpolation);
 

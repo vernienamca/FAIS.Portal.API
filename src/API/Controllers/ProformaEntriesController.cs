@@ -18,13 +18,13 @@ namespace FAIS.Portal.API.Controllers
     public class ProformaEntriesController : ControllerBase
     {
         #region Variables
-        
+
         private readonly IProformaEntriesService _proformaEntriesService;
-        
+
         #endregion Variables
 
         #region Constructor
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProformaEntriesController"/> class.
         /// <param name="proformaEntriesService">The proforma entries service.</param>
@@ -43,10 +43,22 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
-        [ProducesResponseType(typeof(IReadOnlyCollection<ProformaEntriesModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<ProformaEntryModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
             return Ok(_proformaEntriesService.Get());
+        }
+
+        /// <summary>
+        /// Retrieve the chart of accounts by unique identifier.
+        /// </summary>
+        /// <param name="id">The chart of accounts identifier.</param>
+        /// <returns>The chart of accounts.</returns>
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(ProformaEntry), StatusCodes.Status200OK)]
+        public IActionResult GetById(int id)
+        {
+            return Ok(_proformaEntriesService.GetById(id));
         }
 
         #endregion
@@ -60,13 +72,13 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost]
-        [ProducesResponseType(typeof(ProformaEntries), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add([FromBody] ProformaEntriesDTO proformaEntriesDto)
+        [ProducesResponseType(typeof(ProformaEntryDetail), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Add([FromBody] ProformaEntryDTO proformaEntryDto)
         {
-            if (proformaEntriesDto == null)
-                throw new ArgumentNullException(nameof(proformaEntriesDto));
+            if (proformaEntryDto == null)
+                throw new ArgumentNullException(nameof(proformaEntryDto));
 
-            return Ok(await _proformaEntriesService.Add(proformaEntriesDto));
+            return Ok(await _proformaEntriesService.Add(proformaEntryDto));
         }
 
         #endregion Post
@@ -79,15 +91,15 @@ namespace FAIS.Portal.API.Controllers
         /// <param name="proformaEntriesDto">The proforma entry data object.</param>
         /// <returns></returns>
         [HttpPut]
-        [ProducesResponseType(typeof(ProformaEntries), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update([FromBody] UpdateProformaEntriesDTO proformaEntriesDto)
+        [ProducesResponseType(typeof(ProformaEntryDetail), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update([FromBody] ProformaEntryDTO proformaEntryDto)
         {
-            if (proformaEntriesDto == null)
-                throw new ArgumentNullException(nameof(proformaEntriesDto));
+            if (proformaEntryDto == null)
+                throw new ArgumentNullException(nameof(proformaEntryDto));
 
-            return Ok(await _proformaEntriesService.Update(proformaEntriesDto));
+            return Ok(await _proformaEntriesService.Update(proformaEntryDto));
         }
-        
+
         #endregion Put
     }
 }

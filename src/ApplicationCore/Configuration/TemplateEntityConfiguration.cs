@@ -50,18 +50,21 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("NOTIFICATION_TYPE");
 
             builder.Property(e => e.CreatedBy)
-                .HasColumnType("NUMBER(38)")
+                .IsRequired()
                 .HasColumnName("USER_CREATED");
 
             builder.Property(e => e.CreatedAt)
+                .IsRequired()
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_CREATED");
 
             builder.Property(e => e.UpdatedBy)
+                .IsRequired(false)
                 .HasColumnType("NUMBER")
                 .HasColumnName("USER_MODIFIED");
 
             builder.Property(e => e.UpdatedAt)
+                .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
         }
