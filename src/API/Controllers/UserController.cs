@@ -301,7 +301,7 @@ namespace FAIS.API.Controllers
                 _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
 
                 return Ok(user);
-            } 
+            }
             catch (Exception ex)
             {
                 throw ex;
@@ -436,7 +436,7 @@ namespace FAIS.API.Controllers
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("asset-profile-notif")]
-        public IActionResult PostNotifRole([FromBody] NotifRoleDTO notifRoleDTO)
+        public async Task<IActionResult> PostNotifRole([FromBody] NotifRoleDTO notifRoleDTO)
         {
             List<string> allEmails = new List<string>();
 
@@ -446,20 +446,26 @@ namespace FAIS.API.Controllers
 
             foreach (var roleId in notifRoleDTO.RoleIds)
             {
-                var emails = _userRoleService.GetUserEmailsByRole(roleId);
+                var emails = _userRoleService.GetUserEmailsByRole(roleId, notifRoleDTO.EditMode);
                 var role = _roleService.GetById(roleId);
+
                 if (emails == null)
                     return Ok($"Email doesn't exist for role ID {roleId}.");
 
-                allEmails.AddRange(emails);
-                string content = GenerateEmailContent(roleId, role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, notifRoleDTO.isAdmin);
-
-                foreach (var email in allEmails.Distinct())
+                foreach (var email in emails)
                 {
+                    var user = await _userService.GetByEmailAddress(email);
+                    if (user == null)
+                        continue;  
+
+                    string firstName = user.FirstName;
+                    string content = GenerateEmailContent(roleId, role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, notifRoleDTO.isAdmin, firstName);
+
                     if (!_emailService.SendEmail(email, "Notification Role", content))
                     {
-                        return Ok($"Email failed!");
+                        return Ok($"Email no content.");
                     }
+                    allEmails.Add(email);
                 }
             }
 
@@ -468,48 +474,21 @@ namespace FAIS.API.Controllers
 
         #endregion Put
 
-        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode, bool isAdmin)
+        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode, bool isAdmin, string firstName)
         {
-            string content;
-            RoleEnum role = (RoleEnum)roleId;
-            var state = (role, isAdmin, editMode);
+            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                .GetSection("EmailTemplatePath")["NotifRole"];
+            string content = System.IO.File.ReadAllText(htmlTemplatePath);
+            string stateMessage = editMode ? "updated" : "added";
+        
+            content = content.Replace("${firstname}", firstName);
+            content = content.Replace("${assetname}", assetName);
+            content = content.Replace("${url}", $"{baseUrl}/apps-asset-profile/{id}");
+            content = content.Replace("${supportemail}", supportEmail);
+            content = content.Replace("${rolename}", roleName);
+            content = content.Replace("${state}", stateMessage);
+            content = content.Replace("${baseurl}", baseUrl);
 
-            switch (state)
-            {
-                case (RoleEnum.ARMDLibrarian, true, false):
-                case (RoleEnum.PADLibrarian, true, false):
-                    content = $"<h3>Dear {roleName},</h3><br/>" +
-                      $"Hi Librarian, information for {assetName} was added by Administrator. You can now view the additional data.<br/><br/>" +
-                      $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                      $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                      "Thank you,<br/>" + "Site Admin";
-                    break;
-
-                case (RoleEnum.ARMDLibrarian, true, true):
-                case (RoleEnum.PADLibrarian, true, true):
-                    content = $"<h3>Dear {roleName}!,</h3><br/>" +
-                       $"The asset {assetName} has been updated by Administrator. Please review the changes.<br/><br/>" +
-                       $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                       $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                      "Thank you,<br/>" + "Site Admin";
-                    break;
-
-                case (RoleEnum.PADLibrarian, false, false):
-                    content = $"<h3>Dear {roleName},</h3><br/>" +
-                     $"Hi {roleName}, a new asset {assetName} was added. You can now view the additional data.<br/><br/>" +
-                     $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                     $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                     "Thank you,<br/>" + "Site Admin";
-                    break;
-
-                default: 
-                    content = $"<h3>Dear {roleName},</h3><br/>" +
-                    $"Hi {role}, information for {assetName} was updated. You can now view the additional data.<br/><br/>" +
-                    $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                    $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                    "Thank you,<br/>" + "Site Admin";
-                    break;
-            }
             return content;
         }
     }
