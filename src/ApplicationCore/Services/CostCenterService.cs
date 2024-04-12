@@ -19,10 +19,5 @@ namespace FAIS.ApplicationCore.Services
         {
             return _repository.Get();
         }
-
-        public CostCenter GetById(int id)
-        {
-            return _repository.GetById(id);
-        }
     }
 }

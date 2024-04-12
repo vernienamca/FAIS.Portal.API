@@ -91,6 +91,7 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
+
             var createdBy = await _userService.GetById(entity.CreatedBy);
 
             if (entity == null)
