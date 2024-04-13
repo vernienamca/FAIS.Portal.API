@@ -3,6 +3,7 @@ using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -74,20 +75,44 @@ namespace FAIS.Infrastructure.Data
 
         public async Task<UserRole> Update(UserRole userRole)
         {
-            return await UpdateAsync(userRole);              
+            return await UpdateAsync(userRole);
         }
-      
-        public IReadOnlyCollection<string> GetUserEmailsByRole(int roleId)
+        public IReadOnlyCollection<string> GetUserEmailsByRole(int roleId, bool? isEditMode = false)
         {
-             IReadOnlyCollection<string> emailAddresses = (from ur in _dbContext.UserRoles.AsNoTracking()
-                                                           join usrN in _dbContext.Users.AsNoTracking() on ur.UserId equals usrN.Id
-                                                           where ur.RoleId == roleId
-                                                           join ro in _dbContext.Roles.AsNoTracking() on ur.RoleId equals ro.Id
-                                                           select usrN.EmailAddress)
-                                                          .ToList();
-
+            List<string> emailAddresses = new List<string>();
+             if (roleId == (int)RoleEnum.Administrator || roleId == (int)RoleEnum.PADLibrarian)
+            {
+                emailAddresses = (from ur in _dbContext.UserRoles.AsNoTracking()
+                                  join usrN in _dbContext.Users.AsNoTracking() on ur.UserId equals usrN.Id
+                                  join ro in _dbContext.Roles.AsNoTracking() on ur.RoleId equals ro.Id
+                                  where ro.Name.Contains("PAD") || ro.Name.Contains("ARMD")
+                                  select usrN.EmailAddress)
+                                  .Distinct()
+                                  .ToList();
+            }
+      
+            else if (roleId == (int)RoleEnum.ARMDLibrarian && !isEditMode.Value)
+            {
+                emailAddresses = (from ur in _dbContext.UserRoles.AsNoTracking()
+                                  join usrN in _dbContext.Users.AsNoTracking() on ur.UserId equals usrN.Id
+                                  join ro in _dbContext.Roles.AsNoTracking() on ur.RoleId equals ro.Id
+                                  where ro.Id == (int)RoleEnum.PADLibrarian
+                                  select usrN.EmailAddress)
+                                 .Distinct()
+                                 .ToList();
+            }
+  
+            else if (roleId == (int)RoleEnum.ARMDLibrarian && isEditMode.Value)
+            {
+                emailAddresses = (from ur in _dbContext.UserRoles.AsNoTracking()
+                                  join usrN in _dbContext.Users.AsNoTracking() on ur.UserId equals usrN.Id
+                                  join ro in _dbContext.Roles.AsNoTracking() on ur.RoleId equals ro.Id
+                                  where ro.Name.Contains("PAD")
+                                  select usrN.EmailAddress)
+                                 .Distinct()
+                                 .ToList();
+            }
             return emailAddresses;
         }
-
     }
 }
