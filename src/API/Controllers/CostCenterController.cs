@@ -33,7 +33,7 @@ namespace FAIS.Portal.API.Controllers
         #region Get
 
         /// <summary>
-        /// Retrieve the list of cost centers.
+        /// Gets the list of cost centers.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -41,18 +41,6 @@ namespace FAIS.Portal.API.Controllers
         public IActionResult Get()
         {
             return Ok(_costCenterService.Get());
-        }
-
-        /// <summary>
-        /// Retrieve the cost center by unique identifier.
-        /// </summary>
-        /// <param name="id">The cost center identifier.</param>
-        /// <returns></returns>
-        [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(CostCenter), StatusCodes.Status200OK)]
-        public IActionResult GetById(int id)
-        {
-            return Ok(_costCenterService.GetById(id));
         }
 
         #endregion Get

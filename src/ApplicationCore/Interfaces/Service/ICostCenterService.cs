@@ -7,6 +7,5 @@ namespace FAIS.ApplicationCore.Interfaces.Services
     public interface ICostCenterService
     {
         IReadOnlyCollection<CostCenterModel> Get();
-        CostCenter GetById(int id);
     }
 }

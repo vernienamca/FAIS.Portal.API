@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.Infrastructure.Data;
@@ -74,5 +76,24 @@ namespace FAIS.API.Controllers
         }
 
         #endregion Get
+
+        #region Post
+
+        /// <summary>
+        /// Posts the create Role.
+        /// </summary>
+        /// <param name="dto">The Role data object.</param>
+        /// <returns></returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(Role), StatusCodes.Status200OK)]
+        public IActionResult Add([FromBody] RoleDTO dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            return Ok(_roleService.Add(dto));
+        }
+
+        #endregion
     }
 }
