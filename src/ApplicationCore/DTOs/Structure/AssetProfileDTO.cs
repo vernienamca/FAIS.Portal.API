@@ -15,6 +15,9 @@ namespace FAIS.ApplicationCore.DTOs
         public int CostCenter { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
+        public string UDF1 { get; set; }
+        public string UDF2 { get; set; }
+        public string UDF3 { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public int CreatedBy { get; set; }
@@ -33,6 +36,9 @@ namespace FAIS.ApplicationCore.DTOs
         public int CostCenter { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
+        public string UDF1 { get; set; }
+        public string UDF2 { get; set; }
+        public string UDF3 { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public int CreatedBy { get; set; }
@@ -50,6 +56,9 @@ namespace FAIS.ApplicationCore.DTOs
         public int CostCenter { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
+        public string UDF1 { get; set; }
+        public string UDF2 { get; set; }
+        public string UDF3 { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public int UpdatedBy { get; set; }
