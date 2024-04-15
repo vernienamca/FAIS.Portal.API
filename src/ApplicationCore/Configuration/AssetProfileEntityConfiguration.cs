@@ -57,6 +57,18 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("RESIDUAL_LIFE");
 
+            builder.Property(e => e.UDF1)
+                .IsRequired(false)
+                .HasColumnName("UDF1");
+
+            builder.Property(e => e.UDF2)
+                .IsRequired(false)
+                .HasColumnName("UDF2");
+
+            builder.Property(e => e.UDF3)
+                .IsRequired(false)
+                .HasColumnName("UDF3");
+
             builder.Property(e => e.IsActive)
                 .IsRequired()
                 .HasMaxLength(1)
