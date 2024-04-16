@@ -17,12 +17,15 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<TemplateModel> Get()
         {
             var templates = (from tmp in _dbContext.Templates.AsNoTracking()
-                             //join rol in _dbContext.Roles.AsNoTracking() on tmp.Receiver equals rol.Id
+                                 //join rol in _dbContext.Roles.AsNoTracking() on tmp.Receiver equals rol.Id
                              join nft in _dbContext.LibraryTypes.Where(x => x.Code == "NFT").AsNoTracking() on tmp.NotificationType equals nft.Id
                              join usrC in _dbContext.Users.AsNoTracking() on tmp.CreatedBy equals usrC.Id
-                             join usrU in _dbContext.Users.AsNoTracking() on tmp.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
-                             join rol2 in _dbContext.Roles.AsNoTracking() on tmp.Roles equals rol2.Id.ToString() into rol2x from rol2 in rol2x.DefaultIfEmpty()
-                             join usr2 in _dbContext.Users.AsNoTracking() on tmp.Users equals usr2.Id.ToString() into usr2x from usr2 in usr2x.DefaultIfEmpty()
+                             join usrU in _dbContext.Users.AsNoTracking() on tmp.UpdatedBy equals usrU.Id into usrUX
+                             from usrU in usrUX.DefaultIfEmpty()
+                             join rol2 in _dbContext.Roles.AsNoTracking() on tmp.Roles equals rol2.Id.ToString() into rol2x
+                             from rol2 in rol2x.DefaultIfEmpty()
+                             join usr2 in _dbContext.Users.AsNoTracking() on tmp.Roles equals usr2.Id.ToString() into usr2x
+                             from usr2 in usr2x.DefaultIfEmpty()
                              select new TemplateModel()
                              {
                                  Id = tmp.Id,
@@ -31,14 +34,15 @@ namespace FAIS.Infrastructure.Data
                                  ReceiverName = $"{usr2.FirstName} {usr2.LastName}" ?? rol2.Name,
                                  NotificationType = tmp.NotificationType,
                                  NotificationTypeName = nft.Name,
-                                 Roles = rol2.Name ?? string.Empty,
-                                 Users = $"{usr2.FirstName} {usr2.LastName}",
+                                 Roles = tmp.Roles,
+                                 Users = tmp.Users,
                                  Icon = tmp.Icon,
                                  IconColor = tmp.IconColor,
                                  StartDate = tmp.StartDate,
                                  StartTime = tmp.StartTime,
                                  EndDate = tmp.EndDate,
                                  EndTime = tmp.EndTime,
+                                 Target = tmp.Target,
                                  IsActive = tmp.IsActive,
                                  StatusDate = tmp.StatusDate,
                                  CreatedBy = tmp.CreatedBy,
@@ -74,14 +78,15 @@ namespace FAIS.Infrastructure.Data
                                 ReceiverName = $"{usr2.FirstName} {usr2.LastName}" ?? rol2.Name,
                                 NotificationType = tmp.NotificationType,
                                 NotificationTypeName = nft.Name,
-                                Roles = rol2.Name ?? string.Empty,
-                                Users = $"{usr2.FirstName} {usr2.LastName}",
+                                Roles = tmp.Roles,
+                                Users = tmp.Users,
                                 Icon = tmp.Icon,
                                 IconColor = tmp.IconColor,
                                 StartDate = tmp.StartDate,
                                 StartTime = tmp.StartTime,
                                 EndDate = tmp.EndDate,
                                 EndTime = tmp.EndTime,
+                                Target = tmp.Target,
                                 IsActive = tmp.IsActive,
                                 StatusDate = tmp.StatusDate,
                                 CreatedBy = tmp.CreatedBy,

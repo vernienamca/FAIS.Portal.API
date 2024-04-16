@@ -48,6 +48,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string EndTime { get; set; }
 
         [DataMember]
+        public string Target { get; set; }
+
+        [DataMember]
         public char IsActive { get; set; }
 
         [DataMember]
