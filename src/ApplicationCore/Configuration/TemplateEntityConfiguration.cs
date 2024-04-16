@@ -73,6 +73,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(250)
                 .HasColumnName("END_TIME");
 
+            builder.Property(e => e.Target)
+                .IsRequired(false)
+                .HasMaxLength(250)
+                .HasColumnName("TARGET");
+
             builder.Property(e => e.IsActive)
                 .HasMaxLength(1)
                 .HasColumnName("IS_ACTIVE");
