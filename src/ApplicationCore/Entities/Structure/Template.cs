@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.InkML;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
@@ -18,9 +19,36 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public int Receiver { get; set; }
+        
+        [DataMember]
+        public string Users { get; set; }
+
+        [DataMember]
+        public string Roles { get; set; }
+
+        [DataMember]
+        public string Icon { get; set; }
+
+        [DataMember]
+        public string IconColor { get; set; }
 
         [DataMember]
         public int? NotificationType { get; set; }
+
+        [DataMember]
+        public DateTime? StartDate { get; set; }
+
+        [DataMember]
+        public string StartTime { get; set; }
+
+        [DataMember]
+        public DateTime? EndDate { get; set; }
+
+        [DataMember]
+        public string EndTime { get; set; }
+
+        [DataMember]
+        public string Target { get; set; }
 
         [DataMember]
         public char IsActive { get; set; }
