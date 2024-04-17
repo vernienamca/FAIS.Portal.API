@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using FAIS.ApplicationCore.Models;
+using DocumentFormat.OpenXml.InkML;
 
 namespace FAIS.API.Controllers
 {
