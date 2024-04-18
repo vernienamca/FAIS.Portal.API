@@ -8,7 +8,7 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface ILibraryTypeRepository
     {
         IReadOnlyCollection<LibraryTypeModel> Get();
-        LibraryType GetById(int id);
+        Task<LibraryType> GetById(int id);
         Task<LibraryType> Add(LibraryType libraryType);
         Task<LibraryType> Update(LibraryType libraryType);
         IReadOnlyCollection<string> GetLibraryCodesById(int id, string libraryCode);
