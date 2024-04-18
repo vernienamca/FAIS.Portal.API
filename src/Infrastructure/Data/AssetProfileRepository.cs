@@ -75,6 +75,7 @@ namespace FAIS.Infrastructure.Data
                                              RCASLId = prf.RcaSLId,
                                              AssetClass = prf.AssetClassId ?? 0,
                                              CostCenter = prf.CostCenter,
+                                             AssetType = prf.AssetType,
                                              IsActive = prf.IsActive,
                                              EconomicLife = prf.EconomicLife,
                                              ResidualLife = prf.ResidualLife,

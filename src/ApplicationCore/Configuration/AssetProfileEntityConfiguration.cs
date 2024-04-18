@@ -49,6 +49,10 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("COST_CENTER");
 
+            builder.Property(e => e.AssetType)
+                .IsRequired()
+                .HasColumnName("ASSET_TYPE");
+
             builder.Property(e => e.EconomicLife)
                 .IsRequired(false)
                 .HasColumnName("ECONOMIC_LIFE");
