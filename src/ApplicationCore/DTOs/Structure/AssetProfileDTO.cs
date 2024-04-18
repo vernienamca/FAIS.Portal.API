@@ -13,6 +13,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int RcaGLId { get; set; }
         public int RcaSLId { get; set; }
         public int CostCenter { get; set; }
+        public int AssetType { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
         public string UDF1 { get; set; }
@@ -34,6 +35,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int RcaGLId { get; set; }
         public int RcaSLId { get; set; }
         public int CostCenter { get; set; }
+        public int AssetType { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
         public string UDF1 { get; set; }
@@ -54,6 +56,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int RcaGLId { get; set; }
         public int RcaSLId { get; set; }
         public int CostCenter { get; set; }
+        public int AssetType { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
         public string UDF1 { get; set; }
