@@ -22,6 +22,8 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public int CostCenter { get; set; }
         [DataMember]
+        public int AssetType { get; set; }
+        [DataMember]
         public string EconomicLife { get; set; }
         [DataMember] 
         public string ResidualLife { get; set; }

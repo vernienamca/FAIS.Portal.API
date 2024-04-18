@@ -15,6 +15,7 @@ namespace FAIS.ApplicationCore.Models
         public long RcaGLId { get; set; }
         public long RCASLId { get; set; } 
         public int CostCenter { get; set; }
+        public int AssetType { get; set; }
         public string EconomicLife { get; set; }
         public string ResidualLife { get; set; }
         public string UDF1 { get; set; }
