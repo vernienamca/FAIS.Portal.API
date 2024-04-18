@@ -103,7 +103,7 @@ namespace FAIS.API.Controllers
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Position = entity.PositionId.ToString(),
-                PositionDescription = _libraryTypeService.GetById(entity.PositionId)?.Name,
+                PositionDescription = _libraryTypeService.GetById(entity.PositionId)?.Result.Name,
                 Division = entity.DivisionId.HasValue ? entity.DivisionId.ToString() : string.Empty,
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,

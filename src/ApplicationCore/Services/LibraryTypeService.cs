@@ -25,9 +25,9 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public LibraryType GetById(int id)
+        public async Task<LibraryType> GetById(int id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetById(id);
         }
 
         public IReadOnlyCollection<string> GetLibraryCodesById (int id, string libraryCode)
@@ -45,10 +45,18 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.Add(libraryTypeDto);
         }
 
-        public async Task<LibraryType> Update(LibraryTypeDTO dto)
+        public async Task<LibraryType> Update(UpdateLibraryTypeDTO dto)
         {
-            var libraryTypeDto = _mapper.Map<LibraryType>(dto);
-            return await _repository.Update(libraryTypeDto);
+            var libraryType = _repository.GetById(dto.Id) ?? throw new Exception("Library Type ID does not exist");
+
+            if (libraryType == null)
+                throw new ArgumentNullException("Library Type not exist.");
+
+            var mapper = _mapper.Map<LibraryType>(dto);
+            mapper.CreatedBy = libraryType.Result.CreatedBy;
+            mapper.CreatedAt = libraryType.Result.CreatedAt;
+            return await _repository.Update(mapper);
+
         }
     }
 }
