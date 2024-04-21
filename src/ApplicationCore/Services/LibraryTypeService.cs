@@ -14,6 +14,7 @@ namespace FAIS.ApplicationCore.Services
     {
         private readonly ILibraryTypeRepository _repository;
         private readonly IMapper _mapper;
+
         public LibraryTypeService(ILibraryTypeRepository repository, IMapper mapper)
         {
             _repository = repository;
@@ -30,15 +31,16 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.GetById(id);
         }
 
-        public IReadOnlyCollection<string> GetLibraryCodesById (int id, string libraryCode)
+        public IReadOnlyCollection<string> GetLookupByCode(int id, string code)
         {
-            return _repository.GetLibraryCodesById(id, libraryCode);
+            return _repository.GetLookupByCode(id, code);
         }
 
         public IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode)
         {
             return _repository.GetLibrarybyCodes(libraryCode);
         }
+
         public async Task<LibraryType> Add(AddLibraryTypeDTO dto)
         {
             var libraryTypeDto = _mapper.Map<LibraryType>(dto);

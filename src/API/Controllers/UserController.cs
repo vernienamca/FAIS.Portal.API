@@ -112,7 +112,7 @@ namespace FAIS.API.Controllers
                 MobileNumber = entity.MobileNumber,
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
-                TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
+                TAFGs = _libraryTypeService.GetLookupByCode(entity.Id, "TAFG"),
                 OUFG = entity.OupFgId.HasValue ? entity.OupFgId.Value.ToString() : string.Empty,
                 LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
                 Photo = entity.Photo,
