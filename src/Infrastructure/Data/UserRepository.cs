@@ -201,7 +201,7 @@ namespace FAIS.Infrastructure.Data
 
             foreach (string tafg in userTAFGs)
             {
-                var libraryType = _dbContext.LibraryTypes.FirstOrDefault(t => t.Code == "TAFG" && t.Description == tafg);
+                var libraryType = _dbContext.LibraryTypes.FirstOrDefault(t => t.Code == "TAFG" && t.Name == tafg);
 
                 if (!tafgs.Select(s => s.TAFGName).Contains(tafg))
                 {

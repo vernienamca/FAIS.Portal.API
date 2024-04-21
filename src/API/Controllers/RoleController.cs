@@ -80,7 +80,7 @@ namespace FAIS.API.Controllers
         #region Post
 
         /// <summary>
-        /// Posts the create Role.
+        /// Posts the create role.
         /// </summary>
         /// <param name="dto">The Role data object.</param>
         /// <returns></returns>
