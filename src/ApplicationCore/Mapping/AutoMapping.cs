@@ -39,17 +39,16 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<AddVersionDTO, Versions>().ReverseMap();
             CreateMap<ChartOfAccountsDTO, ChartOfAccounts>();
             CreateMap<ChartOfAccountDetailsDTO, ChartOfAccountDetails>();
-            CreateMap<LibraryTypeDTO, LibraryType>();
-            CreateMap<AddLibraryTypeDTO, LibraryType>()
-                .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
-            CreateMap<LibraryOptions, LibraryOptionAddDto>().ReverseMap()
-                .ForMember(x=>x.Remarks, opt => opt.MapFrom(s=>s.Remark));
+            CreateMap<LibraryTypeDTO, LibraryType>().ReverseMap();
+            CreateMap<AddLibraryTypeDTO, LibraryType>().ReverseMap();
+            CreateMap<UpdateLibraryTypeDTO, LibraryType>().ReverseMap();
+            CreateMap<LibraryOptionAddDto, LibraryType>().ReverseMap();
+            CreateMap<LibraryTypeModel, LibraryType>().ReverseMap();
+            CreateMap<LibraryOptions, LibraryOptionAddDto>().ReverseMap();
             CreateMap<LibraryOptions, LibraryOptionUpdateDto>().ReverseMap()
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
             CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap()
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
-            CreateMap<LibraryType, LibraryOptionAddDto>().ReverseMap();
-            CreateMap<LibraryType, LibraryTypeModel>().ReverseMap();
             CreateMap<AssetProfileDTO, AssetProfile>();
             CreateMap<AddAssetProfileDTO, AssetProfile>();
             CreateMap<UpdateAssetProfileDTO, AssetProfile>();

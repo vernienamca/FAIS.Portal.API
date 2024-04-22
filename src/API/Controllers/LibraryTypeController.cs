@@ -64,15 +64,15 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var data = _libraryTypeService.GetById(id);
-            var createdBy = await _userService.GetById(data.CreatedBy);
-            var libraryTypeMapper = _mapper.Map<LibraryTypeModel>(data);
+            var createdBy = await _userService.GetById(data.Result.CreatedBy);
+            var libraryTypeMapper = _mapper.Map<LibraryTypeModel>(data.Result);
             libraryTypeMapper.CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}";
 
-            if (data.UpdatedBy.HasValue)
+            if (data.Result.UpdatedBy.HasValue)
             {
-                var updatedBy = await _userService.GetById(data.UpdatedBy.Value);
+                var updatedBy = await _userService.GetById(data.Result.UpdatedBy.Value);
                 libraryTypeMapper.UpdatedBy = $"{updatedBy.FirstName} {updatedBy.LastName}";
-                libraryTypeMapper.UpdatedAt = data.UpdatedAt;
+                libraryTypeMapper.UpdatedAt = data.Result.UpdatedAt;
             }
 
             return Ok(libraryTypeMapper);
@@ -108,10 +108,17 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
-        public IActionResult Update([FromBody] LibraryTypeDTO dto)
+        public IActionResult Update([FromBody] UpdateLibraryTypeDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
+
+            var lib = _libraryTypeService.GetById(dto.Id);
+            if (dto.IsActive != lib.Result.IsActive)
+            {
+                lib.Result.IsActive = dto.IsActive;
+                dto.StatusDate = DateTime.Now;
+            }
 
             return Ok(_libraryTypeService.Update(dto));
         }

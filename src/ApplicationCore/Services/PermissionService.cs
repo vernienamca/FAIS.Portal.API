@@ -36,6 +36,11 @@ namespace FAIS.ApplicationCore.Services
             return _permissionRepository.Get();
         }
 
+        public IReadOnlyCollection<PermissionModel> GetPermissions(int userId, int moduleId)
+        {
+            return _permissionRepository.GetPermissions(userId, moduleId);
+        }
+
         public async Task DeletePermission(int id)
         {
             var rolePermission = _permissionRepository.GetById(id);
@@ -76,7 +81,7 @@ namespace FAIS.ApplicationCore.Services
             return new RolePermissionModel()
             {
                 Role = roleModel,
-                Permissions = permissionModel
+                Permissions = permissionModel.OrderByDescending(x => x.CreatedAt).ToList()
             };
         }
         public List<PermissionModel> GetListPermission()
@@ -85,6 +90,7 @@ namespace FAIS.ApplicationCore.Services
             var permissionModel = _mapper.Map<List<PermissionModel>>(getPermission);
             return permissionModel;
         }
+
         public List<PermissionModel> GetListPermissionByRoleId(int roleId)
         {
             var getPermission = _permissionRepository.Get().Where(perm => perm.RoleId == roleId).ToList();
