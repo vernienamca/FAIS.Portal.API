@@ -73,5 +73,8 @@ namespace FAIS.ApplicationCore.Entities.Security
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
+
+        [DataMember]
+        public string ForcePasswordChange { get; set; }
     }
 }

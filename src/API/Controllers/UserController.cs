@@ -351,6 +351,7 @@ namespace FAIS.API.Controllers
                 }
 
                 user.DateExpired = userDTO.AccountExpiration;
+                user.ForcePasswordChange = "N";
 
                 if (!string.IsNullOrEmpty(userDTO.Photo))
                 {

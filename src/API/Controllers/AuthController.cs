@@ -129,9 +129,9 @@ namespace FAIS.Controllers
                     CreatedAt = DateTime.Now
                 });
 
-                return Ok(new { userId = user.Id, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
+                return Ok(new { userId = user.Id, isForcePasswordChange = user.ForcePasswordChange, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Ok(new { errorDescription = "Invalid username or password combination. Please try again." });
             }
