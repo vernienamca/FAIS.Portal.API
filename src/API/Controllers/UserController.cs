@@ -1,6 +1,4 @@
 ﻿using FAIS.ApplicationCore.DTOs;
-using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -22,7 +20,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -32,6 +30,7 @@ namespace FAIS.API.Controllers
         private readonly IEmailService _emailService;
         private readonly ISettingsService _settingsService;
         private readonly IUserRoleService _userRoleService;
+        private readonly IAuditLogService _auditLogService;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
         private readonly IRoleService _roleService;
         private readonly IConfiguration _configuration;
@@ -46,12 +45,14 @@ namespace FAIS.API.Controllers
         /// <param name="libraryTypeService">The library type service.</param>
         /// <param name="emailService">The email service.</param>
         /// <param name="settingsService">The settings service.</param>
+        /// <param name="auditLogService">The audit log service.</param>
         /// </summary>
         public UserController(IUserService userService
             , ILibraryTypeService libraryTypeService
             , IEmailService emailService
             , ISettingsService settingsService
             , IUserRoleService userRoleService
+            , IAuditLogService auditLogService
             , ILibraryTypeRepository libraryTypeRepository
             , IRoleService roleService
             , IConfiguration configuration)
@@ -61,6 +62,7 @@ namespace FAIS.API.Controllers
             _emailService = emailService;
             _settingsService = settingsService;
             _userRoleService = userRoleService;
+            _auditLogService = auditLogService;
             _ILibraryTypeRepository = libraryTypeRepository;
             _roleService = roleService;
             _configuration = configuration;
@@ -79,6 +81,20 @@ namespace FAIS.API.Controllers
         public IActionResult Get()
         {
             return Ok(_userService.Get());
+        }
+
+        /// <summary>
+        /// Gets the user activities by unique identifier.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("activities/{userId:int}")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<AuditLogModel>), StatusCodes.Status200OK)]
+        public IActionResult GetActivities(int userId)
+        {
+            var activities = _auditLogService.Get().Where(t => t.UserId == userId).Take(10).OrderByDescending(s => s.CreatedAt);
+
+            return Ok(activities);
         }
 
         /// <summary>
