@@ -16,7 +16,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public string Description { get; set; }
         [DataMember]
-        public int RcaGLId { get; set; }
+        public string RcaGLId { get; set; }
         [DataMember]
         public int RcaSLId { get; set; }
         [DataMember]
