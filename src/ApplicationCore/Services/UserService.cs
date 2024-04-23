@@ -113,6 +113,7 @@ namespace FAIS.ApplicationCore.Services
                 CreatedBy = userDTO.CreatedBy,
                 CreatedAt = DateTime.Now,
                 TempKey = userDTO.TempKey,
+                ForcePasswordChange = "N"
             };
 
             if (!string.IsNullOrEmpty(userDTO.OupFG))
@@ -167,6 +168,7 @@ namespace FAIS.ApplicationCore.Services
             user.StatusCode = (int)UserStatusEnum.Active;
             user.StatusDate = DateTime.Now;
             user.DateExpired = DateTime.Now.AddDays(settings.PasswordExpiry);
+            user.ForcePasswordChange = "N";
 
             return await _userRepository.Update(user);
         }
@@ -193,6 +195,7 @@ namespace FAIS.ApplicationCore.Services
         {
             var user = await _userRepository.GetById(id);
 
+            user.ForcePasswordChange = "Y";
             user.TempKey = $"{Guid.NewGuid()}-{DateTime.Now.Date.ToString().Split(' ')[0].Replace("/", string.Empty)}";
 
             await _userRepository.Update(user);
