@@ -91,7 +91,8 @@ namespace FAIS.Infrastructure.Data
                                         GroupName = mod.GroupName,
                                         IsCreate = per.IsCreate == 'Y',
                                         IsRead = per.IsRead == 'Y',
-                                        IsUpdate = per.IsUpdate == 'Y'
+                                        IsUpdate = per.IsUpdate == 'Y',
+                                        Sequence = mod.Sequence.Value
                                     }).ToListAsync();
             return permissions;
         }

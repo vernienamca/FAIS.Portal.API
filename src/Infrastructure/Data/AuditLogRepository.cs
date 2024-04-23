@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Security;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using System;
@@ -29,7 +30,8 @@ namespace FAIS.Infrastructure.Data
                                  OldValues = log.OldValues,
                                  IpAddress = log.IpAddress,
                                  CreatedBy = $"{usr.FirstName} {usr.LastName}",
-                                 CreatedAt = log.CreatedAt
+                                 CreatedAt = log.CreatedAt,
+                                 UserId = log.CreatedBy
                              })
                              .OrderByDescending(t => t.CreatedAt)
                              .Where(l => l.CreatedAt.Date == DateTime.Now.Date)
