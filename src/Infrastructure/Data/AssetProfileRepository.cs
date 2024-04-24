@@ -20,7 +20,7 @@ namespace FAIS.Infrastructure.Data
                                 join usr in _dbContext.Users.AsNoTracking() on prf.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on prf.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
                                 join opt in _dbContext.LibraryTypes.AsNoTracking() on prf.AssetCategoryId equals opt.Id into optX from opt in optX.DefaultIfEmpty()
-                                join ca in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaGLId equals ca.Id  into caX from ca in caX.DefaultIfEmpty()
+                                //join ca in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaGLId equals ca.Id  into caX from ca in caX.DefaultIfEmpty()
                                 join ch in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaSLId equals ch.Id into chX from ch in chX.DefaultIfEmpty()
                                 orderby prf.Id descending
                                 select new AssetProfileModel()
@@ -30,8 +30,8 @@ namespace FAIS.Infrastructure.Data
                                     Category = opt.Description,
                                     StatusDate = opt.StatusDate,
                                     Description = prf.Description,
-                                    RcaGLId = ca.RcaGL,
-                                    RCASLId = ca.RcaSL,
+                                    RcaGLId = string.IsNullOrEmpty(prf.RcaGLId) ? null : prf.RcaGLId.Split(',', System.StringSplitOptions.None).Select(int.Parse).ToArray(),
+                                    RCASLId = ch.RcaSL,
                                     AssetClass = prf.AssetClassId ?? 0,
                                     CostCenter = prf.CostCenter,
                                     IsActive = prf.IsActive,
@@ -58,8 +58,8 @@ namespace FAIS.Infrastructure.Data
                                          from usrU in usrUX.DefaultIfEmpty()
                                          join opt in _dbContext.LibraryTypes.AsNoTracking() on prf.AssetCategoryId equals opt.Id into optX
                                          from opt in optX.DefaultIfEmpty()
-                                         join ca in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaGLId equals ca.Id into caX
-                                         from ca in caX.DefaultIfEmpty()
+                                         //join ca in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaGLId equals ca.Id into caX
+                                         //from ca in caX.DefaultIfEmpty()
                                          join ch in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaSLId equals ch.Id into chX
                                          from ch in chX.DefaultIfEmpty()
                                          orderby prf.Id descending
@@ -71,7 +71,7 @@ namespace FAIS.Infrastructure.Data
                                              CategoryId = prf.AssetCategoryId,
                                              StatusDate = prf.StatusDate,
                                              Description = prf.Description,
-                                             RcaGLId = prf.RcaGLId,
+                                             RcaGLId = string.IsNullOrEmpty(prf.RcaGLId) ? null : prf.RcaGLId.Split(',',    System.StringSplitOptions.None).Select(int.Parse).ToArray(),
                                              RCASLId = prf.RcaSLId,
                                              AssetClass = prf.AssetClassId ?? 0,
                                              CostCenter = prf.CostCenter,
