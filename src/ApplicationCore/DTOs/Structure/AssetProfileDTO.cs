@@ -10,7 +10,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int AssetCategoryId { get; set; }
         public int? AssetClassId { get; set; }
         public string Description { get; set; }
-        public int RcaGLId { get; set; }
+        public string RcaGLId { get; set; }
         public int RcaSLId { get; set; }
         public int CostCenter { get; set; }
         public int AssetType { get; set; }
@@ -32,7 +32,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int AssetCategoryId { get; set; }
         public int? AssetClassId { get; set; }
         public string Description { get; set; }
-        public int RcaGLId { get; set; }
+        public string RcaGLId { get; set; }
         public int RcaSLId { get; set; }
         public int CostCenter { get; set; }
         public int AssetType { get; set; }
@@ -53,7 +53,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int AssetCategoryId { get; set; }
         public int? AssetClassId { get; set; }
         public string Description { get; set; }
-        public int RcaGLId { get; set; }
+        public string RcaGLId { get; set; }
         public int RcaSLId { get; set; }
         public int CostCenter { get; set; }
         public int AssetType { get; set; }
