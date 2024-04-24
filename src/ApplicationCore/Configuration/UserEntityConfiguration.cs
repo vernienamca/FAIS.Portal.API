@@ -121,6 +121,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
+
+            builder.Property(e => e.ForcePasswordChange)
+               .IsRequired(false)
+               .HasMaxLength(7)
+               .HasColumnName("FORCE_PASSWORD_CHANGE");
         }
     }
 }

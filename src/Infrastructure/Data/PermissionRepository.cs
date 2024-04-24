@@ -38,7 +38,7 @@ namespace FAIS.Infrastructure.Data
                                   IsCreate = perm.IsCreate == 'Y',
                                   IsRead = perm.IsRead == 'Y',
                                   IsUpdate = perm.IsUpdate == 'Y',
-                                  Url = mod.Url,
+                                  Url = !string.IsNullOrEmpty(mod.Url) ? mod.Url : "",
                                   Icon = mod.Icon,
                                   CreatedBy = perm.CreatedBy,
                                   CreatedByName = $"{usrC.FirstName} {usrC.LastName}",
