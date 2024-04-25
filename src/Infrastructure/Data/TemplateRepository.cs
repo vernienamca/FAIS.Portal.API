@@ -17,7 +17,6 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<TemplateModel> Get()
         {
             var templates = (from tmp in _dbContext.Templates.AsNoTracking()
-                                 //join rol in _dbContext.Roles.AsNoTracking() on tmp.Receiver equals rol.Id
                              join nft in _dbContext.LibraryTypes.Where(x => x.Code == "NFT").AsNoTracking() on tmp.NotificationType equals nft.Id
                              join usrC in _dbContext.Users.AsNoTracking() on tmp.CreatedBy equals usrC.Id
                              join usrU in _dbContext.Users.AsNoTracking() on tmp.UpdatedBy equals usrU.Id into usrUX
