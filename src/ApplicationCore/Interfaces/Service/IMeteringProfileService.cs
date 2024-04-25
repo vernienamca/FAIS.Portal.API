@@ -9,6 +9,7 @@ namespace FAIS.ApplicationCore.Interfaces.Service
     public interface IMeteringProfileService
     {
         IReadOnlyCollection<MeteringProfile> Get();
+        MeteringProfile GetById(int id);
         Task<MeteringProfile> Add(MeteringProfileDTO dto);
         Task<MeteringProfile> Update(MeteringProfileDTO dto);
     }

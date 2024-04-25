@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
@@ -20,6 +21,10 @@ namespace FAIS.ApplicationCore.Services
         public IReadOnlyCollection<MeteringProfile> Get()
         {
             return _repository.Get();
+        }
+        public MeteringProfile GetById(int id)
+        {
+            return _repository.GetById(id);
         }
         public async Task<MeteringProfile> Add(MeteringProfileDTO dto)
         {
