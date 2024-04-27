@@ -9,7 +9,6 @@ namespace FAIS.ApplicationCore.Configuration
 {
     public class MeteringProfileEntityConfiguration : IEntityTypeConfiguration<MeteringProfile>
     {
-
         public void Configure(EntityTypeBuilder<MeteringProfile> builder)
         {
             if (builder == null)
@@ -39,6 +38,10 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("METERING_POINT_NAME");
 
+            builder.Property(e => e.MeteringClass)
+                .IsRequired()
+                .HasColumnName("METERING_CLASS_SEQ");
+
             builder.Property(e => e.InstallationTypeSeq)
                 .IsRequired()
                 .HasColumnName("INSTALLATION_TYPE_SEQ");
@@ -47,9 +50,25 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("FACILITY_LOCATION_SEQ");
 
+            builder.Property(e => e.LineSegment)
+                .IsRequired(false)
+                .HasColumnName("LINE_SEGMENT");
+
             builder.Property(e => e.Remarks)
                 .IsRequired(false)
                 .HasColumnName("REMARKS");
+
+            builder.Property(e => e.UDF1)
+                .IsRequired(false)
+                .HasColumnName("UDF1");
+
+            builder.Property(e => e.UDF2)
+                .IsRequired(false)
+                .HasColumnName("UDF2");
+
+            builder.Property(e => e.UDF3)
+                .IsRequired(false)
+                .HasColumnName("UDF3");
 
             builder.Property(e => e.AdRegionSeq)
                 .IsRequired(false)
@@ -71,7 +90,6 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasMaxLength(1)
                 .HasColumnName("IS_ACTIVE");
-
 
             builder.Property(e => e.StatusDate)
                 .IsRequired()
