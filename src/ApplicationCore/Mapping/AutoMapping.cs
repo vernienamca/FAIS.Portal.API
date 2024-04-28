@@ -55,6 +55,7 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<MeteringProfileDTO, MeteringProfile>();
             CreateMap<MeteringProfile, MeteringProfileDTO>();
             CreateMap<ProjectProfile, ProjectProfileDTO>().ReverseMap();
+            CreateMap<ProjectComponent, ProjectComponentDTO>().ReverseMap();
         }        
     }
 }

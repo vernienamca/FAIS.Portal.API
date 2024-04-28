@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FAIS.ApplicationCore.Models
 {
@@ -16,5 +17,7 @@ namespace FAIS.ApplicationCore.Models
         public DateTime? UpdatedAt { get; set; }
         public int CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
+        public IEnumerable<ProjectComponentModel> ProjectComponentsDTO { get; set; }
+
     }
 }
