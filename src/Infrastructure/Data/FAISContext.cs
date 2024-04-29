@@ -1,5 +1,4 @@
-﻿
-using FAIS.ApplicationCore.AuditTrail;
+﻿using FAIS.ApplicationCore.AuditTrail;
 using FAIS.ApplicationCore.Configuration;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
@@ -12,7 +11,7 @@ namespace FAIS.Infrastructure.Data
 {
     public partial class FAISContext : DbContext
     {
-        public FAISContext(DbContextOptions<FAISContext> options) 
+        public FAISContext(DbContextOptions<FAISContext> options)
             : base(options)
         {
         }
@@ -39,6 +38,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<ChartOfAccountDetails> ChartOfAccountDetails { get; set; }
         public DbSet<AssetProfile> AssetProfile { get; set; }
         public DbSet<ProjectProfile> ProjectProfile { get; set; }
+        public DbSet<ProjectProfileComponent> ProjectProfileComponents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -69,11 +69,9 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new VersionEntityConfiguration());
             builder.ApplyConfiguration(new AssetProfileEntityConfiguration());
             builder.ApplyConfiguration(new ProjectProfileEntityConfiguration());
-
-            OnModelCreatingPartial(builder);
+            builder.ApplyConfiguration(new ProjectProfileComponentEntityConfiguration());
+            //   OnModelCreatingPartial(builder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder builder);
 
         public virtual async Task<int> SaveChangesAsync(int? userId = null)
         {
@@ -87,7 +85,7 @@ namespace FAIS.Infrastructure.Data
             ChangeTracker.DetectChanges();
 
             List<AuditEntry> auditEntries = new List<AuditEntry>();
-            foreach(EntityEntry entry in ChangeTracker.Entries())
+            foreach (EntityEntry entry in ChangeTracker.Entries())
             {
                 if (!entry.ShouldBeAudited())
                 {

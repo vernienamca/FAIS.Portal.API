@@ -43,7 +43,7 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<AddLibraryTypeDTO, LibraryType>()
                 .ForMember(x => x.IsActive, opt => opt.MapFrom(s => s.IsActive ? 'Y' : 'N'));
             CreateMap<LibraryOptions, LibraryOptionAddDto>().ReverseMap()
-                .ForMember(x=>x.Remarks, opt => opt.MapFrom(s=>s.Remark));
+                .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
             CreateMap<LibraryOptions, LibraryOptionUpdateDto>().ReverseMap()
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
             CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap()
@@ -56,6 +56,7 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<MeteringProfileDTO, MeteringProfile>();
             CreateMap<MeteringProfile, MeteringProfileDTO>();
             CreateMap<ProjectProfile, ProjectProfileDTO>().ReverseMap();
-        }        
+            CreateMap<ProjectProfileComponent, ProjectProfileComponentDTO>().ReverseMap();
+        }
     }
 }

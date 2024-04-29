@@ -1,40 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    public class ProjectProfile : BaseEntity<int>
+    public class ProjectProfileComponent : BaseEntity<int>
     {
         [DataMember]
         public int Id { get; set; }
 
         [DataMember]
-        public string ProjectName { get; set; }
+        public int ProjectProfileSeq { get; set; }
 
         [DataMember]
-        public string Remarks { get; set; }
+        public int ProjectComponentSeq { get; set; }
 
         [DataMember]
-        public string UDF1 { get; set; }
+        public string Details { get; set; }
 
         [DataMember]
-        public string UDF2 { get; set; }
+        public int? ProjectStageSeq { get; set; }
 
         [DataMember]
-        public string UDF3 { get; set; }
+        public int? TransmissionGridSeq { get; set; }
 
         [DataMember]
-        public int ProjClassSeq { get; set; }
+        public DateTime? StartDate { get; set; }
 
         [DataMember]
-        public DateTime TpsrMonth { get; set; }
+        public DateTime? TargetDate { get; set; }
 
         [DataMember]
-        public char IsActive { get; set; }
+        public DateTime? CompletionDate { get; set; }
 
         [DataMember]
-        public DateTime StatusDate { get; set; }
+        public DateTime? InspectionDate { get; set; }
+
+        [DataMember]
+        public DateTime? InitialAMRMonth { get; set; }
 
         [DataMember]
         public DateTime CreatedAt { get; set; }
@@ -47,8 +49,5 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public int? UpdatedBy { get; set; }
-
-        [DataMember]
-        public IEnumerable<ProjectProfileComponent> ProjectProfileComponents { get; set; }
     }
 }

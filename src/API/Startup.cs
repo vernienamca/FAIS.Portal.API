@@ -44,16 +44,16 @@ namespace FAIS
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-               options.TokenValidationParameters = new TokenValidationParameters
-               {
-                   ValidateIssuer = true,
-                   ValidateAudience = true,
-                   ValidateLifetime = true,
-                   ValidateIssuerSigningKey = true,
-                   ValidIssuer = "http://localhost:55653",
-                   ValidAudience = "http://localhost:55653",
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("KeyForSignInSecret@1234"))
-               };
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "http://localhost:55653",
+                    ValidAudience = "http://localhost:55653",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("KeyForSignInSecret@1234"))
+                };
             });
 
             services.AddControllers();
@@ -92,6 +92,7 @@ namespace FAIS
             services.AddScoped(typeof(IAssetProfileRepository), typeof(AssetProfileRepository));
             services.AddScoped(typeof(IMeteringProfileRepository), typeof(MeteringProfilesRepository));
             services.AddScoped(typeof(IProjectProfileRepository), typeof(ProjectProfilesRepository));
+            services.AddScoped(typeof(IProjectProfileComponentsRepository), typeof(ProjectProfileComponentsRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
@@ -113,6 +114,7 @@ namespace FAIS
             services.AddScoped(typeof(IAssetProfileService), typeof(AssetProfileService));
             services.AddScoped(typeof(IMeteringProfileService), typeof(MeteringProfileService));
             services.AddScoped(typeof(IProjectProfileService), typeof(ProjectProfileService));
+            services.AddScoped(typeof(IProjectProfileComponentService), typeof(ProjectProfileComponentService));
 
             services.AddSwaggerGen(c =>
             {
