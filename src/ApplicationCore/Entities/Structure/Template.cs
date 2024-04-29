@@ -16,9 +16,6 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public string Content { get; set; }
-
-        [DataMember]
-        public int Receiver { get; set; }
         
         [DataMember]
         public string Users { get; set; }
@@ -30,7 +27,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string Icon { get; set; }
 
         [DataMember]
-        public string IconColor { get; set; }
+        public int? IconColor { get; set; }
 
         [DataMember]
         public int? NotificationType { get; set; }
@@ -48,7 +45,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string EndTime { get; set; }
 
         [DataMember]
-        public string Target { get; set; }
+        public int Target { get; set; }
 
         [DataMember]
         public char IsActive { get; set; }

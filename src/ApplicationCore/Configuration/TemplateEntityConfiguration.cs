@@ -29,10 +29,6 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(500)
                 .HasColumnName("CONTENT");
 
-            builder.Property(e => e.Receiver)
-                .IsRequired()
-                .HasColumnName("RECEIVER");
-
             builder.Property(e => e.Users)
                 .HasMaxLength(250)
                 .HasColumnName("USERS");
@@ -46,7 +42,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("ICON");
 
             builder.Property(e => e.IconColor)
-                .HasMaxLength(250)
+                .IsRequired(false)
                 .HasColumnName("ICON_COLOR");
 
             builder.Property(e => e.NotificationType)
@@ -74,8 +70,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("END_TIME");
 
             builder.Property(e => e.Target)
-                .IsRequired(false)
-                .HasMaxLength(250)
+                .IsRequired()
                 .HasColumnName("TARGET");
 
             builder.Property(e => e.IsActive)
