@@ -9,6 +9,8 @@ namespace FAIS.ApplicationCore.Enumeration
         [Description("PAD Librarian")]
         PADLibrarian =  8,
         [Description("Administrator")]
-        Administrator = 1
+        Administrator = 1,
+        [Description("Metering Librarian")]
+        MeteringLibrarian = 13
     }
 }
