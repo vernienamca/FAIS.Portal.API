@@ -111,7 +111,7 @@ namespace FAIS.Infrastructure.Data
                                        UserRoleId = urr.Id,
                                        Name = rol.Name,
                                        Description = rol.Description,
-                                       IsActive = urr.IsActive == 'Y',
+                                       IsActive = rol.IsActive == 'Y' ? urr.IsActive == 'Y' : false,
                                        StatusDate = urr.IsActive == 'Y' ? urr.StatusDate.ToString() : string.Empty,
                                        CreatedBy = urr.CreatedBy,
                                        CreatedAt = urr.CreatedAt
