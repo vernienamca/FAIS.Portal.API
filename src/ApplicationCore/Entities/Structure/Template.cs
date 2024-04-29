@@ -33,6 +33,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int? NotificationType { get; set; }
 
         [DataMember]
+        public string Url { get; set; }
+
+        [DataMember]
         public DateTime? StartDate { get; set; }
 
         [DataMember]

@@ -45,6 +45,10 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("ICON_COLOR");
 
+            builder.Property(e => e.Url)
+                .IsRequired(false)
+                .HasColumnName("URL");
+
             builder.Property(e => e.NotificationType)
                 .IsRequired(false)
                 .HasColumnName("NOTIFICATION_TYPE");

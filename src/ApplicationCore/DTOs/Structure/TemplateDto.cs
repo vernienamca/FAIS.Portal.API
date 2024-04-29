@@ -20,6 +20,7 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime? EndDate { get; set; }
         public string EndTime { get; set; }
         public int Target { get; set; }
+        public string Url { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public int CreatedBy { get; set; }
@@ -42,6 +43,7 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime? EndDate { get; set; }
         public string EndTime { get; set; }
         public string Target { get; set; }
+        public string Url { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; } = DateTime.Now;
         public int CreatedBy { get; set; }
@@ -63,6 +65,7 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime? EndDate { get; set; }
         public string EndTime { get; set; }
         public int Target { get; set; }
+        public string Url { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
         public int UpdatedBy { get; set; }
