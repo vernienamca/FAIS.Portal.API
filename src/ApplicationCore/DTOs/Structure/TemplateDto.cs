@@ -10,7 +10,6 @@ namespace FAIS.ApplicationCore.DTOs
         public int Id { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
-        public int Receiver { get; set; }
         public string Users { get; set; }
         public string Roles { get; set; }
         public string Icon { get; set; }
@@ -33,7 +32,6 @@ namespace FAIS.ApplicationCore.DTOs
     {
         public string Subject { get; set; }
         public string Content { get; set; }
-        public int Receiver { get; set; }
         public string Users { get; set; }
         public string Roles { get; set; }
         public string Icon { get; set; }
@@ -55,7 +53,6 @@ namespace FAIS.ApplicationCore.DTOs
         public int Id { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
-        public int Receiver { get; set; }
         public string Users { get; set; }
         public string Roles { get; set; }
         public string Icon { get; set; }

@@ -30,7 +30,6 @@ namespace FAIS.Infrastructure.Data
                                  Id = tmp.Id,
                                  Subject = tmp.Subject,
                                  Content = tmp.Content,
-                                 ReceiverName = $"{usr2.FirstName} {usr2.LastName}" ?? rol2.Name,
                                  NotificationType = tmp.NotificationType,
                                  NotificationTypeName = nft.Name,
                                  Roles = tmp.Roles,
@@ -42,6 +41,7 @@ namespace FAIS.Infrastructure.Data
                                  EndDate = tmp.EndDate,
                                  EndTime = tmp.EndTime,
                                  Target = tmp.Target,
+                                 Url = tmp.Url,
                                  IsActive = tmp.IsActive,
                                  StatusDate = tmp.StatusDate,
                                  CreatedBy = tmp.CreatedBy,
@@ -60,7 +60,6 @@ namespace FAIS.Infrastructure.Data
             var test = await _dbContext.Templates.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
 
             var template = (from tmp in _dbContext.Templates.AsNoTracking()
-                            //join rol in _dbContext.Roles.AsNoTracking() on tmp.Receiver equals rol.Id
                             join nft in _dbContext.LibraryTypes.Where(x => x.Code == "NFT").AsNoTracking() on tmp.NotificationType equals nft.Id
                             join usrC in _dbContext.Users.AsNoTracking() on tmp.CreatedBy equals usrC.Id
                             join usrU in _dbContext.Users.AsNoTracking() on tmp.UpdatedBy equals usrU.Id into usrUX
@@ -74,7 +73,6 @@ namespace FAIS.Infrastructure.Data
                                 Id = tmp.Id,
                                 Subject = tmp.Subject,
                                 Content = tmp.Content,
-                                ReceiverName = $"{usr2.FirstName} {usr2.LastName}" ?? rol2.Name,
                                 NotificationType = tmp.NotificationType,
                                 NotificationTypeName = nft.Name,
                                 Roles = tmp.Roles,
@@ -86,6 +84,7 @@ namespace FAIS.Infrastructure.Data
                                 EndDate = tmp.EndDate,
                                 EndTime = tmp.EndTime,
                                 Target = tmp.Target,
+                                Url = tmp.Url,
                                 IsActive = tmp.IsActive,
                                 StatusDate = tmp.StatusDate,
                                 CreatedBy = tmp.CreatedBy,

@@ -16,10 +16,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public string Content { get; set; }
-
-        [DataMember]
-        public int Receiver { get; set; }
-        
+            
         [DataMember]
         public string Users { get; set; }
 
@@ -49,6 +46,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public string Target { get; set; }
+
+        [DataMember]
+        public string Url { get; set; }
 
         [DataMember]
         public char IsActive { get; set; }
