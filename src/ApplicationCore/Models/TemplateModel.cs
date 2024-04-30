@@ -18,7 +18,6 @@ namespace FAIS.ApplicationCore.Models
         public string StartTime { get; set; }
         public DateTime? EndDate { get; set; }
         public int Target { get; set; }
-        public string Url { get; set; }
         public string EndTime { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }

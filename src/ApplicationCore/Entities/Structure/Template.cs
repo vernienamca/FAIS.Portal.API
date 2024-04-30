@@ -51,9 +51,6 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int Target { get; set; }
 
         [DataMember]
-        public string Url { get; set; }
-
-        [DataMember]
         public char IsActive { get; set; }
 
         [DataMember]
