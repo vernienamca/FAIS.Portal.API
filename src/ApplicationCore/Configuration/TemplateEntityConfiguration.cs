@@ -42,7 +42,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("ICON");
 
             builder.Property(e => e.IconColor)
-                .HasMaxLength(250)
+                .IsRequired(false)
                 .HasColumnName("ICON_COLOR");
 
             builder.Property(e => e.Url)
@@ -74,8 +74,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("END_TIME");
 
             builder.Property(e => e.Target)
-                .IsRequired(false)
-                .HasMaxLength(250)
+                .IsRequired()
                 .HasColumnName("TARGET");
 
             builder.Property(e => e.IsActive)
