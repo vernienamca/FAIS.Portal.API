@@ -1,4 +1,5 @@
 ﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -44,6 +45,18 @@ namespace FAIS.Portal.API.Controllers
         public IActionResult Get()
         {
             return Ok(_service.Get());
+        }
+
+        /// <summary>
+        /// Gets the role by unique identifier.
+        /// </summary>
+        /// <param name="id">The role identifier.</param>
+        /// <returns></returns>
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(Role), StatusCodes.Status200OK)]
+        public IActionResult GetById(int id)
+        {
+            return Ok(_service.GetById(id));
         }
         #endregion Get
 

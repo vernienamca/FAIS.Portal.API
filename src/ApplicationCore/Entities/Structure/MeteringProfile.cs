@@ -18,11 +18,21 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public string MeteringPointName { get; set; }
         [DataMember]
+        public int MeteringClass { get; set; }
+        [DataMember]
         public int InstallationTypeSeq { get; set; }
         [DataMember]
         public int FacilityLocationSeq { get; set; }
         [DataMember]
+        public string LineSegment { get; set; }
+        [DataMember]
         public string Remarks { get; set; }
+        [DataMember]
+        public string UDF1 { get; set; }
+        [DataMember]
+        public string UDF2 { get; set; }
+        [DataMember]
+        public string UDF3 { get; set; }
         [DataMember]
         public int? AdRegionSeq { get; set; }
         [DataMember]
