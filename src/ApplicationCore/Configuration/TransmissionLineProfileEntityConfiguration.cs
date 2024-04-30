@@ -49,17 +49,17 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("SLWT");
 
-            builder.Property(e => e.ConductorSize)
-                .IsRequired()
-                .HasColumnName("CONDUCTOR_SIZE");
+            //builder.Property(e => e.ConductorSize)
+            //    .IsRequired()
+            //    .HasColumnName("CONDUCTOR_SIZE");
 
-            builder.Property(e => e.EconomicLife)
-                .IsRequired(false)
-                .HasColumnName("ECONOMIC_LIFE");
+            //builder.Property(e => e.EconomicLife)
+            //    .IsRequired(false)
+            //    .HasColumnName("ECONOMIC_LIFE");
 
-            builder.Property(e => e.ResidualLife)
-                .IsRequired(false)
-                .HasColumnName("RESIDUAL_LIFE");
+            //builder.Property(e => e.ResidualLife)
+            //    .IsRequired(false)
+            //    .HasColumnName("RESIDUAL_LIFE");
 
             builder.Property(e => e.UDF1)
                 .IsRequired(false)
