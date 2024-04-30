@@ -20,7 +20,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -34,6 +34,7 @@ namespace FAIS.API.Controllers
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
         private readonly IRoleService _roleService;
         private readonly IConfiguration _configuration;
+        private readonly IModuleService _moduleService;
 
         #endregion Variables
 
@@ -55,7 +56,8 @@ namespace FAIS.API.Controllers
             , IAuditLogService auditLogService
             , ILibraryTypeRepository libraryTypeRepository
             , IRoleService roleService
-            , IConfiguration configuration)
+            , IConfiguration configuration,
+              IModuleService moduleService)
         {
             _userService = userService;
             _libraryTypeService = libraryTypeService;
@@ -66,6 +68,7 @@ namespace FAIS.API.Controllers
             _ILibraryTypeRepository = libraryTypeRepository;
             _roleService = roleService;
             _configuration = configuration;
+            _moduleService = moduleService;
         }
 
         #endregion Constructor
@@ -476,7 +479,7 @@ namespace FAIS.API.Controllers
                         continue;  
 
                     string firstName = user.FirstName;
-                    string content = GenerateEmailContent(roleId, role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, notifRoleDTO.isAdmin, firstName);
+                    string content = GenerateEmailContent(role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode,firstName,notifRoleDTO.ModuleId);
 
                     if (!_emailService.SendEmail(email, "Notification Role", content))
                     {
@@ -491,20 +494,20 @@ namespace FAIS.API.Controllers
 
         #endregion Put
 
-        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode, bool isAdmin, string firstName)
+        private string GenerateEmailContent(string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode,string firstName, int moduleId)
         {
-            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
-                .GetSection("EmailTemplatePath")["NotifRole"];
+            var url = _moduleService.GetById (moduleId);
+            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("EmailTemplatePath")["NotifRole"];
             string content = System.IO.File.ReadAllText(htmlTemplatePath);
             string stateMessage = editMode ? "updated" : "added";
-        
             content = content.Replace("${firstname}", firstName);
             content = content.Replace("${assetname}", assetName);
-            content = content.Replace("${url}", $"{baseUrl}/apps-asset-profile/{id}");
+            content = content.Replace("${url}", $"{baseUrl}{url.Url}/{id}");
             content = content.Replace("${supportemail}", supportEmail);
             content = content.Replace("${rolename}", roleName);
             content = content.Replace("${state}", stateMessage);
             content = content.Replace("${baseurl}", baseUrl);
+            content = content.Replace("${modulename}", url.Name);
 
             return content;
         }
