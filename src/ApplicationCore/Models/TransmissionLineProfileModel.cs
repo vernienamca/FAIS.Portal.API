@@ -1,58 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 
-namespace FAIS.ApplicationCore.Entities.Structure
+namespace FAIS.ApplicationCore.Models
 {
-    public class TransmissionLineProfile : BaseEntity<int>
+    public class TransmissionLineProfileModel
     {
-        [DataMember]
         public int Id { get; set; }
-        [DataMember]
         public int LineStretch { get; set; }
-        [DataMember]
-        public int VoltageId{ get; set; }
-        [DataMember]
+        public int VoltageId { get; set; }
         public int ST { get; set; }
-        [DataMember]
         public int SP { get; set; }
-        [DataMember]
         public int CP { get; set; }
-        [DataMember]
         public int WP { get; set; }
-        [DataMember]
         public int? SLWT { get; set; }
-        [DataMember]
         public DateTime? InstallationDate { get; set; }
-        [DataMember]
         public int? RouteLength { get; set; }
-        [DataMember]
         public int? NoCircuitId { get; set; }
-        [DataMember]
         public int? CircuitLength { get; set; }
-        [DataMember]
         public int? NoConductor { get; set; }
-
-        [DataMember]
         public string ConductorSize { get; set; }
-        [DataMember]
         public string Remarks { get; set; }
-        [DataMember]
         public string UDF1 { get; set; }
-        [DataMember]
         public string UDF2 { get; set; }
-        [DataMember]
         public string UDF3 { get; set; }
-        [DataMember]
         public char IsActive { get; set; }
-        [DataMember]
         public DateTime StatusDate { get; set; }
-        [DataMember]
         public int CreatedBy { get; set; }
-        [DataMember]
+        public string CreatedByName { get; set; }
         public DateTime CreatedAt { get; set; }
-        [DataMember]
         public int? UpdatedBy { get; set; }
-        [DataMember]
+        public string UpdatedByName { get; set; } = string.Empty;
         public DateTime? UpdatedAt { get; set; }
     }
 }

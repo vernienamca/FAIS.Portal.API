@@ -22,7 +22,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("TRANS_LINE_SEQ");
 
             builder.Property(e => e.LineStretch)
-                .IsRequired()   
+                .IsRequired()
                 .HasColumnName("LINE_STRETCH");
 
             builder.Property(e => e.VoltageId)
@@ -30,7 +30,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("VOLTAGE_SEQ");
 
             builder.Property(e => e.ST)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("ST");
 
             builder.Property(e => e.SP)
@@ -38,28 +38,46 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("SP");
 
             builder.Property(e => e.CP)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("CP");
 
             builder.Property(e => e.WP)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("WP");
 
             builder.Property(e => e.SLWT)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("SLWT");
 
-            //builder.Property(e => e.ConductorSize)
-            //    .IsRequired()
-            //    .HasColumnName("CONDUCTOR_SIZE");
+            builder.Property(e => e.InstallationDate)
+                .IsRequired()
+                .HasColumnType("datetime")
+                .HasColumnName("INSTALLATION_DATE");
 
-            //builder.Property(e => e.EconomicLife)
-            //    .IsRequired(false)
-            //    .HasColumnName("ECONOMIC_LIFE");
+            builder.Property(e => e.RouteLength)
+                .IsRequired(false)
+                .HasColumnName("ROUTE_LENGTH");
 
-            //builder.Property(e => e.ResidualLife)
-            //    .IsRequired(false)
-            //    .HasColumnName("RESIDUAL_LIFE");
+            builder.Property(e => e.NoCircuitId)
+                .IsRequired(false)
+                .HasColumnName("NO_CIRCUIT_SEQ");
+
+            builder.Property(e => e.CircuitLength)
+                .IsRequired(false)
+                .HasColumnName("CIRCUIT_LENGTH");
+
+            builder.Property(e => e.NoConductor)
+                .IsRequired(false)
+                .HasColumnName("NO_CONDUCTOR");
+
+            builder.Property(e => e.ConductorSize)
+                .IsRequired(false)
+                .HasMaxLength(50)
+                .HasColumnName("CONDUCTOR_SIZE");
+
+            builder.Property(e => e.Remarks)
+                .IsRequired(false)
+                .HasColumnName("REMARKS");
 
             builder.Property(e => e.UDF1)
                 .IsRequired(false)
@@ -80,6 +98,7 @@ namespace FAIS.ApplicationCore.Configuration
 
             builder.Property(e => e.StatusDate)
                 .IsRequired()
+                .HasColumnType("datetime")
                 .HasColumnName("STATUS_DATE");
 
             builder.Property(e => e.CreatedBy)
@@ -87,13 +106,13 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("USER_CREATED");
 
             builder.Property(e => e.CreatedAt)
-               .IsRequired()
-               .HasColumnType("datetime")
-               .HasColumnName("DATE_CREATED");
+                .IsRequired()
+                .HasColumnType("datetime")
+                .HasColumnName("DATE_CREATED");
 
             builder.Property(e => e.UpdatedBy)
-              .IsRequired(false)
-              .HasColumnName("USER_MODIFIED");
+                .IsRequired(false)
+                .HasColumnName("USER_MODIFIED");
 
             builder.Property(e => e.UpdatedAt)
                 .IsRequired(false)
