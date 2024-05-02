@@ -3,6 +3,7 @@ using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Service;
+using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,6 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
     public class MeteringProfileController : ControllerBase
     {
         #region Variables
@@ -43,7 +43,7 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
-        [ProducesResponseType(typeof(IReadOnlyCollection<MeteringProfile>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<MeteringProfileModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
             return Ok(_service.Get());
@@ -99,7 +99,7 @@ namespace FAIS.Portal.API.Controllers
         /// <param name="id">The role identifier.</param>
         /// <returns></returns>
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(Role), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MeteringProfileModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
