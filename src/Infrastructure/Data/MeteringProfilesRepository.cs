@@ -21,17 +21,35 @@ namespace FAIS.Infrastructure.Data
                                     join usr in _dbContext.Users.AsNoTracking() on metering.CreatedBy equals usr.Id
                                     join usrU in _dbContext.Users.AsNoTracking() on metering.UpdatedBy equals usrU.Id into usrUX
                                     from usrU in usrUX.DefaultIfEmpty()
+                                    join library_type in _dbContext.LibraryTypes.AsNoTracking() on metering.InstallationTypeSeq equals library_type.Id into library_typeUX
+                                    from library_type in library_typeUX.DefaultIfEmpty()
+                                    join meteringType in _dbContext.LibraryTypes.AsNoTracking() on metering.MeteringClass equals meteringType.Id into meteringTypeUX
+                                    from meteringType in meteringTypeUX.DefaultIfEmpty()
+                                    join transmissionGrid in _dbContext.LibraryTypes.AsNoTracking() on metering.MeteringClass equals transmissionGrid.Id into transmissionGridUX
+                                    from transmissionGrid in transmissionGridUX.DefaultIfEmpty()
+                                    join district in _dbContext.LibraryTypes.AsNoTracking() on metering.MeteringClass equals district.Id into districtUX
+                                    from district in districtUX.DefaultIfEmpty()
+                                    join facility in _dbContext.LibraryTypes.AsNoTracking() on metering.MeteringClass equals facility.Id into facilityUX
+                                    from facility in facilityUX.DefaultIfEmpty()
                                     orderby metering.Id descending
                                     select new MeteringProfileModel()
                                     {
                                         Id = metering.Id,
                                         TransGrid = metering.TransGrid,
+                                        TransGridDescription = transmissionGrid.Description,
                                         DistrictSeq = metering.DistrictSeq,
+                                        DistrictDescription = district.Description,
                                         Customer = metering.Customer,
                                         MeteringPointName = metering.MeteringPointName,
+                                        MeteringClassDescription = meteringType.Description,
+                                        InstallationTypeDescription = library_type.Description,
                                         InstallationTypeSeq = metering.InstallationTypeSeq,
                                         FacilityLocationSeq = metering.FacilityLocationSeq,
+                                        FacilityLocationDescription = facility.Description,
                                         Remarks = metering.Remarks,
+                                        UDF1 = metering.UDF1,
+                                        UDF2 = metering.UDF2,
+                                        UDF3 = metering.UDF3,
                                         AdRegionSeq = metering.AdRegionSeq,
                                         AdProvSeq = metering.AdProvSeq,
                                         AdMunSeq = metering.AdMunSeq,
@@ -54,17 +72,35 @@ namespace FAIS.Infrastructure.Data
                                    join usr in _dbContext.Users.AsNoTracking() on metering.CreatedBy equals usr.Id
                                    join usrU in _dbContext.Users.AsNoTracking() on metering.UpdatedBy equals usrU.Id into usrUX
                                    from usrU in usrUX.DefaultIfEmpty()
+                                   join library_type in _dbContext.LibraryTypes.AsNoTracking() on metering.InstallationTypeSeq equals library_type.Id into library_typeUX
+                                   from library_type in library_typeUX.DefaultIfEmpty()
+                                   join meteringType in _dbContext.LibraryTypes.AsNoTracking() on metering.MeteringClass equals meteringType.Id into meteringTypeUX
+                                   from meteringType in meteringTypeUX.DefaultIfEmpty()
+                                   join transmissionGrid in _dbContext.LibraryTypes.AsNoTracking() on metering.MeteringClass equals transmissionGrid.Id into transmissionGridUX
+                                   from transmissionGrid in transmissionGridUX.DefaultIfEmpty()
+                                   join district in _dbContext.LibraryTypes.AsNoTracking() on metering.MeteringClass equals district.Id into districtUX
+                                   from district in districtUX.DefaultIfEmpty()
+                                   join facility in _dbContext.LibraryTypes.AsNoTracking() on metering.MeteringClass equals facility.Id into facilityUX
+                                   from facility in facilityUX.DefaultIfEmpty()
                                    orderby metering.Id descending
                                    select new MeteringProfileModel()
                                    {
                                        Id = metering.Id,
                                        TransGrid = metering.TransGrid,
+                                       TransGridDescription = transmissionGrid.Description,
                                        DistrictSeq = metering.DistrictSeq,
+                                       DistrictDescription = district.Description,
                                        Customer = metering.Customer,
                                        MeteringPointName = metering.MeteringPointName,
+                                       MeteringClassDescription = meteringType.Description,
+                                       InstallationTypeDescription = library_type.Description,
                                        InstallationTypeSeq = metering.InstallationTypeSeq,
                                        FacilityLocationSeq = metering.FacilityLocationSeq,
+                                       FacilityLocationDescription = facility.Description,
                                        Remarks = metering.Remarks,
+                                       UDF1 = metering.UDF1,
+                                       UDF2 = metering.UDF2,
+                                       UDF3 = metering.UDF3,
                                        AdRegionSeq = metering.AdRegionSeq,
                                        AdProvSeq = metering.AdProvSeq,
                                        AdMunSeq = metering.AdMunSeq,

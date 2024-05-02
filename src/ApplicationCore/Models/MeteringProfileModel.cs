@@ -9,12 +9,22 @@ namespace FAIS.ApplicationCore.Models
     {
         public int Id { get; set; }
         public int TransGrid { get; set; }
+        public string TransGridDescription { get; set; }
         public int DistrictSeq { get; set; }
+        public string DistrictDescription { get; set; }
         public string Customer { get; set; }
         public string MeteringPointName { get; set; }
+        public string MeteringClassDescription { get; set; }
+        public int MeteringClass { get; set; }
+        public string InstallationTypeDescription { get; set; }
         public int InstallationTypeSeq { get; set; }
         public int FacilityLocationSeq { get; set; }
+        public string FacilityLocationDescription { get; set; }
+        public string LineSegment { get; set; }
         public string Remarks { get; set; }
+        public string UDF1 { get; set; }
+        public string UDF2 { get; set; }
+        public string UDF3 { get; set; }
         public int? AdRegionSeq { get; set; }
         public int? AdProvSeq { get; set; }
         public int? AdMunSeq { get; set; }
