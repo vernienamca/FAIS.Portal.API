@@ -20,10 +20,12 @@ namespace FAIS.ApplicationCore.Models
         public int? AdMunSeq { get; set; }
         public int? AdBrgySeq { get; set; }
         public char IsActive { get; set; }
+        public string CreatedByName { get; set; }
         public DateTime StatusDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public int CreatedBy { get; set; }
+        public string UpdatedByName { get; set; } = string.Empty;
         public int? UpdatedBy { get; set; }
     }
 }

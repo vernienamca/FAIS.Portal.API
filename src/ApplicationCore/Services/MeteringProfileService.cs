@@ -5,6 +5,7 @@ using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
+using FAIS.ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,12 +22,12 @@ namespace FAIS.ApplicationCore.Services
             _mapper = mapper;
         }
 
-        public IReadOnlyCollection<MeteringProfile> Get()
+        public IReadOnlyCollection<MeteringProfileModel> Get()
         {
             return _repository.Get();
         }
 
-        public MeteringProfile GetById(int id)
+        public MeteringProfileModel GetById(int id)
         {
             return _repository.GetById(id);
         }
@@ -40,6 +41,10 @@ namespace FAIS.ApplicationCore.Services
         public async Task<MeteringProfile> Update(MeteringProfileDTO dto)
         {
             var meteringProfile = _mapper.Map<MeteringProfile>(dto);
+
+            meteringProfile.CreatedBy = dto.CreatedBy;
+            meteringProfile.CreatedAt = dto.CreatedAt;
+
             return await _repository.Update(meteringProfile);
         }
 

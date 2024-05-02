@@ -1,7 +1,8 @@
 ﻿using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Structure;
-using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Interfaces.Repository;
+using FAIS.ApplicationCore.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,14 +15,68 @@ namespace FAIS.Infrastructure.Data
         {
         }
 
-        public IReadOnlyCollection<MeteringProfile> Get()
+        public IReadOnlyCollection<MeteringProfileModel> Get()
         {
-            return _dbContext.MeteringProfiles.ToList();
+            var meteringProfiles = (from metering in _dbContext.MeteringProfiles.AsNoTracking()
+                                    join usr in _dbContext.Users.AsNoTracking() on metering.CreatedBy equals usr.Id
+                                    join usrU in _dbContext.Users.AsNoTracking() on metering.UpdatedBy equals usrU.Id into usrUX
+                                    from usrU in usrUX.DefaultIfEmpty()
+                                    orderby metering.Id descending
+                                    select new MeteringProfileModel()
+                                    {
+                                        Id = metering.Id,
+                                        TransGrid = metering.TransGrid,
+                                        DistrictSeq = metering.DistrictSeq,
+                                        Customer = metering.Customer,
+                                        MeteringPointName = metering.MeteringPointName,
+                                        InstallationTypeSeq = metering.InstallationTypeSeq,
+                                        FacilityLocationSeq = metering.FacilityLocationSeq,
+                                        Remarks = metering.Remarks,
+                                        AdRegionSeq = metering.AdRegionSeq,
+                                        AdProvSeq = metering.AdProvSeq,
+                                        AdMunSeq = metering.AdMunSeq,
+                                        AdBrgySeq = metering.AdBrgySeq,
+                                        IsActive = metering.IsActive,
+                                        CreatedBy = metering.CreatedBy,
+                                        CreatedByName = $"{usr.FirstName} {usr.LastName}",
+                                        CreatedAt = metering.CreatedAt,
+                                        UpdatedBy = metering.UpdatedBy,
+                                        UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                                        UpdatedAt = metering.UpdatedAt
+                                    }).ToList();
+
+            return meteringProfiles;
         }
 
-        public MeteringProfile GetById(int id)
+        public MeteringProfileModel GetById(int id)
         {
-            var meteringProfile = _dbContext.MeteringProfiles.FirstOrDefault(t => t.Id == id);
+            var meteringProfile = (from metering in _dbContext.MeteringProfiles.AsNoTracking()
+                                   join usr in _dbContext.Users.AsNoTracking() on metering.CreatedBy equals usr.Id
+                                   join usrU in _dbContext.Users.AsNoTracking() on metering.UpdatedBy equals usrU.Id into usrUX
+                                   from usrU in usrUX.DefaultIfEmpty()
+                                   orderby metering.Id descending
+                                   select new MeteringProfileModel()
+                                   {
+                                       Id = metering.Id,
+                                       TransGrid = metering.TransGrid,
+                                       DistrictSeq = metering.DistrictSeq,
+                                       Customer = metering.Customer,
+                                       MeteringPointName = metering.MeteringPointName,
+                                       InstallationTypeSeq = metering.InstallationTypeSeq,
+                                       FacilityLocationSeq = metering.FacilityLocationSeq,
+                                       Remarks = metering.Remarks,
+                                       AdRegionSeq = metering.AdRegionSeq,
+                                       AdProvSeq = metering.AdProvSeq,
+                                       AdMunSeq = metering.AdMunSeq,
+                                       AdBrgySeq = metering.AdBrgySeq,
+                                       IsActive = metering.IsActive,
+                                       CreatedBy = metering.CreatedBy,
+                                       CreatedByName = $"{usr.FirstName} {usr.LastName}",
+                                       CreatedAt = metering.CreatedAt,
+                                       UpdatedBy = metering.UpdatedBy,
+                                       UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                                       UpdatedAt = metering.UpdatedAt
+                                   }).FirstOrDefault(t => t.Id == id);
 
             return meteringProfile;
         }
