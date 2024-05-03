@@ -46,7 +46,6 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("SL_NO_SEQ");
 
             builder.Property(e => e.CostCenter)
-                .IsRequired()
                 .HasColumnName("COST_CENTER");
 
             builder.Property(e => e.AssetType)
