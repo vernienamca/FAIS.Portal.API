@@ -60,7 +60,6 @@ namespace FAIS.Infrastructure.Data
                                         CreatedAt = metering.CreatedAt,
                                         UpdatedBy = metering.UpdatedBy,
                                         UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                        UpdatedAt = metering.UpdatedAt
                                     }).ToList();
 
             return meteringProfiles;
@@ -93,6 +92,8 @@ namespace FAIS.Infrastructure.Data
                                        Customer = metering.Customer,
                                        MeteringPointName = metering.MeteringPointName,
                                        MeteringClassDescription = meteringType.Description,
+                                       MeteringClass = metering.MeteringClass,
+                                       LineSegment = metering.LineSegment,
                                        InstallationTypeDescription = library_type.Description,
                                        InstallationTypeSeq = metering.InstallationTypeSeq,
                                        FacilityLocationSeq = metering.FacilityLocationSeq,
@@ -111,7 +112,8 @@ namespace FAIS.Infrastructure.Data
                                        CreatedAt = metering.CreatedAt,
                                        UpdatedBy = metering.UpdatedBy,
                                        UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                       UpdatedAt = metering.UpdatedAt
+                                       UpdatedAt = metering.UpdatedAt,
+                                       StatusDate = metering.StatusDate,
                                    }).FirstOrDefault(t => t.Id == id);
 
             return meteringProfile;

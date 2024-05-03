@@ -502,7 +502,7 @@ namespace FAIS.API.Controllers
             string stateMessage = editMode ? "updated" : "added";
             content = content.Replace("${firstname}", firstName);
             content = content.Replace("${assetname}", assetName);
-            content = content.Replace("${url}", $"{baseUrl}{url.Url}/{id}");
+            content = content.Replace("${url}", $"{baseUrl}{url.Url}/edit/{id}");
             content = content.Replace("${supportemail}", supportEmail);
             content = content.Replace("${rolename}", roleName);
             content = content.Replace("${state}", stateMessage);
