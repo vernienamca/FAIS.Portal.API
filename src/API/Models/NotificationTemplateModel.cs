@@ -8,7 +8,6 @@ namespace FAIS.Portal.API.Models
         public int Id { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
-        public string Receiver { get; set; }
         public string NotificationType { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }
