@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
-using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Services
@@ -39,13 +40,57 @@ namespace FAIS.ApplicationCore.Services
 
             var projectProfileResult = await _repository.Add(projectProfile);
 
-            //Check proforma entry details
+            ////Check project profile details
             if (projectProfileComponents != null)
             {
                 foreach (var component in projectProfileComponents)
                 {
-                    component.ProjectProfileSeq = projectProfileResult.Id;
+                    component.ProjectProfileId = projectProfileResult.Id;
                     await _componentsRepository.Add(component);
+                }
+            }
+            return projectProfileResult;
+        }
+
+        public async Task<ProjectProfile> Update(ProjectProfileDTO projectProfileDTO)
+        {
+            var projectProfile = _mapper.Map<ProjectProfile>(projectProfileDTO);
+            var projectProfileComponents = _mapper.Map<List<ProjectProfileComponent>>(projectProfileDTO.ProjectProfileComponentsDTO);
+
+            var projectProfileResult = await _repository.Update(projectProfile);
+
+            if (projectProfileResult != null)
+            {
+                var components = _componentsRepository.GetById(projectProfileResult.Id);
+                if (components != null)
+                {
+                    if (components.Count > 0 && components.Count != projectProfileComponents.Count)
+                    {
+                        foreach (var component in components.Where(o => !projectProfileComponents.Select(a => a.Id).Contains(o.Id)))
+                        {
+                            if (component.RemoveAt == null)
+                            {
+                                component.RemoveAt = DateTime.Now;
+                                await _componentsRepository.Update(component);
+                            }
+                        }
+                    }
+                }
+
+                if (projectProfileComponents != null && projectProfileComponents.Count > 0)
+                {
+                    foreach (var item in projectProfileComponents)
+                    {
+                        if (item.Id > 0)
+                        {
+                            await _componentsRepository.Update(item);
+                        }
+                        else
+                        {
+                            item.ProjectProfileId = projectProfileResult.Id;
+                            await _componentsRepository.Add(item);
+                        }
+                    }
                 }
             }
             return projectProfileResult;

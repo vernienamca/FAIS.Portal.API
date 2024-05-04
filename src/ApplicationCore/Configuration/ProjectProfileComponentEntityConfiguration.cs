@@ -20,13 +20,13 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("PROFILE_COMP_SEQ");
 
-            builder.Property(e => e.ProjectProfileSeq)
+            builder.Property(e => e.ProjectProfileId)
                 .IsRequired()
                 .HasColumnName("PROFILE_SEQ");
 
-            builder.Property(e => e.ProjectComponentSeq)
-                .IsRequired()
-                .HasColumnName("PROJECT_COMP_SEQ");
+            //builder.Property(e => e.ProjectComponentSeq)
+            //    .IsRequired()
+            //    .HasColumnName("PROJECT_COMP_SEQ");
 
             builder.Property(e => e.Details)
               .IsRequired(false)
@@ -82,6 +82,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("DATE_MODIFIED")
                 .HasColumnType("datetime");
+
+            builder.Property(e => e.RemoveAt)
+               .IsRequired(false)
+               .HasColumnName("DATE_REMOVED")
+               .HasColumnType("datetime");
         }
     }
 }

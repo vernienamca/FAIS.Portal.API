@@ -23,7 +23,7 @@ namespace FAIS.Infrastructure.Data
 
             if (projectProfile != null)
             {
-                var projectProfileComponents = _dbContext.ProjectProfileComponents.Where(t => t.ProjectProfileSeq == id).ToList();
+                var projectProfileComponents = _dbContext.ProjectProfileComponents.Where(t => t.ProjectProfileId == id).ToList();
                 projectProfile.ProjectProfileComponents = projectProfileComponents;
 
                 return projectProfile;

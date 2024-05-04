@@ -6,8 +6,7 @@ namespace FAIS.ApplicationCore.DTOs
     public class ProjectProfileComponentDTO
     {
         public int Id { get; set; }
-        public int ProjectProfileSeq { get; set; }
-        public int ProjectComponentSeq { get; set; }
+        public int ProjectProfileId { get; set; }
         public string Details { get; set; }
         public int? ProjectStageSeq { get; set; }
         public int? TransmissionGridSeq { get; set; }

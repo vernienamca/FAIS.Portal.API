@@ -1,7 +1,6 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -80,5 +79,24 @@ namespace FAIS.Portal.API.Controllers
         }
 
         #endregion Post
+
+        #region Put
+
+        /// <summary>
+        /// Puts the update project profile
+        /// </summary>
+        /// <param name="projectProfileDto">The project profile data object.</param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(typeof(ProjectProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update([FromBody] ProjectProfileDTO projectProfileDto)
+        {
+            if (projectProfileDto == null)
+                throw new ArgumentNullException(nameof(projectProfileDto));
+
+            return Ok(await _service.Update(projectProfileDto));
+        }
+
+        #endregion Put
     }
 }

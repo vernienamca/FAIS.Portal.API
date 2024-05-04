@@ -20,7 +20,7 @@ namespace FAIS.Infrastructure.Data
 
         public List<ProjectProfileComponent> GetById(int id)
         {
-            return _dbContext.ProjectProfileComponents.Where(t => t.ProjectProfileSeq == id).AsNoTracking().ToList();
+            return _dbContext.ProjectProfileComponents.Where(t => t.ProjectProfileId == id).AsNoTracking().ToList();
         }
 
         public async Task<ProjectProfileComponent> Add(ProjectProfileComponent projectProfileComponent)

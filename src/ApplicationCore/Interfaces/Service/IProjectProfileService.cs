@@ -12,6 +12,7 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         ProjectProfile GetById(int id);
 
         Task<ProjectProfile> Add(ProjectProfileDTO projectProfileDTO);
-        //Task<ProformaEntry> Update(ProformaEntryDTO proformaEntryDTO);
+
+        Task<ProjectProfile> Update(ProjectProfileDTO projectProfileDTO);
     }
 }

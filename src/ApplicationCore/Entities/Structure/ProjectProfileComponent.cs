@@ -9,10 +9,10 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int Id { get; set; }
 
         [DataMember]
-        public int ProjectProfileSeq { get; set; }
+        public int ProjectProfileId { get; set; }
 
-        [DataMember]
-        public int ProjectComponentSeq { get; set; }
+        //[DataMember]
+        //public int ProjectComponentSeq { get; set; }
 
         [DataMember]
         public string Details { get; set; }
@@ -43,6 +43,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
+
+        [DataMember]
+        public DateTime? RemoveAt { get; set; }
 
         [DataMember]
         public int CreatedBy { get; set; }
