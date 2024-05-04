@@ -38,7 +38,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("DESCRIPTION");
 
             builder.Property(e => e.RcaGLId)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("RCA_GL_SEQ");
 
             builder.Property(e => e.RcaSLId)
