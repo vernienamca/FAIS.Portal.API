@@ -15,7 +15,6 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public string Remarks { get; set; }
 
-        public int ProjectStageSeq { get; set; }
         [DataMember]
         public string UDF1 { get; set; }
 

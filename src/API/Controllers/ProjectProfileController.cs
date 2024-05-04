@@ -13,7 +13,6 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
     public class ProjectProfileController : ControllerBase
     {
         #region Variables
@@ -101,4 +100,4 @@ namespace FAIS.Portal.API.Controllers
 
         #endregion Put
     }
-}  
+}
