@@ -38,7 +38,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("DESCRIPTION");
 
             builder.Property(e => e.RcaGLId)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("RCA_GL_SEQ");
 
             builder.Property(e => e.RcaSLId)
@@ -46,7 +46,6 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("SL_NO_SEQ");
 
             builder.Property(e => e.CostCenter)
-                .IsRequired()
                 .HasColumnName("COST_CENTER");
 
             builder.Property(e => e.AssetType)

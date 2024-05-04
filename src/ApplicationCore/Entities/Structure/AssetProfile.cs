@@ -20,7 +20,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public int RcaSLId { get; set; }
         [DataMember]
-        public int CostCenter { get; set; }
+        public int? CostCenter { get; set; }
         [DataMember]
         public int AssetType { get; set; }
         [DataMember]
