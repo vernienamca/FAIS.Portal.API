@@ -30,23 +30,18 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("VOLTAGE_SEQ");
 
             builder.Property(e => e.ST)
-                .IsRequired(false)
                 .HasColumnName("ST");
 
             builder.Property(e => e.SP)
-                .IsRequired(false)
                 .HasColumnName("SP");
 
             builder.Property(e => e.CP)
-                .IsRequired(false)
                 .HasColumnName("CP");
 
             builder.Property(e => e.WP)
-                .IsRequired(false)
                 .HasColumnName("WP");
 
             builder.Property(e => e.SLWT)
-                .IsRequired(false)
                 .HasColumnName("SLWT");
 
             builder.Property(e => e.InstallationDate)
@@ -55,40 +50,35 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("INSTALLATION_DATE");
 
             builder.Property(e => e.RouteLength)
-                .IsRequired(false)
                 .HasColumnName("ROUTE_LENGTH");
 
             builder.Property(e => e.NoCircuitId)
-                .IsRequired(false)
                 .HasColumnName("NO_CIRCUIT_SEQ");
 
             builder.Property(e => e.CircuitLength)
-                .IsRequired(false)
                 .HasColumnName("CIRCUIT_LENGTH");
 
             builder.Property(e => e.NoConductor)
-                .IsRequired(false)
                 .HasColumnName("NO_CONDUCTOR");
 
             builder.Property(e => e.ConductorSize)
-                .IsRequired(false)
                 .HasMaxLength(50)
                 .HasColumnName("CONDUCTOR_SIZE");
 
             builder.Property(e => e.Remarks)
-                .IsRequired(false)
+                .HasMaxLength(250)
                 .HasColumnName("REMARKS");
 
             builder.Property(e => e.UDF1)
-                .IsRequired(false)
+                .HasMaxLength(250)
                 .HasColumnName("UDF1");
 
             builder.Property(e => e.UDF2)
-                .IsRequired(false)
+                .HasMaxLength(250)
                 .HasColumnName("UDF2");
 
             builder.Property(e => e.UDF3)
-                .IsRequired(false)
+                .HasMaxLength(250)
                 .HasColumnName("UDF3");
 
             builder.Property(e => e.IsActive)

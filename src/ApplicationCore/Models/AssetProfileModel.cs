@@ -11,7 +11,7 @@ namespace FAIS.ApplicationCore.Models
         public string Category { get; set; }
         public int CategoryId { get; set; }
         public int? AssetClass { get; set; }
-        public string Description { get; set; } 
+        public string Description { get; set; }
         public string RcaGLId { get; set; }
         public long RCASLId { get; set; } 
         public int CostCenter { get; set; }
