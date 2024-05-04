@@ -8,6 +8,7 @@ namespace FAIS.ApplicationCore.DTOs
     {
         public int Id { get; set; }
         public string ProjectName { get; set; }
+        public int ProjectStageSeq { get; set; }
         public string Remarks { get; set; }
         public string UDF1 { get; set; }
         public string UDF2 { get; set; }

@@ -1,6 +1,4 @@
 ﻿using FAIS.ApplicationCore.DTOs;
-using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -22,7 +20,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -32,6 +30,7 @@ namespace FAIS.API.Controllers
         private readonly IEmailService _emailService;
         private readonly ISettingsService _settingsService;
         private readonly IUserRoleService _userRoleService;
+        private readonly IAuditLogService _auditLogService;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
         private readonly IRoleService _roleService;
         private readonly IConfiguration _configuration;
@@ -46,12 +45,14 @@ namespace FAIS.API.Controllers
         /// <param name="libraryTypeService">The library type service.</param>
         /// <param name="emailService">The email service.</param>
         /// <param name="settingsService">The settings service.</param>
+        /// <param name="auditLogService">The audit log service.</param>
         /// </summary>
         public UserController(IUserService userService
             , ILibraryTypeService libraryTypeService
             , IEmailService emailService
             , ISettingsService settingsService
             , IUserRoleService userRoleService
+            , IAuditLogService auditLogService
             , ILibraryTypeRepository libraryTypeRepository
             , IRoleService roleService
             , IConfiguration configuration)
@@ -61,6 +62,7 @@ namespace FAIS.API.Controllers
             _emailService = emailService;
             _settingsService = settingsService;
             _userRoleService = userRoleService;
+            _auditLogService = auditLogService;
             _ILibraryTypeRepository = libraryTypeRepository;
             _roleService = roleService;
             _configuration = configuration;
@@ -82,6 +84,20 @@ namespace FAIS.API.Controllers
         }
 
         /// <summary>
+        /// Gets the user activities by unique identifier.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        [HttpGet("activities/{userId:int}")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<AuditLogModel>), StatusCodes.Status200OK)]
+        public IActionResult GetActivities(int userId)
+        {
+            var activities = _auditLogService.Get().Where(t => t.UserId == userId).Take(10).OrderByDescending(s => s.CreatedAt);
+
+            return Ok(activities);
+        }
+
+        /// <summary>
         /// Gets the user by unique identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
@@ -91,6 +107,7 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
+
             var createdBy = await _userService.GetById(entity.CreatedBy);
 
             if (entity == null)
@@ -102,7 +119,7 @@ namespace FAIS.API.Controllers
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Position = entity.PositionId.ToString(),
-                PositionDescription = _libraryTypeService.GetById(entity.PositionId)?.Name,
+                PositionDescription = _libraryTypeService.GetById(entity.PositionId)?.Result.Name,
                 Division = entity.DivisionId.HasValue ? entity.DivisionId.ToString() : string.Empty,
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,
@@ -111,7 +128,7 @@ namespace FAIS.API.Controllers
                 MobileNumber = entity.MobileNumber,
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
-                TAFGs = _libraryTypeService.GetLibraryCodesById(entity.Id, "TAFG"),
+                TAFGs = _libraryTypeService.GetLookupByCode(entity.Id, "TAFG"),
                 OUFG = entity.OupFgId.HasValue ? entity.OupFgId.Value.ToString() : string.Empty,
                 LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
                 Photo = entity.Photo,
@@ -275,29 +292,36 @@ namespace FAIS.API.Controllers
             userDTO.Password = EncryptionHelper.HashPassword(generatedPassword);
             userDTO.CreatedAt = DateTime.Now;
 
-            var user = await _userService.Add(userDTO);
+            try
+            {
+                var user = await _userService.Add(userDTO);
 
-            if (userDTO.TAFG.Count > 0)
-                _userService.SetTAFGs(user.Id, userDTO.TAFG);
+                if (userDTO.TAFG.Count > 0)
+                    _userService.SetTAFGs(user.Id, userDTO.TAFG);
 
-            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
-                .GetSection("EmailTemplatePath")["UserCredential"];
+                string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                    .GetSection("EmailTemplatePath")["UserCredential"];
 
-            if (!System.IO.File.Exists(htmlTemplatePath))
-                throw new FileNotFoundException(nameof(htmlTemplatePath));
+                if (!System.IO.File.Exists(htmlTemplatePath))
+                    throw new FileNotFoundException(nameof(htmlTemplatePath));
 
-            string content = System.IO.File.ReadAllText(htmlTemplatePath);
+                string content = System.IO.File.ReadAllText(htmlTemplatePath);
 
-            var settings = _settingsService.GetById(1);
+                var settings = _settingsService.GetById(1);
 
-            content = content.Replace("${firstname}", user.FirstName);
-            content = content.Replace("${username}", user.UserName);
-            content = content.Replace("${password}", generatedPassword);
-            content = content.Replace("${baseurl}", settings.BaseUrl);
+                content = content.Replace("${firstname}", user.FirstName);
+                content = content.Replace("${username}", user.UserName);
+                content = content.Replace("${password}", generatedPassword);
+                content = content.Replace("${baseurl}", settings.BaseUrl);
 
-            _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
+                _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
 
-            return Ok(user);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         #endregion Post
@@ -343,6 +367,7 @@ namespace FAIS.API.Controllers
                 }
 
                 user.DateExpired = userDTO.AccountExpiration;
+                user.ForcePasswordChange = "N";
 
                 if (!string.IsNullOrEmpty(userDTO.Photo))
                 {
@@ -428,7 +453,7 @@ namespace FAIS.API.Controllers
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("asset-profile-notif")]
-        public IActionResult PostNotifRole([FromBody] NotifRoleDTO notifRoleDTO)
+        public async Task<IActionResult> PostNotifRole([FromBody] NotifRoleDTO notifRoleDTO)
         {
             List<string> allEmails = new List<string>();
 
@@ -438,20 +463,26 @@ namespace FAIS.API.Controllers
 
             foreach (var roleId in notifRoleDTO.RoleIds)
             {
-                var emails = _userRoleService.GetUserEmailsByRole(roleId);
+                var emails = _userRoleService.GetUserEmailsByRole(roleId, notifRoleDTO.EditMode);
                 var role = _roleService.GetById(roleId);
+
                 if (emails == null)
                     return Ok($"Email doesn't exist for role ID {roleId}.");
 
-                allEmails.AddRange(emails);
-                string content = GenerateEmailContent(roleId, role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, notifRoleDTO.isAdmin);
-
-                foreach (var email in allEmails.Distinct())
+                foreach (var email in emails)
                 {
+                    var user = await _userService.GetByEmailAddress(email);
+                    if (user == null)
+                        continue;  
+
+                    string firstName = user.FirstName;
+                    string content = GenerateEmailContent(roleId, role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, notifRoleDTO.isAdmin, firstName);
+
                     if (!_emailService.SendEmail(email, "Notification Role", content))
                     {
-                        return Ok($"Email failed!");
+                        return Ok($"Email no content.");
                     }
+                    allEmails.Add(email);
                 }
             }
 
@@ -460,48 +491,21 @@ namespace FAIS.API.Controllers
 
         #endregion Put
 
-        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode, bool isAdmin)
+        private string GenerateEmailContent(int roleId, string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode, bool isAdmin, string firstName)
         {
-            string content;
-            RoleEnum role = (RoleEnum)roleId;
-            var state = (role, isAdmin, editMode);
+            string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+                .GetSection("EmailTemplatePath")["NotifRole"];
+            string content = System.IO.File.ReadAllText(htmlTemplatePath);
+            string stateMessage = editMode ? "updated" : "added";
+        
+            content = content.Replace("${firstname}", firstName);
+            content = content.Replace("${assetname}", assetName);
+            content = content.Replace("${url}", $"{baseUrl}/apps-asset-profile/{id}");
+            content = content.Replace("${supportemail}", supportEmail);
+            content = content.Replace("${rolename}", roleName);
+            content = content.Replace("${state}", stateMessage);
+            content = content.Replace("${baseurl}", baseUrl);
 
-            switch (state)
-            {
-                case (RoleEnum.ARMDLibrarian, true, false):
-                case (RoleEnum.PADLibrarian, true, false):
-                    content = $"<h3>Dear {roleName},</h3><br/>" +
-                      $"Hi Librarian, information for {assetName} was added by Administrator. You can now view the additional data.<br/><br/>" +
-                      $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                      $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                      "Thank you,<br/>" + "Site Admin";
-                    break;
-
-                case (RoleEnum.ARMDLibrarian, true, true):
-                case (RoleEnum.PADLibrarian, true, true):
-                    content = $"<h3>Dear {roleName}!,</h3><br/>" +
-                       $"The asset {assetName} has been updated by Administrator. Please review the changes.<br/><br/>" +
-                       $"If you have any questions, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                       $"To view the updated asset, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                      "Thank you,<br/>" + "Site Admin";
-                    break;
-
-                case (RoleEnum.PADLibrarian, false, false):
-                    content = $"<h3>Dear {roleName},</h3><br/>" +
-                     $"Hi {roleName}, a new asset {assetName} was added. You can now view the additional data.<br/><br/>" +
-                     $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                     $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                     "Thank you,<br/>" + "Site Admin";
-                    break;
-
-                default: 
-                    content = $"<h3>Dear {roleName},</h3><br/>" +
-                    $"Hi {role}, information for {assetName} was updated. You can now view the additional data.<br/><br/>" +
-                    $"If you have any issues, please contact FAIS Support at {supportEmail}.<br/><br/>" +
-                    $"For direct access, copy and paste the following link into your browser: {baseUrl}/apps/asset-profile/edit/{id}<br/><br/>" +
-                    "Thank you,<br/>" + "Site Admin";
-                    break;
-            }
             return content;
         }
     }

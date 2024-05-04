@@ -91,7 +91,8 @@ namespace FAIS.Infrastructure.Data
                                         GroupName = mod.GroupName,
                                         IsCreate = per.IsCreate == 'Y',
                                         IsRead = per.IsRead == 'Y',
-                                        IsUpdate = per.IsUpdate == 'Y'
+                                        IsUpdate = per.IsUpdate == 'Y',
+                                        Sequence = mod.Sequence.Value
                                     }).ToListAsync();
             return permissions;
         }
@@ -106,10 +107,11 @@ namespace FAIS.Infrastructure.Data
                                    orderby urr.CreatedAt
                                    select new UserRoleModel()
                                    {
-                                       Id = urr.Id,
+                                       Id = rol.Id,
+                                       UserRoleId = urr.Id,
                                        Name = rol.Name,
                                        Description = rol.Description,
-                                       IsActive = urr.IsActive == 'Y',
+                                       IsActive = rol.IsActive == 'Y' ? urr.IsActive == 'Y' : false,
                                        StatusDate = urr.IsActive == 'Y' ? urr.StatusDate.ToString() : string.Empty,
                                        CreatedBy = urr.CreatedBy,
                                        CreatedAt = urr.CreatedAt
@@ -149,7 +151,7 @@ namespace FAIS.Infrastructure.Data
                 } 
                 else
                 {
-                    var data = _dbContext.UserRoles.FirstOrDefault(t => t.UserId == userId && t.Id == role.Id);
+                    var data = _dbContext.UserRoles.FirstOrDefault(t => t.UserId == userId && t.Id == role.UserRoleId);
 
                     if ((data.IsActive == 'Y') != role.IsActive)
                     {

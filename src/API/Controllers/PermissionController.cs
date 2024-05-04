@@ -11,7 +11,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PermissionController : Controller
     {
         #region Variables
@@ -32,7 +32,8 @@ namespace FAIS.Portal.API.Controllers
 
         #endregion Constructor
 
-        #region get
+        #region Get
+
         /// <summary>
         /// List the roles.
         /// </summary>
@@ -42,6 +43,19 @@ namespace FAIS.Portal.API.Controllers
         public IActionResult Get()
         {
             return Ok(_permissionService.Get());
+        }
+
+        /// <summary>
+        /// List the user permissions by module identifier.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="id">The moduleId identifier.</param>
+        /// <returns></returns>
+        [HttpGet("{userId:int}/{moduleId:int}")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<PermissionModel>), StatusCodes.Status200OK)]
+        public IActionResult GetPermissions(int userId, int moduleId)
+        {
+            return Ok(_permissionService.GetPermissions(userId, moduleId));
         }
 
         /// <summary>
@@ -65,13 +79,15 @@ namespace FAIS.Portal.API.Controllers
         {
             return Ok(_permissionService.GetRolePermissionListByRoleId(roleId));
         }
+
         #endregion
 
-        #region post
+        #region Post
+
         /// <summary>
-        /// Add permission
+        /// Posts the adding of permission.
         /// </summary>
-        /// <param name="permission">The permission identifier.</param>
+        /// <param name="permission">The permission data object.</param>
         /// <returns></returns>
         [HttpPost]
         public IActionResult Add(AddPermissionDTO permission)
@@ -79,19 +95,21 @@ namespace FAIS.Portal.API.Controllers
             return Ok(_permissionService.AddPermission(permission));
         }
 
+        #endregion
+
+        #region Put
+
         /// <summary>
-        /// Update role and permission connected to role
+        /// Puts the updating of role permissions.
         /// </summary>
-        /// <param name="updateRolePermission">The role and permission identifier.</param>
+        /// <param name="updateRolePermission">The role permission data object.</param>
         /// <returns></returns>
-        [HttpPut("Role")]
+        [HttpPut("role")]
         public IActionResult UpdateRolePermission(UpdateRolePermissionDTO updateRolePermission)
         {
             return Ok(_permissionService.UpdateRoleAddPermission(updateRolePermission));
         }
-        #endregion
 
-        #region put
         /// <summary>
         /// Update permission
         /// </summary>
@@ -102,9 +120,11 @@ namespace FAIS.Portal.API.Controllers
         {
             return Ok(_permissionService.UpdatePermission(permission));
         }
+
         #endregion
 
-        #region delete
+        #region Delete
+
         /// <summary>
         /// Delete permission
         /// </summary>
@@ -115,6 +135,7 @@ namespace FAIS.Portal.API.Controllers
         {
             return Ok(_permissionService.DeletePermission(id));
         }
+
         #endregion
     }
 }

@@ -1,18 +1,16 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using FAIS.ApplicationCore.DTOs;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
-using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static ApplicationCore.Enumeration.LoginEnum;
 using Password.Core;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -23,18 +21,21 @@ namespace FAIS.ApplicationCore.Services
         private readonly ISettingsRepository _settingsRepository;
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IAuditLogService _auditLogService;
 
-        public UserService(IUserRepository testRepository
+        public UserService(IUserRepository userRepository
             , ISettingsRepository settingsRepository
             , ILoginHistoryRepository historyRepository
-            , ILibraryTypeRepository iLibraryTypeRepository,
-            IUserRoleRepository userRoleRepository)
+            , ILibraryTypeRepository iLibraryTypeRepository
+            , IUserRoleRepository userRoleRepository
+            , IAuditLogService auditLogService)
         {
-            _userRepository = testRepository;
+            _userRepository = userRepository;
             _settingsRepository = settingsRepository;
             _historyRepository = historyRepository;
             _ILibraryTypeRepository = iLibraryTypeRepository;
             _userRoleRepository = userRoleRepository;
+            _auditLogService = auditLogService;
         }
 
         public IReadOnlyCollection<UserModel> Get()
@@ -113,6 +114,7 @@ namespace FAIS.ApplicationCore.Services
                 CreatedBy = userDTO.CreatedBy,
                 CreatedAt = DateTime.Now,
                 TempKey = userDTO.TempKey,
+                ForcePasswordChange = "N"
             };
 
             if (!string.IsNullOrEmpty(userDTO.OupFG))
@@ -154,6 +156,15 @@ namespace FAIS.ApplicationCore.Services
             user.TempKey = string.Empty;
             user.DateExpired = DateTime.Now.AddDays(settings.PasswordExpiry);
 
+            await _auditLogService.Add(new AuditLogDTO()
+            {
+                ModuleSeq = 23,
+                Activity = "User reset password",
+                IpAddress = GeoLocationHelpers.GetClientIpAddress(),
+                CreatedBy = user.Id,
+                CreatedAt = DateTime.Now
+            });
+
             return await _userRepository.Update(user);
         }
 
@@ -167,6 +178,16 @@ namespace FAIS.ApplicationCore.Services
             user.StatusCode = (int)UserStatusEnum.Active;
             user.StatusDate = DateTime.Now;
             user.DateExpired = DateTime.Now.AddDays(settings.PasswordExpiry);
+            user.ForcePasswordChange = "Y";
+
+            await _auditLogService.Add(new AuditLogDTO()
+            {
+                ModuleSeq = 23,
+                Activity = "User change password",
+                IpAddress = GeoLocationHelpers.GetClientIpAddress(),
+                CreatedBy = userId,
+                CreatedAt = DateTime.Now
+            });
 
             return await _userRepository.Update(user);
         }
@@ -193,6 +214,7 @@ namespace FAIS.ApplicationCore.Services
         {
             var user = await _userRepository.GetById(id);
 
+            user.ForcePasswordChange = "Y";
             user.TempKey = $"{Guid.NewGuid()}-{DateTime.Now.Date.ToString().Split(' ')[0].Replace("/", string.Empty)}";
 
             await _userRepository.Update(user);

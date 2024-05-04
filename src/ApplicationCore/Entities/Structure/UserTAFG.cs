@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
@@ -6,6 +8,8 @@ namespace FAIS.ApplicationCore.Entities.Structure
     public class UserTAFG : BaseEntity<int>
     {
         [DataMember]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [DataMember]

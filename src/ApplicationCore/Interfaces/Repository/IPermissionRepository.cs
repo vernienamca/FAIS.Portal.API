@@ -7,6 +7,7 @@ namespace FAIS.ApplicationCore.Interfaces
 {
     public interface IPermissionRepository
     {
+        IReadOnlyCollection<PermissionModel> GetPermissions(int userId, int moduleId);
         IReadOnlyCollection<PermissionModel> Get();
         RolePermission GetById(int id);
         List<RolePermission> GetListById(int id);

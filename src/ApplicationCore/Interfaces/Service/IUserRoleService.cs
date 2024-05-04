@@ -9,6 +9,6 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface IUserRoleService
     {
         IReadOnlyCollection<UserRoleModel> Get();
-        IReadOnlyCollection<string> GetUserEmailsByRole(int roleId);
+        IReadOnlyCollection<string> GetUserEmailsByRole(int roleId, bool? isEditMode);
     }
 }

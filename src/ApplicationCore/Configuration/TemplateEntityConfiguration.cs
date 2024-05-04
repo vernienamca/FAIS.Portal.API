@@ -29,21 +29,61 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(500)
                 .HasColumnName("CONTENT");
 
-            builder.Property(e => e.Receiver)
-                .IsRequired()
-                .HasColumnName("RECEIVER");
+            builder.Property(e => e.Users)
+                .HasMaxLength(250)
+                .HasColumnName("USERS");
+
+            builder.Property(e => e.Roles)
+                .HasMaxLength(250)
+                .HasColumnName("ROLES");
+
+            builder.Property(e => e.Icon)
+                .HasMaxLength(250)
+                .HasColumnName("ICON");
+
+            builder.Property(e => e.IconColor)
+                .IsRequired(false)
+                .HasColumnName("ICON_COLOR");
+
+            builder.Property(e => e.Url)
+                .HasMaxLength(250)
+                .HasColumnName("URL");
 
             builder.Property(e => e.NotificationType)
                 .IsRequired(false)
                 .HasColumnName("NOTIFICATION_TYPE");
+
+            builder.Property(e => e.StartDate)
+                .IsRequired(false)
+                .HasColumnType("datetime")
+                .HasColumnName("START_DATE");
+
+            builder.Property(e => e.StartTime)
+                .IsRequired(false)
+                .HasMaxLength(250)
+                .HasColumnName("START_TIME");
+
+            builder.Property(e => e.EndDate)
+                .IsRequired(false)
+                .HasColumnType("datetime")
+                .HasColumnName("END_DATE");
+
+            builder.Property(e => e.EndTime)
+                .IsRequired(false)
+                .HasMaxLength(250)
+                .HasColumnName("END_TIME");
+
+            builder.Property(e => e.Target)
+                .IsRequired()
+                .HasColumnName("TARGET");
 
             builder.Property(e => e.IsActive)
                 .HasMaxLength(1)
                 .HasColumnName("IS_ACTIVE");
 
             builder.Property(e => e.StatusDate)
-                .HasColumnName("STATUS_DATE")
-                .HasColumnType("datetime");
+                .HasColumnType("datetime")
+                .HasColumnName("STATUS_DATE");
 
             builder.Property(e => e.NotificationType)
                 .HasMaxLength(50)
@@ -60,7 +100,6 @@ namespace FAIS.ApplicationCore.Configuration
 
             builder.Property(e => e.UpdatedBy)
                 .IsRequired(false)
-                .HasColumnType("NUMBER")
                 .HasColumnName("USER_MODIFIED");
 
             builder.Property(e => e.UpdatedAt)

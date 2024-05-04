@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
-using FAIS.Infrastructure.Data;
 using FAIS.Portal.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,13 +13,12 @@ namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class RoleController : ControllerBase
     {
         #region Variables
 
         private readonly IRoleService _roleService;
-        private readonly IUserRoleService _userRoleService;
 
         #endregion Variables
 
@@ -29,12 +27,10 @@ namespace FAIS.API.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="RoleController"/> class.
         /// <param name="roleService">The role service.</param>
-        /// <param name="userService">The user service.</param>
         /// </summary>
-        public RoleController(IRoleService roleService, IUserRoleService userRoleService)
+        public RoleController(IRoleService roleService)
         {
             _roleService = roleService;
-            _userRoleService = userRoleService;
         }
 
         #endregion Constructor
@@ -80,7 +76,7 @@ namespace FAIS.API.Controllers
         #region Post
 
         /// <summary>
-        /// Posts the create Role.
+        /// Posts the create role.
         /// </summary>
         /// <param name="dto">The Role data object.</param>
         /// <returns></returns>

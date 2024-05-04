@@ -7,6 +7,8 @@ namespace FAIS.ApplicationCore.Interfaces
 {
     public interface IPermissionService
     {
+        IReadOnlyCollection<PermissionModel> Get();
+        IReadOnlyCollection<PermissionModel> GetPermissions(int userId, int moduleId);
         List<PermissionModel> GetListPermission();
         Task DeletePermission(int id);
         Task AddPermission(AddPermissionDTO permissionDTO);
@@ -14,6 +16,5 @@ namespace FAIS.ApplicationCore.Interfaces
         List<PermissionModel> GetListPermissionByRoleId(int roleId);
         RolePermissionModel GetRolePermissionListByRoleId(int roleId);
         Task UpdateRoleAddPermission(UpdateRolePermissionDTO rolePermission);
-        IReadOnlyCollection<PermissionModel> Get();
     }
 }

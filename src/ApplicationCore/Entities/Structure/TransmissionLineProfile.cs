@@ -3,30 +3,39 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    public class AssetProfile : BaseEntity<int>
+    public class TransmissionLineProfile : BaseEntity<int>
     {
         [DataMember]
         public int Id { get; set; }
         [DataMember]
-        public string Name { get; set; }
+        public int LineStretch { get; set; }
         [DataMember]
-        public int AssetCategoryId { get; set; }
+        public int VoltageId{ get; set; }
         [DataMember]
-        public int? AssetClassId { get; set; }
+        public int ST { get; set; }
         [DataMember]
-        public string Description { get; set; }
+        public int SP { get; set; }
         [DataMember]
-        public string RcaGLId { get; set; }
+        public int CP { get; set; }
         [DataMember]
-        public int RcaSLId { get; set; }
+        public int WP { get; set; }
         [DataMember]
-        public int? CostCenter { get; set; }
+        public int? SLWT { get; set; }
         [DataMember]
-        public int AssetType { get; set; }
+        public DateTime? InstallationDate { get; set; }
         [DataMember]
-        public string EconomicLife { get; set; }
-        [DataMember] 
-        public string ResidualLife { get; set; }
+        public int? RouteLength { get; set; }
+        [DataMember]
+        public int? NoCircuitId { get; set; }
+        [DataMember]
+        public int? CircuitLength { get; set; }
+        [DataMember]
+        public int? NoConductor { get; set; }
+
+        [DataMember]
+        public string ConductorSize { get; set; }
+        [DataMember]
+        public string Remarks { get; set; }
         [DataMember]
         public string UDF1 { get; set; }
         [DataMember]

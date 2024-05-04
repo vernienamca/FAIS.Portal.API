@@ -38,7 +38,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("DESCRIPTION");
 
             builder.Property(e => e.RcaGLId)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("RCA_GL_SEQ");
 
             builder.Property(e => e.RcaSLId)
@@ -46,8 +46,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("SL_NO_SEQ");
 
             builder.Property(e => e.CostCenter)
-                .IsRequired()
                 .HasColumnName("COST_CENTER");
+
+            builder.Property(e => e.AssetType)
+                .IsRequired()
+                .HasColumnName("ASSET_TYPE");
 
             builder.Property(e => e.EconomicLife)
                 .IsRequired(false)
@@ -56,6 +59,18 @@ namespace FAIS.ApplicationCore.Configuration
             builder.Property(e => e.ResidualLife)
                 .IsRequired(false)
                 .HasColumnName("RESIDUAL_LIFE");
+
+            builder.Property(e => e.UDF1)
+                .IsRequired(false)
+                .HasColumnName("UDF1");
+
+            builder.Property(e => e.UDF2)
+                .IsRequired(false)
+                .HasColumnName("UDF2");
+
+            builder.Property(e => e.UDF3)
+                .IsRequired(false)
+                .HasColumnName("UDF3");
 
             builder.Property(e => e.IsActive)
                 .IsRequired()

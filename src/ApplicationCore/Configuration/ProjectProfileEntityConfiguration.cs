@@ -24,6 +24,9 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("PROJECT_NAME");
 
+            builder.Property(e => e.ProjectStageSeq)
+                .HasColumnName("PROJECT_STAGE_SEQ");
+
             builder.Property(e => e.Remarks)
                 .IsRequired(false)
                 .HasColumnName("REMARKS");

@@ -1,8 +1,10 @@
-﻿using FAIS.ApplicationCore.Helpers;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
@@ -16,6 +18,7 @@ namespace FAIS.API.Controllers
         #region Variables
 
         private readonly IUserService _userService;
+        private readonly IAuditLogService _auditLogService;
 
         #endregion Variables
 
@@ -24,10 +27,12 @@ namespace FAIS.API.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="DashboardController"/> class.
         /// <param name="userService">The user service.</param>
+        /// <param name="auditLogService">The audit log service.</param>
         /// </summary>
-        public DashboardController(IUserService userService)
+        public DashboardController(IUserService userService, IAuditLogService auditLogService)
         {
             _userService = userService;
+            _auditLogService = auditLogService;
         }
 
         #endregion Constructor
@@ -44,6 +49,15 @@ namespace FAIS.API.Controllers
         {
             var entity = await _userService.GetById(userId);
             string greeting = $"{DateTimeHelpers.GetGreetings()} {entity.FirstName}";
+
+            await _auditLogService.Add(new AuditLogDTO()
+            {
+                ModuleSeq = 1,
+                Activity = "Viewed the dashboard page",
+                IpAddress = GeoLocationHelpers.GetClientIpAddress(),
+                CreatedBy = userId,
+                CreatedAt = DateTime.Now
+            });
 
             return Ok(greeting);
         }
