@@ -32,5 +32,24 @@ namespace FAIS.ApplicationCore.Services
         {
             return await _repository.GetById(id);
         }
+
+        public async Task<TransmissionLineProfile> Add(AddTransmissionLineProfileDTO dto)
+        {
+            var transDto = _mapper.Map<TransmissionLineProfile>(dto);
+            return await _repository.Add(transDto);
+        }
+
+        public async Task<TransmissionLineProfile> Update(UpdateTransmissionLineProfileDTO dto)
+        {
+            var transProfile = _repository.GetById(dto.Id) ?? throw new Exception("Transmission Line Profile Id does not exist");
+
+            if (transProfile == null)
+                throw new ArgumentNullException("Transmission Line Profile not exist.");
+
+            var mapper = _mapper.Map<TransmissionLineProfile>(dto);
+            mapper.CreatedBy = transProfile.Result.CreatedBy;
+            mapper.CreatedAt = transProfile.Result.CreatedAt;
+            return await _repository.Update(mapper);
+        }
     }
 }

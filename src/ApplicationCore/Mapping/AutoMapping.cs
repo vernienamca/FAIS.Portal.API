@@ -50,11 +50,13 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<LibraryOptions, LibraryOptionModel>().ReverseMap()
                 .ForMember(x => x.Remarks, opt => opt.MapFrom(s => s.Remark));
             CreateMap<AssetProfileDTO, AssetProfile>();
-            CreateMap<AddAssetProfileDTO, AssetProfile>();
-            CreateMap<UpdateAssetProfileDTO, AssetProfile>();
-            CreateMap<MeteringProfileDTO, MeteringProfile>();
-            CreateMap<MeteringProfile, MeteringProfileDTO>();
+            CreateMap<AddAssetProfileDTO, AssetProfile>().ReverseMap();
+            CreateMap<UpdateAssetProfileDTO, AssetProfile>().ReverseMap();
+            CreateMap<MeteringProfile, MeteringProfileDTO>().ReverseMap();
             CreateMap<ProjectProfile, ProjectProfileDTO>().ReverseMap();
+            CreateMap<TransmissionLineProfile, TransmissionLineProfileDTO>().ReverseMap();
+            CreateMap<TransmissionLineProfile, AddTransmissionLineProfileDTO>().ReverseMap();
+            CreateMap<TransmissionLineProfile, UpdateTransmissionLineProfileDTO>().ReverseMap();
         }        
     }
 }
