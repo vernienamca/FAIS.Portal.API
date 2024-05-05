@@ -12,7 +12,7 @@ namespace FAIS.ApplicationCore.Interfaces.Service
     {
         IReadOnlyCollection<TransmissionLineProfileModel> Get();
         Task<TransmissionLineProfileModel> GetById(int id);
-        //Task<TransmissionLineProfile> Add(TransmissionLineProfile transProfileDto);
-        //Task<TransmissionLineProfile> Update(TransmissionLineProfile transProfileDto);
+        Task<TransmissionLineProfile> Add(AddTransmissionLineProfileDTO transProfileDto);
+        Task<TransmissionLineProfile> Update(UpdateTransmissionLineProfileDTO transProfileDto);
     }
 }
