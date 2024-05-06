@@ -36,7 +36,7 @@ namespace FAIS.ApplicationCore.Services
         /// <param name="content">The content body.</param>
         public bool SendEmail(string emailAddress, string subject, string content)
         {
-            var settings = _settingsRepository.GetById(1);
+            var settings = _settingsRepository.GetById(17);
 
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));

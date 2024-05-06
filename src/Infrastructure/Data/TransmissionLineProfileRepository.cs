@@ -43,7 +43,8 @@ namespace FAIS.Infrastructure.Data
                                     CreatedAt = trns.CreatedAt,
                                     UpdatedBy = trns.UpdatedBy,
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                    UpdatedAt = trns.UpdatedAt
+                                    UpdatedAt = trns.UpdatedAt,
+                                    IsActive = trns.IsActive
                                 }).ToList();
             return transProfile;
         }
@@ -80,7 +81,9 @@ namespace FAIS.Infrastructure.Data
                                     CreatedAt = trns.CreatedAt,
                                     UpdatedBy = trns.UpdatedBy,
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                    UpdatedAt = trns.UpdatedAt
+                                    UpdatedAt = trns.UpdatedAt,
+                                    IsActive = trns.IsActive,
+                                    StatusDate = trns.StatusDate
                                 }).FirstOrDefaultAsync(t => t.Id == id);
             return await transProfile;
         }

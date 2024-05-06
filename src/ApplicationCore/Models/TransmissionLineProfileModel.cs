@@ -8,8 +8,8 @@ namespace FAIS.ApplicationCore.Models
     public class TransmissionLineProfileModel
     {
         public int Id { get; set; }
-        public int LineStretch { get; set; }
-        public int VoltageId { get; set; }
+        public string LineStretch { get; set; }
+        public decimal VoltageId { get; set; }
         public int ST { get; set; }
         public int SP { get; set; }
         public int CP { get; set; }
