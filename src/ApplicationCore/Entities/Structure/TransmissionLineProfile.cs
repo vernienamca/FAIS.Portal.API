@@ -8,9 +8,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public int Id { get; set; }
         [DataMember]
-        public int LineStretch { get; set; }
+        public string LineStretch { get; set; }
         [DataMember]
-        public int VoltageId{ get; set; }
+        public decimal VoltageId{ get; set; }
         [DataMember]
         public int ST { get; set; }
         [DataMember]

@@ -6,7 +6,7 @@ namespace FAIS.ApplicationCore.DTOs
     public class TransmissionLineProfileDTO
     {
         public int Id { get; set; }
-        public int LineStretch { get; set; }
+        public string LineStretch { get; set; }
         public int VoltageId { get; set; }
         public int ST { get; set; }
         public int SP { get; set; }
@@ -32,7 +32,7 @@ namespace FAIS.ApplicationCore.DTOs
     }
     public class AddTransmissionLineProfileDTO
     {
-        public int LineStretch { get; set; }
+        public string LineStretch { get; set; }
         public int VoltageId { get; set; }
         public int ST { get; set; }
         public int SP { get; set; }
@@ -57,7 +57,7 @@ namespace FAIS.ApplicationCore.DTOs
     public class UpdateTransmissionLineProfileDTO
     {
         public int Id { get; set; }
-        public int LineStretch { get; set; }
+        public string LineStretch { get; set; }
         public int VoltageId { get; set; }
         public int ST { get; set; }
         public int SP { get; set; }

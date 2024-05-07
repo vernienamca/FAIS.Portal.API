@@ -11,6 +11,8 @@ namespace FAIS.ApplicationCore.Enumeration
         [Description("Administrator")]
         Administrator = 1,
         [Description("Metering Librarian")]
-        MeteringLibrarian = 13
+        MeteringLibrarian = 13,
+        [Description("ARMD Analyst")]
+        ARMDAnalyst = 14
     }
 }
