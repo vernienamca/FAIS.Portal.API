@@ -1,7 +1,6 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,7 +16,7 @@ namespace FAIS.Portal.API.Controllers
     {
         #region Variables
 
-        private readonly IProjectProfileService _service;
+        private readonly IProjectProfileService service;
 
         #endregion Variables
 
@@ -25,11 +24,11 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectProfileController"/> class.
-        /// <param name="ProjectProfileService">List the project profiles.</param>
+        /// <param name="ProjectProfileService">The project profile service.</param>
         /// </summary>
         public ProjectProfileController(IProjectProfileService projectProfileService)
         {
-            _service = projectProfileService;
+            service = projectProfileService;
         }
 
         #endregion Constructor
@@ -44,19 +43,14 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(IReadOnlyCollection<ProjectProfile>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            return Ok(_service.Get());
+            return Ok(service.Get());
         }
 
-        /// <summary>
-        /// Retrieve a Project Profile by unique identifier.
-        /// </summary>
-        /// <param name="id">The project profile identifier.</param>
-        /// <returns>A project profile.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(ProjectProfile), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
-            return Ok(_service.GetById(id));
+            return Ok(service.GetById(id));
         }
 
         #endregion Get
@@ -64,19 +58,19 @@ namespace FAIS.Portal.API.Controllers
         #region Post
 
         /// <summary>
-        /// Post the add project profile.
+        /// Posts the add project profile.
         /// </summary>
         /// <param name="projectProfileDto">The project profile data object.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost]
         [ProducesResponseType(typeof(ProjectProfileDTO), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add([FromBody] ProjectProfileDTO projectProfileDto)
+        public async Task<IActionResult> Create([FromBody] ProjectProfileDTO projectProfileDto)
         {
             if (projectProfileDto == null)
                 throw new ArgumentNullException(nameof(projectProfileDto));
 
-            return Ok(await _service.Add(projectProfileDto));
+            return Ok(await service.Add(projectProfileDto));
         }
 
         #endregion Post
@@ -84,7 +78,7 @@ namespace FAIS.Portal.API.Controllers
         #region Put
 
         /// <summary>
-        /// Puts the update project profile
+        /// Puts the update project profile.
         /// </summary>
         /// <param name="projectProfileDto">The project profile data object.</param>
         /// <returns></returns>
@@ -95,7 +89,7 @@ namespace FAIS.Portal.API.Controllers
             if (projectProfileDto == null)
                 throw new ArgumentNullException(nameof(projectProfileDto));
 
-            return Ok(await _service.Update(projectProfileDto));
+            return Ok(await service.Update(projectProfileDto));
         }
 
         #endregion Put

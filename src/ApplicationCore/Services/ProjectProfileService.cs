@@ -40,7 +40,6 @@ namespace FAIS.ApplicationCore.Services
 
             var projectProfileResult = await _repository.Add(projectProfile);
 
-            ////Check project profile details
             if (projectProfileComponents != null)
             {
                 foreach (var component in projectProfileComponents)
