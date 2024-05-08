@@ -109,8 +109,8 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("{action}/{id:int}")]
+        public IActionResult DeleteProforma([FromRoute] int id)
         {
             return Ok(_proformaEntriesService.Delete(id));
         }
