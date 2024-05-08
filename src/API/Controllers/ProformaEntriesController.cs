@@ -61,7 +61,7 @@ namespace FAIS.Portal.API.Controllers
             return Ok(_proformaEntriesService.GetById(id));
         }
 
-        #endregion
+        #endregion Get
 
         #region Post
 
@@ -101,5 +101,20 @@ namespace FAIS.Portal.API.Controllers
         }
 
         #endregion Put
+
+        #region Delete
+
+        /// <summary>
+        /// Delete proforma entry by id.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            return Ok(_proformaEntriesService.Delete(id));
+        }
+
+        #endregion Delete
     }
 }
