@@ -69,6 +69,17 @@ namespace FAIS.ApplicationCore.Services
             return await _interpolationRepository.Update(mapper);
         }
 
+        public async Task<StringInterpolation> DeleteStringInterpolation(int id)
+        {
+            var stringInterpolation = _interpolationRepository.GetById(id) ?? throw new Exception("StringInterpolationId does not exist");
+
+            if (stringInterpolation == null)
+                throw new ArgumentNullException("String Interpolation not exist.");
+
+            stringInterpolation.Result.DateRemoved = DateTime.Now;
+            return await _interpolationRepository.Update(stringInterpolation.Result);
+        }
+
         public async Task<Template> UpdateTemplate(UpdateTemplateDTO dto)
         {
             var template = _templateRepository.GetById(dto.Id) ?? throw new Exception("NotificationTemplateId does not exist");

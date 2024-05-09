@@ -169,6 +169,22 @@ namespace FAIS.API.Controllers
         }
 
         /// <summary>
+        /// Soft delete for string interpolation.
+        /// </summary>
+        /// <param name="id">The string interpolation identifier.</param>
+        /// <param name="dto">The interpolation data object.</param>
+        /// <returns></returns>
+        [HttpPut("interpolation/delete/{id:int}")]
+        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PutDeleteInterpolation(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentNullException(nameof(id));
+           
+            return Ok(await _notificationService.DeleteStringInterpolation(id));
+        }
+
+        /// <summary>
         /// Puts the update template.
         /// </summary>
         /// <param name="id">The template identifier.</param>
