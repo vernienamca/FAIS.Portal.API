@@ -27,7 +27,7 @@ namespace FAIS.ApplicationCore.Configuration
             builder.Property(e => e.Code)
                 .IsRequired(false)
                 .HasColumnName("LIB_TYPE_OPT_CODE")
-            .HasMaxLength(10);
+                .HasMaxLength(10);
 
             builder.Property(e => e.Description)
                   .HasMaxLength(200)
@@ -38,6 +38,10 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("REMARKS")
                 .HasMaxLength(250);
+
+            builder.Property(e => e.Ranking)
+                 .IsRequired(false)
+                 .HasColumnName("RANKING");
 
             builder.Property(e => e.IsActive)
                 .IsRequired()

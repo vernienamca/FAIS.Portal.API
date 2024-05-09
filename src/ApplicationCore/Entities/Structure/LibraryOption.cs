@@ -21,6 +21,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string Remarks { get; set; }
 
         [DataMember]
+        public int? Ranking { get; set; }
+
+        [DataMember]
         public char IsActive { get; set; }
 
         [DataMember]
