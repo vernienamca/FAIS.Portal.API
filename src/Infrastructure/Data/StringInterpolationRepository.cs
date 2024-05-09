@@ -29,8 +29,9 @@ namespace FAIS.Infrastructure.Data
                                       CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
                                       CreatedAt = str.CreatedAt,
                                       UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                                      UpdatedAt = str.UpdatedAt
-                                  }).ToList();
+                                      UpdatedAt = str.UpdatedAt,
+                                      DateRemoved = str.DateRemoved
+                                  }).Where(x => x.DateRemoved == null).ToList();
 
             return interpolations;
         }
