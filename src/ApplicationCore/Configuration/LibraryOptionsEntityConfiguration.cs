@@ -43,6 +43,21 @@ namespace FAIS.ApplicationCore.Configuration
                  .IsRequired(false)
                  .HasColumnName("RANKING");
 
+            builder.Property(e => e.UDF1)
+                  .IsRequired(false)
+                  .HasColumnName("UDF1")
+                  .HasMaxLength(250);
+
+            builder.Property(e => e.UDF2)
+                  .IsRequired(false)
+                  .HasColumnName("UDF2")
+                  .HasMaxLength(250);
+
+            builder.Property(e => e.UDF3)
+                  .IsRequired(false)
+                  .HasColumnName("UDF3")
+                  .HasMaxLength(250);
+
             builder.Property(e => e.IsActive)
                 .IsRequired()
                 .HasColumnName("IS_ACTIVE")
