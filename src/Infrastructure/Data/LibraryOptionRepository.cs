@@ -21,28 +21,32 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<LibraryOptionModel> GetAll()
         {
             var libraryOption = (from lo in _dbContext.LibraryOptions.AsNoTracking()
-                                    join lto in _dbContext.LibraryTypes.AsNoTracking() on lo.LibraryTypeId equals lto.Id
-                                    join usrC in _dbContext.Users.AsNoTracking() on lo.CreatedBy equals usrC.Id
-                                    join usrU in _dbContext.Users.AsNoTracking() on lo.UpdatedBy equals usrU.Id into usrUX
-                                    from usrU in usrUX.DefaultIfEmpty()
-                                    orderby lo.Id descending
-                                        select new LibraryOptionModel()
-                                        {
-                                            Id = lo.Id,
-                                            LibraryTypeId = lo.LibraryTypeId,
-                                            LibraryTypeName = lto.Name,
-                                            Code = lo.Code,
-                                            Description = lo.Description,
-                                            IsActive = lo.IsActive,
-                                            Remark = lo.Remarks,
-                                            StatusDate = lo.StatusDate,
-                                            CreatedBy = lo.CreatedBy,
-                                            CreatedByName = $"{usrC.FirstName} {usrC.LastName}",
-                                            CreatedAt = lo.CreatedAt,
-                                            UpdatedAt = lo.UpdatedAt,
-                                            UpdatedBy = lo.UpdatedBy,
-                                            UpdatedByName = lo.UpdatedBy.HasValue ? $"{usrU.FirstName} {usrU.LastName}" : ""
-                                        }).ToList();
+                                 join lto in _dbContext.LibraryTypes.AsNoTracking() on lo.LibraryTypeId equals lto.Id
+                                 join usrC in _dbContext.Users.AsNoTracking() on lo.CreatedBy equals usrC.Id
+                                 join usrU in _dbContext.Users.AsNoTracking() on lo.UpdatedBy equals usrU.Id into usrUX
+                                 from usrU in usrUX.DefaultIfEmpty()
+                                 orderby lo.Id descending
+                                 select new LibraryOptionModel()
+                                 {
+                                     Id = lo.Id,
+                                     LibraryTypeId = lo.LibraryTypeId,
+                                     LibraryTypeName = lto.Name,
+                                     Code = lo.Code,
+                                     Description = lo.Description,
+                                     IsActive = lo.IsActive,
+                                     Remark = lo.Remarks,
+                                     Ranking = lo.Ranking.Value,
+                                     UDF1 = lo.UDF1,
+                                     UDF2 = lo.UDF2,
+                                     UDF3 = lo.UDF3,
+                                     StatusDate = lo.StatusDate,
+                                     CreatedBy = lo.CreatedBy,
+                                     CreatedByName = $"{usrC.FirstName} {usrC.LastName}",
+                                     CreatedAt = lo.CreatedAt,
+                                     UpdatedAt = lo.UpdatedAt,
+                                     UpdatedBy = lo.UpdatedBy,
+                                     UpdatedByName = lo.UpdatedBy.HasValue ? $"{usrU.FirstName} {usrU.LastName}" : ""
+                                 }).ToList();
 
             return libraryOption;
         }

@@ -17,7 +17,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class NotificationController : ControllerBase
     {
         #region Variables
@@ -169,6 +169,22 @@ namespace FAIS.API.Controllers
         }
 
         /// <summary>
+        /// Soft delete for string interpolation.
+        /// </summary>
+        /// <param name="id">The string interpolation identifier.</param>
+        /// <param name="dto">The interpolation data object.</param>
+        /// <returns></returns>
+        [HttpPut("interpolation/delete/{id:int}")]
+        [ProducesResponseType(typeof(StringInterpolation), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PutDeleteInterpolation(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentNullException(nameof(id));
+           
+            return Ok(await _notificationService.DeleteStringInterpolation(id));
+        }
+
+        /// <summary>
         /// Puts the update template.
         /// </summary>
         /// <param name="id">The template identifier.</param>
@@ -192,6 +208,21 @@ namespace FAIS.API.Controllers
 
         }
 
+        /// <summary>
+        /// Soft delete for template.
+        /// </summary>
+        /// <param name="id">The template identifier.</param>
+        /// <param name="dto">The template data object.</param>
+        /// <returns></returns>
+        [HttpPut("template/delete/{id:int}")]
+        [ProducesResponseType(typeof(Template), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteTemplate(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentNullException(nameof(id));
+
+            return Ok(await _notificationService.DeleteTemplate(id));
+        }
         #endregion
     }
 }

@@ -11,6 +11,7 @@ namespace FAIS.Infrastructure.Data
         public ProformaEntriesRepository(FAISContext context) : base(context)
         {
         }
+
         public IReadOnlyCollection<ProformaEntry> Get()
         {
             return _dbContext.ProformaEntries.ToList();
@@ -20,8 +21,8 @@ namespace FAIS.Infrastructure.Data
         {
             var proformaEntry = _dbContext.ProformaEntries.FirstOrDefault(t => t.Id == id);
 
-            if(proformaEntry != null) {
-
+            if (proformaEntry != null)
+            {
                 var proformaDetails = _dbContext.ProformaEntryDetails.Where(t => t.ProformaEntryId == id && t.DeletedAt == null).ToList();
                 proformaEntry.ProformaEntryDetails = proformaDetails;
 
@@ -30,6 +31,7 @@ namespace FAIS.Infrastructure.Data
 
             return null;
         }
+
         public async Task<ProformaEntry> Add(ProformaEntry proforma)
         {
             return await AddAsync(proforma);
@@ -38,6 +40,13 @@ namespace FAIS.Infrastructure.Data
         public async Task<ProformaEntry> Update(ProformaEntry proforma)
         {
             return await UpdateAsync(proforma);
+        }
+
+        public async Task Delete(int id)
+        {
+            var result = _dbContext.ProformaEntries.FirstOrDefault(res => res.Id == id);
+
+            await DeleteAsync(result);
         }
     }
 }

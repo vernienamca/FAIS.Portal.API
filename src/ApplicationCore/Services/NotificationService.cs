@@ -58,7 +58,7 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<StringInterpolation> UpdateStringInterpolation(UpdateStringInterpolationDTO dto)
         {
-            var stringInterpolation = _interpolationRepository.GetById(dto.Id) ?? throw new Exception("StringInterpolationId does not exist");
+            var stringInterpolation = _interpolationRepository.GetById(dto.Id) ?? throw new Exception("String Interpolation Id does not exist");
 
             if (stringInterpolation == null)
                 throw new ArgumentNullException("String Interpolation not exist.");
@@ -69,9 +69,20 @@ namespace FAIS.ApplicationCore.Services
             return await _interpolationRepository.Update(mapper);
         }
 
+        public async Task<StringInterpolation> DeleteStringInterpolation(int id)
+        {
+            var stringInterpolation = _interpolationRepository.GetById(id) ?? throw new Exception("String Interpolation Id does not exist");
+
+            if (stringInterpolation == null)
+                throw new ArgumentNullException("String Interpolation not exist.");
+
+            stringInterpolation.Result.DateRemoved = DateTime.Now;
+            return await _interpolationRepository.Update(stringInterpolation.Result);
+        }
+
         public async Task<Template> UpdateTemplate(UpdateTemplateDTO dto)
         {
-            var template = _templateRepository.GetById(dto.Id) ?? throw new Exception("NotificationTemplateId does not exist");
+            var template = _templateRepository.GetById(dto.Id) ?? throw new Exception("Template Id does not exist");
 
             if (template == null)
                 throw new ArgumentNullException("Notification Template not exist.");
@@ -80,6 +91,16 @@ namespace FAIS.ApplicationCore.Services
             mapper.CreatedBy = template.Result.CreatedBy;
             mapper.CreatedAt = template.Result.CreatedAt;
             return await _templateRepository.Update(mapper);
+        }
+
+        public async Task<Template> DeleteTemplate(int id)
+        {
+            var template = _templateRepository.GetById(id) ?? throw new Exception("Template Id does not exist");
+
+            if (id <= 0)
+                throw new ArgumentNullException("Template not exist.");
+
+            return await _templateRepository.Delete(id);
         }
     }
 }

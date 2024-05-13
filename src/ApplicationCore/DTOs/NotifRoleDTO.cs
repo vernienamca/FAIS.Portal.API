@@ -8,6 +8,7 @@ namespace FAIS.ApplicationCore.DTOs
         public int? Id { get; set; }
         public string AssetName { get; set; }
         public bool EditMode { get; set; }
-        public bool isAdmin { get; set; }
+        public int ModuleId { get; set; }
+        public string ModuleName { get; set; }
     }
 }

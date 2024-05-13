@@ -80,7 +80,7 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<string> GetUserEmailsByRole(int roleId, bool? isEditMode = false)
         {
             List<string> emailAddresses = new List<string>();
-             if (roleId == (int)RoleEnum.Administrator || roleId == (int)RoleEnum.PADLibrarian)
+             if (roleId == (int)RoleEnum.Administrator || roleId == (int)RoleEnum.PADLibrarian || roleId == (int)RoleEnum.MeteringLibrarian || roleId == (int)RoleEnum.ARMDAnalyst)
             {
                 emailAddresses = (from ur in _dbContext.UserRoles.AsNoTracking()
                                   join usrN in _dbContext.Users.AsNoTracking() on ur.UserId equals usrN.Id

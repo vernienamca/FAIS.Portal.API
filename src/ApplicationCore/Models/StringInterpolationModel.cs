@@ -14,5 +14,6 @@ namespace FAIS.ApplicationCore.Models
         public DateTime CreatedAt { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public DateTime? DateRemoved { get; set; }
     }
 }

@@ -7,8 +7,13 @@ namespace FAIS.ApplicationCore.Interfaces
     public interface IProformaEntriesRepository
     {
         IReadOnlyCollection<ProformaEntry> Get();
+
         ProformaEntry GetById(int id);
+
         Task<ProformaEntry> Add(ProformaEntry proforma);
+
         Task<ProformaEntry> Update(ProformaEntry proforma);
+
+        Task Delete(int id);
     }
 }
