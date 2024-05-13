@@ -1,9 +1,12 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
 {
@@ -15,7 +18,7 @@ namespace FAIS.Portal.API.Controllers
     {
         #region Variables
 
-        private readonly IProjectProfileService _service;
+        private readonly IProjectProfileService service;
 
         #endregion Variables
 
@@ -23,16 +26,17 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectProfileController"/> class.
-        /// <param name="ProjectProfileService">List the project profiles.</param>
+        /// <param name="ProjectProfileService">The project profile service.</param>
         /// </summary>
-        public ProjectProfileController(IProjectProfileService projectProfileService) 
+        public ProjectProfileController(IProjectProfileService projectProfileService)
         {
-            _service = projectProfileService;
+            service = projectProfileService;
         }
 
         #endregion Constructor
 
         #region Get
+
         /// <summary>
         /// Retrieve the list of project profile.
         /// </summary>
@@ -41,8 +45,55 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(IReadOnlyCollection<ProjectProfile>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            return Ok(_service.Get());
+            return Ok(service.Get());
         }
+
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(ProjectProfile), StatusCodes.Status200OK)]
+        public IActionResult GetById(int id)
+        {
+            return Ok(service.GetById(id));
+        }
+
         #endregion Get
+
+        #region Post
+
+        /// <summary>
+        /// Posts the add project profile.
+        /// </summary>
+        /// <param name="projectProfileDto">The project profile data object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPost]
+        [ProducesResponseType(typeof(ProjectProfileDTO), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Create([FromBody] ProjectProfileDTO projectProfileDto)
+        {
+            if (projectProfileDto == null)
+                throw new ArgumentNullException(nameof(projectProfileDto));
+
+            return Ok(await service.Add(projectProfileDto));
+        }
+
+        #endregion Post
+
+        #region Put
+
+        /// <summary>
+        /// Puts the update project profile.
+        /// </summary>
+        /// <param name="projectProfileDto">The project profile data object.</param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(typeof(ProjectProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update([FromBody] ProjectProfileDTO projectProfileDto)
+        {
+            if (projectProfileDto == null)
+                throw new ArgumentNullException(nameof(projectProfileDto));
+
+            return Ok(await service.Update(projectProfileDto));
+        }
+
+        #endregion Put
     }
-}  
+}
