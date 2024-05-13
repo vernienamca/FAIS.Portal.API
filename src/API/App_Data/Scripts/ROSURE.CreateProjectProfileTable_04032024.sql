@@ -75,7 +75,9 @@ FOR EACH ROW
 BEGIN
   <<COLUMN_SEQUENCES>>
   BEGIN
-    NULL;
+    IF INSERTING AND :NEW.PROJECT_SEQ IS NULL THEN
+      SELECT PROJECT_PROFILE_SEQ1.NEXTVAL INTO :NEW.PROJECT_SEQ FROM SYS.DUAL;
+    END IF;
   END COLUMN_SEQUENCES;
 END;
 /
@@ -113,8 +115,7 @@ ALTER TRIGGER "FAIS"."PROJECT_PROFILE_TRG" ENABLE;
 	  REFERENCES "FAIS"."LIBRARY_TYPE_OPTIONS" ("LIB_TYPE_OPT_SEQ") ENABLE;
 
 
-
---------------------------------------------------------
+	  --------------------------------------------------------
 --  DDL for Table PROJECT_PROFILE_COMPONENTS
 --------------------------------------------------------
 
@@ -164,21 +165,6 @@ END;
 /
 ALTER TRIGGER "FAIS"."METERING_PROFILES_COMPONENTS_" ENABLE;
 --------------------------------------------------------
---  DDL for Trigger PROJECT_PROFILE_COMPONENTS_TR
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "FAIS"."PROJECT_PROFILE_COMPONENTS_TR" 
-BEFORE INSERT ON PROJECT_PROFILE_COMPONENTS 
-FOR EACH ROW 
-BEGIN
-  <<COLUMN_SEQUENCES>>
-  BEGIN
-    NULL;
-  END COLUMN_SEQUENCES;
-END;
-/
-ALTER TRIGGER "FAIS"."PROJECT_PROFILE_COMPONENTS_TR" ENABLE;
---------------------------------------------------------
 --  DDL for Trigger PROJECT_PROFILE_COMPONENTS_TRG
 --------------------------------------------------------
 
@@ -193,6 +179,23 @@ BEGIN
 END;
 /
 ALTER TRIGGER "FAIS"."PROJECT_PROFILE_COMPONENTS_TRG" ENABLE;
+--------------------------------------------------------
+--  DDL for Trigger PROJECT_PROFILE_COMPONENTS_TR
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "FAIS"."PROJECT_PROFILE_COMPONENTS_TR" 
+BEFORE INSERT ON PROJECT_PROFILE_COMPONENTS 
+FOR EACH ROW 
+BEGIN
+  <<COLUMN_SEQUENCES>>
+  BEGIN
+    IF INSERTING AND :NEW.PROFILE_COMP_SEQ IS NULL THEN
+      SELECT PROJECT_PROFILE_COMPONENTS_SE1.NEXTVAL INTO :NEW.PROFILE_COMP_SEQ FROM SYS.DUAL;
+    END IF;
+  END COLUMN_SEQUENCES;
+END;
+/
+ALTER TRIGGER "FAIS"."PROJECT_PROFILE_COMPONENTS_TR" ENABLE;
 --------------------------------------------------------
 --  Constraints for Table PROJECT_PROFILE_COMPONENTS
 --------------------------------------------------------
