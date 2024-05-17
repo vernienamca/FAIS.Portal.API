@@ -40,6 +40,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<ProjectProfile> ProjectProfile { get; set; }
         public DbSet<ProjectProfileComponent> ProjectProfileComponents { get; set; }
         public DbSet<TransmissionLineProfile> TransmissionLineProfile { get; set; }
+        public DbSet<PlantInformation> PlantInformation { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -73,6 +74,8 @@ namespace FAIS.Infrastructure.Data
 
             builder.ApplyConfiguration(new ProjectProfileEntityConfiguration());
             builder.ApplyConfiguration(new ProjectProfileComponentEntityConfiguration());
+            builder.ApplyConfiguration(new PlantInformationEntityConfiguration());
+            builder.ApplyConfiguration(new PlantInformationDetailsEntityConfiguration());
         }
 
         public virtual async Task<int> SaveChangesAsync(int? userId = null)

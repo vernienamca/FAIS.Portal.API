@@ -32,18 +32,18 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(100)
                 .HasColumnName("SUBSTATION_NAME_OLD");
 
-            builder.Property(e => e.ClassSeq)
+            builder.Property(e => e.ClassId)
                 .IsRequired(false)
                 .HasColumnName("CLASS_SEQ");
 
             builder.Property(e => e.TransGrid)
                 .HasColumnName("TRANS_GRID");
 
-            builder.Property(e => e.DistrictSeq)
+            builder.Property(e => e.DistrictId)
                 .IsRequired()
                 .HasColumnName("DISTRICT_SEQ");
 
-            builder.Property(e => e.MidSeq)
+            builder.Property(e => e.MtdId)
                 .HasColumnName("MTD_SEQ");
 
             builder.Property(e => e.GmapCoord)
@@ -69,16 +69,16 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasMaxLength(250)
                 .HasColumnName("UDF3");
 
-            builder.Property(e => e.RegionSeq)
+            builder.Property(e => e.RegionId)
                 .HasColumnName("REGION_SEQ");
 
-            builder.Property(e => e.ProvSeq)
+            builder.Property(e => e.ProvId)
                 .HasColumnName("PROV_SEQ");
 
-            builder.Property(e => e.MunSeq)
+            builder.Property(e => e.MunId)
                 .HasColumnName("MUN_SEQ");
 
-            builder.Property(e => e.BrgySeq)
+            builder.Property(e => e.BrgyId)
                 .HasColumnName("BRGY_SEQ");
 
             builder.Property(e => e.IsActive)

@@ -58,6 +58,9 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<TransmissionLineProfile, TransmissionLineProfileDTO>().ReverseMap();
             CreateMap<TransmissionLineProfile, AddTransmissionLineProfileDTO>().ReverseMap();
             CreateMap<TransmissionLineProfile, UpdateTransmissionLineProfileDTO>().ReverseMap();
+            CreateMap<PlantInformation, PlantInformationDTO>().ReverseMap();
+            CreateMap<PlantInformation, AddPlantInformationDTO>().ReverseMap();
+            CreateMap<PlantInformation, UpdatePlantInformationDTO>().ReverseMap();
         }        
     }
 }

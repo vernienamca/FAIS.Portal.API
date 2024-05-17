@@ -68,7 +68,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPost("asset-profile")]
         [ProducesResponseType(typeof(AssetProfile), StatusCodes.Status200OK)]
-        public async Task<IActionResult> PostCreateInterpolation(AddAssetProfileDTO assetProfileDTO)
+        public async Task<IActionResult> Add(AddAssetProfileDTO assetProfileDTO)
         {
             if (assetProfileDTO == null)
                 throw new ArgumentNullException(nameof(assetProfileDTO));

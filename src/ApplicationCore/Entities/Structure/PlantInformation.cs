@@ -1,12 +1,14 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    public class PlantInformation : BaseEntity<int>
+    public class PlantInformation : BaseEntity<string>
     {
-        [DataMember]
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [DataMember]
         public string PlantCode { get; set; }
         [DataMember]
@@ -14,15 +16,15 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]        
         public string SubstationNameOld { get; set; }
         [DataMember]
-        public int? ClassSeq{ get; set; }
+        public int? ClassId { get; set; }
         [DataMember]
         public int TransGrid { get; set; }
         [DataMember]
-        public int DistrictSeq { get; set; }
+        public int DistrictId { get; set; }
         [DataMember]
-        public int? MidSeq { get; set; }
+        public int? MtdId { get; set; }
         [DataMember]
-        public string? GmapCoord { get; set; }
+        public string GmapCoord { get; set; }
         [DataMember]
         public DateTime? CommissionDate { get; set; }
         [DataMember]
@@ -32,13 +34,13 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public string UDF3 { get; set; }
         [DataMember]
-        public int? RegionSeq { get; set; }
+        public int? RegionId { get; set; }
         [DataMember]
-        public int? ProvSeq { get; set; }
+        public int? ProvId { get; set; }
         [DataMember]
-        public int? MunSeq { get; set; }
+        public int? MunId { get; set; }
         [DataMember]
-        public int? BrgySeq { get; set; }
+        public int? BrgyId { get; set; }
         [DataMember]
         public char IsActive { get; set; }
         [DataMember]
@@ -51,7 +53,5 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public DateTime? UpdatedAt { get; set; }
         [DataMember]
         public int? UpdatedBy { get; set;}
-
-
     }
 }
