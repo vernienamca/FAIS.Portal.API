@@ -52,7 +52,9 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("USER_MODIFIED");
 
-            
+            builder.Property(e => e.CostCenterTypeLto)
+                .IsRequired(false)
+                .HasColumnName("COST_CENTER_TYPE_LTO");
         }
     }
 }

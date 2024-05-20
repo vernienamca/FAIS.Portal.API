@@ -80,6 +80,33 @@ namespace FAIS.Infrastructure.Data
                                  UpdatedAt = pi.UpdatedAt
                              }).FirstOrDefaultAsync(t => t.PlantCode == plantCode);
 
+            if (plantInfo != null)
+            {
+                var plantInfoDetails = (from pi in _dbContext.PlantInformationDetails.AsNoTracking()
+                                        join cc in _dbContext.CostCenters.AsNoTracking() on pi.CostCenter.ToString() equals cc.MCNumber into ccX
+                                        from cc in ccX.DefaultIfEmpty()
+                                        join usr in _dbContext.Users.AsNoTracking() on pi.CreatedBy equals usr.Id
+                                        join usrU in _dbContext.Users.AsNoTracking() on pi.UpdatedBy equals usrU.Id into usrUX
+                                        from usrU in usrUX.DefaultIfEmpty()
+                                        orderby pi.CreatedAt descending
+                                        select new PlantInformationDetailModel()
+                                        {
+                                            Id = pi.Id,
+                                            PlantCode = pi.PlantCode,
+                                            CostCenter = pi.CostCenter,
+                                            CostCenterNumber = cc.MCNumber,
+                                            DateRemoved = pi.DateRemoved,
+                                            CreatedBy = pi.CreatedBy,
+                                            CreatedByName = $"{usr.FirstName} {usr.LastName}",
+                                            CreatedAt = pi.CreatedAt,
+                                            UpdatedBy = pi.UpdatedBy,
+                                            UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                                            UpdatedAt = pi.UpdatedAt
+                                        }).Where(d => d.PlantCode == plantCode && d.DateRemoved == null).ToList();
+
+                plantInfo.Result.PlantInformationDetail = plantInfoDetails;
+            }
+
             return await plantInfo;
         }
 

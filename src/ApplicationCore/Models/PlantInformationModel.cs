@@ -38,5 +38,7 @@ namespace FAIS.ApplicationCore.Models
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
         //ADDITIONAL FOR EDIT FIELDS
+
+        public List<PlantInformationDetailModel> PlantInformationDetail { get; set; }
     }
 }

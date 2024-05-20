@@ -41,6 +41,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<ProjectProfileComponent> ProjectProfileComponents { get; set; }
         public DbSet<TransmissionLineProfile> TransmissionLineProfile { get; set; }
         public DbSet<PlantInformation> PlantInformation { get; set; }
+        public DbSet<PlantInformationDetails> PlantInformationDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
