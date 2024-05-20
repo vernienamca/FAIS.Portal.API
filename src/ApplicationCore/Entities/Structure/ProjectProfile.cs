@@ -28,6 +28,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int ProjClassSeq { get; set; }
 
         [DataMember]
+        public int ProjStageSeq { get; set; }
+
+        [DataMember]
         public DateTime TpsrMonth { get; set; }
 
         [DataMember]
