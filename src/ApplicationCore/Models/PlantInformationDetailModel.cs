@@ -17,6 +17,6 @@ namespace FAIS.ApplicationCore.Models
         public string UpdatedByName { get; set; } 
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public DateTime? DateRemoved { get; set; }
+        public DateTime? RemovedAt { get; set; }
     }
 }

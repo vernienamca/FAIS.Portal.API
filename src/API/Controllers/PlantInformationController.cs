@@ -27,7 +27,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlantInformationController"/> class.
-        /// <param name="assetProfileService">List the plant information.</param>
+        /// <param name="service">List the plant information.</param>
         /// </summary>
         public PlantInformationController(IPlantInformationService service) 
         {

@@ -11,6 +11,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     {
         IReadOnlyCollection<PlantInformationDetailModel> Get();
         Task<PlantInformationDetailModel> GetById(int id);
+        IReadOnlyCollection<PlantInformationDetails> GetByCode(string plantCode);
         Task<PlantInformationDetails> Add(PlantInformationDetails dto);
         Task<PlantInformationDetails> Update(PlantInformationDetails dto);
     }

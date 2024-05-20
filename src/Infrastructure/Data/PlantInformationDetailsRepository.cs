@@ -25,7 +25,7 @@ namespace FAIS.Infrastructure.Data
                                     PlantCode = pi.PlantCode,
                                     CostCenter = pi.CostCenter,
                                     CostCenterNumber = cc.MCNumber,
-                                    DateRemoved = pi.DateRemoved,
+                                    RemovedAt = pi.RemovedAt,
                                     CreatedBy = pi.CreatedBy,
                                     CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                     CreatedAt = pi.CreatedAt,
@@ -51,7 +51,7 @@ namespace FAIS.Infrastructure.Data
                                  PlantCode = pi.PlantCode,
                                  CostCenter = pi.CostCenter,
                                  CostCenterNumber = cc.MCNumber,
-                                 DateRemoved = pi.DateRemoved,
+                                 RemovedAt = pi.RemovedAt,
                                  CreatedBy = pi.CreatedBy,
                                  CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                  CreatedAt = pi.CreatedAt,
@@ -61,6 +61,13 @@ namespace FAIS.Infrastructure.Data
                              }).FirstOrDefaultAsync(t => t.Id == id);
 
             return await piDetail;
+        }
+
+        public IReadOnlyCollection<PlantInformationDetails> GetByCode(string code)
+        {
+            var piDetail = _dbContext.PlantInformationDetails.AsNoTracking().Where(t => t.PlantCode == code).ToList();
+
+            return piDetail;
         }
 
         public async Task<PlantInformationDetails> Add(PlantInformationDetails dto)

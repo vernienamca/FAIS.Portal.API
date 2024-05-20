@@ -18,7 +18,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public DateTime? UpdatedAt { get; set;}
         [DataMember]
-        public DateTime? DateRemoved { get; set;}
+        public DateTime? RemovedAt { get; set;}
         [DataMember]
         public int CreatedBy { get; set;}
         [DataMember]

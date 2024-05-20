@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.DTOs
@@ -50,6 +52,7 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime StatusDate { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public List<AddPlantInformationDetailDTO> PlantInformationDetailDTO  { get; set; }
     }
     public class UpdatePlantInformationDTO
     {
@@ -73,5 +76,6 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime StatusDate { get; set; }
         public int UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; } = DateTime.Now;
+        public List<UpdatePlantInformationDetailDTO> PlantInformationDetailDTO { get; set; }
     }
 }

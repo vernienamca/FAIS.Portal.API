@@ -95,14 +95,14 @@ namespace FAIS.Infrastructure.Data
                                             PlantCode = pi.PlantCode,
                                             CostCenter = pi.CostCenter,
                                             CostCenterNumber = cc.MCNumber,
-                                            DateRemoved = pi.DateRemoved,
+                                            RemovedAt = pi.RemovedAt,
                                             CreatedBy = pi.CreatedBy,
                                             CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                             CreatedAt = pi.CreatedAt,
                                             UpdatedBy = pi.UpdatedBy,
                                             UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
                                             UpdatedAt = pi.UpdatedAt
-                                        }).Where(d => d.PlantCode == plantCode && d.DateRemoved == null).ToList();
+                                        }).Where(d => d.PlantCode == plantCode && d.RemovedAt == null).ToList();
 
                 plantInfo.Result.PlantInformationDetail = plantInfoDetails;
             }
