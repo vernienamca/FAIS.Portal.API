@@ -295,6 +295,18 @@ namespace FAIS.API.Controllers
             userDTO.Password = EncryptionHelper.HashPassword(generatedPassword);
             userDTO.CreatedAt = DateTime.Now;
 
+            var existingEmail = await _userService.GetByEmailAddress(userDTO.EmailAddress);
+            if (existingEmail != null)
+            {
+                return Ok(new { errorDescription = "Email address already exists" });
+            }
+
+            var existingUser = await _userService.GetByUserName(userDTO.UserName);
+            if (existingUser != null)
+            {
+                return Ok(new { errorDescription = "Username already exists" });
+            }
+
             try
             {
                 var user = await _userService.Add(userDTO);
@@ -346,6 +358,12 @@ namespace FAIS.API.Controllers
 
             user.LastName = userDTO.LastName;
             user.MobileNumber = userDTO.MobileNumber;
+
+            var existingEmail = await _userService.GetByEmailAddress(userDTO.EmailAddress);
+            if (existingEmail != null)
+            {
+                return Ok(new { errorDescription = "Email address already exists" });
+            }
 
             if (!isMyProfile)
             {
