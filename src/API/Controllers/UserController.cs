@@ -270,7 +270,9 @@ namespace FAIS.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostCreateUser([FromBody] UserDTO userDTO)
         {
-            if (userDTO == null)
+            try
+            {
+                if (userDTO == null)
                 throw new ArgumentNullException(nameof(userDTO));
 
             if (!string.IsNullOrEmpty(userDTO.Photo))
@@ -295,20 +297,17 @@ namespace FAIS.API.Controllers
             userDTO.Password = EncryptionHelper.HashPassword(generatedPassword);
             userDTO.CreatedAt = DateTime.Now;
 
-            var existingEmail = await _userService.GetByEmailAddress(userDTO.EmailAddress);
-            if (existingEmail != null)
+            if (await _userService.GetByEmailAddress(userDTO.EmailAddress) != null)
             {
                 return Ok(new { errorDescription = "Email address already exists" });
             }
 
-            var existingUser = await _userService.GetByUserName(userDTO.UserName);
-            if (existingUser != null)
+            else if (await _userService.GetByUserName(userDTO.UserName) != null)
             {
                 return Ok(new { errorDescription = "Username already exists" });
             }
 
-            try
-            {
+          
                 var user = await _userService.Add(userDTO);
 
                 if (userDTO.TAFG.Count > 0)
