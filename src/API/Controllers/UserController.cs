@@ -359,7 +359,7 @@ namespace FAIS.API.Controllers
             user.MobileNumber = userDTO.MobileNumber;
 
             var existingEmail = await _userService.GetByEmailAddress(userDTO.EmailAddress);
-            if (existingEmail != null)
+            if (existingEmail != null && user.EmailAddress != userDTO.EmailAddress)
             {
                 return Ok(new { errorDescription = "Email address already exists" });
             }
