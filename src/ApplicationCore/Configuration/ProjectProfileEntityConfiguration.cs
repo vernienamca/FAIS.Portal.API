@@ -7,7 +7,6 @@ namespace FAIS.ApplicationCore.Configuration
 {
     public class ProjectProfileEntityConfiguration : IEntityTypeConfiguration<ProjectProfile>
     {
-
         public void Configure(EntityTypeBuilder<ProjectProfile> builder)
         {
             if (builder == null)
@@ -25,16 +24,29 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("PROJECT_NAME");
 
-            builder.Property(e => e.ProjectStageSeq)
-                .HasColumnName("PROJECT_STAGE_SEQ");
-
             builder.Property(e => e.Remarks)
                 .IsRequired(false)
                 .HasColumnName("REMARKS");
 
+            builder.Property(e => e.UDF1)
+              .IsRequired(false)
+              .HasColumnName("UDF1");
+
+            builder.Property(e => e.UDF2)
+              .IsRequired(false)
+              .HasColumnName("UDF2");
+
+            builder.Property(e => e.UDF3)
+              .IsRequired(false)
+              .HasColumnName("UDF3");
+
             builder.Property(e => e.ProjClassSeq)
                 .IsRequired()
                 .HasColumnName("PROJ_CLASS_SEQ");
+
+            builder.Property(e => e.ProjStageSeq)
+              .IsRequired()
+              .HasColumnName("PROJ_STAGE_SEQ");
 
             builder.Property(e => e.TpsrMonth)
                 .IsRequired()

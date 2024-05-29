@@ -27,5 +27,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int? UpdatedBy { get; set; }
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
+        [DataMember]
+        public DateTime? DateRemoved { get; set; }
     }
 }

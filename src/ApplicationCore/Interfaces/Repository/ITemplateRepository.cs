@@ -11,6 +11,7 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<TemplateModel> GetById(int id);
         Task<Template> Add(Template interpolation);
         Task<Template> Update(Template interpolation);
+        Task<Template> Delete(int id);
 
     }
 }

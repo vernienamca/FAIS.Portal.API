@@ -17,14 +17,15 @@ namespace FAIS.ApplicationCore.Services
         private readonly IProformaEntryDetailsRepository _detailsRepository;
         private readonly IMapper _mapper;
 
-        public ProformaEntriesService(IProformaEntriesRepository repository, IProformaEntryDetailsRepository detailsRepository , IMapper mapper)
+        public ProformaEntriesService(IProformaEntriesRepository repository, IProformaEntryDetailsRepository detailsRepository, IMapper mapper)
         {
             _repository = repository;
             _detailsRepository = detailsRepository;
             _mapper = mapper;
         }
 
-        public IReadOnlyCollection<ProformaEntry> Get() {
+        public IReadOnlyCollection<ProformaEntry> Get()
+        {
             return _repository.Get();
         }
 
@@ -56,7 +57,6 @@ namespace FAIS.ApplicationCore.Services
         {
             var proformaEntry = _mapper.Map<ProformaEntry>(proformaEntryDTO);
             var proformaEntryDetails = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
-
 
             var proformaEntryResult = await _repository.Update(proformaEntry);
 
@@ -95,6 +95,11 @@ namespace FAIS.ApplicationCore.Services
                 }
             }
             return proformaEntryResult;
+        }
+
+        public async Task Delete(int id)
+        {
+            await _repository.Delete(id);
         }
     }
 }

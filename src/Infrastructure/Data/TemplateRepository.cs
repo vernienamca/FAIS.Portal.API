@@ -4,6 +4,7 @@ using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,8 +48,9 @@ namespace FAIS.Infrastructure.Data
                                  CreatedAt = tmp.CreatedAt,
                                  UpdatedBy = tmp.UpdatedBy,
                                  UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                 UpdatedAt = tmp.UpdatedAt
-                             }).ToList();
+                                 UpdatedAt = tmp.UpdatedAt,
+                                 DateRemoved = tmp.DateRemoved
+                             }).Where(x => x.DateRemoved == null).ToList();
 
             return templates;
         }
@@ -88,8 +90,9 @@ namespace FAIS.Infrastructure.Data
                                 CreatedAt = tmp.CreatedAt,
                                 UpdatedBy = tmp.UpdatedBy,
                                 UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                UpdatedAt = tmp.UpdatedAt
-                             }).FirstOrDefaultAsync(t => t.Id == id);
+                                UpdatedAt = tmp.UpdatedAt,
+                                DateRemoved = tmp.DateRemoved
+                            }).FirstOrDefaultAsync(t => t.Id == id);
 
             return await template;
         }
@@ -102,6 +105,14 @@ namespace FAIS.Infrastructure.Data
         public async Task<Template> Update(Template template)
         {
             return await UpdateAsync(template);
+        }
+
+        public async Task<Template> Delete(int id)
+        {
+            var tmp = _dbContext.Templates.FirstOrDefaultAsync(x => x.Id == id);
+            tmp.Result.DateRemoved = DateTime.Now;
+
+            return await UpdateAsync(tmp.Result);
         }
     }
 }

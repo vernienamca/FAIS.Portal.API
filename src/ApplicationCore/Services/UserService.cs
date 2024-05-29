@@ -178,7 +178,7 @@ namespace FAIS.ApplicationCore.Services
             user.StatusCode = (int)UserStatusEnum.Active;
             user.StatusDate = DateTime.Now;
             user.DateExpired = DateTime.Now.AddDays(settings.PasswordExpiry);
-            user.ForcePasswordChange = "Y";
+            user.ForcePasswordChange = "N";
 
             await _auditLogService.Add(new AuditLogDTO()
             {
