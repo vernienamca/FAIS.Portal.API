@@ -26,7 +26,7 @@ namespace FAIS.Infrastructure.Data
                                join usr in _dbContext.Users.AsNoTracking() on ca.CreatedBy equals usr.Id
                                join usrU in _dbContext.Users.AsNoTracking() on ca.UpdatedBy equals usrU.Id 
                                     into joinedUsers from usrU in joinedUsers.DefaultIfEmpty()
-                               join libT in _dbContext.LibraryTypes.AsNoTracking() on ca.AccountGroupId equals libT.Id 
+                               join libT in _dbContext.LibraryOptions.AsNoTracking() on ca.AccountGroupId equals libT.Id 
                                     into joinedTypes from libT in joinedTypes.DefaultIfEmpty()
                                join libO in _dbContext.LibraryOptions.AsNoTracking() on ca.SubAccountGroupId equals libO.Id 
                                     into joinedOptions from libO in joinedOptions.DefaultIfEmpty()
@@ -34,7 +34,7 @@ namespace FAIS.Infrastructure.Data
                                select new ChartOfAccountModel()
                                {
                                    Id = ca.Id,
-                                   AcountGroup = libT.Name,
+                                   AcountGroup = libT.Description,
                                    IsActive = ca.IsActive == "Y" ? true : false,
                                    RcaGL = ca.RcaGL,
                                    RcaLedgerTitle = ca.RcaLedgerTitle,

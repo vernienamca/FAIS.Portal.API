@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FAIS.ApplicationCore.Models
 {
@@ -19,5 +20,15 @@ namespace FAIS.ApplicationCore.Models
         public int? UpdatedBy { get; set; }
         public string UpdatedByName { get; set; } = string.Empty;
         public DateTime? UpdatedAt { get; set; }
+        public string ParentValue { get; set; }
+        public int ParentId { get; set; }
+        public List<ChildValueModel> ChildValues { get; set; }
+      
+    }
+
+    public class ChildValueModel
+    {
+        public int Id { get; set; }
+        public string Description { get; set; }
     }
 }
