@@ -27,6 +27,10 @@ namespace FAIS.ApplicationCore.Services
             return _repository.GetAll();
         }
 
+        public IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code)
+        {
+            return _repository.GetDropdownValues(code);
+        }
         public LibraryOptionModel GetById(int id)
         {
             return _repository.GetAll().Where(x=>x.Id == id).FirstOrDefault();

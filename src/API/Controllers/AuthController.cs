@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using static ApplicationCore.Enumeration.LoginEnum;
 using Microsoft.AspNetCore.Http;
 using FAIS.ApplicationCore.Enumeration;
-using System.Diagnostics;
 
 namespace FAIS.Controllers
 {
@@ -58,6 +57,8 @@ namespace FAIS.Controllers
         /// <summary>
         /// Authenticates the user login credential.
         /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
         /// <returns></returns>
         [HttpGet("authenticate")]
         [ProducesResponseType(typeof(IReadOnlyCollection<string>), StatusCodes.Status200OK)]

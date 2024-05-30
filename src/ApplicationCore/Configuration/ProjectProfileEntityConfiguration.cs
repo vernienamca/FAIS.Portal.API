@@ -44,6 +44,10 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("PROJ_CLASS_SEQ");
 
+            builder.Property(e => e.ProjStageSeq)
+              .IsRequired()
+              .HasColumnName("PROJ_STAGE_SEQ");
+
             builder.Property(e => e.TpsrMonth)
                 .IsRequired()
                 .HasColumnName("TPSR_MONTH");

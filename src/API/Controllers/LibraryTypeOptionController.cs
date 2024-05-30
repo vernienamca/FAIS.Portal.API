@@ -12,8 +12,8 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
-    public class LibraryTypeOptionController : Controller
+    //[Authorize]
+    public class LibraryTypeOptionController : Controller 
     {
         #region Variables
 
@@ -45,6 +45,17 @@ namespace FAIS.Portal.API.Controllers
         public IActionResult Get()
         {
             return Ok(_libraryOptionService.Get());
+        }
+        /// <summary>
+        /// Retrieve dropdown values based on supplied code.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [HttpGet("dropdown-values")]
+        [ProducesResponseType(typeof(List<LibraryOptionModel>), StatusCodes.Status200OK)]
+        public IActionResult GetDropdownValues([FromQuery] string[] codes)
+        {
+            return Ok(_libraryOptionService.GetDropdownValues(codes));
         }
 
         /// <summary>
