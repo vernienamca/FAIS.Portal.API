@@ -14,7 +14,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PlantInformationController : ControllerBase
     {
         #region Variables
@@ -66,7 +66,7 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <param name="dto">The plant information data object.</param>
         /// <returns></returns>
-        [HttpPost("plant-information")]
+        [HttpPost()]
         [ProducesResponseType(typeof(PlantInformation), StatusCodes.Status200OK)]
         public async Task<IActionResult> Add(AddPlantInformationDTO dto)
         {
