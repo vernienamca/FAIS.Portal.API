@@ -51,11 +51,11 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        [HttpGet("{code}")]
+        [HttpGet("dropdown-values")]
         [ProducesResponseType(typeof(List<LibraryOptionModel>), StatusCodes.Status200OK)]
-        public IActionResult GetDropdownValues(string code)
+        public IActionResult GetDropdownValues([FromQuery] string[] codes)
         {
-            return Ok(_libraryOptionService.GetDropdownValues(code));
+            return Ok(_libraryOptionService.GetDropdownValues(codes));
         }
 
         /// <summary>

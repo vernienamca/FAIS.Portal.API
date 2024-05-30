@@ -52,26 +52,28 @@ namespace FAIS.Infrastructure.Data
             return libraryOption;
         }
 
-        public IReadOnlyCollection<LibraryOptionModel> GetDropdownValues(string code)
+        public IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code)
         {
             var parentValues = (from lo in _dbContext.LibraryOptions.AsNoTracking()
                                 join prt in _dbContext.LibraryTypes.AsNoTracking() on lo.LibraryTypeId equals prt.Id
-                                where prt.Code == code
-                                select new LibraryOptionModel()
+                                where code.Contains(prt.Code)
+                                select new DropdownModel()
                                 {
-                                    Id = prt.Id,
                                     LibraryTypeId = lo.LibraryTypeId,
+                                    LibraryTypeName = prt.Name,
                                     Description = prt.Description,
-                                    Code = lo.Code,
+                                    DropdownCode = prt.Code,
+                                    DependentCode = lo.Code,
                                     ParentValue = lo.Description,
                                     ParentId = lo.Id,
                                     ChildValues = (from lt in _dbContext.LibraryTypes.AsNoTracking()
                                                    where lt.Code == lo.Code
                                                    join lo2 in _dbContext.LibraryOptions.AsNoTracking() on lt.Id equals lo2.LibraryTypeId
-                                                   select new ChildValueModel
+                                                   select new ChildValueModel 
                                                    {
                                                        Id = lo2.Id,
-                                                       Description = lo2.Description
+                                                       Description = lo2.Description,
+                                                       Remark = lo2.Remarks
                                                    })
                                                    .ToList()
                                 })
