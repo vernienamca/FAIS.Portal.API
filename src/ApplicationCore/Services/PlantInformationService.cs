@@ -19,9 +19,10 @@ namespace FAIS.ApplicationCore.Services
         private readonly IPlantInformationDetailsRepository _detailsRepository;
         private readonly IMapper _mapper;
 
-        public PlantInformationService(IPlantInformationRepository repository, IMapper mapper)
+        public PlantInformationService(IPlantInformationRepository repository, IPlantInformationDetailsRepository detailsRepository, IMapper mapper)
         {
             _repository = repository;
+            _detailsRepository = detailsRepository;
             _mapper = mapper;
         }
 
@@ -30,9 +31,9 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public async Task<PlantInformationModel> GetByCode(string plantCode)
+        public PlantInformationModel GetByCode(string plantCode)
         {
-            return await _repository.GetByCode(plantCode);
+            return _repository.GetByCode(plantCode);
         }
 
         public async Task<PlantInformation> Add(AddPlantInformationDTO dto)
@@ -62,8 +63,8 @@ namespace FAIS.ApplicationCore.Services
                 throw new ArgumentNullException("Plant Information does not exist.");
 
             var mapper = _mapper.Map<PlantInformation>(dto);
-            mapper.CreatedBy = pi.Result.CreatedBy;
-            mapper.CreatedAt = pi.Result.CreatedAt;
+            mapper.CreatedBy = pi.CreatedBy;
+            mapper.CreatedAt = pi.CreatedAt;
 
             var piResult = await _repository.Update(mapper);
 

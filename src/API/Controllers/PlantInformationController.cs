@@ -53,7 +53,7 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
-        [ProducesResponseType(typeof(PlantInformationModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<PlantInformationModel>), StatusCodes.Status200OK)]
         public IActionResult GetByCode(string code)
         {
             return Ok(_service.GetByCode(code));
@@ -90,7 +90,7 @@ namespace FAIS.Portal.API.Controllers
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            var pi = await _service.GetByCode(dto.PlantCode);
+            var pi = _service.GetByCode(dto.PlantCode);
             if (dto.IsActive != pi.IsActive)
             {
                 pi.IsActive = dto.IsActive;

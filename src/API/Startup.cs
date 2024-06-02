@@ -95,6 +95,7 @@ namespace FAIS
             services.AddScoped(typeof(IProjectProfileComponentsRepository), typeof(ProjectProfileComponentsRepository));
             services.AddScoped(typeof(ITransmissionLineProfileRepository), typeof(TransmissionLineProfileRepository));
             services.AddScoped(typeof(IPlantInformationRepository), typeof(PlantInformationRepository));
+            services.AddScoped(typeof(IPlantInformationDetailsRepository), typeof(PlantInformationDetailsRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
