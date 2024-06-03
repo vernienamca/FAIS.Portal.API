@@ -21,7 +21,14 @@ namespace FAIS.Infrastructure.Data
                                    EmployeeNumber = t.EmployeeNumber,
                                    FirstName = t.FirstName,
                                    MiddleName = t.MiddleName,
-                                   LastName = t.LastName
+                                   LastName = t.LastName,
+                                   Position = t.Position,
+                                   Jg = t.Jg,
+                                   ChargingMC = t.ChargingMC,
+                                   EmailAddress = t.EmailAddress,
+                                   MobileNumber = t.MobileNumber,
+                                   EmployeeStatus = t.EmployeeStatus,
+                                   ApplicationStatus = t.ApplicationStatus
                                }).ToList();
 
             return employees;

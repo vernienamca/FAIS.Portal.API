@@ -27,10 +27,11 @@ namespace FAIS.ApplicationCore.Services
             return _repository.GetAll();
         }
 
-        public IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code)
+        public IReadOnlyCollection<DropdownModel> GetLookupValues(string[] code)
         {
             return _repository.GetDropdownValues(code);
         }
+
         public LibraryOptionModel GetById(int id)
         {
             return _repository.GetAll().Where(x=>x.Id == id).FirstOrDefault();
@@ -46,18 +47,29 @@ namespace FAIS.ApplicationCore.Services
             await _repository.Add(_mapper.Map<LibraryOptions>(model));
         }
 
-        public async Task<LibraryOptions> Update(LibraryOptionUpdateDto model)
+        public async Task<LibraryOptions> Update(LibraryOptionUpdateDto dto)
         {
-            var libraryOption = _repository.GetAll().FirstOrDefault(libraryOption => libraryOption.Id == model.Id) ?? throw new Exception("LibraryOptionId is not exist");
-            
-            if (libraryOption == null)
-                throw new ArgumentNullException("Library Option not exist.");
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            var mapper = _mapper.Map<LibraryOptions>(model);
-            mapper.CreatedBy = libraryOption.CreatedBy;
-            mapper.CreatedAt = libraryOption.CreatedAt;
+            var option = _repository.GetById(dto.Id);
+            option.LibraryTypeId = dto.LibraryTypeId;
+            option.Code = dto.Code;
+            option.Description = dto.Description;
+            option.Remarks = dto.Remarks;
+            option.Ranking = dto.Ranking;
+            option.UDF1 = dto.UDF1;
+            option.UDF2 = dto.UDF2;
+            option.UDF3 = dto.UDF3;
+            option.IsActive = dto.IsActive;
 
-            return await _repository.Update(mapper);
+            if (option.IsActive != dto.IsActive)
+                option.StatusDate = DateTime.Now;
+
+            option.UpdatedBy = dto.UpdatedBy;
+            option.UpdatedAt = DateTime.Now;
+
+            return await _repository.Update(option);
         }
     }
 }

@@ -11,10 +11,10 @@ namespace FAIS.ApplicationCore.Interfaces.Service
     public interface ILibraryOptionService
     {
         IReadOnlyCollection<LibraryOptionModel> Get();
-        public IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code);
+        public IReadOnlyCollection<DropdownModel> GetLookupValues(string[] code);
         LibraryOptionModel GetById(int id);
         Task Delete(int id);
         Task Add(LibraryOptionAddDto model);
-        Task<LibraryOptions> Update(LibraryOptionUpdateDto model);
+        Task<LibraryOptions> Update(LibraryOptionUpdateDto dto);
     }
 }

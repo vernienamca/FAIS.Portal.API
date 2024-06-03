@@ -8,6 +8,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     public interface ILibraryOptionRepository
     {
         IReadOnlyCollection<LibraryOptionModel> GetAll();
+        LibraryOptions GetById(int id);
         IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code);
         Task<LibraryOptions> Add(LibraryOptions libraryOptionType);
         Task<LibraryOptions> Update(LibraryOptions libraryOptionType);

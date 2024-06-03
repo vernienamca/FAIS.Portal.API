@@ -35,7 +35,7 @@ namespace FAIS.Infrastructure.Data
                                      Code = lo.Code,
                                      Description = lo.Description,
                                      IsActive = lo.IsActive,
-                                     Remark = lo.Remarks,
+                                     Remarks = lo.Remarks,
                                      Ranking = lo.Ranking.Value,
                                      UDF1 = lo.UDF1,
                                      UDF2 = lo.UDF2,
@@ -50,6 +50,11 @@ namespace FAIS.Infrastructure.Data
                                  }).ToList();
 
             return libraryOption;
+        }
+
+        public LibraryOptions GetById(int id)
+        {
+            return _dbContext.LibraryOptions.FirstOrDefault(t => t.Id == id);
         }
 
         public IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code)

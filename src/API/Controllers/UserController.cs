@@ -20,7 +20,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -84,6 +84,17 @@ namespace FAIS.API.Controllers
         public IActionResult Get()
         {
             return Ok(_userService.Get());
+        }
+
+        /// <summary>
+        /// List the employees.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("employees")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<EmployeeModel>), StatusCodes.Status200OK)]
+        public IActionResult GetEmployees()
+        {
+            return Ok(_userService.GetEmployees());
         }
 
         /// <summary>

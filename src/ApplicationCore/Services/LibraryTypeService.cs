@@ -59,7 +59,6 @@ namespace FAIS.ApplicationCore.Services
             mapper.CreatedAt = libraryType.Result.CreatedAt;
             mapper.UpdatedAt = DateTime.Now;
             return await _repository.Update(mapper);
-
         }
     }
 }

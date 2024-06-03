@@ -53,8 +53,6 @@ namespace FAIS.ApplicationCore.Services
 
         public IReadOnlyCollection<EmployeeModel> GetEmployees()
         {
-            var test = _employeeRepository.Get();
-
             return _employeeRepository.Get();
         }
 
