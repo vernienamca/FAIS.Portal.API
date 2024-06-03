@@ -53,7 +53,7 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
-        [ProducesResponseType(typeof(PlantInformationModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<PlantInformationModel>), StatusCodes.Status200OK)]
         public IActionResult GetByCode(string code)
         {
             return Ok(_service.GetByCode(code));
@@ -66,7 +66,7 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <param name="dto">The plant information data object.</param>
         /// <returns></returns>
-        [HttpPost("plant-information")]
+        [HttpPost()]
         [ProducesResponseType(typeof(PlantInformation), StatusCodes.Status200OK)]
         public async Task<IActionResult> Add(AddPlantInformationDTO dto)
         {
@@ -90,7 +90,7 @@ namespace FAIS.Portal.API.Controllers
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            var pi = await _service.GetByCode(dto.PlantCode);
+            var pi = _service.GetByCode(dto.PlantCode);
             if (dto.IsActive != pi.IsActive)
             {
                 pi.IsActive = dto.IsActive;

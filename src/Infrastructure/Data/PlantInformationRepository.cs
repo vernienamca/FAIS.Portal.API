@@ -17,16 +17,18 @@ namespace FAIS.Infrastructure.Data
             var plantInfo = (from pi in _dbContext.PlantInformation.AsNoTracking()
                                 join usr in _dbContext.Users.AsNoTracking() on pi.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on pi.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
-                                orderby pi.CreatedAt descending
+                                join trs in _dbContext.LibraryOptions.AsNoTracking() on pi.TransGrid equals trs.Id into trsX from trs in trsX.DefaultIfEmpty()
+                                join dis in _dbContext.LibraryOptions.AsNoTracking() on pi.DistrictId equals dis.Id into disX from dis in disX.DefaultIfEmpty()
+                             orderby pi.CreatedAt descending
                                 select new PlantInformationModel()
                                 {
                                     PlantCode = pi.PlantCode,
                                     SubstationName = pi.SubstationName,
                                     SubstationNameOld = pi.SubstationNameOld,
                                     TransGrid = pi.TransGrid,
-                                    TransGridDescription = string.Empty,
+                                    TransGridDescription = trs.Description,
                                     DistrictId = pi.DistrictId,
-                                    DistrictName = string.Empty,
+                                    DistrictName = dis.Description,
                                     GmapCoord = pi.GmapCoord,
                                     CommissionDate = pi.CommissionDate,
                                     IsActive = pi.IsActive,
@@ -41,7 +43,7 @@ namespace FAIS.Infrastructure.Data
             return plantInfo;
         }
 
-        public async Task<PlantInformationModel> GetByCode(string plantCode)
+        public PlantInformationModel GetByCode(string plantCode)
         {
             var plantInfo = (from pi in _dbContext.PlantInformation.AsNoTracking()
                              join usr in _dbContext.Users.AsNoTracking() on pi.CreatedBy equals usr.Id
@@ -78,7 +80,7 @@ namespace FAIS.Infrastructure.Data
                                  UpdatedBy = pi.UpdatedBy,
                                  UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
                                  UpdatedAt = pi.UpdatedAt
-                             }).FirstOrDefaultAsync(t => t.PlantCode == plantCode);
+                             }).FirstOrDefault(t => t.PlantCode == plantCode);
 
             if (plantInfo != null)
             {
@@ -104,10 +106,10 @@ namespace FAIS.Infrastructure.Data
                                             UpdatedAt = pi.UpdatedAt
                                         }).Where(d => d.PlantCode == plantCode && d.RemovedAt == null).ToList();
 
-                plantInfo.Result.PlantInformationDetail = plantInfoDetails;
+                plantInfo.PlantInformationDetail = plantInfoDetails;
             }
 
-            return await plantInfo;
+            return plantInfo;
         }
 
         public async Task<PlantInformation> Add(PlantInformation dto)

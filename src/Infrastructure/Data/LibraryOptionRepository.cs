@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Linq;
 using DocumentFormat.OpenXml.Office.Word;
+using FAIS.ApplicationCore.Entities.Security;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -50,6 +51,40 @@ namespace FAIS.Infrastructure.Data
 
             return libraryOption;
         }
+
+        public IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code)
+        {
+            var parentValues = (from lo in _dbContext.LibraryOptions.AsNoTracking()
+                                join prt in _dbContext.LibraryTypes.AsNoTracking() on lo.LibraryTypeId equals prt.Id
+                                where code.Contains(prt.Code)
+                                select new DropdownModel()
+                                {
+                                    LibraryTypeId = lo.LibraryTypeId,
+                                    LibraryTypeName = prt.Name,
+                                    Description = prt.Description,
+                                    DropdownCode = prt.Code,
+                                    DependentCode = lo.Code,
+                                    ParentValue = lo.Description,
+                                    ParentId = lo.Id,
+                                    ChildValues = (from lt in _dbContext.LibraryTypes.AsNoTracking()
+                                                   where lt.Code == lo.Code
+                                                   join lo2 in _dbContext.LibraryOptions.AsNoTracking() on lt.Id equals lo2.LibraryTypeId
+                                                   select new ChildValueModel 
+                                                   {
+                                                       Id = lo2.Id,
+                                                       Description = lo2.Description,
+                                                       Remark = lo2.Remarks
+                                                   })
+                                                   .ToList()
+                                })
+                                .ToList();
+
+            return parentValues;
+        }
+            
+
+
+
 
         public async Task Delete(int libraryOptionid)
         {
