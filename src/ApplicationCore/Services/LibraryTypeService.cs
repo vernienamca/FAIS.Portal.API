@@ -49,14 +49,15 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<LibraryType> Update(UpdateLibraryTypeDTO dto)
         {
-            var libraryType = _repository.GetById(dto.Id) ?? throw new Exception("Library Type ID does not exist");
+            var libraryType = _repository.GetById(dto.Id) ?? throw new Exception("Library type ID does not exist.");
 
             if (libraryType == null)
-                throw new ArgumentNullException("Library Type not exist.");
+                throw new ArgumentNullException("Library type not exist.");
 
             var mapper = _mapper.Map<LibraryType>(dto);
             mapper.CreatedBy = libraryType.Result.CreatedBy;
             mapper.CreatedAt = libraryType.Result.CreatedAt;
+            mapper.UpdatedAt = DateTime.Now;
             return await _repository.Update(mapper);
 
         }

@@ -20,6 +20,7 @@ namespace FAIS.Infrastructure.Data
                                   join usrC in _dbContext.Users.AsNoTracking() on lib.CreatedBy equals usrC.Id
                                   join usrU in _dbContext.Users.AsNoTracking() on lib.UpdatedBy equals usrU.Id into usrUX
                                   from usrU in usrUX.DefaultIfEmpty()
+                                  orderby lib.CreatedAt descending
                                   select new LibraryTypeModel()
                                   {
                                       Id = lib.Id,

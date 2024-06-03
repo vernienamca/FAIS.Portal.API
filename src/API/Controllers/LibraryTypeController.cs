@@ -80,7 +80,7 @@ namespace FAIS.API.Controllers
 
         #endregion
 
-        #region post
+        #region Post
 
         /// <summary>
         /// Posts the create library type.
@@ -97,7 +97,7 @@ namespace FAIS.API.Controllers
             return Ok(_libraryTypeService.Add(dto));
         }
 
-        #endregion
+        #endregion Post
 
         #region Put
 
