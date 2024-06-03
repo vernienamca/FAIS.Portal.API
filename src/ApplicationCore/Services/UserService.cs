@@ -22,13 +22,15 @@ namespace FAIS.ApplicationCore.Services
         private readonly ILibraryTypeRepository _ILibraryTypeRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IAuditLogService _auditLogService;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public UserService(IUserRepository userRepository
             , ISettingsRepository settingsRepository
             , ILoginHistoryRepository historyRepository
             , ILibraryTypeRepository iLibraryTypeRepository
             , IUserRoleRepository userRoleRepository
-            , IAuditLogService auditLogService)
+            , IAuditLogService auditLogService
+            , IEmployeeRepository employeeRepository)
         {
             _userRepository = userRepository;
             _settingsRepository = settingsRepository;
@@ -36,6 +38,7 @@ namespace FAIS.ApplicationCore.Services
             _ILibraryTypeRepository = iLibraryTypeRepository;
             _userRoleRepository = userRoleRepository;
             _auditLogService = auditLogService;
+            _employeeRepository = employeeRepository;
         }
 
         public IReadOnlyCollection<UserModel> Get()
@@ -46,6 +49,13 @@ namespace FAIS.ApplicationCore.Services
         public async Task<User> GetById(int id)
         {
             return await _userRepository.GetById(id);
+        }
+
+        public IReadOnlyCollection<EmployeeModel> GetEmployees()
+        {
+            var test = _employeeRepository.Get();
+
+            return _employeeRepository.Get();
         }
 
         public async Task<User> GetByUserName(string userName)
