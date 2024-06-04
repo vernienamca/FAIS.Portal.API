@@ -173,6 +173,7 @@ namespace FAIS.Infrastructure.Data
         {
             IReadOnlyCollection<UserTAFGModel> tafgs = (from ufg in _dbContext.UserTAFGs.Where(x => x.UserId == userId).AsNoTracking()
                                                         join lib in _dbContext.LibraryTypes.Where(x => x.Code == "TAFG").AsNoTracking() on ufg.TAFGId equals lib.Id
+                                                        join libO in _dbContext.LibraryOptions on lib.Id equals libO.LibraryTypeId
                                                         select new UserTAFGModel
                                                         {
                                                             TAFGId = ufg.TAFGId,
@@ -202,14 +203,15 @@ namespace FAIS.Infrastructure.Data
 
             foreach (string tafg in userTAFGs)
             {
-                var libraryType = _dbContext.LibraryTypes.FirstOrDefault(t => t.Code == "TAFG" && t.Name == tafg);
+                var libraryType = _dbContext.LibraryTypes.FirstOrDefault(t => t.Code == "TAFG");
+                var libraryTypeOption = _dbContext.LibraryOptions.FirstOrDefault(libO => libO.LibraryTypeId == libraryType.Id && libO.Description == tafg);
 
                 if (!tafgs.Select(s => s.TAFGName).Contains(tafg))
                 {
                     tafgToAdd.Add(new UserTAFG()
                     {
                         UserId = userId,
-                        TAFGId = libraryType.Id,
+                        TAFGId = libraryTypeOption.Id,
                         IsActive = 'Y',
                         StatusDate = DateTime.Now,
                         CreatedBy = 1,
