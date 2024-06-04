@@ -12,7 +12,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class LibraryTypeOptionController : Controller 
     {
         #region Variables
@@ -48,7 +48,7 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Retrieve dropdown values based on supplied code.
+        /// List the library type option values.
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>

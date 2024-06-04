@@ -32,7 +32,8 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<User> Update(User user);
         Task<string> WriteFile(IFormFile file, string directory);
         Task<int> GetLastUserId();
-        void SetTAFGs(int userId, IReadOnlyCollection<string> userTAFGs);
+        void SetTAFGs(int userId, IReadOnlyCollection<int> userTAFGs);
         void SetUserRoles(int userId, IReadOnlyCollection<UserRoleDTO> userRoles);
+        IReadOnlyCollection<int> GetUserTAFgs(int userId);
     }
 }

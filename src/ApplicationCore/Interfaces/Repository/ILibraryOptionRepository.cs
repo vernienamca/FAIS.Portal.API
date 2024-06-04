@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     {
         IReadOnlyCollection<LibraryOptionModel> GetAll();
         LibraryOptions GetById(int id);
-        IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code);
+        IReadOnlyCollection<DropdownModel> GetLookupValues(string[] codes);
         Task<LibraryOptions> Add(LibraryOptions libraryOptionType);
         Task<LibraryOptions> Update(LibraryOptions libraryOptionType);
         Task Delete(int libraryOptionid);

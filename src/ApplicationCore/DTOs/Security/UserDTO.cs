@@ -16,7 +16,7 @@ namespace FAIS.ApplicationCore.DTOs
         public string Division { get; set; }
         public string EmailAddress { get; set; }
         public string MobileNumber { get; set; }
-        public IReadOnlyCollection<string> TAFG { get; set; }
+        public IReadOnlyCollection<int> TAFG { get; set; }
         public string Photo { get; set; }
         public string SessionId { get; set; }
         public int SignInAttempts { get; set; }

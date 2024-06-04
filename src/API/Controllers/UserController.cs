@@ -132,9 +132,8 @@ namespace FAIS.API.Controllers
                 Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
-                Position = entity.PositionId.ToString(),
-                PositionDescription = _libraryTypeService.GetById(entity.PositionId)?.Result.Name,
-                Division = entity.DivisionId.HasValue ? entity.DivisionId.ToString() : string.Empty,
+                Position = entity.PositionId,
+                Division = entity.DivisionId.Value,
                 EmployeeNumber = entity.EmployeeNumber,
                 DateExpired = entity.DateExpired,
                 StatusDate = entity.StatusDate,
@@ -142,7 +141,7 @@ namespace FAIS.API.Controllers
                 MobileNumber = entity.MobileNumber,
                 Status = entity.StatusCode,
                 EmailAddress = entity.EmailAddress,
-                TAFGs = _libraryTypeService.GetLookupByCode(entity.Id, "TAFG"),
+                TAFGs = _userService.GetUserTAFgs(entity.Id),
                 OUFG = entity.OupFgId.HasValue ? entity.OupFgId.Value.ToString() : string.Empty,
                 LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
                 Photo = entity.Photo,
@@ -382,8 +381,10 @@ namespace FAIS.API.Controllers
                 user.FirstName = userDTO.FirstName;
                 user.EmailAddress = userDTO.EmailAddress;
 
-                if (userDTO.TAFG.Count > 0)
-                    _userService.SetTAFGs(user.Id, userDTO.TAFG);
+                _userService.SetTAFGs(user.Id, userDTO.TAFG);
+
+                //if (userDTO.TAFG.Count > 0)
+                //    _userService.SetTAFGs(user.Id, userDTO.TAFG);
 
                 if (!string.IsNullOrEmpty(userDTO.OupFG))
                     user.OupFgId = int.Parse(userDTO.OupFG);

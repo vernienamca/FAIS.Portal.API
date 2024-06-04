@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Linq;
-using DocumentFormat.OpenXml.Office.Word;
-using FAIS.ApplicationCore.Entities.Security;
 
 namespace FAIS.Infrastructure.Data
 {
@@ -57,40 +55,34 @@ namespace FAIS.Infrastructure.Data
             return _dbContext.LibraryOptions.FirstOrDefault(t => t.Id == id);
         }
 
-        public IReadOnlyCollection<DropdownModel> GetDropdownValues(string[] code)
+        public IReadOnlyCollection<DropdownModel> GetLookupValues(string[] codes)
         {
-            var parentValues = (from lo in _dbContext.LibraryOptions.AsNoTracking()
-                                join prt in _dbContext.LibraryTypes.AsNoTracking() on lo.LibraryTypeId equals prt.Id
-                                where code.Contains(prt.Code)
+            var values = (from opt in _dbContext.LibraryOptions.AsNoTracking()
+                                join typ in _dbContext.LibraryTypes.AsNoTracking() on opt.LibraryTypeId equals typ.Id
+                                where codes.Contains(typ.Code)
                                 select new DropdownModel()
                                 {
-                                    LibraryTypeId = lo.LibraryTypeId,
-                                    LibraryTypeName = prt.Name,
-                                    Description = prt.Description,
-                                    DropdownCode = prt.Code,
-                                    DependentCode = lo.Code,
-                                    ParentValue = lo.Description,
-                                    ParentId = lo.Id,
-                                    ChildValues = (from lt in _dbContext.LibraryTypes.AsNoTracking()
-                                                   where lt.Code == lo.Code
-                                                   join lo2 in _dbContext.LibraryOptions.AsNoTracking() on lt.Id equals lo2.LibraryTypeId
+                                    LibraryTypeId = opt.LibraryTypeId,
+                                    LibraryTypeName = typ.Name,
+                                    Description = typ.Description,
+                                    DropdownCode = typ.Code,
+                                    DependentCode = opt.Code,
+                                    ParentValue = opt.Description,
+                                    ParentId = opt.Id,
+                                    ChildValues = (from styp in _dbContext.LibraryTypes.AsNoTracking()
+                                                   where styp.Code == opt.Code
+                                                   join sopt in _dbContext.LibraryOptions.AsNoTracking() on styp.Id equals sopt.LibraryTypeId
                                                    select new ChildValueModel 
                                                    {
-                                                       Id = lo2.Id,
-                                                       Description = lo2.Description,
-                                                       Remark = lo2.Remarks
-                                                   })
-                                                   .ToList()
-                                })
-                                .ToList();
+                                                       Id = sopt.Id,
+                                                       Description = sopt.Description,
+                                                       Remark = sopt.Remarks
+                                                   }).ToList()
+                                }).ToList();
 
-            return parentValues;
+            return values;
         }
             
-
-
-
-
         public async Task Delete(int libraryOptionid)
         {
             var result = _dbContext.LibraryOptions.FirstOrDefault(res => res.Id == libraryOptionid);

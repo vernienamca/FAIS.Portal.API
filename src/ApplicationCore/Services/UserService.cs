@@ -51,6 +51,11 @@ namespace FAIS.ApplicationCore.Services
             return await _userRepository.GetById(id);
         }
 
+        public IReadOnlyCollection<int> GetUserTAFgs(int userId)
+        {
+            return _userRepository.GetUserTAFgs(userId);
+        }
+
         public IReadOnlyCollection<EmployeeModel> GetEmployees()
         {
             return _employeeRepository.Get();
@@ -240,7 +245,7 @@ namespace FAIS.ApplicationCore.Services
             _userRepository.SetUserRoles(userId, userRoles);
         }
 
-        public void SetTAFGs(int userId, IReadOnlyCollection<string> userTAFGs)
+        public void SetTAFGs(int userId, IReadOnlyCollection<int> userTAFGs)
         {
             _userRepository.SetTAFGs(userId, userTAFGs);
         }

@@ -20,10 +20,11 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<User> Add(User test);
         Task <User> Update(User user);
         void SetUserRoles(int userId, IReadOnlyCollection<UserRoleDTO> userRoles);
-        void SetTAFGs(int userId, IReadOnlyCollection<string> userTAFGs);
+        void SetTAFGs(int userId, IReadOnlyCollection<int> userTAFGs);
         Task<int> GetLastUserId();
         Task AddTAFGs(IReadOnlyCollection<UserTAFG> userTAFGs);
         Task<string> WriteFile(IFormFile file, string directory);
+        IReadOnlyCollection<int> GetUserTAFgs(int userId);
     }
 }
  

@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office.Word;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office.Word;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FAIS.ApplicationCore.DTOs;
@@ -8,6 +9,7 @@ using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,10 +42,10 @@ namespace FAIS.Infrastructure.Data
                             FirstName = usr.FirstName,
                             LastName = usr.LastName,
                             UserName = usr.UserName,
-                            Position = pst.Name,
-                            Division = div.Name,
-                            TAFGs = _dbContext.UserTAFGs.Where(x => x.UserId == usr.Id).AsNoTracking().Join(_dbContext.LibraryTypes.AsNoTracking(), fgs => fgs.TAFGId, lib => lib.Id,
-                                (fgs, lib) => new { fgs, lib }).Select(t => t.lib.Name).ToList(),
+                            //Position = pst.Name,
+                            //Division = div.Name,
+                            //TAFGs = _dbContext.UserTAFGs.Where(x => x.UserId == usr.Id).AsNoTracking().Join(_dbContext.LibraryTypes.AsNoTracking(), fgs => fgs.TAFGId, lib => lib.Id,
+                            //    (fgs, lib) => new { fgs, lib }).Select(t => t.lib.Name).ToList(),
                             OUFG = ofg.Name,
                             Status = usr.StatusCode,
                             Photo = usr.Photo
@@ -70,6 +72,11 @@ namespace FAIS.Infrastructure.Data
         public async Task<User> GetById(int id)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public IReadOnlyCollection<int> GetUserTAFgs(int userId)
+        {
+            return _dbContext.UserTAFGs.Where(x => x.UserId == userId).Select(t => t.TAFGId).ToList();
         }
 
         public async Task<List<PermissionModel>> GetPermissions(int id)
@@ -169,20 +176,27 @@ namespace FAIS.Infrastructure.Data
             _dbContext.SaveChanges();
         }
 
-        public void SetTAFGs(int userId, IReadOnlyCollection<string> userTAFGs)
+        public void SetTAFGs(int userId, IReadOnlyCollection<int> userTAFGs)
         {
-            IReadOnlyCollection<UserTAFGModel> tafgs = (from ufg in _dbContext.UserTAFGs.Where(x => x.UserId == userId).AsNoTracking()
-                                                        join lib in _dbContext.LibraryTypes.Where(x => x.Code == "TAFG").AsNoTracking() on ufg.TAFGId equals lib.Id
-                                                        join libO in _dbContext.LibraryOptions on lib.Id equals libO.LibraryTypeId
+            IReadOnlyCollection<UserTAFGModel> tafgs = (from ufg in _dbContext.UserTAFGs.Where(x => x.UserId == userId)
+                                                        join opt in _dbContext.LibraryOptions on ufg.TAFGId equals opt.Id
                                                         select new UserTAFGModel
                                                         {
-                                                            TAFGId = ufg.TAFGId,
-                                                            TAFGName = lib.Name
+                                                            TAFGId = ufg.TAFGId
                                                         }).ToList();
 
+            if (tafgs.Count == 1 && !userTAFGs.Any())
+            {
+                var userTags = _dbContext.UserTAFGs.Where(t => t.UserId == userId);
+                base._dbContext.UserTAFGs.RemoveRange(userTags);
+                _dbContext.SaveChanges();
+                return;
+            }
+
+
             var tafgsToRemove = (from ufg in tafgs
-                                 join tfg in _dbContext.UserTAFGs.Where(x => x.UserId == userId).AsNoTracking() on ufg.TAFGId equals tfg.TAFGId
-                                 where !userTAFGs.Select(s => s).Contains(ufg.TAFGName)
+                                 join tfg in _dbContext.UserTAFGs.Where(x => x.UserId == userId) on ufg.TAFGId equals tfg.TAFGId
+                                 where !userTAFGs.Select(s => s).Contains(ufg.TAFGId)
                                  select new UserTAFG
                                  {
                                      Id = tfg.Id,
@@ -201,12 +215,12 @@ namespace FAIS.Infrastructure.Data
 
             List<UserTAFG> tafgToAdd = new List<UserTAFG>();
 
-            foreach (string tafg in userTAFGs)
+            foreach (int tafg in userTAFGs)
             {
                 var libraryType = _dbContext.LibraryTypes.FirstOrDefault(t => t.Code == "TAFG");
-                var libraryTypeOption = _dbContext.LibraryOptions.FirstOrDefault(libO => libO.LibraryTypeId == libraryType.Id && libO.Description == tafg);
+                var libraryTypeOption = _dbContext.LibraryOptions.FirstOrDefault(opt => opt.LibraryTypeId == libraryType.Id && opt.Id == tafg);
 
-                if (!tafgs.Select(s => s.TAFGName).Contains(tafg))
+                if (!tafgs.Select(s => s.TAFGId).Contains(tafg))
                 {
                     tafgToAdd.Add(new UserTAFG()
                     {
@@ -223,6 +237,7 @@ namespace FAIS.Infrastructure.Data
             if (tafgToAdd.Any())
                 base._dbContext.UserTAFGs.AddRange(tafgToAdd);
 
+            _dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
             _dbContext.SaveChanges();
         }
 
