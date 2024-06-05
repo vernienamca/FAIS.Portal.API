@@ -73,6 +73,10 @@ namespace FAIS.Portal.API.Controllers
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
+            var isExists = _service.GetByCode(dto.PlantCode);
+            if (isExists != null)
+                throw new ArgumentNullException(nameof(dto));
+
             return Ok(await _service.Add(dto));
         }
         #endregion
