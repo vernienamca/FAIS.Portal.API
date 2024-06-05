@@ -178,66 +178,28 @@ namespace FAIS.Infrastructure.Data
 
         public void SetTAFGs(int userId, IReadOnlyCollection<int> userTAFGs)
         {
-            IReadOnlyCollection<UserTAFGModel> tafgs = (from ufg in _dbContext.UserTAFGs.Where(x => x.UserId == userId)
-                                                        join opt in _dbContext.LibraryOptions on ufg.TAFGId equals opt.Id
-                                                        select new UserTAFGModel
-                                                        {
-                                                            TAFGId = ufg.TAFGId
-                                                        }).ToList();
-
-            if (tafgs.Count == 1 && !userTAFGs.Any())
-            {
-                var userTags = _dbContext.UserTAFGs.Where(t => t.UserId == userId);
-                base._dbContext.UserTAFGs.RemoveRange(userTags);
-                _dbContext.SaveChanges();
-                return;
-            }
-
+            var tafgs = _dbContext.UserTAFGs.Where(x => x.UserId == userId).ToList();
 
             var tafgsToRemove = (from ufg in tafgs
                                  join tfg in _dbContext.UserTAFGs.Where(x => x.UserId == userId) on ufg.TAFGId equals tfg.TAFGId
-                                 where !userTAFGs.Select(s => s).Contains(ufg.TAFGId)
-                                 select new UserTAFG
-                                 {
-                                     Id = tfg.Id,
-                                     UserId = tfg.UserId,
-                                     TAFGId = tfg.TAFGId,
-                                     IsActive = tfg.IsActive,
-                                     StatusDate = tfg.StatusDate,
-                                     CreatedBy = tfg.CreatedBy,
-                                     CreatedAt = tfg.CreatedAt,
-                                     UpdatedAt = tfg.UpdatedAt,
-                                     UpdatedBy = tfg.UpdatedBy
-                                 }).ToList();
+                                 where !userTAFGs.Contains(ufg.TAFGId)
+                                 select tfg).ToList();
 
             if (tafgsToRemove.Any())
                 base._dbContext.UserTAFGs.RemoveRange(tafgsToRemove);
 
-            List<UserTAFG> tafgToAdd = new List<UserTAFG>();
-
-            foreach (int tafg in userTAFGs)
+            var tafgToAdd = userTAFGs.Where(tafg => !tafgs.Any(ufg => ufg.TAFGId == tafg)).Select(tafg => new UserTAFG
             {
-                var libraryType = _dbContext.LibraryTypes.FirstOrDefault(t => t.Code == "TAFG");
-                var libraryTypeOption = _dbContext.LibraryOptions.FirstOrDefault(opt => opt.LibraryTypeId == libraryType.Id && opt.Id == tafg);
-
-                if (!tafgs.Select(s => s.TAFGId).Contains(tafg))
-                {
-                    tafgToAdd.Add(new UserTAFG()
-                    {
-                        UserId = userId,
-                        TAFGId = libraryTypeOption.Id,
-                        IsActive = 'Y',
-                        StatusDate = DateTime.Now,
-                        CreatedBy = 1,
-                        CreatedAt = DateTime.Now
-                    });
-                }
-            }
+                UserId = userId,
+                TAFGId = tafg,
+                IsActive = 'Y',
+                StatusDate = DateTime.Now,
+                CreatedBy = 1,
+                CreatedAt = DateTime.Now
+            }).ToList();
 
             if (tafgToAdd.Any())
                 base._dbContext.UserTAFGs.AddRange(tafgToAdd);
-
-            _dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
             _dbContext.SaveChanges();
         }
 
