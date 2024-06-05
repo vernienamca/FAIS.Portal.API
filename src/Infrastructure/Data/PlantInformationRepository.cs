@@ -96,7 +96,7 @@ namespace FAIS.Infrastructure.Data
                                             Id = pi.Id,
                                             PlantCode = pi.PlantCode,
                                             CostCenter = pi.CostCenter,
-                                            CostCenterNumber = cc.MCNumber,
+                                            costCenterTypeLto = pi.CostCenterTypeLto,
                                             RemovedAt = pi.RemovedAt,
                                             CreatedBy = pi.CreatedBy,
                                             CreatedByName = $"{usr.FirstName} {usr.LastName}",

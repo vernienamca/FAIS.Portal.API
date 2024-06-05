@@ -523,7 +523,7 @@ namespace FAIS.API.Controllers
 
         #endregion Put
 
-        private string GenerateEmailContent(string roleName, string assetName, int? id, string supportEmail, string baseUrl, bool editMode,string firstName, int moduleId)
+        private string GenerateEmailContent(string roleName, string assetName, string? id, string supportEmail, string baseUrl, bool editMode,string firstName, int moduleId)
         {
             var url = _moduleService.GetById (moduleId);
             string htmlTemplatePath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("EmailTemplatePath")["NotifRole"];
