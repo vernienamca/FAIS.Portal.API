@@ -17,7 +17,6 @@ namespace FAIS.ApplicationCore.DTOs
     }
     public class AddPlantInformationDetailDTO
     {
-        public string PlantCode { get; set; }
         public int CostCenter { get; set; }
         public int? CostCenterTypeLto { get; set; }
         public int CreatedBy { get; set; }
@@ -26,7 +25,6 @@ namespace FAIS.ApplicationCore.DTOs
     public class UpdatePlantInformationDetailDTO
     {
         public int Id { get; set; }
-        public string PlantCode { get; set; }
         public int CostCenter { get; set; }
         public int? CostCenterTypeLto { get; set; }
         public DateTime? RemovedAt { get; set; }
