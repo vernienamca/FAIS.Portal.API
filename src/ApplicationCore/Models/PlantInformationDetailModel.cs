@@ -10,7 +10,7 @@ namespace FAIS.ApplicationCore.Models
         public int Id { get; set; }
         public string PlantCode { get; set; }
         public int CostCenter { get; set; }
-        public string CostCenterNumber { get; set; }
+        public int? costCenterTypeLto { get; set; }
         public string CreatedByName { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
