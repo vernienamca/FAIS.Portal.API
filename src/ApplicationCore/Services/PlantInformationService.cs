@@ -92,11 +92,13 @@ namespace FAIS.ApplicationCore.Services
                     {
                         if (item.Id > 0)
                         {
+                            item.UpdatedBy = dto.UpdatedBy;
                             await _detailsRepository.Update(item);
                         }
                         else
                         {
                             item.PlantCode = piResult.PlantCode;
+                            item.CreatedBy = dto.UpdatedBy;
                             await _detailsRepository.Add(item);
                         }
                     }
