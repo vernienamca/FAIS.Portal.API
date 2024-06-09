@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -31,16 +32,6 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.GetById(id);
         }
 
-        public IReadOnlyCollection<string> GetLookupByCode(int id, string code)
-        {
-            return _repository.GetLookupByCode(id, code);
-        }
-
-        public IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode)
-        {
-            return _repository.GetLibrarybyCodes(libraryCode);
-        }
-
         public async Task<LibraryType> Add(AddLibraryTypeDTO dto)
         {
             var libraryTypeDto = _mapper.Map<LibraryType>(dto);
@@ -59,6 +50,11 @@ namespace FAIS.ApplicationCore.Services
             mapper.CreatedAt = libraryType.Result.CreatedAt;
             mapper.UpdatedAt = DateTime.Now;
             return await _repository.Update(mapper);
+        }
+
+        public async Task<LibraryType> GetByCode(string code)
+        {
+            return await _repository.GetByCode(code);
         }
     }
 }

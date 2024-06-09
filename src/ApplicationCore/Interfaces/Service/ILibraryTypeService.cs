@@ -11,9 +11,8 @@ namespace FAIS.ApplicationCore.Interfaces
     {
         IReadOnlyCollection<LibraryTypeModel> Get();
         Task<LibraryType> GetById(int id);
-        IReadOnlyCollection<string> GetLookupByCode(int id, string code);
-        IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode);
         Task<LibraryType> Add(AddLibraryTypeDTO dto);
         Task<LibraryType> Update(UpdateLibraryTypeDTO dto);
+        Task<LibraryType> GetByCode(string code);
     }
 }

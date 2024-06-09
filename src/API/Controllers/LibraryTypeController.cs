@@ -89,11 +89,15 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(LibraryType), StatusCodes.Status200OK)]
-        public IActionResult Add([FromBody] AddLibraryTypeDTO dto)
+        public async Task<IActionResult> Add([FromBody] AddLibraryTypeDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
+            if ( await _libraryTypeService.GetByCode(dto.Code) != null)
+            {
+                return Ok(new { errorDescription = "Code already in use/ Duplicate code detected" });
+            }
             return Ok(_libraryTypeService.Add(dto));
         }
 
