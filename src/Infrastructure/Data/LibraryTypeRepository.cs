@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.Entities.Security;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -63,24 +64,9 @@ namespace FAIS.Infrastructure.Data
             return await UpdateAsync(libraryType);
         }
 
-        public IReadOnlyCollection<string> GetLookupByCode(int id, string code)
+        public async Task<LibraryType> GetByCode(string code)
         {
-            var userTafgId = _dbContext.UserTAFGs.AsNoTracking().Where(t => t.UserId == id).Select(s => s.TAFGId);
-            var libraryTypeCodeId = _dbContext.LibraryTypes.AsNoTracking().Where(t => userTafgId.Contains(t.Id) && t.Code == code).Select(t => t.Id);
-            var libraryTypeDescriptions = _dbContext.LibraryOptions.AsNoTracking().Where(t => libraryTypeCodeId.Contains(t.LibraryTypeId)).Select(t => t.Description);
-
-
-            //var oupFgIds = _dbContext.Users.Where(t => t.Id == id && t.OupFgId != null) .Select(s => s.OupFgId);
-            //var oupFgCodeDescriptions = _dbContext.LibraryTypes.AsNoTracking().Where(t => oupFgIds.Contains(t.Id) && t.Code == code) 
-            //    .Select(t => t.Name).Distinct();
-            
-            return libraryTypeDescriptions.ToList();
+            return await _dbContext.LibraryTypes.FirstOrDefaultAsync(t => t.Code == code);
         }
-        public IReadOnlyCollection<string> GetLibrarybyCodes(string libraryCode)
-        {
-            List<string> libraryTypeDescriptions = _dbContext.LibraryTypes.AsNoTracking().Where(t => t.Code == libraryCode).Select(t => t.Description).ToList();
-            return libraryTypeDescriptions;
-        }
-
     }
 }
