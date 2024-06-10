@@ -13,6 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<LibraryType> Update(LibraryType libraryType);
         LibraryType GetPositionIdByName(string positionName);
         LibraryType GetLibraryTypeIdByCode(string description);
-        Task <LibraryType> GetByCode (string code);
+        Task<LibraryType> GetByCode (string code);
     }
 }

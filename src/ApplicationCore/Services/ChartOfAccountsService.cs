@@ -33,15 +33,15 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ChartOfAccounts> Add(ChartOfAccountsDTO chartOfAccountsDTO)
         {
             var accounts = _repository.Get();
+
             if (accounts != null)
             {
                 if (accounts.Any(d => d.RcaGL == chartOfAccountsDTO.RcaGL || d.RcaSL == chartOfAccountsDTO.RcaSL))
-                {
                     throw new LedgerAlreadyExistException();
-                }
             }
 
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
+            chartOfAccount.CreatedAt = DateTime.Now;
             var chartOfAccountDetails = _mapper.Map<List<ChartOfAccountDetails>>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
             var chartofAccountResult = await _repository.Add(chartOfAccount);
             var details = _detailsRepository.Get();
@@ -81,6 +81,7 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ChartOfAccounts> Update(ChartOfAccountsDTO chartOfAccountsDTO)
         {
             var chartOfAccount = _mapper.Map<ChartOfAccounts>(chartOfAccountsDTO);
+            chartOfAccount.UpdatedAt = DateTime.Now;
             var chartOfAccountDetails = _mapper.Map<List<ChartOfAccountDetails>>(chartOfAccountsDTO.ChartOfAccountDetailsDTO);
             var chartofAccountResult = await _repository.Update(chartOfAccount);
            

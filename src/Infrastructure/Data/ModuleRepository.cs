@@ -20,26 +20,26 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<ModuleModel> Get()
         {
             var modules = (from mod in _dbContext.Modules.AsNoTracking()
-                         join usrC in _dbContext.Users.AsNoTracking() on mod.CreatedBy equals usrC.Id
-                         join usrU in _dbContext.Users.AsNoTracking() on mod.UpdatedBy equals usrU.Id into usrUX
-                         from usrU in usrUX.DefaultIfEmpty()
-                         orderby mod.Id descending
-                         select new ModuleModel()
-                         {
-                             Id = mod.Id,
-                             Name = mod.Name,
-                             Description = mod.Description,
-                             Url = mod.Url,
-                             Icon = mod.Icon,
-                             GroupName = mod.GroupName,
-                             Sequence = mod.Sequence,
-                             IsActive = mod.IsActive,
-                             StatusDate = mod.StatusDate,
-                             CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
-                             CreatedAt = mod.CreatedAt,
-                             UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
-                             UpdatedAt = mod.UpdatedBy != null ? mod.UpdatedAt : null,
-                         }).ToList();
+                           join usrC in _dbContext.Users.AsNoTracking() on mod.CreatedBy equals usrC.Id
+                           join usrU in _dbContext.Users.AsNoTracking() on mod.UpdatedBy equals usrU.Id into usrUX
+                           from usrU in usrUX.DefaultIfEmpty()
+                           orderby mod.Id descending
+                           select new ModuleModel()
+                           {
+                               Id = mod.Id,
+                               Name = mod.Name,
+                               Description = mod.Description,
+                               Url = mod.Url,
+                               Icon = mod.Icon,
+                               GroupName = mod.GroupName,
+                               Sequence = mod.Sequence,
+                               IsActive = mod.IsActive,
+                               StatusDate = mod.StatusDate,
+                               CreatedBy = $"{usrC.FirstName} {usrC.LastName}",
+                               CreatedAt = mod.CreatedAt,
+                               UpdatedBy = $"{usrU.FirstName} {usrU.LastName}",
+                               UpdatedAt = mod.UpdatedBy != null ? mod.UpdatedAt : null,
+                           }).ToList();
 
             return modules;
         }

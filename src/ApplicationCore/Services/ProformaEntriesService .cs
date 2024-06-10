@@ -37,11 +37,11 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ProformaEntry> Add(ProformaEntryDTO proformaEntryDTO)
         {
             var proformaEntry = _mapper.Map<ProformaEntry>(proformaEntryDTO);
+            proformaEntry.CreatedAt = DateTime.Now;
             var proformaEntryDetails = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
 
             var proformaEntryResult = await _repository.Add(proformaEntry);
 
-            //Check proforma entry details
             if (proformaEntryDetails != null)
             {
                 foreach (var detail in proformaEntryDetails)
@@ -56,6 +56,7 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ProformaEntry> Update(ProformaEntryDTO proformaEntryDTO)
         {
             var proformaEntry = _mapper.Map<ProformaEntry>(proformaEntryDTO);
+            proformaEntry.UpdatedAt = DateTime.Now;
             var proformaEntryDetails = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
 
             var proformaEntryResult = await _repository.Update(proformaEntry);
