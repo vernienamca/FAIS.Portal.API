@@ -43,6 +43,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<PlantInformation> PlantInformation { get; set; }
         public DbSet<PlantInformationDetails> PlantInformationDetails { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Amr> Amrs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -78,6 +79,7 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new PlantInformationEntityConfiguration());
             builder.ApplyConfiguration(new PlantInformationDetailsEntityConfiguration());
             builder.ApplyConfiguration(new EmployeeEntityConfiguration());
+            builder.ApplyConfiguration(new AmrEntityConfiguration());
         }
 
         public virtual async Task<int> SaveChangesAsync(int? userId = null)
