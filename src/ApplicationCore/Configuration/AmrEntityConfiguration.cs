@@ -38,7 +38,6 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("DATE_SENT_ENCODING");
 
             builder.Property(e => e.NoOfBinders)
-                .IsRequired(false)
                 .HasColumnName("NO_OF_BINDERS");
 
             builder.Property(e => e.UDF1)
