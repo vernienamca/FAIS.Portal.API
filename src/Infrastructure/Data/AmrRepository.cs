@@ -10,9 +10,7 @@ namespace FAIS.Infrastructure.Data
 {
     public class AmrRepository : EFRepository<Amr, int>, IAmrRepository
     {
-        public AmrRepository(FAISContext context) : base(context) 
-        {
-        }
+        public AmrRepository(FAISContext context) : base(context) { }
 
         public IReadOnlyCollection<AmrModel> Get()
         {
