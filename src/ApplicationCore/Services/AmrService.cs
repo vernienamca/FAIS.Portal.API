@@ -33,5 +33,23 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.GetById(id);
         }
 
+        public async Task<Amr> Add(AddAmrDTO dto)
+        {
+            var amrDto = _mapper.Map<Amr>(dto);
+            return await _repository.Add(amrDto);
+        }
+
+        public async Task<Amr> Update(UpdateAmrDTO dto)
+        {
+            var amr = _repository.GetById(dto.Id) ?? throw new Exception("Amr Id does not exist");
+
+            if (amr == null)
+                throw new ArgumentNullException("Amr not exist.");
+
+            var mapper = _mapper.Map<Amr>(dto);
+            mapper.CreatedBy = amr.Result.CreatedBy;
+            mapper.CreatedAt = amr.Result.CreatedAt;
+            return await _repository.Update(mapper);
+        }
     }
 }
