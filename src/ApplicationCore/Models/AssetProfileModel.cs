@@ -29,5 +29,6 @@ namespace FAIS.ApplicationCore.Models
         public string UpdatedByName { get; set; } = string.Empty;
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string AssetCategoryDescription { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace FAIS.Infrastructure.Data
             var assetProfile = (from prf in _dbContext.AssetProfile.AsNoTracking()
                                 join usr in _dbContext.Users.AsNoTracking() on prf.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on prf.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
-                                join opt in _dbContext.LibraryTypes.AsNoTracking() on prf.AssetCategoryId equals opt.Id into optX from opt in optX.DefaultIfEmpty()
+                                join opt in _dbContext.LibraryOptions.AsNoTracking() on prf.AssetCategoryId equals opt.Id into optX from opt in optX.DefaultIfEmpty()
                                 join ch in _dbContext.ChartOfAccounts.AsNoTracking() on prf.RcaSLId equals ch.Id into chX from ch in chX.DefaultIfEmpty()
                                 orderby prf.Id descending
                                 select new AssetProfileModel()
@@ -68,6 +68,7 @@ namespace FAIS.Infrastructure.Data
                                              CategoryId = prf.AssetCategoryId,
                                              StatusDate = prf.StatusDate,
                                              Description = prf.Description,
+                                             AssetCategoryDescription = opt.Description,
                                              RcaGLId = prf.RcaGLId,
                                              RCASLId = prf.RcaSLId,
                                              AssetClass = prf.AssetClassId ?? 0,
@@ -83,7 +84,7 @@ namespace FAIS.Infrastructure.Data
                                              CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                              CreatedAt = prf.CreatedAt,
                                              UpdatedAt = prf.UpdatedAt,
-                                             UpdatedByName = $"{usrU.FirstName} {usrU.LastName}"
+                                             UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
                                          }).FirstOrDefaultAsync(t => t.Id == id);
             return await assetProfile;
         }
