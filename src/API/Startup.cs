@@ -96,6 +96,7 @@ namespace FAIS
             services.AddScoped(typeof(IPlantInformationRepository), typeof(PlantInformationRepository));
             services.AddScoped(typeof(IPlantInformationDetailsRepository), typeof(PlantInformationDetailsRepository));
             services.AddScoped(typeof(IEmployeeRepository), typeof(EmployeeRepository));
+            services.AddScoped(typeof(IAmrRepository), typeof(AmrRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));
@@ -120,6 +121,7 @@ namespace FAIS
             services.AddScoped(typeof(IProjectProfileComponentService), typeof(ProjectProfileComponentService));
             services.AddScoped(typeof(ITransmissionLineProfileService), typeof(TransmissionLineProfileService));
             services.AddScoped(typeof(IPlantInformationService), typeof(PlantInformationService));
+            services.AddScoped(typeof(IAmrService), typeof(AmrService));
 
             services.AddSwaggerGen(c =>
             {
