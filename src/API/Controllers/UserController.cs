@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.DTOs;
+﻿using DocumentFormat.OpenXml.VariantTypes;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -13,6 +14,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace FAIS.API.Controllers
@@ -364,7 +366,6 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> PutUpdateUser(int id, bool isMyProfile, [FromBody] UserDTO userDTO)
         {
             var user = await _userService.GetById(id);
-
             user.LastName = userDTO.LastName;
             user.MobileNumber = userDTO.MobileNumber;
 
@@ -382,9 +383,6 @@ namespace FAIS.API.Controllers
                 user.EmailAddress = userDTO.EmailAddress;
 
                 _userService.SetTAFGs(user.Id, userDTO.TAFG);
-
-                //if (userDTO.TAFG.Count > 0)
-                //    _userService.SetTAFGs(user.Id, userDTO.TAFG);
 
                 if (!string.IsNullOrEmpty(userDTO.OupFG))
                     user.OupFgId = int.Parse(userDTO.OupFG);

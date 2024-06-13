@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.DTOs;
+﻿using FAIS.ApplicationCore.AuditTrail;
+using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -61,7 +62,7 @@ namespace FAIS.API.Controllers
         /// <returns></returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(Module), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var entity = _moduleService.GetById(id);
             var createdBy = await _userService.GetById(entity.CreatedBy);

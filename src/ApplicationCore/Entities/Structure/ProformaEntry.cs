@@ -11,7 +11,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int Id { get; set; }
 
         [DataMember]
-        public int TranTypeSeq { get; set; }
+        public string TranTypeSeq { get; set; }
 
         [DataMember]
         public string Description { get; set; }

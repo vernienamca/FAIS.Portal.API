@@ -1,10 +1,12 @@
-﻿using System;
+﻿using FAIS.ApplicationCore.AuditTrail;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
+    [Auditable]
     public class StringInterpolation : BaseEntity<int>
     {
         [DataMember]

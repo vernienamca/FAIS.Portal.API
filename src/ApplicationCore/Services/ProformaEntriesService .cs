@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Wordprocessing;
 using FAIS.ApplicationCore.BusinessRules;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.DTOs.Structure;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using System;
@@ -38,43 +40,54 @@ namespace FAIS.ApplicationCore.Services
         {
             var proformaEntry = _mapper.Map<ProformaEntry>(proformaEntryDTO);
             proformaEntry.CreatedAt = DateTime.Now;
-            var proformaEntryDetails = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
+            proformaEntry.StatusDate = DateTime.Now;
 
-            var proformaEntryResult = await _repository.Add(proformaEntry);
+            var result = await _repository.Add(proformaEntry);
 
-            if (proformaEntryDetails != null)
+            var details = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
+
+            if (details.Any())
             {
-                foreach (var detail in proformaEntryDetails)
+                foreach (var detail in details)
                 {
-                    detail.ProformaEntryId = proformaEntryResult.Id;
+                    detail.ProformaEntryId = result.Id;
+
                     await _detailsRepository.Add(detail);
                 }
             }
-            return proformaEntryResult;
+
+            return result;
         }
 
         public async Task<ProformaEntry> Update(ProformaEntryDTO proformaEntryDTO)
         {
-            var proformaEntry = _mapper.Map<ProformaEntry>(proformaEntryDTO);
+            var proformaEntry = _repository.GetById(proformaEntryDTO.Id);
+
+            proformaEntry.TranTypeSeq = proformaEntryDTO.TranTypeSeq;
+            proformaEntry.Description = proformaEntryDTO.Description;
+            proformaEntry.IsActive = proformaEntryDTO.IsActive;
+
+            if (proformaEntry.IsActive != proformaEntryDTO.IsActive)
+                proformaEntry.StatusDate = DateTime.Now;
+
+            proformaEntry.UpdatedBy = proformaEntryDTO.UpdatedBy;
             proformaEntry.UpdatedAt = DateTime.Now;
+
+            var result = await _repository.Update(proformaEntry);
+
             var proformaEntryDetails = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
 
-            var proformaEntryResult = await _repository.Update(proformaEntry);
-
-            if (proformaEntryResult != null)
+            if (result != null)
             {
-                var details = _detailsRepository.GetById(proformaEntry.Id);
-                if (details != null)
+                if (proformaEntryDetails.Any() && proformaEntryDetails.Count != proformaEntryDetails.Count)
                 {
-                    if (details.Count > 0 && details.Count != proformaEntryDetails.Count)
+                    foreach (var detail in proformaEntryDetails.Where(t => !proformaEntryDetails.Select(a => a.Id).Contains(t.Id)))
                     {
-                        foreach (var detail in details.Where(o => !proformaEntryDetails.Select(a => a.Id).Contains(o.Id)))
+                        if (detail.DeletedAt == null)
                         {
-                            if (detail.DeletedAt == null)
-                            {
-                                detail.DeletedAt = DateTime.Now;
-                                await _detailsRepository.Update(detail);
-                            }
+                            detail.DeletedAt = DateTime.Now;
+
+                            await _detailsRepository.Update(detail);
                         }
                     }
                 }
@@ -84,18 +97,17 @@ namespace FAIS.ApplicationCore.Services
                     foreach (var item in proformaEntryDetails)
                     {
                         if (item.Id > 0)
-                        {
                             await _detailsRepository.Update(item);
-                        }
                         else
                         {
-                            item.ProformaEntryId = proformaEntryResult.Id;
+                            item.ProformaEntryId = result.Id;
                             await _detailsRepository.Add(item);
                         }
                     }
                 }
             }
-            return proformaEntryResult;
+
+            return result;
         }
 
         public async Task Delete(int id)

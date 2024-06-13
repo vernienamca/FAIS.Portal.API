@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
     public class ProformaEntryDetail : BaseEntity<int>
     {
         [DataMember]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [DataMember]
@@ -17,7 +19,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public string FaisRefNo { get; set; }
 
         [DataMember]
-        public int TranTypeSeq { get; set; }
+        public string TranTypeSeq { get; set; }
 
         [DataMember]
         public string CostCenter { get; set; }

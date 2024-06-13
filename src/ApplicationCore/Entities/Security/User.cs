@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FAIS.ApplicationCore.AuditTrail;
+using System;
 using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Security

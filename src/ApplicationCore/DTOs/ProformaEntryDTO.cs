@@ -10,7 +10,7 @@ namespace FAIS.ApplicationCore.DTOs
     {
         public int Id { get; set; }
 
-        public int TranTypeSeq { get; set; }
+        public string TranTypeSeq { get; set; }
 
         public string Description { get; set; }
 

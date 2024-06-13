@@ -26,6 +26,7 @@ namespace FAIS.ApplicationCore.Models
         public string UDF2 { get; set; }
         public string UDF3 { get; set; }
         public int? AdRegionSeq { get; set; }
+        public string AdRegionSeqDescription { get; set; }
         public int? AdProvSeq { get; set; }
         public int? AdMunSeq { get; set; }
         public int? AdBrgySeq { get; set; }
