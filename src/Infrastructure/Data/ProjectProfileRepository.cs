@@ -38,7 +38,8 @@ namespace FAIS.Infrastructure.Data
                                        TotalAmrCost = 0,
                                        RecordedAMR = 0,
                                        UnrecordedAMR = 0,
-                                       Remarks = prj.Remarks
+                                       Remarks = prj.Remarks,
+                                       IsActive = prj.IsActive
                                    }).ToList();
 
             return projectProfiles;
