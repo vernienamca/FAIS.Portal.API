@@ -60,5 +60,38 @@ namespace FAIS.Portal.API.Controllers
         }
         #endregion Get
 
+        #region Post
+        /// <summary>
+        /// Posts the create AMR.
+        /// </summary>
+        /// <param name="dto">The amr data object.</param>
+        /// <returns></returns>
+        [HttpPost()]
+        [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Add(AddAmrDTO dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            return Ok(await _service.Add(dto));
+        }
+        #endregion
+
+        #region Put
+        /// <summary>
+        /// Puts the update AMR
+        /// </summary>
+        /// <param name="dto">The amr data object.</param>
+        /// <returns></returns>
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update(UpdateAmrDTO dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            return Ok(_service.Update(dto));
+        }
+        #endregion
     }
 }  
