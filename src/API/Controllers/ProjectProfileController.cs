@@ -1,6 +1,7 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Service;
+using FAIS.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -42,14 +43,14 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
-        [ProducesResponseType(typeof(IReadOnlyCollection<ProjectProfile>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<ProjectProfileModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
             return Ok(service.Get());
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(ProjectProfile), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProjectProfileModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(service.GetById(id));
@@ -66,8 +67,8 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost]
-        [ProducesResponseType(typeof(ProjectProfileDTO), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Create([FromBody] ProjectProfileDTO projectProfileDto)
+        [ProducesResponseType(typeof(AddProjectProfileDTO), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Create([FromBody] AddProjectProfileDTO projectProfileDto)
         {
             if (projectProfileDto == null)
                 throw new ArgumentNullException(nameof(projectProfileDto));
