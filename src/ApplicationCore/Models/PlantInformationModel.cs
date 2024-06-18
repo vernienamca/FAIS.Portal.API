@@ -7,7 +7,6 @@ namespace FAIS.ApplicationCore.Models
 {
     public class PlantInformationModel
     {
-        //LISTING FIELDS
         public string PlantCode { get; set; }
         public string SubstationName { get; set; }
         public string SubstationNameOld { get; set; }
@@ -18,9 +17,6 @@ namespace FAIS.ApplicationCore.Models
         public string GmapCoord { get; set; }
         public DateTime? CommissionDate { get; set; }
         public char IsActive { get; set; }
-        //.LISTING FIELDS
-
-        //ADDITIONAL FOR EDIT FIELDS
         public int? ClassId { get; set; }
         public int? MtdId { get; set; }
         public string UDF1 { get; set; }
@@ -37,8 +33,6 @@ namespace FAIS.ApplicationCore.Models
         public string UpdatedByName { get; set; } = string.Empty;
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        //ADDITIONAL FOR EDIT FIELDS
-
-        public List<PlantInformationDetailModel> PlantInformationDetail { get; set; }
+        public IReadOnlyCollection<PlantInformationDetailModel> Details { get; set; }
     }
 }

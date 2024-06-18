@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,80 +33,125 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public PlantInformationModel GetByCode(string plantCode)
+        public PlantInformationModel GetById(string id)
         {
-            return _repository.GetByCode(plantCode);
+            return _repository.GetById(id);
         }
 
-        public async Task<PlantInformation> Add(AddPlantInformationDTO dto)
+        public async Task<PlantInformation> Add(AddPlantInformationDTO plantInfoDTO)
         {
-            var pi = _mapper.Map<PlantInformation>(dto);
-            var piDetail = _mapper.Map<List<PlantInformationDetails>>(dto.PlantInformationDetailDTO);
-
-            var piResult = await _repository.Add(pi);
-
-            if (piDetail != null)
+            PlantInformation plantInfo = new PlantInformation()
             {
-                foreach (var detail in piDetail)
+                PlantCode = plantInfoDTO.PlantCode,
+                SubstationName = plantInfoDTO.SubstationName,
+                SubstationNameOld = plantInfoDTO.SubstationNameOld,
+                ClassId = plantInfoDTO.ClassId,
+                TransGrid = plantInfoDTO.TransGrid,
+                DistrictId = plantInfoDTO.DistrictId,
+                MtdId = plantInfoDTO.MtdId,
+                GmapCoord = plantInfoDTO.GmapCoord,
+                RegionId = plantInfoDTO.RegionId,
+                ProvId = plantInfoDTO.ProvId,
+                MunId = plantInfoDTO.MunId,
+                BrgyId = plantInfoDTO.BrgyId,
+                IsActive = plantInfoDTO.IsActive,
+                StatusDate = DateTime.Now,
+                UDF1 = plantInfoDTO.UDF1,
+                UDF2 = plantInfoDTO.UDF2,
+                UDF3 = plantInfoDTO.UDF3,
+                CommissionDate = plantInfoDTO.CommissionDate,
+                CreatedBy = plantInfoDTO.CreatedBy,
+                CreatedAt = DateTime.Now
+            };
+
+            var result = await _repository.Add(plantInfo);
+
+            if (plantInfoDTO.Details != null && plantInfoDTO.Details.Any())
+            {
+                foreach (var item in plantInfoDTO.Details)
                 {
-                    detail.PlantCode = piResult.PlantCode;
-                    await _detailsRepository.Add(detail);
+                    await _detailsRepository.Add(new PlantInformationDetails()
+                    {
+                        PlantCode = item.PlantCode,
+                        CostCenter = item.CostCenterType.Value,
+                        CreatedBy = result.CreatedBy,
+                        CreatedAt = item.CreatedAt,
+                        CostCenterNo = item.CostCenterNo
+                    });
                 }
             }
-            return piResult;
+
+            return result;
         }
 
-        public async Task<PlantInformation> Update(UpdatePlantInformationDTO dto)
+        public async Task<PlantInformation> Update(UpdatePlantInformationDTO plantInfoDTO)
         {
-            var pi = _repository.GetByCode(dto.PlantCode) ?? throw new Exception("Plant Code does not exist");
-            var piDetail = _mapper.Map<List<PlantInformationDetails>>(dto.PlantInformationDetailDTO);
+            if (plantInfoDTO == null)
+                throw new ArgumentNullException(nameof(plantInfoDTO));
 
-            if (pi == null)
-                throw new ArgumentNullException("Plant Information does not exist.");
+            var plantInfo = _repository.GetById(plantInfoDTO.PlantCode);
 
-            var mapper = _mapper.Map<PlantInformation>(dto);
-            mapper.CreatedBy = pi.CreatedBy;
-            mapper.CreatedAt = pi.CreatedAt;
-
-            var piResult = await _repository.Update(mapper);
-
-            if (piResult != null)
+            if (plantInfoDTO.IsActive != plantInfo.IsActive)
             {
-                var details = _detailsRepository.GetByCode(mapper.PlantCode);
-                if (details != null)
+                plantInfo.IsActive = plantInfoDTO.IsActive;
+                plantInfo.StatusDate = DateTime.Now;
+            }
+
+            var mapper = _mapper.Map<PlantInformation>(plantInfoDTO);
+            mapper.CreatedBy = plantInfo.CreatedBy;
+            mapper.CreatedAt = plantInfo.CreatedAt;
+
+            var result = await _repository.Update(mapper);
+
+            if (plantInfoDTO.Details != null && plantInfoDTO.Details.Any())
+            {
+                int[] detailUniqueIds = plantInfoDTO.Details.Select(s => s.Id.Value).ToArray();
+                var detailsToRemove = _detailsRepository.GetByPlantCode(result.PlantCode).Where(t => detailUniqueIds.Any(a => t.Id != a));
+
+                foreach (var item in detailsToRemove)
                 {
-                    if (details.Count > 0 && details.Count != piDetail.Count)
-                    {
-                        foreach (var detail in details.Where(o => !piDetail.Select(a => a.Id).Contains(o.Id)))
-                        {
-                            if (detail.RemovedAt == null)
-                            {
-                                detail.RemovedAt = DateTime.Now;
-                                await _detailsRepository.Update(detail);
-                            }
-                        }
-                    }
+                    var detail = await _detailsRepository.GetDetails(item.Id);
+                    
+                    detail.RemovedAt = DateTime.Now;
+                    await _detailsRepository.Update(detail);
                 }
 
-                if (piDetail != null && piDetail.Count > 0)
+                foreach (var item in plantInfoDTO.Details)
                 {
-                    foreach (var item in piDetail)
+                    if (item.Id.HasValue)
                     {
-                        if (item.Id > 0)
+                        var detail = await _detailsRepository.GetDetails(item.Id.Value);
+
+                        if (detail.CostCenter != item.CostCenterType || detail.CostCenterNo != item.CostCenterNo)
                         {
-                            item.UpdatedBy = dto.UpdatedBy;
-                            await _detailsRepository.Update(item);
+                            detail.CostCenter = item.CostCenterType.Value;
+                            detail.CostCenterNo = item.CostCenterNo;
+                            detail.UpdatedBy = result.UpdatedBy;
+                            detail.UpdatedAt = DateTime.Now;
+                            await _detailsRepository.Update(detail);
                         }
-                        else
+                    } 
+                    else
+                    {
+                        await _detailsRepository.Add(new PlantInformationDetails()
                         {
-                            item.PlantCode = piResult.PlantCode;
-                            item.CreatedBy = dto.UpdatedBy;
-                            await _detailsRepository.Add(item);
-                        }
+                            PlantCode = item.PlantCode,
+                            CostCenter = item.CostCenterType.Value,
+                            CreatedBy = result.CreatedBy,
+                            CreatedAt = item.CreatedAt,
+                            CostCenterNo = item.CostCenterNo
+                        });
                     }
                 }
             }
-            return piResult;
+
+            return result;
         }
+
+        #region Private
+
+
+
+        #endregion Private
     }
 }

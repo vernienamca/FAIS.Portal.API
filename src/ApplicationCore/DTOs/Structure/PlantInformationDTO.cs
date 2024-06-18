@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace FAIS.ApplicationCore.DTOs
 {
@@ -49,11 +50,15 @@ namespace FAIS.ApplicationCore.DTOs
         public int? MunId { get; set; }
         public int? BrgyId { get; set; }
         public char IsActive { get; set; }
+        public string Status { get; set; }
+        [JsonIgnore]
         public DateTime StatusDate { get; set; } = DateTime.Now;
         public int CreatedBy { get; set; }
+        [JsonIgnore]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public List<AddPlantInformationDetailDTO> PlantInformationDetailDTO  { get; set; }
+        public IReadOnlyCollection<PlantInfoDetails> Details { get; set; }
     }
+
     public class UpdatePlantInformationDTO
     {
         public string PlantCode { get; set; }
@@ -76,6 +81,20 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime StatusDate { get; set; }
         public int UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; } = DateTime.Now;
-        public List<UpdatePlantInformationDetailDTO> PlantInformationDetailDTO { get; set; }
+        public IReadOnlyCollection<PlantInfoDetails> Details { get; set; }
+    }
+
+    public class PlantInfoDetails
+    {
+        public int? Id { get; set; }
+        public string TempKey { get; set; }
+        public string PlantCode { get; set; }
+        public int? CostCenterType { get; set; }
+        public string CostCenterNo { get; set; }
+        public bool IsRemoved { get; set; }
+        [JsonIgnore]
+        public int CreatedBy { get; set; }
+        [JsonIgnore]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

@@ -49,60 +49,54 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Retrieve the plant information by code
+        /// Gets the plant informaiton by unique identifier.
         /// </summary>
+        /// <param name="id">The plant information identifier.</param>
         /// <returns></returns>
         [HttpGet("[action]")]
         [ProducesResponseType(typeof(IReadOnlyCollection<PlantInformationModel>), StatusCodes.Status200OK)]
-        public IActionResult GetByCode(string code)
+        public IActionResult GetById(string id)
         {
-            return Ok(_service.GetByCode(code));
+            return Ok(_service.GetById(id));
         }
+
         #endregion Get
 
         #region Post
         /// <summary>
         /// Posts the create plant information.
         /// </summary>
-        /// <param name="dto">The plant information data object.</param>
+        /// <param name="plantInfoDTO">The plant information data object.</param>
         /// <returns></returns>
         [HttpPost()]
         [ProducesResponseType(typeof(PlantInformation), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(AddPlantInformationDTO dto)
+        public async Task<IActionResult> Add(AddPlantInformationDTO plantInfoDTO)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (plantInfoDTO == null)
+                throw new ArgumentNullException(nameof(plantInfoDTO));
 
-            var isExists = _service.GetByCode(dto.PlantCode);
-            if (isExists != null)
-                throw new ArgumentNullException(nameof(dto));
-
-            return Ok(await _service.Add(dto));
+            return Ok(await _service.Add(plantInfoDTO));
         }
         #endregion
 
         #region Put
+
         /// <summary>
-        /// Puts the update plant information
+        /// Puts the update plant information.
         /// </summary>
-        /// <param name="dto">The plant information data object.</param>
+        /// <param name="plantInfoDTO">The plant information data object.</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException">command</exception>
         [HttpPut("{code}")]
         [ProducesResponseType(typeof(PlantInformation), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(UpdatePlantInformationDTO dto)
+        public async Task<IActionResult> Update(UpdatePlantInformationDTO plantInfoDTO)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (plantInfoDTO == null)
+                throw new ArgumentNullException(nameof(plantInfoDTO));
 
-            var pi = _service.GetByCode(dto.PlantCode);
-            if (dto.IsActive != pi.IsActive)
-            {
-                pi.IsActive = dto.IsActive;
-                dto.StatusDate = DateTime.Now;
-            }
-
-            return Ok(_service.Update(dto));
+            return Ok(await _service.Update(plantInfoDTO));
         }
+
         #endregion
     }
 }  

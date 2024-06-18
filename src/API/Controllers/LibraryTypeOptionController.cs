@@ -39,6 +39,7 @@ namespace FAIS.Portal.API.Controllers
         /// <summary>
         /// List the library type options.
         /// </summary>
+        /// <param name="id">The library type identifier.</param>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(List<LibraryOptionModel>), StatusCodes.Status200OK)]

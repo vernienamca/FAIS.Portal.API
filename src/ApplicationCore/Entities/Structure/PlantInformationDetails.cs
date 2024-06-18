@@ -12,6 +12,8 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public int CostCenter { get; set;}
         [DataMember]
+        public string CostCenterNo { get; set; }
+        [DataMember]
         public int? CostCenterTypeLto { get; set; }
         [DataMember]        
         public DateTime CreatedAt { get; set; }

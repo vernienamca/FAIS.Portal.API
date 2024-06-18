@@ -107,7 +107,7 @@ namespace FAIS.Portal.API.Controllers
 
         #endregion Get
 
-        #region post
+        #region Post
 
         /// <summary>
         /// Posts the create metering profile.

@@ -45,7 +45,7 @@ namespace FAIS.API.Controllers
         #region Get
 
         /// <summary>
-        /// Retrive the list the library types.
+        /// Gets the list of library types.
         /// </summary>
         [HttpGet("[action]")]
         [ProducesResponseType(typeof(IReadOnlyCollection<LibraryTypeModel>), StatusCodes.Status200OK)]

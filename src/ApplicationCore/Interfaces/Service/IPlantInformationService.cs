@@ -11,8 +11,8 @@ namespace FAIS.ApplicationCore.Interfaces.Service
     public interface IPlantInformationService
     {
         IReadOnlyCollection<PlantInformationModel> Get();
-        PlantInformationModel GetByCode(string plantCode);
-        Task<PlantInformation> Add(AddPlantInformationDTO dto);
-        Task<PlantInformation> Update(UpdatePlantInformationDTO dto);
+        PlantInformationModel GetById(string id);
+        Task<PlantInformation> Add(AddPlantInformationDTO plantInfoDTO);
+        Task<PlantInformation> Update(UpdatePlantInformationDTO plantInfoDTO);
     }
 }

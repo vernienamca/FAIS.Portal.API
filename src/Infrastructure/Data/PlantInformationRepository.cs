@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,99 +15,88 @@ namespace FAIS.Infrastructure.Data
 
         public IReadOnlyCollection<PlantInformationModel> Get()
         {
-            var plantInfo = (from pi in _dbContext.PlantInformation.AsNoTracking()
-                                join usr in _dbContext.Users.AsNoTracking() on pi.CreatedBy equals usr.Id
-                                join usrU in _dbContext.Users.AsNoTracking() on pi.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
-                                join trs in _dbContext.LibraryOptions.AsNoTracking() on pi.TransGrid equals trs.Id into trsX from trs in trsX.DefaultIfEmpty()
-                                join dis in _dbContext.LibraryOptions.AsNoTracking() on pi.DistrictId equals dis.Id into disX from dis in disX.DefaultIfEmpty()
-                             orderby pi.CreatedAt descending
-                                select new PlantInformationModel()
-                                {
-                                    PlantCode = pi.PlantCode,
-                                    SubstationName = pi.SubstationName,
-                                    SubstationNameOld = pi.SubstationNameOld,
-                                    TransGrid = pi.TransGrid,
-                                    TransGridDescription = trs.Description,
-                                    DistrictId = pi.DistrictId,
-                                    DistrictName = dis.Description,
-                                    GmapCoord = pi.GmapCoord,
-                                    CommissionDate = pi.CommissionDate,
-                                    IsActive = pi.IsActive,
-
-                                    CreatedBy = pi.CreatedBy,
-                                    CreatedByName = $"{usr.FirstName} {usr.LastName}",
-                                    CreatedAt = pi.CreatedAt,
-                                    UpdatedBy = pi.UpdatedBy,
-                                    UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                    UpdatedAt = pi.UpdatedAt
-                                }).ToList();
-            return plantInfo;
-        }
-
-        public PlantInformationModel GetByCode(string plantCode)
-        {
-            var plantInfo = (from pi in _dbContext.PlantInformation.AsNoTracking()
-                             join usr in _dbContext.Users.AsNoTracking() on pi.CreatedBy equals usr.Id
-                             join usrU in _dbContext.Users.AsNoTracking() on pi.UpdatedBy equals usrU.Id into usrUX
+            var plantInfos = (from pnt in _dbContext.PlantInformation.AsNoTracking()
+                             join usr in _dbContext.Users.AsNoTracking() on pnt.CreatedBy equals usr.Id
+                             join usrU in _dbContext.Users.AsNoTracking() on pnt.UpdatedBy equals usrU.Id into usrUX 
                              from usrU in usrUX.DefaultIfEmpty()
-                             orderby pi.CreatedAt descending
+                             join trs in _dbContext.LibraryOptions.AsNoTracking() on pnt.TransGrid equals trs.Id into trsX 
+                             from trs in trsX.DefaultIfEmpty()
+                             join dis in _dbContext.LibraryOptions.AsNoTracking() on pnt.DistrictId equals dis.Id into disX 
+                             from dis in disX.DefaultIfEmpty()
+                             orderby pnt.CreatedAt descending
                              select new PlantInformationModel()
                              {
-                                 PlantCode = pi.PlantCode,
-                                 SubstationName = pi.SubstationName,
-                                 SubstationNameOld = pi.SubstationNameOld,
-                                 TransGrid = pi.TransGrid,
-                                 TransGridDescription = string.Empty,
-                                 DistrictId = pi.DistrictId,
-                                 DistrictName = string.Empty,
-                                 GmapCoord = pi.GmapCoord,
-                                 CommissionDate = pi.CommissionDate,
-                                 IsActive = pi.IsActive,
-
-                                 ClassId = pi.ClassId,
-                                 MtdId = pi.MtdId,
-                                 UDF1 = pi.UDF1,
-                                 UDF2 = pi.UDF2,
-                                 UDF3 = pi.UDF3,
-                                 RegionId = pi.RegionId,
-                                 ProvId = pi.ProvId,
-                                 MunId = pi.MunId,
-                                 BrgyId = pi.BrgyId,
-                                 StatusDate = pi.StatusDate,
-
-                                 CreatedBy = pi.CreatedBy,
+                                 PlantCode = pnt.PlantCode,
+                                 SubstationName = pnt.SubstationName,
+                                 SubstationNameOld = pnt.SubstationNameOld,
+                                 TransGrid = pnt.TransGrid,
+                                 TransGridDescription = trs.Description,
+                                 DistrictId = pnt.DistrictId,
+                                 DistrictName = dis.Description,
+                                 GmapCoord = pnt.GmapCoord,
+                                 CommissionDate = pnt.CommissionDate,
+                                 IsActive = pnt.IsActive,
+                                 CreatedBy = pnt.CreatedBy,
                                  CreatedByName = $"{usr.FirstName} {usr.LastName}",
-                                 CreatedAt = pi.CreatedAt,
-                                 UpdatedBy = pi.UpdatedBy,
+                                 CreatedAt = pnt.CreatedAt,
+                                 UpdatedBy = pnt.UpdatedBy,
                                  UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                 UpdatedAt = pi.UpdatedAt
-                             }).FirstOrDefault(t => t.PlantCode == plantCode);
+                                 UpdatedAt = pnt.UpdatedAt
+                             }).ToList();
+
+            return plantInfos;
+        }
+
+        public PlantInformationModel GetById(string id)
+        {
+            var plantInfo = (from pnt in _dbContext.PlantInformation.AsNoTracking()
+                             join usr in _dbContext.Users.AsNoTracking() on pnt.CreatedBy equals usr.Id
+                             join usrU in _dbContext.Users.AsNoTracking() on pnt.UpdatedBy equals usrU.Id into usrUX
+                             from usrU in usrUX.DefaultIfEmpty()
+                             orderby pnt.CreatedAt descending
+                             select new PlantInformationModel()
+                             {
+                                 PlantCode = pnt.PlantCode,
+                                 SubstationName = pnt.SubstationName,
+                                 SubstationNameOld = pnt.SubstationNameOld,
+                                 TransGrid = pnt.TransGrid,
+                                 TransGridDescription = string.Empty,
+                                 DistrictId = pnt.DistrictId,
+                                 DistrictName = string.Empty,
+                                 GmapCoord = pnt.GmapCoord,
+                                 CommissionDate = pnt.CommissionDate,
+                                 IsActive = pnt.IsActive,
+                                 ClassId = pnt.ClassId,
+                                 MtdId = pnt.MtdId,
+                                 UDF1 = pnt.UDF1,
+                                 UDF2 = pnt.UDF2,
+                                 UDF3 = pnt.UDF3,
+                                 RegionId = pnt.RegionId,
+                                 ProvId = pnt.ProvId,
+                                 MunId = pnt.MunId,
+                                 BrgyId = pnt.BrgyId,
+                                 StatusDate = pnt.StatusDate,
+                                 CreatedBy = pnt.CreatedBy,
+                                 CreatedByName = $"{usr.FirstName} {usr.LastName}",
+                                 CreatedAt = pnt.CreatedAt,
+                                 UpdatedBy = pnt.UpdatedBy,
+                                 UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                                 UpdatedAt = pnt.UpdatedAt
+                             }).FirstOrDefault(t => t.PlantCode == id);
 
             if (plantInfo != null)
             {
-                var plantInfoDetails = (from pi in _dbContext.PlantInformationDetails.AsNoTracking()
-                                        join cc in _dbContext.CostCenters.AsNoTracking() on pi.CostCenter.ToString() equals cc.MCNumber into ccX
-                                        from cc in ccX.DefaultIfEmpty()
-                                        join usr in _dbContext.Users.AsNoTracking() on pi.CreatedBy equals usr.Id
-                                        join usrU in _dbContext.Users.AsNoTracking() on pi.UpdatedBy equals usrU.Id into usrUX
-                                        from usrU in usrUX.DefaultIfEmpty()
-                                        orderby pi.CreatedAt descending
-                                        select new PlantInformationDetailModel()
-                                        {
-                                            Id = pi.Id,
-                                            PlantCode = pi.PlantCode,
-                                            CostCenter = pi.CostCenter,
-                                            costCenterTypeLto = pi.CostCenterTypeLto,
-                                            RemovedAt = pi.RemovedAt,
-                                            CreatedBy = pi.CreatedBy,
-                                            CreatedByName = $"{usr.FirstName} {usr.LastName}",
-                                            CreatedAt = pi.CreatedAt,
-                                            UpdatedBy = pi.UpdatedBy,
-                                            UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                            UpdatedAt = pi.UpdatedAt
-                                        }).Where(d => d.PlantCode == plantCode && d.RemovedAt == null).ToList();
-
-                plantInfo.PlantInformationDetail = plantInfoDetails;
+                plantInfo.Details = (from pid in _dbContext.PlantInformationDetails
+                                     orderby pid.CreatedAt descending
+                                     select new PlantInformationDetailModel()
+                                     {
+                                         Id = pid.Id,
+                                         PlantCode = pid.PlantCode,
+                                         CostCenterType = pid.CostCenter,
+                                         CostCenterNo = pid.CostCenterNo,
+                                         RemovedAt = pid.RemovedAt,
+                                         UpdatedAt = pid.UpdatedAt
+                                     }).Where(x => x.PlantCode == id && !x.RemovedAt.HasValue).ToList();
             }
 
             return plantInfo;

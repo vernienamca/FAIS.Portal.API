@@ -10,7 +10,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     public interface IPlantInformationRepository
     {
         IReadOnlyCollection<PlantInformationModel> Get();
-        PlantInformationModel GetByCode(string plantCode);
+        PlantInformationModel GetById(string plantCode);
         Task<PlantInformation> Add(PlantInformation dto);
         Task<PlantInformation> Update(PlantInformation dto);
     }

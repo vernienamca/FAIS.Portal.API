@@ -23,8 +23,7 @@ namespace FAIS.Infrastructure.Data
                                 {
                                     Id = pi.Id,
                                     PlantCode = pi.PlantCode,
-                                    CostCenter = pi.CostCenter,
-                                    costCenterTypeLto = pi.CostCenterTypeLto,
+                                    CostCenterType = pi.CostCenter,
                                     RemovedAt = pi.RemovedAt,
                                     CreatedBy = pi.CreatedBy,
                                     CreatedByName = $"{usr.FirstName} {usr.LastName}",
@@ -49,8 +48,7 @@ namespace FAIS.Infrastructure.Data
                              {
                                  Id = pi.Id,
                                  PlantCode = pi.PlantCode,
-                                 CostCenter = pi.CostCenter,
-                                 costCenterTypeLto = pi.CostCenterTypeLto,
+                                 CostCenterType = pi.CostCenter,
                                  RemovedAt = pi.RemovedAt,
                                  CreatedBy = pi.CreatedBy,
                                  CreatedByName = $"{usr.FirstName} {usr.LastName}",
@@ -63,11 +61,14 @@ namespace FAIS.Infrastructure.Data
             return await piDetail;
         }
 
-        public IReadOnlyCollection<PlantInformationDetails> GetByCode(string code)
+        public IReadOnlyCollection<PlantInformationDetails> GetByPlantCode(string code)
         {
-            var piDetail = _dbContext.PlantInformationDetails.AsNoTracking().Where(t => t.PlantCode == code).ToList();
+            return _dbContext.PlantInformationDetails.AsNoTracking().Where(t => t.PlantCode == code).ToList();
+        }
 
-            return piDetail;
+        public async Task<PlantInformationDetails> GetDetails(int id)
+        {
+            return await _dbContext.PlantInformationDetails.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<PlantInformationDetails> Add(PlantInformationDetails dto)

@@ -29,6 +29,10 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired()
                 .HasColumnName("COST_CENTER");
 
+            builder.Property(e => e.CostCenterNo)
+               .IsRequired(false)
+               .HasColumnName("COST_CENTER_NO");
+ 
             builder.Property(e => e.CreatedAt)
                 .IsRequired()
                 .HasColumnType("datetime")
