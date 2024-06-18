@@ -3,6 +3,7 @@ using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
+using FAIS.ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,76 +24,97 @@ namespace FAIS.ApplicationCore.Services
             _mapper = mapper;
         }
 
-        public IReadOnlyCollection<ProjectProfile> Get()
+        public IReadOnlyCollection<ProjectProfileModel> Get()
         {
             return _repository.Get();
         }
 
-        public ProjectProfile GetById(int id)
+        public ProjectProfileModel GetById(int id)
         {
             return _repository.GetById(id);
         }
 
-        public async Task<ProjectProfile> Add(ProjectProfileDTO projectProfileDTO)
+        public async Task<ProjectProfile> Add(AddProjectProfileDTO projectProfileDTO)
         {
-            var projectProfile = _mapper.Map<ProjectProfile>(projectProfileDTO);
-            var projectProfileComponents = _mapper.Map<List<ProjectProfileComponent>>(projectProfileDTO.ProjectProfileComponentsDTO);
-
-            var projectProfileResult = await _repository.Add(projectProfile);
-
-            if (projectProfileComponents != null)
+            try
             {
-                foreach (var component in projectProfileComponents)
+                var projectProfile = _mapper.Map<ProjectProfile>(projectProfileDTO);
+                var projectProfileComponents = _mapper.Map<List<ProjectProfileComponent>>(projectProfileDTO.ProjectProfileComponentsDTO);
+
+                var projectProfileResult = await _repository.Add(projectProfile);
+
+                if (projectProfileComponents != null)
                 {
-                    component.ProjectProfileId = projectProfileResult.Id;
-                    await _componentsRepository.Add(component);
+                    foreach (var component in projectProfileComponents)
+                    {
+                        component.ProjectProfileId = projectProfileResult.Id;
+                        await _componentsRepository.Add(component);
+                    }
                 }
+                return projectProfileResult;
             }
-            return projectProfileResult;
+            catch(Exception ex) {
+                throw new ArgumentNullException();
+            }
         }
 
         public async Task<ProjectProfile> Update(ProjectProfileDTO projectProfileDTO)
         {
-            var projectProfile = _mapper.Map<ProjectProfile>(projectProfileDTO);
-            var projectProfileComponents = _mapper.Map<List<ProjectProfileComponent>>(projectProfileDTO.ProjectProfileComponentsDTO);
-
-            var projectProfileResult = await _repository.Update(projectProfile);
-
-            if (projectProfileResult != null)
+            try
             {
-                var components = _componentsRepository.GetById(projectProfileResult.Id);
-                if (components != null)
+                var projectProfile = _repository.GetById(projectProfileDTO.Id) ?? throw new Exception("Project Profile Id does not exist");
+
+                if (projectProfile == null)
+                    throw new ArgumentNullException("Project Profile not exist.");
+
+                if (projectProfile.IsActive != projectProfileDTO.IsActive)
+                    projectProfileDTO.StatusDate = DateTime.Now;
+                                
+                var mapper = _mapper.Map<ProjectProfile>(projectProfileDTO);
+                var projectProfileComponents = _mapper.Map<List<ProjectProfileComponent>>(projectProfileDTO.ProjectProfileComponentsDTO);
+
+                var projectProfileResult = await _repository.Update(mapper);
+
+                if (projectProfileResult != null)
                 {
-                    if (components.Count > 0 && components.Count != projectProfileComponents.Count)
+                    var components = _componentsRepository.GetById(projectProfileResult.Id);
+                    if (components != null)
                     {
-                        foreach (var component in components.Where(o => !projectProfileComponents.Select(a => a.Id).Contains(o.Id)))
+                        if (components.Count > 0 && components.Count != projectProfileComponents.Count)
                         {
-                            if (component.RemoveAt == null)
+                            foreach (var component in components.Where(o => !projectProfileComponents.Select(a => a.Id).Contains(o.Id)))
                             {
-                                component.RemoveAt = DateTime.Now;
-                                await _componentsRepository.Update(component);
+                                if (component.RemoveAt == null)
+                                {
+                                    component.RemoveAt = DateTime.Now;
+                                    await _componentsRepository.Update(component);
+                                }
+                            }
+                        }
+                    }
+
+                    if (projectProfileComponents != null && projectProfileComponents.Count > 0)
+                    {
+                        foreach (var item in projectProfileComponents)
+                        {
+                            if (item.Id > 0)
+                            {
+                                await _componentsRepository.Update(item);
+                            }
+                            else
+                            {
+                                item.ProjectProfileId = projectProfileResult.Id;
+                                await _componentsRepository.Add(item);
                             }
                         }
                     }
                 }
-
-                if (projectProfileComponents != null && projectProfileComponents.Count > 0)
-                {
-                    foreach (var item in projectProfileComponents)
-                    {
-                        if (item.Id > 0)
-                        {
-                            await _componentsRepository.Update(item);
-                        }
-                        else
-                        {
-                            item.ProjectProfileId = projectProfileResult.Id;
-                            await _componentsRepository.Add(item);
-                        }
-                    }
-                }
+                return projectProfileResult;
             }
-            return projectProfileResult;
+            catch (Exception e)
+            {
+                throw new ArgumentNullException();
+            }
         }
     }
 }
