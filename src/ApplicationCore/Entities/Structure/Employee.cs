@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    [Auditable]
     public class Employee : BaseEntity<string>
     {
         [DataMember]

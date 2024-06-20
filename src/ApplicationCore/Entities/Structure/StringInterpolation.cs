@@ -6,7 +6,6 @@ using System.Text;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    [Auditable]
     public class StringInterpolation : BaseEntity<int>
     {
         [DataMember]

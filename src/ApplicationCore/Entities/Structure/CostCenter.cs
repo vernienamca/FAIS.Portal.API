@@ -4,7 +4,6 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    [Auditable]
     public class CostCenter : BaseEntity<string>
     {
         [DataMember]
