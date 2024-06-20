@@ -11,6 +11,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     {
         IReadOnlyCollection<AmrModel> Get();
         Task<AmrModel> GetById(int id);
+        Task<Amr> GetByIdForEncoding(int id);
         Task<Amr> Add(Amr amr);
         Task<Amr> Update(Amr amr);
     }
