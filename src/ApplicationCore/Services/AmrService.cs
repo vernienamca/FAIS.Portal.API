@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using ArrayToExcel;
+using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
@@ -50,6 +51,11 @@ namespace FAIS.ApplicationCore.Services
             mapper.CreatedBy = amr.Result.CreatedBy;
             mapper.CreatedAt = amr.Result.CreatedAt;
             return await _repository.Update(mapper);
+        }
+
+        public byte[] ExportAmrLogs()
+        {
+            return _repository.Get().ToExcel();
         }
     }
 }
