@@ -15,7 +15,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class AmrController : ControllerBase
     {
         #region Variables
@@ -61,12 +61,12 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Gets the exported logs file in bytes.
+        /// Gets the exported AMR logs file in bytes.
         /// </summary>
         /// <returns></returns>
         [HttpGet("export")]
         [ProducesResponseType(typeof(File), StatusCodes.Status200OK)]
-        public IActionResult ExportLogs()
+        public IActionResult ExportAmrLogs()
         {
             return File(_service.ExportAmrLogs(), System.Net.Mime.MediaTypeNames.Application.Octet,
                 $"logs_{DateTime.Now.ToString("MM/dd/yyyy hh:mm tt")}.xlsx");
