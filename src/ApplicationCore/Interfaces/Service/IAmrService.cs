@@ -14,5 +14,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         Task<AmrModel> GetById(int id);
         Task<Amr> Add(AddAmrDTO dto);
         Task<Amr> Update(UpdateAmrDTO dto);
+        Task<Amr> UpdateEncoding(int id);
     }
 }
