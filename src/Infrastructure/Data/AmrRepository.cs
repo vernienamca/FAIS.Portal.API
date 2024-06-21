@@ -67,6 +67,11 @@ namespace FAIS.Infrastructure.Data
             return await amr;
         }
 
+        public async Task<Amr> GetByIdForEncoding(int id)
+        {
+            return await _dbContext.Amrs.FirstOrDefaultAsync(i => i.Id == id);
+        }
+
         public async Task<Amr> Add(Amr amr)
         {
             return await AddAsync(amr);

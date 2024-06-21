@@ -15,5 +15,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         byte[] ExportAmrLogs();
         Task<Amr> Add(AddAmrDTO dto);
         Task<Amr> Update(UpdateAmrDTO dto);
+        Task<Amr> UpdateEncoding(int id);
     }
 }

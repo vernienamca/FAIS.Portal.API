@@ -28,7 +28,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmrController"/> class.
-        /// <param name="service">List the AMR.</param>
+        /// <param name="service">The AMR Service</param>
         /// </summary>
         public AmrController(IAmrService service) 
         {
@@ -39,7 +39,7 @@ namespace FAIS.Portal.API.Controllers
 
         #region Get
         /// <summary>
-        /// Retrieve the list of AMR.
+        /// List of AMRs.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -50,8 +50,8 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Retrieve the AMR by id
-        /// </summary> 
+        /// Get the AMR by id
+        /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
         [ProducesResponseType(typeof(AmrModel), StatusCodes.Status200OK)]
@@ -105,6 +105,21 @@ namespace FAIS.Portal.API.Controllers
                 throw new ArgumentNullException(nameof(dto));
 
             return Ok(_service.Update(dto));
+        }
+
+        /// <summary>
+        /// Puts the update AMR for Date Sent Encoding
+        /// </summary>
+        /// <param name="dto">The amr data object.</param>
+        /// <returns></returns>
+        [HttpPut("encoding/{id:int}")]
+        [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateEncoding(int id)
+        {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id));
+
+            return Ok(_service.UpdateEncoding(id));
         }
         #endregion
     }
