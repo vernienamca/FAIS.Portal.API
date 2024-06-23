@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
@@ -58,6 +59,19 @@ namespace FAIS.Portal.API.Controllers
         {
             return Ok(_service.GetById(id));
         }
+
+        /// <summary>
+        /// Gets the exported AMR logs file in bytes.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("export")]
+        [ProducesResponseType(typeof(File), StatusCodes.Status200OK)]
+        public IActionResult ExportAmrLogs()
+        {
+            return File(_service.ExportAmrLogs(), System.Net.Mime.MediaTypeNames.Application.Octet,
+                $"logs_{DateTime.Now.ToString("MM/dd/yyyy hh:mm tt")}.xlsx");
+        }
+
         #endregion Get
 
         #region Post

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using ArrayToExcel;
+using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
@@ -80,6 +81,11 @@ namespace FAIS.ApplicationCore.Services
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public byte[] ExportAmrLogs()
+        {
+            return _repository.Get().ToExcel();
         }
     }
 }
