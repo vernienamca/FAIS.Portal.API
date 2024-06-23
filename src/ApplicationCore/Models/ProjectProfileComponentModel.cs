@@ -11,13 +11,12 @@ namespace FAIS.ApplicationCore.Models
 
         public int ProjectProfileSeq { get; set; }
 
-        public int ProjectComponentSeq { get; set; }
-
+        public string ComponentName { get; set; }
         public string Details { get; set; }
 
-        public int ProjectStageSeq { get; set; }
+        public int? ProjectStageSeq { get; set; }
 
-        public int TransmissionGridSeq { get; set; }
+        public int? TransmissionGridSeq { get; set; }
 
         public DateTime? StartDate { get; set; }
 
@@ -27,7 +26,10 @@ namespace FAIS.ApplicationCore.Models
 
         public DateTime? InspectionDate { get; set; }
 
-        public DateTime? InitialAMRMonth { get; set; }
+        public DateTime? InitialAmrMonth { get; set; }
+        public int? TotalAmrCost { get; set; }
+        public int? RecordedAmr { get; set; }
+        public int? UnrecordedAmr { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

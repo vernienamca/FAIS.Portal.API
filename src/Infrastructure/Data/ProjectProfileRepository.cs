@@ -47,7 +47,7 @@ namespace FAIS.Infrastructure.Data
 
         public ProjectProfileModel GetById(int id)
         {
-            var projectProfile = (from prj in _dbContext.ProjectProfile.AsNoTracking().Include(x => x.ProjectProfileComponents)
+            var projectProfile = (from prj in _dbContext.ProjectProfile.AsNoTracking()
                                     join opt in _dbContext.LibraryOptions.AsNoTracking() on prj.ProjStageSeq equals opt.Id into optX
                                     from opt in optX.DefaultIfEmpty()
                                     join opt2 in _dbContext.LibraryOptions.AsNoTracking() on prj.ProjClassSeq equals opt2.Id into opt2X
@@ -81,13 +81,31 @@ namespace FAIS.Infrastructure.Data
                                         StatusDate = prj.StatusDate
                                   }).FirstOrDefault(x => x.Id == id);
 
-            //if (projectProfile != null)
-            //{
-            //    var projectProfileComponents = _dbContext.ProjectProfileComponents.Where(t => t.ProjectProfileId == id && t.RemoveAt == null).ToList();
-            //    projectProfile.ProjectProfileComponents = projectProfileComponents;
+            if (projectProfile != null)
+            {
+                var projectProfileComponents = (from ppc in _dbContext.ProjectProfileComponents.AsNoTracking()
+                                                select new ProjectProfileComponentModel()
+                                                {
+                                                    Id = ppc.Id,
+                                                    ProjectProfileSeq = ppc.ProjectProfileId,
+                                                    ComponentName = ppc.ComponentName,
+                                                    Details = ppc.Details,
+                                                    ProjectStageSeq = ppc.ProjectStageSeq,
+                                                    TransmissionGridSeq = ppc.TransmissionGridSeq,
+                                                    StartDate = ppc.StartDate,
+                                                    TargetDate = ppc.TargetDate,
+                                                    CompletionDate = ppc.CompletionDate,
+                                                    InspectionDate = ppc.InspectionDate,
+                                                    InitialAmrMonth = ppc.InitialAMRMonth,
+                                                    TotalAmrCost = 0, //TO BE MODIFIED: FROM AMR DATA
+                                                    RecordedAmr = 0, //TO BE MODIFIED: FROM AMR DATA
+                                                    UnrecordedAmr = 0 //TO BE MODIFIED: FROM AMR DATA
+                                                }).Where(y => y.ProjectProfileSeq == projectProfile.Id).ToList();
 
-            //    return projectProfile;
-            //}
+                projectProfile.ProjectProfileComponents = projectProfileComponents;
+
+                return projectProfile;
+            }
 
             return projectProfile;
         }

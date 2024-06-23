@@ -28,6 +28,10 @@ namespace FAIS.ApplicationCore.Configuration
                     .IsRequired(false)
                     .HasColumnName("PROJECT_COMP_DETAILS");
 
+            builder.Property(e => e.ComponentName)
+                    .IsRequired(false)
+                    .HasColumnName("NAME");
+
             builder.Property(e => e.ProjectStageSeq)
                     .IsRequired(false)
                     .HasColumnName("PROJECT_STAGE_SEQ");
