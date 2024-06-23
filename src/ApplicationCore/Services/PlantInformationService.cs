@@ -105,8 +105,8 @@ namespace FAIS.ApplicationCore.Services
 
             if (plantInfoDTO.Details != null && plantInfoDTO.Details.Any())
             {
-                int[] detailUniqueIds = plantInfoDTO.Details.Select(s => s.Id.Value).ToArray();
-                var detailsToRemove = _detailsRepository.GetByPlantCode(result.PlantCode).Where(t => detailUniqueIds.Any(a => t.Id != a));
+                int[] detailUniqueIds = plantInfoDTO.Details.Select(s => s.Id ?? 0).ToArray();
+                var detailsToRemove = _detailsRepository.GetByPlantCode(result.PlantCode).Where(t => !detailUniqueIds.Any(a => t.Id == a));
 
                 foreach (var item in detailsToRemove)
                 {
