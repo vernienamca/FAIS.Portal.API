@@ -29,24 +29,24 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("REMARKS");
 
             builder.Property(e => e.UDF1)
-              .IsRequired(false)
-              .HasColumnName("UDF1");
+                .IsRequired(false)
+                .HasColumnName("UDF1");
 
             builder.Property(e => e.UDF2)
-              .IsRequired(false)
-              .HasColumnName("UDF2");
+                .IsRequired(false)
+                .HasColumnName("UDF2");
 
             builder.Property(e => e.UDF3)
-              .IsRequired(false)
-              .HasColumnName("UDF3");
+                .IsRequired(false)
+                .HasColumnName("UDF3");
 
             builder.Property(e => e.ProjClassSeq)
                 .IsRequired()
                 .HasColumnName("PROJ_CLASS_SEQ");
 
             builder.Property(e => e.ProjStageSeq)
-              .IsRequired()
-              .HasColumnName("PROJ_STAGE_SEQ");
+                .IsRequired()
+                .HasColumnName("PROJ_STAGE_SEQ");
 
             builder.Property(e => e.TpsrMonth)
                 .IsRequired()
@@ -71,9 +71,9 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("USER_MODIFIED");
 
             builder.Property(e => e.CreatedAt)
-                 .IsRequired()
-                 .HasColumnName("DATE_CREATED")
-                 .HasColumnType("datetime");
+                .IsRequired()
+                .HasColumnName("DATE_CREATED")
+                .HasColumnType("datetime");
 
             builder.Property(e => e.UpdatedAt)
                 .IsRequired(false)

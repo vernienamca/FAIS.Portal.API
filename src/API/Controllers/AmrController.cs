@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace FAIS.Portal.API.Controllers
@@ -27,7 +28,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmrController"/> class.
-        /// <param name="service">List the AMR.</param>
+        /// <param name="service">The AMR Service</param>
         /// </summary>
         public AmrController(IAmrService service) 
         {
@@ -38,7 +39,7 @@ namespace FAIS.Portal.API.Controllers
 
         #region Get
         /// <summary>
-        /// Retrieve the list of AMR.
+        /// List of AMRs.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -49,7 +50,7 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Retrieve the AMR by id
+        /// Get the AMR by id
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -58,6 +59,19 @@ namespace FAIS.Portal.API.Controllers
         {
             return Ok(_service.GetById(id));
         }
+
+        /// <summary>
+        /// Gets the exported AMR logs file in bytes.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("export")]
+        [ProducesResponseType(typeof(File), StatusCodes.Status200OK)]
+        public IActionResult ExportAmrLogs()
+        {
+            return File(_service.ExportAmrLogs(), System.Net.Mime.MediaTypeNames.Application.Octet,
+                $"logs_{DateTime.Now.ToString("MM/dd/yyyy hh:mm tt")}.xlsx");
+        }
+
         #endregion Get
 
         #region Post
@@ -91,6 +105,21 @@ namespace FAIS.Portal.API.Controllers
                 throw new ArgumentNullException(nameof(dto));
 
             return Ok(_service.Update(dto));
+        }
+
+        /// <summary>
+        /// Puts the update AMR for Date Sent Encoding
+        /// </summary>
+        /// <param name="dto">The amr data object.</param>
+        /// <returns></returns>
+        [HttpPut("encoding/{id:int}")]
+        [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateEncoding(int id)
+        {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id));
+
+            return Ok(_service.UpdateEncoding(id));
         }
         #endregion
     }
