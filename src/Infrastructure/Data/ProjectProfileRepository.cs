@@ -99,8 +99,9 @@ namespace FAIS.Infrastructure.Data
                                                     InitialAmrMonth = ppc.InitialAMRMonth,
                                                     TotalAmrCost = 0, //TO BE MODIFIED: FROM AMR DATA
                                                     RecordedAmr = 0, //TO BE MODIFIED: FROM AMR DATA
-                                                    UnrecordedAmr = 0 //TO BE MODIFIED: FROM AMR DATA
-                                                }).Where(y => y.ProjectProfileSeq == projectProfile.Id).ToList();
+                                                    UnrecordedAmr = 0, //TO BE MODIFIED: FROM AMR DATA
+                                                    RemovedAt = ppc.RemoveAt
+                                                }).Where(y => y.ProjectProfileSeq == projectProfile.Id && !y.RemovedAt.HasValue).ToList();
 
                 projectProfile.ProjectProfileComponents = projectProfileComponents;
 
