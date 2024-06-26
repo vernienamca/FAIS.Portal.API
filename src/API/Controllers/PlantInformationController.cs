@@ -38,7 +38,7 @@ namespace FAIS.Portal.API.Controllers
 
         #region Get
         /// <summary>
-        /// Retrieve the list of plant information.
+        /// Gets the list of plant informations.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -63,6 +63,7 @@ namespace FAIS.Portal.API.Controllers
         #endregion Get
 
         #region Post
+
         /// <summary>
         /// Posts the create plant information.
         /// </summary>

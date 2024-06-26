@@ -39,7 +39,7 @@ namespace FAIS.Portal.API.Controllers
         #region Get
 
         /// <summary>
-        /// Retrieve the list of project profile.
+        /// List of project profiles.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -49,6 +49,11 @@ namespace FAIS.Portal.API.Controllers
             return Ok(service.Get());
         }
 
+        /// <summary>
+        /// Get project profile by unique identifier.
+        /// </summary>
+        /// <param name="id">The project profile details.</param>
+        /// <returns></returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(ProjectProfileModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)

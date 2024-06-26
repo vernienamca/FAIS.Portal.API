@@ -13,7 +13,7 @@ namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class RoleController : ControllerBase
     {
         #region Variables
