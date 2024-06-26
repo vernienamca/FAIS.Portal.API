@@ -12,6 +12,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int ProjectProfileId { get; set; }
 
         [DataMember]
+        public string ComponentName { get; set; }
+
+        [DataMember]
         public string Details { get; set; }
 
         [DataMember]

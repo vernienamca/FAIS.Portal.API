@@ -23,6 +23,11 @@ namespace FAIS.Infrastructure.Data
             return _dbContext.ProjectProfileComponents.Where(t => t.ProjectProfileId == id).AsNoTracking().ToList();
         }
 
+        public async Task<ProjectProfileComponent> GetDetails(int id)
+        {
+            return await _dbContext.ProjectProfileComponents.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<ProjectProfileComponent> Add(ProjectProfileComponent projectProfileComponent)
         {
             return await AddAsync(projectProfileComponent);
