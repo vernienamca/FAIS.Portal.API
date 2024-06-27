@@ -352,6 +352,12 @@ namespace FAIS.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Sends the email according to settings.
+        /// </summary>
+        /// <param name="notifRoleDTO">The email notif data object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("[action]")]
         public async Task<IActionResult> PostEmailNotif([FromBody] NotifRoleDTO notifRoleDTO)
         {

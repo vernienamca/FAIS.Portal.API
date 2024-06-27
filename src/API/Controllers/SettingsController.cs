@@ -60,15 +60,7 @@ namespace FAIS.Portal.API.Controllers
         {
             return Ok(_service.GetById(id));
         }
-        
-
-        [HttpGet("emailRecipients/{settingsId}")]
-        [ProducesResponseType(typeof(IReadOnlyCollection<EmailModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetEmailRecipients(int settingsId)
-        {
-            return Ok(await _service.GetRecipients(settingsId));
-        }
-
+       
         #endregion Get
 
         #region Put
