@@ -34,7 +34,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("PROJECT_SEQ");
 
             builder.Property(e => e.ProjectComponentLto)
-                .IsRequired(false)
+                .IsRequired()
                 .HasColumnName("PROJECT_COMPONENT_LTO");
 
             builder.Property(e => e.Remarks)
@@ -62,11 +62,11 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("STATUS_DATE");
 
             builder.Property(e => e.AccStatusCodeLto)
-                .IsRequired(false)
+                .IsRequired()
                 .HasColumnName("ACC_STATUS_CODE_LTO");
 
             builder.Property(e => e.AccStatusDate)
-                .IsRequired(false)
+                .IsRequired()
                 .HasColumnType("datetime")
                 .HasColumnName("ACC_STATUS_DATE");
 

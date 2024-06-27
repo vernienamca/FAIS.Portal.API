@@ -91,15 +91,15 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("UDF3");
 
             builder.Property(e => e.IsReturnedToEncoder)
-                .IsRequired(false)
+                .IsRequired()
                 .HasColumnName("IS_RETURNED_TO_ENCODER");
 
             builder.Property(e => e.IsReturnedToAnalysis)
-                .IsRequired(false)
+                .IsRequired()
                 .HasColumnName("IS_RETURNED_TO_ANALYSIS");
 
             builder.Property(e => e.ProformaEntrySeq)
-                .IsRequired(false)
+                .IsRequired()
                 .HasColumnName("PROFORMA_ENTRY_SEQ");
 
             builder.Property(e => e.Remarks)
