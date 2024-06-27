@@ -1,5 +1,7 @@
 ﻿using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +26,10 @@ namespace FAIS.ApplicationCore.Services
             return _repository.GetById(id);
         }
 
+        public async Task<IReadOnlyCollection<EmailModel>> GetRecipients(int settingsId)
+        {
+            return await _repository.GetRecipients(settingsId);
+        }
         public async Task<Settings> Update(Settings settings)
         {
             return await _repository.Update(settings);

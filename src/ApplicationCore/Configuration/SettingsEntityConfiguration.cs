@@ -125,6 +125,14 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
+
+            builder.Property(e => e.ToRecipient)
+             .HasMaxLength(200)
+             .HasColumnName("TORECIPIENT");
+
+            builder.Property(e => e.CcRecipient)
+             .HasMaxLength(200)
+             .HasColumnName("CCRECIPIENT");
         }
     }
 }

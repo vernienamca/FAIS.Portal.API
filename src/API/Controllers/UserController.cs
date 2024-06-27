@@ -1,5 +1,7 @@
-﻿using DocumentFormat.OpenXml.VariantTypes;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.VariantTypes;
 using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -22,7 +24,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -348,6 +350,44 @@ namespace FAIS.API.Controllers
             {
                 throw ex;
             }
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> PostEmailNotif([FromBody] NotifRoleDTO notifRoleDTO)
+        {
+            // Get recipients based on the provided settings
+            var recipients = await _settingsService.GetRecipients(notifRoleDTO.settings);
+            var settings = _settingsService.GetById(notifRoleDTO.settings);
+
+            if (recipients == null)
+                throw new ArgumentNullException(nameof(recipients));
+
+
+            foreach (var roleId in notifRoleDTO.RoleIds)
+            {
+                var role = _roleService.GetById(roleId);
+
+                foreach (var email in recipients)
+                {
+                    foreach (var toRecipient in email.ToRecipient)
+                    {
+                        var user = await _userService.GetByEmailAddress(toRecipient);
+
+                        if (user == null)
+                            continue;
+
+                        string firstName = user.FirstName;
+                        string content = GenerateEmailContent(role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, firstName, notifRoleDTO.ModuleId);
+
+
+                        if (!_emailService.SendEmail(toRecipient, "Notification Role", content))
+                        {
+                            return Ok($"Email no content.");
+                        }
+                    }
+                }
+            }
+            return Ok(recipients);
         }
 
         #endregion Post

@@ -1,6 +1,7 @@
 ﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
+using FAIS.ApplicationCore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class SettingsController : Controller
     {
         #region Variables
@@ -58,6 +59,14 @@ namespace FAIS.Portal.API.Controllers
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
+        }
+        
+
+        [HttpGet("emailRecipients/{settingsId}")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<EmailModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetEmailRecipients(int settingsId)
+        {
+            return Ok(await _service.GetRecipients(settingsId));
         }
 
         #endregion Get
