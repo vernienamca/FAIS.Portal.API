@@ -67,6 +67,8 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<PlantInformationDetails, UpdatePlantInformationDetailDTO>().ReverseMap();
             CreateMap<Amr, AddAmrDTO>().ReverseMap();
             CreateMap<Amr, UpdateAmrDTO>().ReverseMap();
+            CreateMap<Amr100Batch, AddAmr100BatchDTO>().ReverseMap();
+            CreateMap<Amr100Batch, UpdateAmr100BatchDTO>().ReverseMap();
         }        
     }
 }

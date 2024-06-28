@@ -44,6 +44,6 @@ namespace FAIS.ApplicationCore.DTOs
         public string UDF2 { get; set; }
         public string UDF3 { get; set; }
         public int UpdatedBy { get; set; }
-        public DateTime UpdatedDate { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }
