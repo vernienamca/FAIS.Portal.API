@@ -269,7 +269,7 @@ namespace FAIS.API.Controllers
             content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/{tempKey}");
             content = content.Replace("${baseurl}", $"{settings.BaseUrl}");
 
-            if (_emailService.SendEmail(user.EmailAddress, "Forgot Password", content))
+            if (_emailService.SendEmail(user.EmailAddress, "Forgot Password", content, null))
                 return Ok(user);
 
             return Ok();
@@ -342,7 +342,7 @@ namespace FAIS.API.Controllers
                 content = content.Replace("${password}", generatedPassword);
                 content = content.Replace("${baseurl}", settings.BaseUrl);
 
-                _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
+                _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content, null);
 
                 return Ok(user);
             }
@@ -368,7 +368,6 @@ namespace FAIS.API.Controllers
             if (recipients == null)
                 throw new ArgumentNullException(nameof(recipients));
 
-
             foreach (var roleId in notifRoleDTO.RoleIds)
             {
                 var role = _roleService.GetById(roleId);
@@ -383,10 +382,10 @@ namespace FAIS.API.Controllers
                             continue;
 
                         string firstName = user.FirstName;
+                        IReadOnlyCollection<string> ccRecipients = email.CcRecipient;
                         string content = GenerateEmailContent(role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, firstName, notifRoleDTO.ModuleId);
 
-
-                        if (!_emailService.SendEmail(toRecipient, "Notification Role", content))
+                        if (!_emailService.SendEmail(toRecipient, "Notification Role", content, ccRecipients))
                         {
                             return Ok($"Email no content.");
                         }
@@ -554,7 +553,7 @@ namespace FAIS.API.Controllers
                     string firstName = user.FirstName;
                     string content = GenerateEmailContent(role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode,firstName,notifRoleDTO.ModuleId);
 
-                    if (!_emailService.SendEmail(email, "Notification Role", content))
+                    if (!_emailService.SendEmail(email, "Notification Role", content, null))
                     {
                         return Ok($"Email no content.");
                     }

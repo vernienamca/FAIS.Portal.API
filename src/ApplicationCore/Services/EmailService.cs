@@ -4,6 +4,9 @@ using System;
 using System.Net.Mail;
 using System.Net;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -34,7 +37,7 @@ namespace FAIS.ApplicationCore.Services
         /// <param name="emailAddress">The target email address.</param>
         /// <param name="subject">The email subject.</param>
         /// <param name="content">The content body.</param>
-        public bool SendEmail(string emailAddress, string subject, string content)
+        public bool SendEmail(string emailAddress, string subject, string content, IReadOnlyCollection<string> ccRecipients) 
         {
             var settings = _settingsRepository.GetById(1);
 
@@ -51,6 +54,15 @@ namespace FAIS.ApplicationCore.Services
                 mail.Subject = subject;
                 mail.IsBodyHtml = true;
                 mail.Body = content;
+
+                if (ccRecipients != null)
+                {
+                    foreach (var cc in ccRecipients)
+                    {
+                        mail.CC.Add(cc);
+                    }
+                }
+
 
                 System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient
                 {
