@@ -361,7 +361,7 @@ namespace FAIS.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> PostEmailNotif([FromBody] NotifRoleDTO notifRoleDTO)
         {
-            // Get recipients based on the provided settings
+
             var recipients = await _settingsService.GetRecipients(notifRoleDTO.settings);
             var settings = _settingsService.GetById(notifRoleDTO.settings);
 

@@ -127,12 +127,12 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("DATE_MODIFIED");
 
             builder.Property(e => e.ToRecipient)
-             .HasMaxLength(200)
-             .HasColumnName("TORECIPIENT");
+                .HasMaxLength(200)
+                .HasColumnName("TORECIPIENT");
 
             builder.Property(e => e.CcRecipient)
-             .HasMaxLength(200)
-             .HasColumnName("CCRECIPIENT");
+                .HasMaxLength(200)
+                .HasColumnName("CCRECIPIENT");
         }
     }
 }

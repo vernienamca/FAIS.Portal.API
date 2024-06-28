@@ -7,6 +7,6 @@ namespace FAIS.ApplicationCore.Models
     public class EmailModel
     {
         public IReadOnlyCollection<string> ToRecipient { get; set; }
-        public IReadOnlyCollection<string> CcRecipient { get; set; } = new List<string>();
+        public IReadOnlyCollection<string> CcRecipient { get; set; }
     }
 }
