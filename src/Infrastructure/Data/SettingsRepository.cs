@@ -34,11 +34,11 @@ namespace FAIS.Infrastructure.Data
 
             switch (setting.ToRecipient)
             {
-                case "15":
+                case "0":
                     toRecipientRoleIds = await GetRoleIdsByDepartment("PAD");
                     break;
 
-                case "16":
+                case "-1":
                     toRecipientRoleIds = await GetRoleIdsByDepartment("ARMD");
                     break;
 
@@ -50,11 +50,11 @@ namespace FAIS.Infrastructure.Data
             }
             switch (setting.CcRecipient)
             {
-                case "15":
+                case "0":
                     ccRecipientRoleIds = await GetRoleIdsByDepartment("PAD");
                     break;
 
-                case "16":
+                case "-1":
                     ccRecipientRoleIds = await GetRoleIdsByDepartment("ARMD");
                     break;
 
