@@ -2,7 +2,6 @@
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,8 +16,7 @@ namespace FAIS.Infrastructure.Data
         {
             var amrs = (from amr in _dbContext.Amr100Batch.AsNoTracking()
                                 join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
-                                join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX 
-                                from usrU in usrUX.DefaultIfEmpty()
+                                join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
                                 orderby amr.Id descending
                                 select new Amr100BatchModel()
                                 {
