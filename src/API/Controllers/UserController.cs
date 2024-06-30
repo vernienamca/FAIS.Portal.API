@@ -1,5 +1,7 @@
-﻿using DocumentFormat.OpenXml.VariantTypes;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.VariantTypes;
 using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Helpers;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore.Models;
@@ -267,7 +269,7 @@ namespace FAIS.API.Controllers
             content = content.Replace("${url}", $"{settings.BaseUrl}/reset-password/{tempKey}");
             content = content.Replace("${baseurl}", $"{settings.BaseUrl}");
 
-            if (_emailService.SendEmail(user.EmailAddress, "Forgot Password", content))
+            if (_emailService.SendEmail(user.EmailAddress, "Forgot Password", content, null))
                 return Ok(user);
 
             return Ok();
@@ -340,7 +342,7 @@ namespace FAIS.API.Controllers
                 content = content.Replace("${password}", generatedPassword);
                 content = content.Replace("${baseurl}", settings.BaseUrl);
 
-                _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content);
+                _emailService.SendEmail(user.EmailAddress, "FAIS Login Credential", content, null);
 
                 return Ok(user);
             }
@@ -348,6 +350,49 @@ namespace FAIS.API.Controllers
             {
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// Sends the email according to settings.
+        /// </summary>
+        /// <param name="notifRoleDTO">The email notif data object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPost("[action]")]
+        public async Task<IActionResult> PostEmailNotif([FromBody] NotifRoleDTO notifRoleDTO)
+        {
+
+            var recipients = await _settingsService.GetRecipients(notifRoleDTO.settings);
+            var settings = _settingsService.GetById(notifRoleDTO.settings);
+
+            if (recipients == null)
+                throw new ArgumentNullException(nameof(recipients));
+
+            foreach (var roleId in notifRoleDTO.RoleIds)
+            {
+                var role = _roleService.GetById(roleId);
+
+                foreach (var email in recipients)
+                {
+                    foreach (var toRecipient in email.ToRecipient)
+                    {
+                        var user = await _userService.GetByEmailAddress(toRecipient);
+
+                        if (user == null)
+                            continue;
+
+                        string firstName = user.FirstName;
+                        IReadOnlyCollection<string> ccRecipients = email.CcRecipient;
+                        string content = GenerateEmailContent(role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode, firstName, notifRoleDTO.ModuleId);
+
+                        if (!_emailService.SendEmail(toRecipient, "Notification Role", content, ccRecipients))
+                        {
+                            return Ok($"Email no content.");
+                        }
+                    }
+                }
+            }
+            return Ok(recipients);
         }
 
         #endregion Post
@@ -508,7 +553,7 @@ namespace FAIS.API.Controllers
                     string firstName = user.FirstName;
                     string content = GenerateEmailContent(role.Name, notifRoleDTO.AssetName, notifRoleDTO.Id, settings.EmailAddress, settings.BaseUrl, notifRoleDTO.EditMode,firstName,notifRoleDTO.ModuleId);
 
-                    if (!_emailService.SendEmail(email, "Notification Role", content))
+                    if (!_emailService.SendEmail(email, "Notification Role", content, null))
                     {
                         return Ok($"Email no content.");
                     }
