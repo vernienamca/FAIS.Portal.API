@@ -47,6 +47,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<Amr100Batch> Amr100Batch { get; set; }
         public DbSet<Amr100BatchD> Amr100BatchD { get; set; }
         public DbSet<Amr100BatchDbd> Amr100BatchDbd { get; set; }
+        public DbSet<Amr100BatchStatHistory> Amr100BatchStatHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -86,6 +87,7 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new Amr100BatchEntityConfiguration());
             builder.ApplyConfiguration(new Amr100BatchDEntityConfiguration());
             builder.ApplyConfiguration(new Amr100BatchDbdEntityConfiguration());
+            builder.ApplyConfiguration(new Amr100BatchStatHistoryEntityConfiguration());
         }
 
         public virtual async Task<int> SaveChangesAsync(int? userId = null)
