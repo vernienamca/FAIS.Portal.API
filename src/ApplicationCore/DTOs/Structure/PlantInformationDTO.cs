@@ -31,6 +31,7 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime? UpdatedAt { get; set; }
         public int? UpdatedBy { get; set; }
     }
+
     public class AddPlantInformationDTO
     {
         public string PlantCode { get; set; }

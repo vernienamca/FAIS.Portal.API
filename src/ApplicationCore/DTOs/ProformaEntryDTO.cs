@@ -1,4 +1,5 @@
 ﻿using FAIS.ApplicationCore.DTOs.Structure;
+using FAIS.ApplicationCore.Entities.Structure;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -26,7 +27,7 @@ namespace FAIS.ApplicationCore.DTOs
 
         public int? UpdatedBy { get; set; }
 
-        public IEnumerable<ProformaEntryDetailDTO> ProformaEntryDetailsDTO { get; set; }
+        public IReadOnlyCollection<ProformaEntryDetail> Details { get; set; }
     }
 
     //public class UpdateProformaEntriesDTO

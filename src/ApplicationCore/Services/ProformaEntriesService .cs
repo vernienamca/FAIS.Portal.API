@@ -38,25 +38,75 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<ProformaEntry> Add(ProformaEntryDTO proformaEntryDTO)
         {
-            var proformaEntry = _mapper.Map<ProformaEntry>(proformaEntryDTO);
-            proformaEntry.CreatedAt = DateTime.Now;
-            proformaEntry.StatusDate = DateTime.Now;
+            ProformaEntry proformaEntry = new ProformaEntry()
+            {
+                TranTypeSeq = proformaEntryDTO.TranTypeSeq,
+                Description = proformaEntryDTO.Description,
+                IsActive = proformaEntryDTO.IsActive,
+                StatusDate = DateTime.Now,
+                CreatedBy = proformaEntryDTO.CreatedBy,
+                CreatedAt = DateTime.Now
+            };
 
             var result = await _repository.Add(proformaEntry);
 
-            var details = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
-
-            if (details.Any())
+            if (proformaEntryDTO.Details != null && proformaEntryDTO.Details.Any())
             {
-                foreach (var detail in details)
+                foreach (var item in proformaEntryDTO.Details)
                 {
-                    detail.ProformaEntryId = result.Id;
-
-                    await _detailsRepository.Add(detail);
+                    await _detailsRepository.Add(new ProformaEntryDetail()
+                    {
+                        ProformaEntryId = item.ProformaEntryId,
+                        FaisRefNo = item.FaisRefNo,
+                        TranTypeSeq = item.TranTypeSeq,
+                        CostCenter = item.CostCenter,
+                        GlNo = item.GlNo,
+                        RcaGl = item.RcaGl,
+                        Prefix = item.Prefix,
+                        Sl = item.Sl,
+                        OtherCode = item.OtherCode,
+                        Dce = item.Dce,
+                        PlantCode = item.PlantCode,
+                        Wo = item.Wo,
+                        RefBillNo = item.RefBillNo,
+                        Source = item.Source,
+                        Nature = item.Nature,
+                        AYyyy = item.AYyyy,
+                        Fg = item.Fg,
+                        Debit = item.Debit,
+                        Credit = item.Credit,
+                        TranDate = item.TranDate,
+                        YmPosted = item.YmPosted,
+                        Sort = item.Sort,
+                        Udf1 = item.Udf1,
+                        Udf2 = item.Udf2,
+                        CreatedBy = result.CreatedBy,
+                        CreatedAt = DateTime.Now
+                    });
                 }
             }
 
             return result;
+
+            //var proformaEntry = _mapper.Map<ProformaEntry>(proformaEntryDTO);
+            //proformaEntry.CreatedAt = DateTime.Now;
+            //proformaEntry.StatusDate = DateTime.Now;
+
+            //var result = await _repository.Add(proformaEntry);
+
+            //var details = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
+
+            //if (details.Any())
+            //{
+            //    foreach (var detail in details)
+            //    {
+            //        detail.ProformaEntryId = result.Id;
+
+            //        await _detailsRepository.Add(detail);
+            //    }
+            //}
+
+            //return result;
         }
 
         public async Task<ProformaEntry> Update(ProformaEntryDTO proformaEntryDTO)
@@ -75,7 +125,7 @@ namespace FAIS.ApplicationCore.Services
 
             var result = await _repository.Update(proformaEntry);
 
-            var proformaEntryDetails = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
+            var proformaEntryDetails = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.Details);
 
             if (result != null)
             {
