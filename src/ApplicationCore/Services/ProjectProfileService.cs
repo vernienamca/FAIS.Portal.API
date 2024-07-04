@@ -4,6 +4,7 @@ using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,12 +44,25 @@ namespace FAIS.ApplicationCore.Services
 
                 var projectProfileResult = await _repository.Add(projectProfile);
 
-                if (projectProfileComponents != null)
+                if (projectProfileDTO.ProjectProfileComponentsDTO != null && projectProfileDTO.ProjectProfileComponentsDTO.Any())
                 {
-                    foreach (var component in projectProfileComponents)
+                    foreach (var component in projectProfileDTO.ProjectProfileComponentsDTO)
                     {
-                        component.ProjectProfileId = projectProfileResult.Id;
-                        await _componentsRepository.Add(component);
+                        await _componentsRepository.Add(new ProjectProfileComponent { 
+                            ProjectProfileId = projectProfileResult.Id,
+                            ComponentName = component.ComponentName,
+                            Details = component.Details,
+                            ProjectStageSeq = component.ProjectStageSeq,
+                            TransmissionGridSeq = component.TransmissionGridSeq,
+                            StartDate = component.StartDate,
+                            TargetDate = component.TargetDate,
+                            CompletionDate = component.CompletionDate,
+                            InspectionDate = component.InspectionDate,
+                            InitialAMRMonth = component.InitialAMRMonth,
+                            CreatedBy = projectProfile.CreatedBy,
+                            CreatedAt = DateTime.Now,
+
+                        });
                     }
                 }
                 return projectProfileResult;
@@ -73,43 +87,61 @@ namespace FAIS.ApplicationCore.Services
                 var mapper = _mapper.Map<ProjectProfile>(projectProfileDTO);
                 var projectProfileComponents = _mapper.Map<List<ProjectProfileComponent>>(projectProfileDTO.ProjectProfileComponentsDTO);
 
-                var projectProfileResult = await _repository.Update(mapper);
+                var result = await _repository.Update(mapper);
 
-                if (projectProfileResult != null)
+                if (projectProfileDTO.ProjectProfileComponentsDTO != null && projectProfileDTO.ProjectProfileComponentsDTO.Any())
                 {
-                    var components = _componentsRepository.GetById(projectProfileResult.Id);
-                    if (components != null)
+                    int[] componentUniqueIds = projectProfileDTO.ProjectProfileComponentsDTO.Select(s => s.Id ?? 0).ToArray();
+                    var detailsToRemove = _componentsRepository.GetById(projectProfileDTO.Id).Where(t => !componentUniqueIds.Any(a => t.Id == a));
+
+                    foreach (var item in detailsToRemove)
                     {
-                        if (components.Count > 0 && components.Count != projectProfileComponents.Count)
-                        {
-                            foreach (var component in components.Where(o => !projectProfileComponents.Select(a => a.Id).Contains(o.Id)))
-                            {
-                                if (component.RemoveAt == null)
-                                {
-                                    component.RemoveAt = DateTime.Now;
-                                    await _componentsRepository.Update(component);
-                                }
-                            }
-                        }
+                        var component = await _componentsRepository.GetDetails(item.Id);
+
+                        component.RemoveAt = DateTime.Now;
+                        await _componentsRepository.Update(component);
                     }
 
-                    if (projectProfileComponents != null && projectProfileComponents.Count > 0)
+                    foreach (var item in projectProfileDTO.ProjectProfileComponentsDTO)
                     {
-                        foreach (var item in projectProfileComponents)
+                        if (item.Id.HasValue)
                         {
-                            if (item.Id > 0)
+                            var component = await _componentsRepository.GetDetails(item.Id.Value);
+
+                            if (component.ComponentName != item.ComponentName || component.ProjectStageSeq != item.ProjectStageSeq || component.TransmissionGridSeq != item.TransmissionGridSeq)
                             {
-                                await _componentsRepository.Update(item);
+                                component.ComponentName = item.ComponentName;
+                                component.Details = item.Details;
+                                component.ProjectStageSeq = item.ProjectStageSeq;
+                                component.TransmissionGridSeq = item.TransmissionGridSeq;
+                                component.StartDate = item.StartDate;
+                                component.TargetDate = item.TargetDate;
+                                component.CompletionDate = item.CompletionDate;
+
+                                component.UpdatedBy = result.UpdatedBy;
+                                component.UpdatedAt = DateTime.Now;
+                                await _componentsRepository.Update(component);
                             }
-                            else
+                        }
+                        else
+                        {
+                            await _componentsRepository.Add(new ProjectProfileComponent
                             {
-                                item.ProjectProfileId = projectProfileResult.Id;
-                                await _componentsRepository.Add(item);
-                            }
+                                ProjectProfileId = projectProfileDTO.Id,
+                                ComponentName = item.ComponentName,
+                                Details = item.Details,
+                                ProjectStageSeq = item.ProjectStageSeq,
+                                TransmissionGridSeq = item.TransmissionGridSeq,
+                                StartDate = item.StartDate,
+                                TargetDate = item.TargetDate,
+                                CompletionDate = item.CompletionDate,
+                                CreatedAt = DateTime.Now,
+                                CreatedBy = (int)projectProfileDTO.UpdatedBy
+                            });
                         }
                     }
                 }
-                return projectProfileResult;
+                return result;
             }
             catch (Exception e)
             {

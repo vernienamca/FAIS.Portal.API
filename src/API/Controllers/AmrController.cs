@@ -21,7 +21,7 @@ namespace FAIS.Portal.API.Controllers
         #region Variables
 
         private readonly IAmrService _service;
-
+      
         #endregion Variables
 
         #region Constructor
@@ -104,7 +104,7 @@ namespace FAIS.Portal.API.Controllers
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            return Ok(_service.Update(dto));
+            return Ok(await _service.Update(dto));
         }
 
         /// <summary>
@@ -116,10 +116,10 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateEncoding(int id)
         {
-            if (id == null)
+            if (id > 0)
                 throw new ArgumentNullException(nameof(id));
 
-            return Ok(_service.UpdateEncoding(id));
+            return Ok(await _service.UpdateEncoding(id));
         }
         #endregion
     }

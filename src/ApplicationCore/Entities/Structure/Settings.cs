@@ -76,5 +76,11 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public DateTime? UpdatedAt { get; set; }
+
+        [DataMember]
+        public string ToRecipient { get; set; }
+
+        [DataMember]
+        public string CcRecipient { get; set; }
     }
 }
