@@ -48,6 +48,13 @@ namespace FAIS.Infrastructure.Data
         public DbSet<Amr100BatchD> Amr100BatchD { get; set; }
         public DbSet<Amr100BatchDbd> Amr100BatchDbd { get; set; }
         public DbSet<Amr100BatchStatHistory> Amr100BatchStatHistory { get; set; }
+        public DbSet<FieldDictionary> FieldDictionaries { get; set; }
+        public DbSet<BusinessProcess> BusinessProcess { get; set; }
+        public DbSet<DefinedTables> DefinedTables { get; set; }
+        public DbSet<DefinedTableColumns> DefinedTableColumns { get; set; }
+        public DbSet<DepreciationMethods> DepreciationMethods { get; set; }
+        public DbSet<DefinedMethodFieldDictionary> DefinedMethodFieldDictionaries { get; set; }
+        public DbSet<StepContainer> StepContainers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -88,6 +95,13 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new Amr100BatchDEntityConfiguration());
             builder.ApplyConfiguration(new Amr100BatchDbdEntityConfiguration());
             builder.ApplyConfiguration(new Amr100BatchStatHistoryEntityConfiguration());
+            builder.ApplyConfiguration(new FieldDictionaryEntityConfiguration());
+            builder.ApplyConfiguration(new BusinessProcessEntityConfiguration());
+            builder.ApplyConfiguration(new DefinedTableColumnsEntityConfiguration());
+            builder.ApplyConfiguration(new DefinedTableColumnsEntityConfiguration());
+            builder.ApplyConfiguration(new DepreciationMethodsEntityConfiguration());
+            builder.ApplyConfiguration(new DefinedMethodFieldDictionaryEntityConfiguration());
+            builder.ApplyConfiguration(new StepContainerEntityConfiguration());
         }
 
         public virtual async Task<int> SaveChangesAsync(int? userId = null)
