@@ -139,6 +139,7 @@ namespace FAIS.Portal.API.Controllers
             return Ok(_service.GetAmr100BatchDbdById(id));
         }
 
+
         #endregion Get
 
         #region Post
