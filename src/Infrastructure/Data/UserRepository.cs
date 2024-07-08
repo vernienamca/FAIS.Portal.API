@@ -1,8 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Office.Word;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
-using FAIS.ApplicationCore.DTOs;
+﻿using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
@@ -12,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.DirectoryServices.ActiveDirectory;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,11 +23,11 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<UserModel> Get()
         {
             var users = (from usr in _dbContext.Users.AsNoTracking()
-                         join pst in _dbContext.LibraryTypes.Where(x => x.Code == "PST").AsNoTracking() on usr.PositionId equals pst.Id into pstX
+                         join pst in _dbContext.LibraryOptions.AsNoTracking() on usr.PositionId equals pst.Id into pstX
                          from pst in pstX.DefaultIfEmpty()
-                         join div in _dbContext.LibraryTypes.Where(x => x.Code == "DIV").AsNoTracking() on usr.DivisionId equals div.Id into divX
+                         join div in _dbContext.LibraryOptions.AsNoTracking() on usr.DivisionId equals div.Id into divX
                          from div in divX.DefaultIfEmpty()
-                         join ofg in _dbContext.LibraryTypes.Where(t => t.Code == "OUFG").AsNoTracking() on usr.OupFgId equals ofg.Id into ofgX
+                         join ofg in _dbContext.LibraryOptions.AsNoTracking() on usr.OupFgId equals ofg.Id into ofgX
                          from ofg in ofgX.DefaultIfEmpty()
                          orderby usr.Id descending
                          select new UserModel()
@@ -42,11 +36,11 @@ namespace FAIS.Infrastructure.Data
                             FirstName = usr.FirstName,
                             LastName = usr.LastName,
                             UserName = usr.UserName,
-                            //Position = pst.Name,
-                            //Division = div.Name,
-                            //TAFGs = _dbContext.UserTAFGs.Where(x => x.UserId == usr.Id).AsNoTracking().Join(_dbContext.LibraryTypes.AsNoTracking(), fgs => fgs.TAFGId, lib => lib.Id,
-                            //    (fgs, lib) => new { fgs, lib }).Select(t => t.lib.Name).ToList(),
-                            OUFG = ofg.Name,
+                            Position = usr.PositionId,
+                            PositionDescription = pst.Description,
+                            Division = usr.DivisionId.Value,
+                            DivisionDescription = div.Description,
+                            OUFG = ofg.Description,
                             Status = usr.StatusCode,
                             Photo = usr.Photo
                          }).ToList();

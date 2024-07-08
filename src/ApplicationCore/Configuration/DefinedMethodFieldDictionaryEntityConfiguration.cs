@@ -54,7 +54,7 @@ namespace FAIS.ApplicationCore.Configuration
             builder.Property(e => e.DateRemoved)
                 .IsRequired(false)
                 .HasColumnType("datetime")
-                .HasColumnName("DATE_CREATED");
+                .HasColumnName("DATE_REMOVED");
         }
     }
 }

@@ -117,18 +117,27 @@ namespace FAIS.Controllers
 
                 userDto.LoginStatus = (int)LoginStatus.Success;
 
-                await _userService.UpdateSignInAttempts(userDto);
-
-                await _userService.AddLoginHistory(userDto.Id, username);
-
-                await _auditLogService.Add(new AuditLogDTO()
+                try
                 {
-                    ModuleSeq = 18,
-                    Activity = "Login to the system",
-                    IpAddress = GeoLocationHelpers.GetClientIpAddress(),
-                    CreatedBy = userDto.Id,
-                    CreatedAt = DateTime.Now
-                });
+                    await _userService.UpdateSignInAttempts(userDto);
+
+                    await _userService.AddLoginHistory(userDto.Id, username);
+
+                    await _auditLogService.Add(new AuditLogDTO()
+                    {
+                        ModuleSeq = 18,
+                        Activity = "Login to the system",
+                        IpAddress = GeoLocationHelpers.GetClientIpAddress(),
+                        CreatedBy = userDto.Id,
+                        CreatedAt = DateTime.Now
+                    });
+                } 
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+              
 
                 return Ok(new { userId = user.Id, isForcePasswordChange = user.ForcePasswordChange, accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
             }

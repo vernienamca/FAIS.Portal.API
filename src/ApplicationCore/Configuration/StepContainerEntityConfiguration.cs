@@ -41,7 +41,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("FIELD_DICT_SEQ");
 
             builder.Property(e => e.IsElse)
-                .IsRequired(false)
+                .IsRequired()
                 .HasColumnName("IS_ELSE")
                 .HasMaxLength(1);
 

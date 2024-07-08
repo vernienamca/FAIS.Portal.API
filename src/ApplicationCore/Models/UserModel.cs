@@ -15,6 +15,7 @@ namespace FAIS.ApplicationCore.Models
         public int Position { get; set; }
         public string PositionDescription { get; set; }
         public int Division { get; set; }
+        public string DivisionDescription { get; set; }
         public IReadOnlyCollection<int> TAFGs { get; set; }
         public string OUFG { get; set; }
         public int Status { get; set; }
