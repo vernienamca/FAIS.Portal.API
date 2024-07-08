@@ -6,9 +6,11 @@ namespace FAIS.ApplicationCore.DTOs.Structure
     public class Amr100BatchDTO
     {
         public int Id { get; set; }
+        public DateTime AmrYearMonth { get; set; }  
         public int ReportSeq { get; set; }
         public int ReportFgLto { get; set; }
         public int ProjectSeq { get; set; }
+        public string ProjectName { get; set; }
         public int ProjectComponentLto { get; set; }
         public string Remarks { get; set; }
         public string UDF1 { get; set; }

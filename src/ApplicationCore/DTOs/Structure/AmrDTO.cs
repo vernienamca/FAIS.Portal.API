@@ -10,6 +10,7 @@ namespace FAIS.ApplicationCore.DTOs
         public DateTime DateReceivedTransco { get; set; }
         public DateTime DateReceivedArmPmd { get; set; }
         public DateTime? DateSentEncoding { get; set; }
+        public DateTime? DateEndorsed { get; set; }
         public int NoOfBinders { get; set; }
         public string UDF1 { get; set; }
         public string UDF2 { get; set; }

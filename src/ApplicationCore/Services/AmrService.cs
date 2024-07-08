@@ -35,9 +35,13 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        public IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch()
+        //public IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch(int id, DateTime yearMonth)
+        //{
+        //    return _amr100BatchRepository.Get(id, yearMonth);
+        //}
+        public IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch(int id, string yearMonth)
         {
-            return _amr100BatchRepository.Get();
+            return _amr100BatchRepository.Get(id, yearMonth);
         }
         public IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD() { 
             return _amr100BatchDRepository.Get();
@@ -52,9 +56,9 @@ namespace FAIS.ApplicationCore.Services
             return await _repository.GetById(id);
         }
 
-        public async Task<Amr100BatchModel> GetAmr100BatchById(int id)
+        public async Task<Amr100BatchModel> GetAmr100BatchById(int ReportSeq)
         {
-            return await _amr100BatchRepository.GetById(id);
+            return await _amr100BatchRepository.GetById(ReportSeq);
         }
         
         public async Task<Amr100BatchDModel> GetAmr100BatchDById(int id)
