@@ -16,7 +16,7 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD();
         IReadOnlyCollection<Amr100BatchDbdModel> GetAmr100BatchDbd();
         Task<AmrModel> GetById(int id);
-        Task<Amr100BatchModel> GetAmr100BatchById(int ReportSeq);
+        Task<Amr100BatchModel> GetAmr100BatchById(int id);
         Task<Amr100BatchDModel> GetAmr100BatchDById(int id);
         Task<Amr100BatchDbdModel> GetAmr100BatchDbdById(int id);
         byte[] ExportAmrLogs();

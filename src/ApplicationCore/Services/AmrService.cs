@@ -39,9 +39,9 @@ namespace FAIS.ApplicationCore.Services
         //{
         //    return _amr100BatchRepository.Get(id, yearMonth);
         //}
-        public IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch(int id, string yearMonth)
+        public IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch(int reportSeqId, string yearMonth)
         {
-            return _amr100BatchRepository.Get(id, yearMonth);
+            return _amr100BatchRepository.Get(reportSeqId, yearMonth);
         }
         public IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD() { 
             return _amr100BatchDRepository.Get();

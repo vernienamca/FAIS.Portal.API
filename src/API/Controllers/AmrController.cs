@@ -56,9 +56,9 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpGet("Amr100Batch")]
         [ProducesResponseType(typeof(IReadOnlyCollection<Amr100BatchModel>), StatusCodes.Status200OK)]
-        public IActionResult GetAmr100Batch(int id, string yearMonth)
+        public IActionResult GetAmr100Batch(int reportSeqId, string yearMonth)
         {
-            return Ok(_service.GetAmr100Batch(id, yearMonth));
+            return Ok(_service.GetAmr100Batch(reportSeqId, yearMonth));
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace FAIS.Portal.API.Controllers
         /// Gets the AMR 100 Batch by id.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("Amr100Batch/{ReportSeq:int}")]
+        [HttpGet("Amr100Batch/{id:int}")]
         [ProducesResponseType(typeof(Amr100BatchModel), StatusCodes.Status200OK)]
         public IActionResult GetAmr100BatchById(int id)
         {

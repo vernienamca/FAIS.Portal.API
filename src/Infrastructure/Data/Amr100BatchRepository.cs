@@ -14,16 +14,17 @@ namespace FAIS.Infrastructure.Data
     {
         public Amr100BatchRepository(FAISContext context) : base(context) { }
 
-        public IReadOnlyCollection<Amr100BatchModel> Get(int id, string yearMonth)
+        public IReadOnlyCollection<Amr100BatchModel> Get(int reportSeqId, string yearMonth)
         {
-            var parsedYearMonth = DateTime.ParseExact(yearMonth, "yyyy-MM", System.Globalization.CultureInfo.InvariantCulture);
+            var parts = yearMonth.Split('-');
+            int year = int.Parse(parts[0]);
+            int month = int.Parse(parts[1]);
 
             var amrs = (from amr in _dbContext.Amr100Batch.AsNoTracking()
                                 join amrA in _dbContext.Amrs.AsNoTracking() on amr.ReportSeq equals amrA.Id
                                 join proj in _dbContext.ProjectProfile.AsNoTracking() on amr.ProjectSeq equals proj.Id
                                 join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
-                                where amr.ReportSeq == id && amrA.AmrYm == parsedYearMonth 
                                 orderby amr.Id descending
                                 select new Amr100BatchModel()
                                 {
@@ -51,6 +52,7 @@ namespace FAIS.Infrastructure.Data
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
 
                                 })
+                                .Where(x => x.ReportSeq == reportSeqId && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month)
                                 .ToList();
             return amrs;
         }
@@ -58,6 +60,7 @@ namespace FAIS.Infrastructure.Data
         public async Task<Amr100BatchModel> GetById(int id)
         {
             var amr = (from am in _dbContext.Amr100Batch.AsNoTracking()
+                                join amrA in _dbContext.Amrs.AsNoTracking() on am.ReportSeq equals amrA.Id
                                 join usr in _dbContext.Users.AsNoTracking() on am.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on am.UpdatedBy equals usrU.Id into usrUX
                                 from usrU in usrUX.DefaultIfEmpty()
@@ -66,6 +69,7 @@ namespace FAIS.Infrastructure.Data
                                 {
                                     Id = am.Id,
                                     ReportSeq = am.ReportSeq,
+                                    AmrYearMonth = amrA.AmrYm,
                                     ReportFgLto = am.ReportFgLto,
                                     ProjectSeq = am.ProjectSeq,
                                     ProjectComponentLto = am.ProjectComponentLto,

@@ -8,9 +8,9 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
 {
     public interface IAmr100BatchRepository
     {
-        IReadOnlyCollection<Amr100BatchModel> Get(int id, string yearMonth);
+        IReadOnlyCollection<Amr100BatchModel> Get(int reportSeqId, string yearMonth);
 
-        Task<Amr100BatchModel> GetById(int ReportSeq);
+        Task<Amr100BatchModel> GetById(int id);
         Task<Amr100Batch> Add(Amr100Batch amr);
         Task<Amr100Batch> Update(Amr100Batch amr);
     }
