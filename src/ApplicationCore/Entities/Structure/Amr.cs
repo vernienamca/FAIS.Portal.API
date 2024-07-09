@@ -16,6 +16,8 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public DateTime? DateSentEncoding { get; set; }
         [DataMember]
+        public DateTime? DateEndorsed { get; set; }
+        [DataMember]
         public int NoOfBinders { get; set; }
         [DataMember]
         public string UDF1 { get; set; }

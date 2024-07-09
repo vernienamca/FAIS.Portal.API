@@ -73,7 +73,7 @@ namespace FAIS.ApplicationCore.Configuration
 
             builder.Property(e => e.Photo)
                 .IsRequired(false)
-                .HasMaxLength(250)
+                .HasMaxLength(800)
                 .HasColumnName("PHOTO");
 
             builder.Property(e => e.SessionId)
