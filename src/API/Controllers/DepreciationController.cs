@@ -12,6 +12,8 @@ namespace FAIS.Portal.API.Controllers
     public class DepreciationController : ControllerBase
     {
         #region Variables
+
+
         #endregion Variables
 
         #region Constructor

@@ -37,8 +37,8 @@ namespace FAIS.ApplicationCore.Configuration
 
             builder.Property(e => e.EmployeeNumber)
                 .IsRequired(false)
-                .HasColumnName("EMP_NO")
-                .HasMaxLength(7);
+                .HasMaxLength(7)
+                .HasColumnName("EMP_NO");
 
             builder.Property(e => e.UserName)
                 .IsRequired()
@@ -59,7 +59,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("PASSWORD");
 
             builder.Property(e => e.EmailAddress)
-                .HasMaxLength(100)
+                .HasMaxLength(250)
                 .HasColumnName("EMAIL_ADDRESS");
 
             builder.Property(e => e.MobileNumber)
@@ -99,33 +99,33 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_EXPIRED");
 
-            builder.Property(e => e.TempKey)
-                .IsRequired(false)
-                .HasMaxLength(250)
-                .HasColumnName("TEMP_KEY");
-
-            builder.Property(e => e.CreatedBy)
-                .IsRequired()
-                .HasColumnName("USER_CREATED");
-
             builder.Property(e => e.CreatedAt)
                 .IsRequired()
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_CREATED");
-
-            builder.Property(e => e.UpdatedBy)
-                .IsRequired(false)
-                .HasColumnName("USER_MODIFIED");
 
             builder.Property(e => e.UpdatedAt)
                 .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
 
+            builder.Property(e => e.CreatedBy)
+                .IsRequired()
+                .HasColumnName("USER_CREATED");
+
+            builder.Property(e => e.UpdatedBy)
+                .IsRequired(false)
+                .HasColumnName("USER_MODIFIED");
+
+            builder.Property(e => e.TempKey)
+                .IsRequired(false)
+                .HasMaxLength(150)
+                .HasColumnName("TEMP_KEY");
+
             builder.Property(e => e.ForcePasswordChange)
-               .IsRequired(false)
-               .HasMaxLength(7)
-               .HasColumnName("FORCE_PASSWORD_CHANGE");
+                .IsRequired(false)
+                .HasMaxLength(7)
+                .HasColumnName("FORCE_PASSWORD_CHANGE");
         }
     }
 }
