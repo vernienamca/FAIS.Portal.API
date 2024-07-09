@@ -98,7 +98,7 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new FieldDictionaryEntityConfiguration());
             builder.ApplyConfiguration(new BusinessProcessEntityConfiguration());
             builder.ApplyConfiguration(new DefinedTableColumnsEntityConfiguration());
-            builder.ApplyConfiguration(new DefinedTableColumnsEntityConfiguration());
+            builder.ApplyConfiguration(new DefinedTablesEntityConfiguration());
             builder.ApplyConfiguration(new DepreciationMethodsEntityConfiguration());
             builder.ApplyConfiguration(new DefinedMethodFieldDictionaryEntityConfiguration());
             builder.ApplyConfiguration(new StepContainerEntityConfiguration());

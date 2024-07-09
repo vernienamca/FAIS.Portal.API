@@ -125,6 +125,9 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
+            string photoPath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AssetsPath")["PhotoPath"];
+            string fullPath = Path.Combine(photoPath, entity.Photo);
+            byte[] imageBytes = System.IO.File.ReadAllBytes(fullPath);
 
             var createdBy = await _userService.GetById(entity.CreatedBy);
 
@@ -148,7 +151,7 @@ namespace FAIS.API.Controllers
                 TAFGs = _userService.GetUserTAFgs(entity.Id),
                 OUFG = entity.OupFgId.HasValue ? entity.OupFgId.Value.ToString() : string.Empty,
                 LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
-                Photo = entity.Photo,
+                Photo = Convert.ToBase64String(imageBytes),
                 Password = EncryptionHelper.HashPassword(entity.Password),
                 CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}",
                 CreatedAt = entity.CreatedAt
