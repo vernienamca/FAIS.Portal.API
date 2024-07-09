@@ -16,7 +16,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AmrController : ControllerBase
     {
         #region Variables
@@ -67,9 +67,9 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpGet("Amr100BatchD")]
         [ProducesResponseType(typeof(IReadOnlyCollection<Amr100BatchDModel>), StatusCodes.Status200OK)]
-        public IActionResult GetAmr100BatchD()
+        public IActionResult GetAmr100BatchD(int amrBatchSeq, int reportSeq, string yearMonth)
         {
-            return Ok(_service.GetAmr100BatchD());
+            return Ok(_service.GetAmr100BatchD(amrBatchSeq, reportSeq, yearMonth));
         }
 
         /// <summary>
