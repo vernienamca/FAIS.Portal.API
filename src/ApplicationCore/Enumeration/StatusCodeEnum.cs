@@ -4,6 +4,8 @@ namespace FAIS.ApplicationCore.Enumeration
 {
     public enum StatusCodeEnum
     {
+        [Description("New Asset")]
+        NewAsset = 1,
         [Description("Open")]
         Open = 2,
         [Description("For Review")]

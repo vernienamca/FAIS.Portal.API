@@ -13,7 +13,7 @@ namespace FAIS.ApplicationCore.Interfaces.Service
     {
         IReadOnlyCollection<AmrModel> Get();
         IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch(int id, string yearMonth);
-        IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD();
+        IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD(int amrBatchSeq, int reportSeq, string yearMonth);
         IReadOnlyCollection<Amr100BatchDbdModel> GetAmr100BatchDbd();
         Task<AmrModel> GetById(int id);
         Task<Amr100BatchModel> GetAmr100BatchById(int id);
