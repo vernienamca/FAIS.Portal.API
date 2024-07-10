@@ -18,15 +18,18 @@ namespace FAIS.ApplicationCore.Services
         private readonly IAmr100BatchRepository _amr100BatchRepository;
         private readonly IAmr100BatchDRepository _amr100BatchDRepository;
         private readonly IAmr100BatchDbdRepository _amr100BatchDbdRepository;
+        private readonly IAmr100BatchStatHistoryRepository _amr100BatchStatHistoryRepository;
         private readonly IMapper _mapper;
 
         public AmrService(IAmrRepository repository, IAmr100BatchRepository amr100BatchRepository, 
-            IAmr100BatchDRepository amr100BatchDRepository, IAmr100BatchDbdRepository amr100BatchDbdRepository, IMapper mapper)
+            IAmr100BatchDRepository amr100BatchDRepository, IAmr100BatchDbdRepository amr100BatchDbdRepository, IAmr100BatchStatHistoryRepository amr100BatchStatHistoryRepository
+            ,IMapper mapper)
         {
             _repository = repository;
             _amr100BatchRepository = amr100BatchRepository;
             _amr100BatchDRepository = amr100BatchDRepository;
             _amr100BatchDbdRepository = amr100BatchDbdRepository;
+            _amr100BatchStatHistoryRepository = amr100BatchStatHistoryRepository;
             _mapper = mapper;
         }
 
@@ -35,10 +38,6 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get();
         }
 
-        //public IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch(int id, DateTime yearMonth)
-        //{
-        //    return _amr100BatchRepository.Get(id, yearMonth);
-        //}
         public IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch(int reportSeqId, string yearMonth)
         {
             return _amr100BatchRepository.Get(reportSeqId, yearMonth);
@@ -65,9 +64,19 @@ namespace FAIS.ApplicationCore.Services
         {
             return await _amr100BatchDRepository.GetById(id);
         }
-          public async Task<Amr100BatchDbdModel> GetAmr100BatchDbdById(int id)
+        public async Task<Amr100BatchDbdModel> GetAmr100BatchDbdById(int id)
         {
             return await _amr100BatchDbdRepository.GetById(id);
+        }
+
+        public IReadOnlyCollection<Amr100BatchStatHistoryModel> GetAmr100BatchStatHistory()
+        {
+            return _amr100BatchStatHistoryRepository.Get();
+        }
+
+        public async Task <IReadOnlyCollection<Amr100BatchStatHistoryModel>> GetAmr100BatchStatHistoryById(int batchId)
+        {
+            return await _amr100BatchStatHistoryRepository.GetById(batchId);
         }
 
         public async Task<Amr> Add(AddAmrDTO dto)
@@ -99,6 +108,26 @@ namespace FAIS.ApplicationCore.Services
         {
             var amr100batchdbdDto = _mapper.Map<Amr100BatchDbd>(dto);
             return await _amr100BatchDbdRepository.Add(amr100batchdbdDto);
+        }
+
+        public async Task<Amr100BatchStatHistory> AddAmr100BatchStatHistory(Amr100BatchStatHistoryDTO amr100BatchStatHistoryDto)
+        {
+            try
+            {
+                var batchHistory = new Amr100BatchStatHistory()
+                {
+                    Amr100BatchSeq = amr100BatchStatHistoryDto.BatchSeq,
+                    StatusCodeLto = amr100BatchStatHistoryDto.StatusCode,
+                    StatusDate = amr100BatchStatHistoryDto.StatusDate,
+                    StatusRemarks = amr100BatchStatHistoryDto.Remarks,
+                    CreatedBy = amr100BatchStatHistoryDto.CreatedBy,
+                };
+                return await _amr100BatchStatHistoryRepository.Add(batchHistory);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<Amr> Update(UpdateAmrDTO dto)
