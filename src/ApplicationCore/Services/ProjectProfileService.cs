@@ -67,7 +67,8 @@ namespace FAIS.ApplicationCore.Services
                 }
                 return projectProfileResult;
             }
-            catch(Exception ex) {
+            catch (Exception)
+            {
                 throw new ArgumentNullException();
             }
         }
@@ -143,7 +144,7 @@ namespace FAIS.ApplicationCore.Services
                 }
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ArgumentNullException();
             }

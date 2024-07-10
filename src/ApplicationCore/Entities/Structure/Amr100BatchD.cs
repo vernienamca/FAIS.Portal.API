@@ -8,8 +8,6 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public int Id { get; set; }
         [DataMember]
-        public int Amr100BatchDSeq { get; set; }
-        [DataMember]
         public int Amr100BatchSeq { get; set; }
         [DataMember]
         public int RoaSeq { get; set; }

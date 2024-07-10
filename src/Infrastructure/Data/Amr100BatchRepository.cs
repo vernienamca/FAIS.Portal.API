@@ -1,7 +1,9 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,18 +14,26 @@ namespace FAIS.Infrastructure.Data
     {
         public Amr100BatchRepository(FAISContext context) : base(context) { }
 
-        public IReadOnlyCollection<Amr100BatchModel> Get()
+        public IReadOnlyCollection<Amr100BatchModel> Get(int reportSeqId, string yearMonth)
         {
+            var parts = yearMonth.Split('-');
+            int year = int.Parse(parts[0]);
+            int month = int.Parse(parts[1]);
+
             var amrs = (from amr in _dbContext.Amr100Batch.AsNoTracking()
+                                join amrA in _dbContext.Amrs.AsNoTracking() on amr.ReportSeq equals amrA.Id
+                                join proj in _dbContext.ProjectProfile.AsNoTracking() on amr.ProjectSeq equals proj.Id
                                 join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
                                 orderby amr.Id descending
                                 select new Amr100BatchModel()
                                 {
                                     Id = amr.Id,
+                                    AmrYearMonth = amrA.AmrYm,
                                     ReportSeq = amr.ReportSeq,
                                     ReportFgLto = amr.ReportFgLto,
                                     ProjectSeq = amr.ProjectSeq,
+                                    ProjectName = proj.ProjectName,
                                     ProjectComponentLto = amr.ProjectComponentLto,
                                     Remarks = amr.Remarks,
                                     UDF1 = amr.UDF1,
@@ -41,13 +51,16 @@ namespace FAIS.Infrastructure.Data
                                     UpdatedBy = amr.UpdatedBy,
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
 
-                                }).ToList();
+                                })
+                                .Where(x => x.ReportSeq == reportSeqId && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month)
+                                .ToList();
             return amrs;
         }
 
         public async Task<Amr100BatchModel> GetById(int id)
         {
             var amr = (from am in _dbContext.Amr100Batch.AsNoTracking()
+                                join amrA in _dbContext.Amrs.AsNoTracking() on am.ReportSeq equals amrA.Id
                                 join usr in _dbContext.Users.AsNoTracking() on am.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on am.UpdatedBy equals usrU.Id into usrUX
                                 from usrU in usrUX.DefaultIfEmpty()
@@ -56,6 +69,7 @@ namespace FAIS.Infrastructure.Data
                                 {
                                     Id = am.Id,
                                     ReportSeq = am.ReportSeq,
+                                    AmrYearMonth = amrA.AmrYm,
                                     ReportFgLto = am.ReportFgLto,
                                     ProjectSeq = am.ProjectSeq,
                                     ProjectComponentLto = am.ProjectComponentLto,

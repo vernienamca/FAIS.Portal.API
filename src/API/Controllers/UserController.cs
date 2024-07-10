@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.VariantTypes;
+using DocumentFormat.OpenXml.Wordprocessing;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Helpers;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -87,7 +89,31 @@ namespace FAIS.API.Controllers
         [ProducesResponseType(typeof(IReadOnlyCollection<UserModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            return Ok(_userService.Get());
+            List<UserModel> users = new List<UserModel>();
+            
+            foreach(var user in _userService.Get())
+            {
+                string photoPath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AssetsPath")["PhotoPath"];
+                string fullPath = Path.Combine(photoPath, user.Photo);
+                byte[] imageBytes = System.IO.File.ReadAllBytes(fullPath);
+
+                users.Add(new UserModel()
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserName = user.UserName,
+                    Position = user.Position,
+                    PositionDescription = user.PositionDescription,
+                    Division = user.Division,
+                    DivisionDescription = user.DivisionDescription,
+                    OUFG = user.OUFG,
+                    Status = user.Status,
+                    Photo = Convert.ToBase64String(imageBytes)
+                });
+            }
+
+            return Ok(users);
         }
 
         /// <summary>
@@ -125,6 +151,9 @@ namespace FAIS.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var entity = await _userService.GetById(id);
+            string photoPath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AssetsPath")["PhotoPath"];
+            string fullPath = Path.Combine(photoPath, entity.Photo);
+            byte[] imageBytes = System.IO.File.ReadAllBytes(fullPath);
 
             var createdBy = await _userService.GetById(entity.CreatedBy);
 
@@ -148,7 +177,7 @@ namespace FAIS.API.Controllers
                 TAFGs = _userService.GetUserTAFgs(entity.Id),
                 OUFG = entity.OupFgId.HasValue ? entity.OupFgId.Value.ToString() : string.Empty,
                 LastLoginDate = _userService.GetLastLoginDate(entity.Id).Result,
-                Photo = entity.Photo,
+                Photo = Convert.ToBase64String(imageBytes),
                 Password = EncryptionHelper.HashPassword(entity.Password),
                 CreatedBy = $"{createdBy.FirstName} {createdBy.LastName}",
                 CreatedAt = entity.CreatedAt
@@ -297,7 +326,7 @@ namespace FAIS.API.Controllers
 
                 using (MemoryStream ms = new MemoryStream(imageBytes))
                 {
-                    Image image = Image.FromStream(ms);
+                    System.Drawing.Image image = System.Drawing.Image.FromStream(ms);
                     image.Save(Path.Combine(photoPath, fileName), ImageFormat.Png);
 
                     userDTO.Photo = fileName;
@@ -452,7 +481,7 @@ namespace FAIS.API.Controllers
 
                     using (MemoryStream ms = new MemoryStream(imageBytes))
                     {
-                        Image image = Image.FromStream(ms);
+                        System.Drawing.Image image = System.Drawing.Image.FromStream(ms);
                         image.Save(Path.Combine(photoPath, fileName), ImageFormat.Png);
 
                         user.Photo = fileName;
