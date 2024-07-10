@@ -44,7 +44,7 @@ namespace FAIS.Infrastructure.Data
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
 
                                 }).ToList();
-            return amrs;
+         return amrs;
         }
 
         public async Task<Amr100BatchDbdModel> GetById(int id)

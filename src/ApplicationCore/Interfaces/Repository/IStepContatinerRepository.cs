@@ -9,8 +9,8 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
 {
     public interface IStepContatinerRepository
     {
-        IReadOnlyCollection<StepContainer> Get();
-        Task<StepContainer> GetById(int id);
+        IReadOnlyCollection<StepContainerModel> Get();
+        Task<StepContainerModel> GetById(int id);
         Task<StepContainer> Add(StepContainer dto);
         Task<StepContainer> Update(StepContainer dto);
     }

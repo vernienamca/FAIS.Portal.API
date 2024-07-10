@@ -12,14 +12,56 @@ namespace FAIS.Infrastructure.Data
     {
         public FieldDictionaryRepository(FAISContext context) : base(context) { }
 
-        public IReadOnlyCollection<FieldDictionary> Get()
+        public IReadOnlyCollection<FieldDictionaryModel> Get()
         {
-            return _dbContext.FieldDictionaries.AsNoTracking().ToList();
+            var ret = (from fd in _dbContext.FieldDictionaries.AsNoTracking()
+                        join usr in _dbContext.Users.AsNoTracking() on fd.CreatedBy equals usr.Id
+                        join usrU in _dbContext.Users.AsNoTracking() on fd.UpdatedBy equals usrU.Id into usrUX
+                        from usrU in usrUX.DefaultIfEmpty()
+                        orderby fd.Id descending
+                        select new FieldDictionaryModel()
+                        {
+                            Id = fd.Id,
+                            BusinessProcessId = fd.BusinessProcessId,
+                            FieldName = fd.FieldName,
+                            TableId = fd.TableId,
+                            ColumnId = fd.ColumnId,
+                            IsActive = fd.IsActive,
+                            StatusDate = fd.StatusDate,
+                            Description = fd.Description,
+                            CreatedAt = fd.CreatedAt,
+                            UpdatedAt = fd.UpdatedAt,
+                            CreatedBy = fd.CreatedBy,
+                            UpdatedBy = fd.UpdatedBy,
+
+                        }). ToList();
+            return ret;
         }
 
-        public async Task<FieldDictionary> GetById(int id)
+        public async Task<FieldDictionaryModel> GetById(int id)
         {
-            return await _dbContext.FieldDictionaries.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+            var ret = (from fd in _dbContext.FieldDictionaries.AsNoTracking()
+                       join usr in _dbContext.Users.AsNoTracking() on fd.CreatedBy equals usr.Id
+                       join usrU in _dbContext.Users.AsNoTracking() on fd.UpdatedBy equals usrU.Id into usrUX
+                       from usrU in usrUX.DefaultIfEmpty()
+                       orderby fd.Id descending
+                       select new FieldDictionaryModel()
+                       {
+                           Id = fd.Id,
+                           BusinessProcessId = fd.BusinessProcessId,
+                           FieldName = fd.FieldName,
+                           TableId = fd.TableId,
+                           ColumnId = fd.ColumnId,
+                           IsActive = fd.IsActive,
+                           StatusDate = fd.StatusDate,
+                           Description = fd.Description,
+                           CreatedAt = fd.CreatedAt,
+                           UpdatedAt = fd.UpdatedAt,
+                           CreatedBy = fd.CreatedBy,
+                           UpdatedBy = fd.UpdatedBy,
+                          
+                       }).FirstOrDefaultAsync(t => t.Id == id);
+            return await ret;
         }
 
         public async Task<FieldDictionary> Add(FieldDictionary dto)

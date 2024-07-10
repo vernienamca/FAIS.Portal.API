@@ -51,7 +51,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
 
-            builder.Property(e => e.DateRemoved)
+            builder.Property(e => e.RemovedAt)
                 .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_REMOVED");

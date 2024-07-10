@@ -1,35 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 
-namespace FAIS.ApplicationCore.Entities.Structure
+namespace FAIS.ApplicationCore.Models
 {
-    public class DefinedMethodFieldDictionary : BaseEntity<int>
+    public class DefinedMethodFieldDictionaryModel
     {
-        [DataMember]
         public int Id { get; set; }
-
-        [DataMember]
         public int DefinedMethodId { get; set; }
-
-        [DataMember]
         public int FieldDictionaryId { get; set; }
-
-        [DataMember]
         public string Description { get; set; }
-
-        [DataMember]
         public DateTime CreatedAt { get; set; }
-
-        [DataMember]
         public DateTime? UpdatedAt { get; set; }
-
-        [DataMember]
-        public int CreatedBy { get; set; }
-
-        [DataMember]
-        public int? UpdatedBy { get; set; }
-
-        [DataMember]
         public DateTime? RemovedAt { get; set; }
+        public int CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

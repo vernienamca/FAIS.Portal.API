@@ -12,14 +12,50 @@ namespace FAIS.Infrastructure.Data
     {
         public BusinessProcessRepository(FAISContext context) : base(context) { }
 
-        public IReadOnlyCollection<BusinessProcess> Get()
+        public IReadOnlyCollection<BusinessProcessModel> Get()
         {
-            return _dbContext.BusinessProcess.AsNoTracking().ToList();
+            var ret = (from bp in _dbContext.BusinessProcess.AsNoTracking()
+                       join usr in _dbContext.Users.AsNoTracking() on bp.CreatedBy equals usr.Id
+                       join usrU in _dbContext.Users.AsNoTracking() on bp.UpdatedBy equals usrU.Id into usrUX
+                       from usrU in usrUX.DefaultIfEmpty()
+                       orderby bp.Id descending
+                       select new BusinessProcessModel()
+                       {
+                           Id = bp.Id,
+                           BusinessProcessName = bp.BusinessProcessName,
+                           Description = bp.Description,
+                           IsActive = bp.IsActive,
+                           StatusDate = bp.StatusDate,
+                           CreatedAt = bp.CreatedAt,
+                           UpdatedAt = bp.UpdatedAt,
+                           CreatedBy = bp.CreatedBy,
+                           UpdatedBy = bp.UpdatedBy,
+
+                       }).ToList();
+            return ret;
         }
 
-        public async Task<BusinessProcess> GetById(int id)
+        public async Task<BusinessProcessModel> GetById(int id)
         {
-            return await _dbContext.BusinessProcess.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+            var ret = (from bp in _dbContext.BusinessProcess.AsNoTracking()
+                   join usr in _dbContext.Users.AsNoTracking() on bp.CreatedBy equals usr.Id
+                   join usrU in _dbContext.Users.AsNoTracking() on bp.UpdatedBy equals usrU.Id into usrUX
+                   from usrU in usrUX.DefaultIfEmpty()
+                   orderby bp.Id descending
+                   select new BusinessProcessModel()
+                  {
+                       Id = bp.Id,
+                       BusinessProcessName = bp.BusinessProcessName,
+                       Description = bp.Description,
+                       IsActive = bp.IsActive,
+                       StatusDate = bp.StatusDate,
+                       CreatedAt = bp.CreatedAt,
+                       UpdatedAt = bp.UpdatedAt,
+                       CreatedBy = bp.CreatedBy,
+                       UpdatedBy = bp.UpdatedBy,
+
+                   }).FirstOrDefaultAsync(t => t.Id == id);
+            return await ret;
         }
 
         public async Task<BusinessProcess> Add(BusinessProcess dto)

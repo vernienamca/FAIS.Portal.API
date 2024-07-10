@@ -9,8 +9,8 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
 {
     public interface IFieldDictionaryRepository
     {
-        IReadOnlyCollection<FieldDictionary> Get();
-        Task<FieldDictionary> GetById(int id);
+        IReadOnlyCollection<FieldDictionaryModel> Get();
+        Task<FieldDictionaryModel> GetById(int id);
         Task<FieldDictionary> Add(FieldDictionary dto);
         Task<FieldDictionary> Update(FieldDictionary dto);
     }

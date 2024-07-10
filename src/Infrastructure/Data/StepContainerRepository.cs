@@ -12,14 +12,60 @@ namespace FAIS.Infrastructure.Data
     {
         public StepContainerRepository(FAISContext context) : base(context) { }
 
-        public IReadOnlyCollection<StepContainer> Get()
+        public IReadOnlyCollection<StepContainerModel> Get()
         {
-            return _dbContext.StepContainers.AsNoTracking().ToList();
+            var ret = (from sc in _dbContext.StepContainers.AsNoTracking()
+                       join usr in _dbContext.Users.AsNoTracking() on sc.CreatedBy equals usr.Id
+                       join usrU in _dbContext.Users.AsNoTracking() on sc.UpdatedBy equals usrU.Id into usrUX
+                       from usrU in usrUX.DefaultIfEmpty()
+                       orderby sc.Id descending
+                       select new StepContainerModel()
+                       {
+                           Id = sc.Id,
+                           DefinedMethodId = sc.DefinedMethodId,
+                           ParentId = sc.ParentId,
+                           SortOrder = sc.SortOrder,
+                           StepType = sc.StepType,
+                           FieldDictionaryId = sc.FieldDictionaryId,
+                           IsElse = sc.IsElse,
+                           Value = sc.Value,
+                           Comments = sc.Comments,
+                           CreatedBy = sc.CreatedBy,
+                           CreatedAt = sc.CreatedAt,
+                           UpdatedBy = sc.UpdatedBy,
+                           UpdatedAt = sc.UpdatedAt,
+                           RemovedAt = sc.RemovedAt,
+
+                       }).ToList();
+            return ret;
         }
 
-        public async Task<StepContainer> GetById(int id)
+        public async Task<StepContainerModel> GetById(int id)
         {
-            return await _dbContext.StepContainers.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+            var ret = (from sc in _dbContext.StepContainers.AsNoTracking()
+                    join usr in _dbContext.Users.AsNoTracking() on sc.CreatedBy equals usr.Id
+                    join usrU in _dbContext.Users.AsNoTracking() on sc.UpdatedBy equals usrU.Id into usrUX
+                    from usrU in usrUX.DefaultIfEmpty()
+                    orderby sc.Id descending
+                    select new StepContainerModel()
+                   {
+                        Id = sc.Id,
+                        DefinedMethodId = sc.DefinedMethodId,
+                        ParentId = sc.ParentId,
+                        SortOrder = sc.SortOrder,
+                        StepType = sc.StepType,
+                        FieldDictionaryId = sc.FieldDictionaryId,
+                        IsElse = sc.IsElse,
+                        Value = sc.Value,
+                        Comments = sc.Comments,
+                        CreatedBy = sc.CreatedBy,
+                        CreatedAt = sc.CreatedAt,
+                        UpdatedBy = sc.UpdatedBy,
+                        UpdatedAt = sc.UpdatedAt,
+                        RemovedAt = sc.RemovedAt,
+
+                     }).FirstOrDefaultAsync(t => t.Id == id);
+            return await ret;
         }
 
         public async Task<StepContainer> Add(StepContainer dto)
