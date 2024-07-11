@@ -258,7 +258,7 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateEncoding(int id)
         {
-            if (id > 0)
+            if (id <= 0)
                 throw new ArgumentNullException(nameof(id));
 
             return Ok(await _service.UpdateEncoding(id));

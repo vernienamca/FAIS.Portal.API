@@ -3,6 +3,7 @@ using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.DTOs.Structure;
 using FAIS.ApplicationCore.Entities.Structure;
+using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
@@ -160,6 +161,7 @@ namespace FAIS.ApplicationCore.Services
                     throw new ArgumentNullException("Amr not exist.");
 
                 amr.Result.DateSentEncoding = DateTime.Now;
+                amr.Result.StatusCode = (int)StatusCodeEnum.Open;
                 return await _repository.Update(amr.Result);
             }
             catch (Exception ex) 

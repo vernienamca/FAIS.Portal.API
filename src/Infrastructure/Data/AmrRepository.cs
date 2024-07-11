@@ -15,28 +15,29 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<AmrModel> Get()
         {
             var amrs = (from amr in _dbContext.Amrs.AsNoTracking()
-                                join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
-                                join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
-                                orderby amr.Id descending
-                                select new AmrModel()
-                                {
-                                    Id = amr.Id,
-                                    AmrYm = amr.AmrYm,
-                                    DateReceivedTransco = amr.DateReceivedTransco,
-                                    DateReceivedArmPmd = amr.DateReceivedArmPmd,
-                                    DateSentEncoding = amr.DateSentEncoding,
-                                    DateEndorsed = amr.DateEndorsed,
-                                    NoOfBinders = amr.NoOfBinders,
-                                    UDF1 = amr.UDF1,
-                                    UDF2 = amr.UDF2,
-                                    UDF3 = amr.UDF3,
-                                    CreatedBy = amr.CreatedBy,
-                                    CreatedByName = $"{usr.FirstName} {usr.LastName}",
-                                    CreatedAt = amr.CreatedAt,
-                                    UpdatedBy = amr.UpdatedBy,
-                                    UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                                    UpdatedAt = amr.UpdatedAt
-                                }).ToList();
+                        join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
+                        join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX
+                        from usrU in usrUX.DefaultIfEmpty()
+                        orderby amr.Id descending
+                        select new AmrModel()
+                        {
+                            Id = amr.Id,
+                            AmrYm = amr.AmrYm,
+                            DateReceivedTransco = amr.DateReceivedTransco,
+                            DateReceivedArmPmd = amr.DateReceivedArmPmd,
+                            DateSentEncoding = amr.DateSentEncoding,
+                            DateEndorsed = amr.DateEndorsed,
+                            NoOfBinders = amr.NoOfBinders,
+                            UDF1 = amr.UDF1,
+                            UDF2 = amr.UDF2,
+                            UDF3 = amr.UDF3,
+                            CreatedBy = amr.CreatedBy,
+                            CreatedByName = $"{usr.FirstName} {usr.LastName}",
+                            CreatedAt = amr.CreatedAt,
+                            UpdatedBy = amr.UpdatedBy,
+                            UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                            UpdatedAt = amr.UpdatedAt
+                        }).ToList();
             return amrs;
         }
 
