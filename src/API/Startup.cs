@@ -100,6 +100,7 @@ namespace FAIS
             services.AddScoped(typeof(IAmr100BatchRepository), typeof(Amr100BatchRepository));
             services.AddScoped(typeof(IAmr100BatchDRepository), typeof(Amr100BatchDRepository));
             services.AddScoped(typeof(IAmr100BatchDbdRepository), typeof(Amr100BatchDbdRepository));
+            services.AddScoped(typeof(IAmr100BatchStatHistoryRepository), typeof(Amr100BatchStatHistoryRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
             services.AddScoped(typeof(IModuleService), typeof(ModuleService));

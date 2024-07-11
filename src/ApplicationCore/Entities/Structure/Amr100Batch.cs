@@ -24,11 +24,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public string UDF3 { get; set; }
         [DataMember]
-        public int StatusCodeLto { get; set; }
+        public int StatusCode { get; set; }
         [DataMember]
         public DateTime StatusDate { get; set; }
-        [DataMember]
-        public int AccStatusCodeLto { get; set; }
         [DataMember]
         public DateTime AccStatusDate { get; set; }
         [DataMember]
@@ -41,5 +39,9 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public DateTime? UpdatedAt { get; set; }
         [DataMember]
         public int? UpdatedBy { get; set; }
+        [DataMember]
+        public int? TotalAmrIssues { get; set; }
+        [DataMember]
+        public int TotalReport { get; set; }
     }
 }

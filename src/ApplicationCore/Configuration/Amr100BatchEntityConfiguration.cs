@@ -52,18 +52,14 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("UDF3");
 
-            builder.Property(e => e.StatusCodeLto)
+            builder.Property(e => e.StatusCode)
                 .IsRequired()
-                .HasColumnName("STATUS_CODE_LTO");
+                .HasColumnName("STATUS_CODE");
 
             builder.Property(e => e.StatusDate)
                 .IsRequired()
                 .HasColumnType("datetime")
                 .HasColumnName("STATUS_DATE");
-
-            builder.Property(e => e.AccStatusCodeLto)
-                .IsRequired()
-                .HasColumnName("ACC_STATUS_CODE_LTO");
 
             builder.Property(e => e.AccStatusDate)
                 .IsRequired()
@@ -92,6 +88,13 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("USER_MODIFIED");
 
+            builder.Property(e => e.TotalAmrIssues)
+                .IsRequired(false)
+                .HasColumnName("NO_AMR_ISSUES");
+
+            builder.Property(e => e.TotalReport)
+                .IsRequired()
+                .HasColumnName("REPORT_TOTAL");
         }
     }
 }
