@@ -80,7 +80,7 @@ namespace FAIS.ApplicationCore.Services
             return await _amr100BatchStatHistoryRepository.GetById(batchId);
         }
 
-        public async Task<Amr> Add(AddAmrDTO dto)
+        public async Task<Amr> Add(AmrDTO dto)
         {
             try
             {
@@ -99,13 +99,13 @@ namespace FAIS.ApplicationCore.Services
             return await _amr100BatchRepository.Add(amr100batchDto);
         }
 
-        public async Task<Amr100BatchD> AddAmr100BatchD(AddAmr100BatchDDTO dto)
+        public async Task<Amr100BatchD> AddAmr100BatchD(Amr100BatchDDTO dto)
         {
             var amr100batchdDto = _mapper.Map<Amr100BatchD>(dto);
             return await _amr100BatchDRepository.Add(amr100batchdDto);
         }
         
-        public async Task<Amr100BatchDbd> AddAmr100BatchDbd(AddAmr100BatchDbdDTO dto)
+        public async Task<Amr100BatchDbd> AddAmr100BatchDbd(Amr100BatchDbdDTO dto)
         {
             var amr100batchdbdDto = _mapper.Map<Amr100BatchDbd>(dto);
             return await _amr100BatchDbdRepository.Add(amr100batchdbdDto);
@@ -131,7 +131,7 @@ namespace FAIS.ApplicationCore.Services
             }
         }
 
-        public async Task<Amr> Update(UpdateAmrDTO dto)
+        public async Task<Amr> Update(AmrDTO dto)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace FAIS.ApplicationCore.Services
             }
         }
 
-        public async Task<Amr100Batch> UpdateAmr100Batch(UpdateAmr100BatchDTO dto)
+        public async Task<Amr100Batch> UpdateAmr100Batch(Amr100BatchDTO dto)
         {
             try
             {
@@ -189,7 +189,7 @@ namespace FAIS.ApplicationCore.Services
                 throw new Exception(e.Message);
             }
         }
-        public async Task<Amr100BatchD> UpdateAmr100BatchD(UpdateAmr100BatchDDTO dto)
+        public async Task<Amr100BatchD> UpdateAmr100BatchD(Amr100BatchDDTO dto)
         {
             try
             {
@@ -209,7 +209,7 @@ namespace FAIS.ApplicationCore.Services
 
         }  
 
-        public async Task<Amr100BatchDbd> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto)
+        public async Task<Amr100BatchDbd> UpdateAmr100BatchDbd(Amr100BatchDbdDTO dto)
         {
             try
             {
