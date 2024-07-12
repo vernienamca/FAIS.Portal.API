@@ -9,6 +9,12 @@ namespace FAIS.ApplicationCore.Models
     {
         public int Id { get; set; }
         public int Amr100BatchSeq { get; set; }
+        public int ReportSeq { get; set; }
+        public DateTime AmrYearMonth { get; set; }
+        public int ReportFg{ get; set; }
+        public string ProjectName { get; set; }
+        public int ReportTotal { get; set; }
+        public int BatchTotal { get; set; }
         public int RoaSeq { get; set; }
         public int FgLto { get; set; }
         public string AmrLocation { get; set; }

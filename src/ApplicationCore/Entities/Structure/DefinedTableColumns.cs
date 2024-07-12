@@ -12,7 +12,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int? DefinedTableId { get; set; }
 
         [DataMember]
-        public string ColumName { get; set; }
+        public string ColumnName { get; set; }
 
         [DataMember]
         public char IsActive { get; set; }

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FAIS.ApplicationCore.DTOs;
 using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Interfaces;
+using FAIS.ApplicationCore.Services;
 using FAIS.Portal.API.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +16,7 @@ namespace FAIS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RoleController : ControllerBase
     {
         #region Variables
@@ -78,18 +81,37 @@ namespace FAIS.API.Controllers
         /// <summary>
         /// Posts the create role.
         /// </summary>
-        /// <param name="dto">The Role data object.</param>
+        /// <param name="roleDto">The role data object.</param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(Role), StatusCodes.Status200OK)]
-        public IActionResult Add([FromBody] RoleDTO dto)
+        public IActionResult Add([FromBody] RoleDTO roleDto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (roleDto == null)
+                throw new ArgumentNullException(nameof(roleDto));
 
-            return Ok(_roleService.Add(dto));
+            return Ok(_roleService.Add(roleDto));
         }
 
         #endregion
+
+        #region Put
+
+        /// <summary>
+        /// Puts the update role.
+        /// </summary>
+        /// <param name="roleDto">The role data object.</param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(typeof(Role), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update([FromBody] RoleDTO roleDto)
+        {
+            if (roleDto == null)
+                throw new ArgumentNullException(nameof(roleDto));
+
+            return Ok(await _roleService.Update(roleDto));
+        }
+
+        #endregion Put
     }
 }

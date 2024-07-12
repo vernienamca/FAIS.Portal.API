@@ -9,8 +9,8 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
 {
     public interface IDepreciationMethodsRepository
     {
-        IReadOnlyCollection<DepreciationMethods> Get();
-        Task<DepreciationMethods> GetById(int id);
+        IReadOnlyCollection<DepreciationMethodsModel> Get();
+        Task<DepreciationMethodsModel> GetById(int id);
         Task<DepreciationMethods> Add(DepreciationMethods dto);
         Task<DepreciationMethods> Update(DepreciationMethods dto);
     }

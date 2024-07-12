@@ -51,10 +51,18 @@ namespace FAIS.ApplicationCore.Services
             }
         }
 
-        public async Task<Role> Update(int id)
+        public async Task<Role> Update(RoleDTO roleDto)
         {
-            var role = _repository.GetById(id);
-            
+            var role = _repository.GetById(roleDto.Id);
+
+            role.Name = roleDto.Name;
+            role.Description = roleDto.Description;
+            role.IsActive = roleDto.IsActive;
+
+            if (role.IsActive != roleDto.IsActive)
+                role.StatusDate = DateTime.Now;
+;
+            role.UpdatedBy = roleDto.UpdatedBy;
             role.UpdatedAt = DateTime.Now;
 
             return await _repository.Update(role);

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace FAIS.ApplicationCore.Interfaces.Repository
 {
-    public interface IDefinedMethodFieldDictionaryRepository
+    public interface IDefinedMethodsFieldDictionaryRepository
     {
-        IReadOnlyCollection<DefinedMethodFieldDictionary> Get();
-        Task<DefinedMethodFieldDictionary> GetById(int id);
-        Task<DefinedMethodFieldDictionary> Add(DefinedMethodFieldDictionary dto);
-        Task<DefinedMethodFieldDictionary> Update(DefinedMethodFieldDictionary dto);
+        IReadOnlyCollection<DefinedMethodsFieldDictionaryModel> Get();
+        Task<DefinedMethodsFieldDictionaryModel> GetById(int id);
+        Task<DefinedMethodsFieldDictionary> Add(DefinedMethodsFieldDictionary dto);
+        Task<DefinedMethodsFieldDictionary> Update(DefinedMethodsFieldDictionary dto);
     }
 }

@@ -12,16 +12,27 @@ namespace FAIS.Infrastructure.Data
     {
         public Amr100BatchDRepository(FAISContext context) : base(context) { }
 
-        public IReadOnlyCollection<Amr100BatchDModel> Get()
+        public IReadOnlyCollection<Amr100BatchDModel> Get(int amrBatchSeq, int reportSeq, string yearMonth)
         {
+            var parts = yearMonth.Split('-');
+            int year = int.Parse(parts[0]);
+            int month = int.Parse(parts[1]);
+
             var amrs = (from amr in _dbContext.Amr100BatchD.AsNoTracking()
+                                join am in _dbContext.Amr100Batch.AsNoTracking() on amr.Amr100BatchSeq equals am.Id
+                                join amrA in _dbContext.Amrs.AsNoTracking() on am.ReportSeq equals amrA.Id
+                                join proj in _dbContext.ProjectProfile.AsNoTracking() on am.ProjectSeq equals proj.Id
                                 join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
                                 orderby amr.Id descending
                                 select new Amr100BatchDModel()
                                 {
                                     Id = amr.Id,
+                                    ReportSeq = am.ReportSeq,
+                                    AmrYearMonth = amrA.AmrYm,
                                     Amr100BatchSeq = amr.Amr100BatchSeq,
+                                    ReportFg = am.ReportFgLto,
+                                    ProjectName = proj.ProjectName,
                                     RoaSeq = amr.RoaSeq,
                                     FgLto = amr.FgLto,
                                     AmrLocation = amr.AmrLocation,
@@ -51,7 +62,9 @@ namespace FAIS.Infrastructure.Data
                                     UpdatedBy = amr.UpdatedBy,
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
 
-                                }).ToList();
+                                })
+                                .Where(x => x.ReportSeq == reportSeq && x.Amr100BatchSeq == amrBatchSeq && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month)
+                                .ToList();
             return amrs;
         }
 

@@ -9,8 +9,8 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
 {
     public interface IDefinedTablesRepository
     {
-        IReadOnlyCollection<DefinedTables> Get();
-        Task<DefinedTables> GetById(int id);
+        IReadOnlyCollection<DefinedTablesModel> Get();
+        Task<DefinedTablesModel> GetById(int id);
         Task<DefinedTables> Add(DefinedTables dto);
         Task<DefinedTables> Update(DefinedTables dto);
     }

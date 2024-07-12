@@ -9,8 +9,8 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
 {
     public interface IBusinessProcessRepository
     {
-        IReadOnlyCollection<BusinessProcess> Get();
-        Task<BusinessProcess> GetById(int id);
+        IReadOnlyCollection<BusinessProcessModel> Get();
+        Task<BusinessProcessModel> GetById(int id);
         Task<BusinessProcess> Add(BusinessProcess dto);
         Task<BusinessProcess> Update(BusinessProcess dto);
     }

@@ -18,9 +18,8 @@ namespace FAIS.ApplicationCore.Models
         public string UDF1 { get; set; }
         public string UDF2 { get; set; }
         public string UDF3 { get; set; }
-        public int StatusCodeLto { get; set; }
+        public int StatusCode { get; set; }
         public DateTime StatusDate { get; set; }
-        public int AccStatusCodeLto { get; set; }
         public DateTime AccStatusDate { get; set; }
         public int AssignedTo { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -29,7 +28,7 @@ namespace FAIS.ApplicationCore.Models
         public string CreatedByName { get; set; }
         public int? UpdatedBy { get; set; }
         public string UpdatedByName { get; set; }
-
-
+        public int TotalAmrIssues { get; set; }
+        public int TotalReport { get; set; }
     }
 }

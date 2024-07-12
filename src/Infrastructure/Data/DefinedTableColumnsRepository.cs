@@ -12,14 +12,50 @@ namespace FAIS.Infrastructure.Data
     {
         public DefinedTableColumnsRepository(FAISContext context) : base(context) { }
 
-        public IReadOnlyCollection<DefinedTableColumns> Get()
+        public IReadOnlyCollection<DefinedTableColumnsModel> Get()
         {
-            return _dbContext.DefinedTableColumns.AsNoTracking().ToList();
+            var ret = (from dtc in _dbContext.DefinedTableColumns.AsNoTracking()
+                       join usr in _dbContext.Users.AsNoTracking() on dtc.CreatedBy equals usr.Id
+                       join usrU in _dbContext.Users.AsNoTracking() on dtc.UpdatedBy equals usrU.Id into usrUX
+                       from usrU in usrUX.DefaultIfEmpty()
+                       orderby dtc.Id descending
+                       select new DefinedTableColumnsModel()
+                       {
+                           Id = dtc.Id,
+                           DefinedTableId = dtc.DefinedTableId,
+                           ColumnName = dtc.ColumnName,
+                           IsActive = dtc.IsActive,
+                           StatusDate = dtc.StatusDate,
+                           CreatedBy = dtc.CreatedBy,
+                           CreatedAt = dtc.CreatedAt,
+                           UpdatedBy = dtc.UpdatedBy,
+                           UpdatedAt = dtc.UpdatedAt,
+
+                       }).ToList();
+            return ret;
         }
 
-        public async Task<DefinedTableColumns> GetById(int id)
+        public async Task<DefinedTableColumnsModel> GetById(int id)
         {
-            return await _dbContext.DefinedTableColumns.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+            var ret = (from dtc in _dbContext.DefinedTableColumns.AsNoTracking()
+                       join usr in _dbContext.Users.AsNoTracking() on dtc.CreatedBy equals usr.Id
+                       join usrU in _dbContext.Users.AsNoTracking() on dtc.UpdatedBy equals usrU.Id into usrUX
+                       from usrU in usrUX.DefaultIfEmpty()
+                       orderby dtc.Id descending
+                       select new DefinedTableColumnsModel()
+                       {
+                           Id = dtc.Id,
+                           DefinedTableId = dtc.DefinedTableId,
+                           ColumnName = dtc.ColumnName,
+                           IsActive = dtc.IsActive,
+                           StatusDate = dtc.StatusDate,
+                           CreatedBy = dtc.CreatedBy,
+                           CreatedAt = dtc.CreatedAt,
+                           UpdatedBy = dtc.UpdatedBy,
+                           UpdatedAt = dtc.UpdatedAt,
+
+                       }).FirstOrDefaultAsync(t => t.Id == id);
+            return await ret;
         }
 
         public async Task<DefinedTableColumns> Add(DefinedTableColumns dto)
