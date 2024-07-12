@@ -55,7 +55,7 @@ namespace FAIS.Portal.API.Controllers
         /// List of AMR 100 Batch.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("Amr100Batch")]
+        [HttpGet("Amr100Batch/{reportSeqId:int}/{yearMonth:string}")]
         [ProducesResponseType(typeof(IReadOnlyCollection<Amr100BatchModel>), StatusCodes.Status200OK)]
         public IActionResult GetAmr100Batch(int reportSeqId, string yearMonth)
         {
@@ -66,7 +66,7 @@ namespace FAIS.Portal.API.Controllers
         /// List of AMR 100 Batch D.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("Amr100BatchD")]
+        [HttpGet("Amr100BatchD/{amrBatchSeq:int}/{reportSeqId:int}/{yearMonth:string}")]
         [ProducesResponseType(typeof(IReadOnlyCollection<Amr100BatchDModel>), StatusCodes.Status200OK)]
         public IActionResult GetAmr100BatchD(int amrBatchSeq, int reportSeq, string yearMonth)
         {
@@ -173,7 +173,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPost()]
         [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(AddAmrDTO dto)
+        public async Task<IActionResult> Add(AmrDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -189,7 +189,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns
         [HttpPost("Amr100Batch")]
         [ProducesResponseType(typeof(Amr100Batch), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddAmr100Batch(AddAmr100BatchDTO amr100BatchDto)
+        public async Task<IActionResult> AddAmr100Batch(Amr100BatchDTO amr100BatchDto)
         {
             if (amr100BatchDto == null)
                 throw new ArgumentNullException(nameof(amr100BatchDto));
@@ -214,7 +214,7 @@ namespace FAIS.Portal.API.Controllers
         /// <param name="amr100BatchDto">The amr 100 Batch data object.</param>`1
         [HttpPost("Amr100BatchD")]
         [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddAmr100BatchD(AddAmr100BatchDDTO amr100batchdDto)
+        public async Task<IActionResult> AddAmr100BatchD(Amr100BatchDDTO amr100batchdDto)
         {
             if (amr100batchdDto == null)
                 throw new ArgumentNullException(nameof(amr100batchdDto));
@@ -227,7 +227,7 @@ namespace FAIS.Portal.API.Controllers
         /// <param name="amr100BatchDto">The amr 100 Batch data object.</param>
         [HttpPost("Amr100BatchDbd")]
         [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddAmr100BatchDbd(AddAmr100BatchDbdDTO amr100batchdbdDto)
+        public async Task<IActionResult> AddAmr100BatchDbd(Amr100BatchDbdDTO amr100batchdbdDto)
         {
             if (amr100batchdbdDto == null)
                 throw new ArgumentNullException(nameof(amr100batchdbdDto));
@@ -244,7 +244,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(UpdateAmrDTO dto)
+        public async Task<IActionResult> Update(AmrDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -274,7 +274,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("Amr100Batch/{id:int}")]
         [ProducesResponseType(typeof(Amr100Batch), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateAmr100Batch(UpdateAmr100BatchDTO dto)
+        public async Task<IActionResult> UpdateAmr100Batch(Amr100BatchDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -289,7 +289,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("Amr100BatchD/{id:int}")]
         [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateAmr100BatchD(UpdateAmr100BatchDDTO dto)
+        public async Task<IActionResult> UpdateAmr100BatchD(Amr100BatchDDTO dto)
         {
             if(dto == null)
                 throw new ArgumentNullException(nameof (dto));
@@ -303,7 +303,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("Amr100BatchDbd/{id:int}")]
         [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto)
+        public async Task<IActionResult> UpdateAmr100BatchDbd(Amr100BatchDbdDTO dto)
         {
             if(dto == null)
                 throw new ArgumentNullException(nameof (dto));
