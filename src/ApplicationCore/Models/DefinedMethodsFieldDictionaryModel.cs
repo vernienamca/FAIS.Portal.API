@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FAIS.ApplicationCore.Models
 {
-    public class DefinedMethodFieldDictionaryModel
+    public class DefinedMethodsFieldDictionaryModel
     {
         public int Id { get; set; }
         public int DefinedMethodId { get; set; }

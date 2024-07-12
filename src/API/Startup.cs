@@ -105,7 +105,7 @@ namespace FAIS
             services.AddScoped(typeof(IDefinedTablesRepository), typeof(DefinedTablesRepository));
             services.AddScoped(typeof(IDefinedTableColumnsRepository), typeof(DefinedTableColumnsRepository));
             services.AddScoped(typeof(IDepreciationMethodsRepository), typeof(DepreciationMethodsRepository));
-            services.AddScoped(typeof(IDefinedMethodFieldDictionaryRepository), typeof(DefinedMethodFiledDictionaryRepository));
+            services.AddScoped(typeof(IDefinedMethodsFieldDictionaryRepository), typeof(DefinedMethodsFieldDictionaryRepository));
             services.AddScoped(typeof(IStepContatinerRepository), typeof(StepContainerRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));

@@ -53,7 +53,7 @@ namespace FAIS.Infrastructure.Data
         public DbSet<DefinedTables> DefinedTables { get; set; }
         public DbSet<DefinedTableColumns> DefinedTableColumns { get; set; }
         public DbSet<DepreciationMethods> DepreciationMethods { get; set; }
-        public DbSet<DefinedMethodFieldDictionary> DefinedMethodFieldDictionaries { get; set; }
+        public DbSet<DefinedMethodsFieldDictionary> DefinedMethodsFieldDictionaries { get; set; }
         public DbSet<StepContainer> StepContainers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -100,7 +100,7 @@ namespace FAIS.Infrastructure.Data
             builder.ApplyConfiguration(new DefinedTablesEntityConfiguration());
             builder.ApplyConfiguration(new DefinedTableColumnsEntityConfiguration());
             builder.ApplyConfiguration(new DepreciationMethodsEntityConfiguration());
-            builder.ApplyConfiguration(new DefinedMethodFieldDictionaryEntityConfiguration());
+            builder.ApplyConfiguration(new DefinedMethodsFieldDictionaryEntityConfiguration());
             builder.ApplyConfiguration(new StepContainerEntityConfiguration());
         }
 

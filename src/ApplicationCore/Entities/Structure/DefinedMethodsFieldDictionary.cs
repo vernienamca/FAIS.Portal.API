@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    public class DefinedMethodFieldDictionary : BaseEntity<int>
+    public class DefinedMethodsFieldDictionary : BaseEntity<int>
     {
         [DataMember]
         public int Id { get; set; }
