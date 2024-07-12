@@ -2,7 +2,7 @@
 
 namespace FAIS.ApplicationCore.Enumeration
 {
-    public enum StatusCodeEnum
+    public enum AmrStatusEnum
     {
         [Description("New Asset")]
         NewAsset = 1,

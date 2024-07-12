@@ -21,6 +21,8 @@ namespace FAIS.Infrastructure.Data
             int month = int.Parse(parts[1]);
 
             var amrs = (from amr in _dbContext.Amr100Batch.AsNoTracking()
+                                join amrD in _dbContext.Amr100BatchD.AsNoTracking() on amr.Id equals amrD.Amr100BatchSeq into amrDx
+                                from amrD in amrDx.DefaultIfEmpty()
                                 join amrA in _dbContext.Amrs.AsNoTracking() on amr.ReportSeq equals amrA.Id
                                 join proj in _dbContext.ProjectProfile.AsNoTracking() on amr.ProjectSeq equals proj.Id
                                 join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
@@ -28,7 +30,7 @@ namespace FAIS.Infrastructure.Data
                                 orderby amr.Id descending
                                 select new Amr100BatchModel()
                                 {
-                                    Id = amr.Id,
+                                    Id = amr.Id, 
                                     AmrYearMonth = amrA.AmrYm,
                                     ReportSeq = amr.ReportSeq,
                                     ReportFgLto = amr.ReportFgLto,
@@ -39,9 +41,8 @@ namespace FAIS.Infrastructure.Data
                                     UDF1 = amr.UDF1,
                                     UDF2 = amr.UDF2,
                                     UDF3 = amr.UDF3,
-                                    StatusCodeLto = amr.StatusCodeLto,
+                                    StatusCode = amr.StatusCode,
                                     StatusDate = amr.StatusDate,
-                                    AccStatusCodeLto = amr.AccStatusCodeLto,
                                     AccStatusDate = amr.AccStatusDate,
                                     AssignedTo = amr.AssignedTo,
                                     CreatedAt = amr.CreatedAt,
@@ -50,10 +51,20 @@ namespace FAIS.Infrastructure.Data
                                     CreatedBy = amr.CreatedBy,
                                     UpdatedBy = amr.UpdatedBy,
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                                    TotalReport = amr.TotalReport,
+                                    TotalAmrIssues = _dbContext.Amr100BatchDbd.AsNoTracking().Count(dbd => dbd.Amr100BatchDSeq == amrD.Id && dbd.WithIssues == 'Y')
 
                                 })
                                 .Where(x => x.ReportSeq == reportSeqId && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month)
                                 .ToList();
+
+            var groupedAmrs = amrs.GroupBy(x => x.Id).Select(g =>
+            {
+                var first = g.First();
+                first.TotalAmrIssues = g.Sum(x => x.TotalAmrIssues);
+                return first;
+            }).ToList();
+
             return amrs;
         }
 
@@ -77,9 +88,8 @@ namespace FAIS.Infrastructure.Data
                                     UDF1 = am.UDF1,
                                     UDF2 = am.UDF2,
                                     UDF3 = am.UDF3,
-                                    StatusCodeLto = am.StatusCodeLto,
+                                    StatusCode = am.StatusCode,
                                     StatusDate = am.StatusDate,
-                                    AccStatusCodeLto = am.AccStatusCodeLto,
                                     AccStatusDate = am.AccStatusDate,
                                     AssignedTo = am.AssignedTo,
                                     CreatedAt = am.CreatedAt,
@@ -87,6 +97,7 @@ namespace FAIS.Infrastructure.Data
                                     CreatedByName = $"{usr.FirstName} {usr.LastName}",
                                     UpdatedBy = am.UpdatedBy,
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                                    TotalReport = am.TotalReport,
 
                                 }).FirstOrDefaultAsync(t => t.Id == id);
             return await amr;

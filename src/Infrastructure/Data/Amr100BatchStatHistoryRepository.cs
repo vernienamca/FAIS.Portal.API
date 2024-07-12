@@ -16,14 +16,12 @@ namespace FAIS.Infrastructure.Data
         {
             var amrs = (from amr in _dbContext.Amr100BatchStatHistory.AsNoTracking()
                                 join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
-                                join opt in _dbContext.LibraryOptions.AsNoTracking() on amr.StatusCodeLto equals opt.Id
                                 orderby amr.Id descending
                                 select new Amr100BatchStatHistoryModel()
                                 {
                                     Id = amr.Id,
                                     Amr100BatchSeq = amr.Amr100BatchSeq,    
                                     StatusCodeLto = amr.StatusCodeLto,
-                                    StatusCodeName = opt.Description,
                                     StatusDate = amr.StatusDate,
                                     StatusRemarks = amr.StatusRemarks,
                                     CreatedBy = amr.CreatedBy,
@@ -32,10 +30,11 @@ namespace FAIS.Infrastructure.Data
             return amrs;
         }
 
-        public async Task<Amr100BatchStatHistoryModel> GetById(int id)
+        public async Task<IReadOnlyCollection<Amr100BatchStatHistoryModel>> GetById(int id)
         {
             var amr = (from am in _dbContext.Amr100BatchStatHistory.AsNoTracking()
                                 join usr in _dbContext.Users.AsNoTracking() on am.CreatedBy equals usr.Id
+                                where am.Amr100BatchSeq == id
                                 orderby am.Id descending
                                 select new Amr100BatchStatHistoryModel()
                                 {
@@ -44,9 +43,8 @@ namespace FAIS.Infrastructure.Data
                                     StatusCodeLto = am.StatusCodeLto,
                                     StatusDate = am.StatusDate,
                                     StatusRemarks = am.StatusRemarks,
-                                    CreatedBy = am.CreatedBy,
-                                   
-                                }).FirstOrDefaultAsync(t => t.Id == id);
+                                    CreatedBy = am.CreatedBy
+                                }).ToListAsync();
             return await amr;
         }
 
