@@ -13,12 +13,14 @@ namespace FAIS.ApplicationCore.Interfaces.Service
     {
         IReadOnlyCollection<AmrModel> Get();
         IReadOnlyCollection<Amr100BatchModel> GetAmr100Batch(int id, string yearMonth);
-        IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD();
+        IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD(int amrBatchSeq, int reportSeq, string yearMonth);
         IReadOnlyCollection<Amr100BatchDbdModel> GetAmr100BatchDbd();
+        IReadOnlyCollection<Amr100BatchStatHistoryModel> GetAmr100BatchStatHistory();
         Task<AmrModel> GetById(int id);
         Task<Amr100BatchModel> GetAmr100BatchById(int id);
         Task<Amr100BatchDModel> GetAmr100BatchDById(int id);
         Task<Amr100BatchDbdModel> GetAmr100BatchDbdById(int id);
+        Task <IReadOnlyCollection<Amr100BatchStatHistoryModel>> GetAmr100BatchStatHistoryById(int batchId);
         byte[] ExportAmrLogs();
         Task<Amr> Add(AddAmrDTO dto);
         Task<Amr> Update(UpdateAmrDTO dto);
@@ -29,5 +31,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         Task<Amr100BatchD> UpdateAmr100BatchD(UpdateAmr100BatchDDTO dto); 
         Task<Amr100BatchDbd> AddAmr100BatchDbd(AddAmr100BatchDbdDTO dto);
         Task<Amr100BatchDbd> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto);
+        Task<Amr100BatchStatHistory> AddAmr100BatchStatHistory(Amr100BatchStatHistoryDTO dto);
     }
 }

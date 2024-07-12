@@ -8,7 +8,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     public interface IAmr100BatchStatHistoryRepository
     {
         IReadOnlyCollection<Amr100BatchStatHistoryModel> Get();
-        Task<Amr100BatchStatHistoryModel> GetById(int id);
+        Task <IReadOnlyCollection<Amr100BatchStatHistoryModel>> GetById(int id);
         Task<Amr100BatchStatHistory> Add(Amr100BatchStatHistory amr);
         Task<Amr100BatchStatHistory> Update(Amr100BatchStatHistory amr);
     }
