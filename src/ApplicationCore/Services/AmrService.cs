@@ -195,7 +195,6 @@ namespace FAIS.ApplicationCore.Services
                 throw new Exception(e.Message);
             }
         }
-
         public async Task<Amr100BatchD> UpdateAmr100BatchD(Amr100BatchDDTO dto)
         {
             try
