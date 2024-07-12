@@ -193,22 +193,25 @@ namespace FAIS.Portal.API.Controllers
         {
             if (amr100BatchDto == null)
                 throw new ArgumentNullException(nameof(amr100BatchDto));
+
+            amr100BatchDto.StatusCode = (int)AmrStatusEnum.Open;
             var addedBatch = await _service.AddAmr100Batch(amr100BatchDto);
 
             await _service.AddAmr100BatchStatHistory(new Amr100BatchStatHistoryDTO()
             {
                 BatchSeq = addedBatch.Id,
-                StatusCode = (int)StatusCodeEnum.Open,
+                StatusCode = (int)AmrStatusEnum.Open,
                 StatusDate = DateTime.Now,
                 CreatedBy = addedBatch.CreatedBy
             });
+
             return Ok(addedBatch);
         }
 
         /// <summary>
         /// Posts the create AMR 100 Batch D.
         /// </summary>
-        /// <param name="amr100BatchDto">The amr 100 Batch data object.</param>
+        /// <param name="amr100BatchDto">The amr 100 Batch data object.</param>`1
         [HttpPost("Amr100BatchD")]
         [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddAmr100BatchD(AddAmr100BatchDDTO amr100batchdDto)
