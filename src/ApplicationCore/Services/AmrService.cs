@@ -161,7 +161,7 @@ namespace FAIS.ApplicationCore.Services
                     throw new ArgumentNullException("Amr not exist.");
 
                 amr.Result.DateSentEncoding = DateTime.Now;
-                amr.Result.StatusCode = (int)StatusCodeEnum.Open;
+                amr.Result.StatusCode = (int)AmrStatusEnum.Open;
                 return await _repository.Update(amr.Result);
             }
             catch (Exception ex) 
