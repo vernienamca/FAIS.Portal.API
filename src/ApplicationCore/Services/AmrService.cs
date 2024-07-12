@@ -99,7 +99,7 @@ namespace FAIS.ApplicationCore.Services
             }
         }
 
-        public async Task<Amr100Batch> AddAmr100Batch(AddAmr100BatchDTO dto)
+        public async Task<Amr100Batch> AddAmr100Batch(Amr100BatchDTO dto)
         { 
             var amr100batchDto = _mapper.Map<Amr100Batch>(dto);
             return await _amr100BatchRepository.Add(amr100batchDto);

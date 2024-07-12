@@ -65,14 +65,14 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<PlantInformationDetails, PlantInformationDetailDTO>().ReverseMap();
             CreateMap<PlantInformationDetails, AddPlantInformationDetailDTO>().ReverseMap();
             CreateMap<PlantInformationDetails, UpdatePlantInformationDetailDTO>().ReverseMap();
-            CreateMap<Amr, AddAmrDTO>().ReverseMap();
-            CreateMap<Amr, UpdateAmrDTO>().ReverseMap();
-            CreateMap<Amr100Batch, AddAmr100BatchDTO>().ReverseMap();
-            CreateMap<Amr100Batch, UpdateAmr100BatchDTO>().ReverseMap();
-            CreateMap<Amr100BatchD, AddAmr100BatchDDTO>().ReverseMap();
-            CreateMap<Amr100BatchD, UpdateAmr100BatchDDTO>().ReverseMap();
-            CreateMap<Amr100BatchDbd, AddAmr100BatchDbdDTO>().ReverseMap();
-            CreateMap<Amr100BatchDbd, UpdateAmr100BatchDbdDTO>().ReverseMap();
+            CreateMap<Amr, AmrDTO>().ReverseMap();
+            CreateMap<Amr, AmrDTO>().ReverseMap();
+            CreateMap<Amr100Batch, Amr100BatchDTO>().ReverseMap();
+            CreateMap<Amr100Batch, Amr100BatchDTO>().ReverseMap();
+            CreateMap<Amr100BatchD, Amr100BatchDDTO>().ReverseMap();
+            CreateMap<Amr100BatchD, Amr100BatchDDTO>().ReverseMap();
+            CreateMap<Amr100BatchDbd, Amr100BatchDbdDTO>().ReverseMap();
+            CreateMap<Amr100BatchDbd, Amr100BatchDbdDTO>().ReverseMap();
         }        
     }
 }
