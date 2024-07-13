@@ -11,6 +11,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
     {
         IReadOnlyCollection<DepreciationMethodsModel> Get();
         Task<DepreciationMethodsModel> GetById(int id);
+        Task<DepreciationMethods> GetByBusinessProcessId(int id);
         Task<DepreciationMethods> Add(DepreciationMethods dto);
         Task<DepreciationMethods> Update(DepreciationMethods dto);
     }

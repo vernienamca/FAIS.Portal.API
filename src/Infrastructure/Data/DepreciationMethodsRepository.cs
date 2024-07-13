@@ -66,6 +66,11 @@ namespace FAIS.Infrastructure.Data
             return await ret;
         }
 
+        public async Task<DepreciationMethods> GetByBusinessProcessId(int id)
+        { 
+            return await _dbContext.DepreciationMethods.FirstOrDefaultAsync(d => d.BusinessProcessId == id);
+        }
+
         public async Task<DepreciationMethods> Add(DepreciationMethods dto)
         {
             return await AddAsync(dto);
