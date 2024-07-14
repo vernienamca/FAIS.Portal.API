@@ -36,7 +36,10 @@ namespace FAIS.Infrastructure.Data
                             CreatedAt = amr.CreatedAt,
                             UpdatedBy = amr.UpdatedBy,
                             UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                            UpdatedAt = amr.UpdatedAt
+                            UpdatedAt = amr.UpdatedAt,
+                            StatusCode = amr.StatusCode,
+                            ReportTotal = _dbContext.Amr100Batch.AsNoTracking().Where(dbd => dbd.ReportSeq == amr.Id).Sum(dbd => dbd.TotalReport),
+                            TotalIssues = _dbContext.Amr100Batch.AsNoTracking().Where(dbd => dbd.ReportSeq == amr.Id).Sum(dbd => dbd.TotalAmrIssues)
                         }).ToList();
             return amrs;
         }

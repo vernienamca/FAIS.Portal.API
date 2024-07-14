@@ -21,14 +21,14 @@ namespace FAIS.ApplicationCore.Models
         public int StatusCode { get; set; }
         public DateTime StatusDate { get; set; }
         public DateTime AccStatusDate { get; set; }
-        public int AssignedTo { get; set; }
+        public int? AssignedTo { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public int CreatedBy { get; set; }
         public string CreatedByName { get; set; }
         public int? UpdatedBy { get; set; }
         public string UpdatedByName { get; set; }
-        public int TotalAmrIssues { get; set; }
+        public int? TotalAmrIssues { get; set; }
         public int TotalReport { get; set; }
     }
 }

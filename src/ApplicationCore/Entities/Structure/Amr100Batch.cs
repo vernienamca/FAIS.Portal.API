@@ -30,7 +30,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         [DataMember]
         public DateTime AccStatusDate { get; set; }
         [DataMember]
-        public int AssignedTo { get; set; }
+        public int? AssignedTo { get; set; }
         [DataMember]
         public DateTime CreatedAt { get; set; }
         [DataMember]
