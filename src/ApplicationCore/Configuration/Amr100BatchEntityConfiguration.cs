@@ -88,6 +88,10 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("USER_MODIFIED");
 
+            builder.Property(e => e.TotalAmrIssues)
+                .IsRequired(false)
+                .HasColumnName("NO_AMR_ISSUES");
+
             builder.Property(e => e.TotalReport)
                 .IsRequired()
                 .HasColumnName("REPORT_TOTAL");
