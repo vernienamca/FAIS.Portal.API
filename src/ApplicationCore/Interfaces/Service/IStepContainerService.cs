@@ -13,6 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         IReadOnlyCollection<StepContainerModel> Get();
         Task<StepContainerModel> GetById(int id);
         Task<StepContainer> Add(StepContainerDTO dto);
-        Task<StepContainer> Update(UpdateStepContainerDTO dto);
+        Task<StepContainer> Update(StepContainerDTO dto);
     }
 }

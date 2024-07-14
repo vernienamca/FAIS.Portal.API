@@ -35,8 +35,15 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<DefinedTables> Add(DefinedTablesDTO dto)
         {
-            var definedTablesDto = _mapper.Map<DefinedTables>(dto);
-            return await _repository.Add(definedTablesDto);
+            try
+            {
+                var definedTablesDto = _mapper.Map<DefinedTables>(dto);
+                return await _repository.Add(definedTablesDto);
+            }
+            catch (Exception ex) 
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
         public async Task<DefinedTables> Update(DefinedTablesDTO dto)
@@ -63,7 +70,7 @@ namespace FAIS.ApplicationCore.Services
             }
             catch(Exception ex) 
             {
-                throw ex;
+                throw new ArgumentException(ex.Message);
             }
         }
     }

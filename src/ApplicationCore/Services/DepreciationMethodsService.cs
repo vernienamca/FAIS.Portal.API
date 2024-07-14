@@ -33,21 +33,33 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<DepreciationMethods> Add(DepreciationMethodsDTO dto)
         {
-            var depreciationMethodsDto = _mapper.Map<DepreciationMethods>(dto);
-            return await _repository.Add(depreciationMethodsDto);
+            try { 
+                var depreciationMethodsDto = _mapper.Map<DepreciationMethods>(dto);
+                return await _repository.Add(depreciationMethodsDto);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
-        public async Task<DepreciationMethods> Update(UpdateDepreciationMethodsDTO dto)
+        public async Task<DepreciationMethods> Update(DepreciationMethodsDTO dto)
         {
-            var depreciationMethods = _repository.GetById(dto.Id) ?? throw new Exception("Depreciation Methods Id does not exist");
+            try { 
+                var depreciationMethods = _repository.GetById(dto.Id) ?? throw new Exception("Depreciation Methods Id does not exist");
 
-            if (depreciationMethods.Result == null)
-                throw new ArgumentNullException("Depreciation Methods not exist.");
+                if (depreciationMethods.Result == null)
+                    throw new ArgumentNullException("Depreciation Methods not exist.");
 
-            var mapper = _mapper.Map<DepreciationMethods>(dto);
-            mapper.CreatedBy = depreciationMethods.Result.CreatedBy;
-            mapper.CreatedAt = depreciationMethods.Result.CreatedAt;
-            return await _repository.Update(mapper);
+                var mapper = _mapper.Map<DepreciationMethods>(dto);
+                mapper.CreatedBy = depreciationMethods.Result.CreatedBy;
+                mapper.CreatedAt = depreciationMethods.Result.CreatedAt;
+                return await _repository.Update(mapper);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
     }
 }

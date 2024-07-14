@@ -33,21 +33,35 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<StepContainer> Add(StepContainerDTO dto)
         {
-            var mapper = _mapper.Map<StepContainer>(dto);
-            return await _repository.Add(mapper);
+            try
+            {
+                var mapper = _mapper.Map<StepContainer>(dto);
+                return await _repository.Add(mapper);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<StepContainer> Update(UpdateStepContainerDTO dto)
+        public async Task<StepContainer> Update(StepContainerDTO dto)
         {
-            var stepContainer = _repository.GetById(dto.Id) ?? throw new Exception("Step Container Id does not exist");
+            try
+            {
+                var stepContainer = _repository.GetById(dto.Id) ?? throw new Exception("Step Container Id does not exist");
 
-            if (stepContainer.Result == null)
-                throw new ArgumentNullException("Step Container not exist.");
+                if (stepContainer.Result == null)
+                    throw new ArgumentNullException("Step Container not exist.");
 
-            var mapper = _mapper.Map<StepContainer>(dto);
-            mapper.CreatedBy = stepContainer.Result.CreatedBy;
-            mapper.CreatedAt = stepContainer.Result.CreatedAt;
-            return await _repository.Update(mapper);
+                var mapper = _mapper.Map<StepContainer>(dto);
+                mapper.CreatedBy = stepContainer.Result.CreatedBy;
+                mapper.CreatedAt = stepContainer.Result.CreatedAt;
+                return await _repository.Update(mapper);
+            }
+            catch (Exception ex) 
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
     }
 }

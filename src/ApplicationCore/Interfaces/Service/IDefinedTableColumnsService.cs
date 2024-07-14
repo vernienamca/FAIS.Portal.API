@@ -13,6 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         IReadOnlyCollection<DefinedTableColumnsModel> Get();
         Task<DefinedTableColumnsModel> GetById(int id);
         Task<DefinedTableColumns> Add(DefinedTableColumnsDTO dto);
-        Task<DefinedTableColumns> Update(UpdateDefinedTableColumnsDTO dto);
+        Task<DefinedTableColumns> Update(DefinedTableColumnsDTO dto);
     }
 }

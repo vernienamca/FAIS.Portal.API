@@ -15,15 +15,4 @@ namespace FAIS.ApplicationCore.DTOs
         public int CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
     }
-
-    public class UpdateDefinedMethodsFieldDictionaryDTO
-    {
-        public int Id { get; set; }
-        public int DefinedMethodId { get; set; }
-        public int FieldDictionaryId { get; set; }
-        public string Description { get; set; }
-        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
-        public DateTime? RemovedAt { get; set; }
-        public int? UpdatedBy { get; set; }
-    }
 }
