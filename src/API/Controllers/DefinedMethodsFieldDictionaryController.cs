@@ -86,7 +86,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(DefinedMethodsFieldDictionary), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(UpdateDefinedMethodsFieldDictionaryDTO dto)
+        public async Task<IActionResult> Update(DefinedMethodsFieldDictionaryDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));

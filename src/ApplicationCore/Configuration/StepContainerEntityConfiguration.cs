@@ -37,7 +37,6 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("STEP_TYPE");
 
             builder.Property(e => e.FieldDictionaryId)
-                .IsRequired(false)
                 .HasColumnName("FIELD_DICT_SEQ");
 
             builder.Property(e => e.IsElse)

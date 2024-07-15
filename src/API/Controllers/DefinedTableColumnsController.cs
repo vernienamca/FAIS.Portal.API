@@ -85,7 +85,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(DefinedTableColumns), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(UpdateDefinedTableColumnsDTO dto)
+        public async Task<IActionResult> Update(DefinedTableColumnsDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));

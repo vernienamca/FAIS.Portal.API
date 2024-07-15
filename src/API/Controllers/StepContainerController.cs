@@ -85,7 +85,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(StepContainer), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(UpdateStepContainerDTO dto)
+        public async Task<IActionResult> Update(StepContainerDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
