@@ -33,21 +33,35 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<FieldDictionary> Add(FieldDictionaryDTO dto)
         {
-            var mapper = _mapper.Map<FieldDictionary>(dto);
-            return await _repository.Add(mapper);
+            try
+            {
+                var mapper = _mapper.Map<FieldDictionary>(dto);
+                return await _repository.Add(mapper);
+            }
+            catch (Exception ex) 
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
-        public async Task<FieldDictionary> Update(UpdateFieldDictionaryDTO dto)
+        public async Task<FieldDictionary> Update(FieldDictionaryDTO dto)
         {
-            var fieldDictionary = _repository.GetById(dto.Id) ?? throw new Exception("Field Dictionary Id does not exist");
+            try
+            {
+                var fieldDictionary = _repository.GetById(dto.Id) ?? throw new Exception("Field Dictionary Id does not exist");
 
-            if (fieldDictionary.Result == null)
-                throw new ArgumentNullException("Field Dictionary not exist.");
+                if (fieldDictionary.Result == null)
+                    throw new ArgumentNullException("Field Dictionary not exist.");
 
-            var mapper = _mapper.Map<FieldDictionary>(dto);
-            mapper.CreatedBy = fieldDictionary.Result.CreatedBy;
-            mapper.CreatedAt = fieldDictionary.Result.CreatedAt;
-            return await _repository.Update(mapper);
+                var mapper = _mapper.Map<FieldDictionary>(dto);
+                mapper.CreatedBy = fieldDictionary.Result.CreatedBy;
+                mapper.CreatedAt = fieldDictionary.Result.CreatedAt;
+                return await _repository.Update(mapper);
+            }
+            catch (Exception ex) 
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
     }
 }

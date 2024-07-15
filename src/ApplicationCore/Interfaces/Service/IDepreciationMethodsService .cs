@@ -13,6 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         IReadOnlyCollection<DepreciationMethodsModel> Get();
         Task<DepreciationMethodsModel> GetById(int id);
         Task<DepreciationMethods> Add(DepreciationMethodsDTO dto);
-        Task<DepreciationMethods> Update(UpdateDepreciationMethodsDTO dto);
+        Task<DepreciationMethods> Update(DepreciationMethodsDTO dto);
     }
 }

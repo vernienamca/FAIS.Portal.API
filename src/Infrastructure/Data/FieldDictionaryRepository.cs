@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,11 @@ namespace FAIS.Infrastructure.Data
                           
                        }).FirstOrDefaultAsync(t => t.Id == id);
             return await ret;
+        }
+
+        public async Task<FieldDictionary> GetByTableId(int id)
+        {
+            return await _dbContext.FieldDictionaries.FirstOrDefaultAsync(d => d.IsActive == 'Y' && d.TableId == id);
         }
 
         public async Task<FieldDictionary> Add(FieldDictionary dto)

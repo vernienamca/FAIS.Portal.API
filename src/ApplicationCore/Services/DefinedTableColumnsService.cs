@@ -33,21 +33,35 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<DefinedTableColumns> Add(DefinedTableColumnsDTO dto)
         {
-            var definedTableColumnsDto = _mapper.Map<DefinedTableColumns>(dto);
-            return await _repository.Add(definedTableColumnsDto);
+            try
+            {
+                var definedTableColumnsDto = _mapper.Map<DefinedTableColumns>(dto);
+                return await _repository.Add(definedTableColumnsDto);
+            }
+            catch (Exception ex) 
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
-        public async Task<DefinedTableColumns> Update(UpdateDefinedTableColumnsDTO dto)
+        public async Task<DefinedTableColumns> Update(DefinedTableColumnsDTO dto)
         {
-            var definedTableColumns = _repository.GetById(dto.Id) ?? throw new Exception("Defined Table Columns Id does not exist");
+            try
+            {
+                var definedTableColumns = _repository.GetById(dto.Id) ?? throw new Exception("Defined Table Columns Id does not exist");
 
-            if (definedTableColumns.Result == null)
-                throw new ArgumentNullException("Defined Table Columns not exist.");
+                if (definedTableColumns.Result == null)
+                    throw new ArgumentNullException("Defined Table Columns not exist.");
 
-            var mapper = _mapper.Map<DefinedTableColumns>(dto);
-            mapper.CreatedBy = definedTableColumns.Result.CreatedBy;
-            mapper.CreatedAt = definedTableColumns.Result.CreatedAt;
-            return await _repository.Update(mapper);
+                var mapper = _mapper.Map<DefinedTableColumns>(dto);
+                mapper.CreatedBy = definedTableColumns.Result.CreatedBy;
+                mapper.CreatedAt = definedTableColumns.Result.CreatedAt;
+                return await _repository.Update(mapper);
+            }
+            catch (Exception ex) 
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
     }
 }

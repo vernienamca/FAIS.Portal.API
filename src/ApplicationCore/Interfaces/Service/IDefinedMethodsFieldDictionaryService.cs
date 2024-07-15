@@ -13,6 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         IReadOnlyCollection<DefinedMethodsFieldDictionaryModel> Get();
         Task<DefinedMethodsFieldDictionaryModel> GetById(int id);
         Task<DefinedMethodsFieldDictionary> Add(DefinedMethodsFieldDictionaryDTO dto);
-        Task<DefinedMethodsFieldDictionary> Update(UpdateDefinedMethodsFieldDictionaryDTO dto);
+        Task<DefinedMethodsFieldDictionary> Update(DefinedMethodsFieldDictionaryDTO dto);
     }
 }

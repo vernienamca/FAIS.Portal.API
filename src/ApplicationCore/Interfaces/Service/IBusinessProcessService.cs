@@ -13,6 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         IReadOnlyCollection<BusinessProcessModel> Get();
         Task<BusinessProcessModel> GetById(int id);
         Task<BusinessProcess> Add(BusinessProcessDTO dto);
-        Task<BusinessProcess> Update(UpdateBusinessProcessDTO dto);
+        Task<BusinessProcess> Update(BusinessProcessDTO dto);
     }
 }
