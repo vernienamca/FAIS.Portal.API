@@ -7,9 +7,12 @@ using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -21,10 +24,11 @@ namespace FAIS.ApplicationCore.Services
         private readonly IAmr100BatchDbdRepository _amr100BatchDbdRepository;
         private readonly IAmr100BatchStatHistoryRepository _amr100BatchStatHistoryRepository;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
         public AmrService(IAmrRepository repository, IAmr100BatchRepository amr100BatchRepository, 
             IAmr100BatchDRepository amr100BatchDRepository, IAmr100BatchDbdRepository amr100BatchDbdRepository, IAmr100BatchStatHistoryRepository amr100BatchStatHistoryRepository
-            ,IMapper mapper)
+            ,IMapper mapper, IConfiguration configuration)
         {
             _repository = repository;
             _amr100BatchRepository = amr100BatchRepository;
@@ -32,6 +36,7 @@ namespace FAIS.ApplicationCore.Services
             _amr100BatchDbdRepository = amr100BatchDbdRepository;
             _amr100BatchStatHistoryRepository = amr100BatchStatHistoryRepository;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         public IReadOnlyCollection<AmrModel> Get()
@@ -232,6 +237,27 @@ namespace FAIS.ApplicationCore.Services
         public byte[] ExportAmrLogs()
         {
             return _repository.Get().ToExcel();
+        }
+
+        public async Task<Amr100BatchD> ResetQuantity()
+        {
+           //so setting the batchSize on batchconfig it will be static? 
+
+            int batchSize = Convert.ToInt32(_configuration.GetSection("BulkConfig")["BatchSize"]);
+            int bulkCopyTimeout = Convert.ToInt32(_configuration.GetSection("BulkConfig")["BulkCopyTimeout"]);
+            var amrs = await _amr100BatchDRepository.GetAll();
+
+
+            var bulkConfig = new BulkConfig { BatchSize = batchSize, BulkCopyTimeout = bulkCopyTimeout };
+            foreach (var amr in amrs)
+            {
+                amr.Qty = 1;
+                amr.ColumnBreaks = 0;
+            }
+
+            await _amr100BatchDRepository.BulkUpdate(amrs, bulkConfig);
+
+            return null;
         }
     }
 }

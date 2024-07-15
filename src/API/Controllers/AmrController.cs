@@ -17,7 +17,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AmrController : ControllerBase
     {
         #region Variables
@@ -308,6 +308,13 @@ namespace FAIS.Portal.API.Controllers
             if(dto == null)
                 throw new ArgumentNullException(nameof (dto));
             return Ok(await _service.UpdateAmr100BatchDbd(dto));
+        }
+
+        [HttpPut("AmrResetQuantity")]
+        [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetQuantity()
+        {
+            return Ok(await _service.ResetQuantity());
         }
 
         #endregion

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FAIS.ApplicationCore.Interfaces;
 using FAIS.ApplicationCore;
+using Z.EntityFramework.Extensions;
+using Microsoft.Extensions.Configuration;
+
 
 namespace FAIS.Infrastructure.Data
 {
@@ -63,6 +66,19 @@ namespace FAIS.Infrastructure.Data
         public async Task<EntityType> GetByIdAsync(IdType id)
         {
             return await _dbContext.Set<EntityType>().FindAsync(id);
+        }
+
+        public async Task BulkUpdateAsync(List<EntityType> entities)
+        {
+            try
+            {
+                await _dbContext.BulkUpdateAsync(entities);
+            }
+            catch (DbUpdateException ex)
+            {
+   
+                throw ex;
+            }
         }
     }
 }

@@ -61,5 +61,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public DateTime? UpdatedAt { get; set; }
         [DataMember]
         public int? UpdatedBy { get; set; }
+        [DataMember]
+        public int? ColumnBreaks { get; set; }
     }
 }
