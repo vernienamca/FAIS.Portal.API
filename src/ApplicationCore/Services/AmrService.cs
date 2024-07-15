@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
+using System.Linq;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -194,6 +195,7 @@ namespace FAIS.ApplicationCore.Services
                 throw new Exception(e.Message);
             }
         }
+
         public async Task<Amr100BatchD> UpdateAmr100BatchD(UpdateAmr100BatchDDTO dto)
         {
             try
@@ -241,23 +243,35 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<Amr100BatchD> ResetQuantity()
         {
-           //so setting the batchSize on batchconfig it will be static? 
+            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
+            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
+            var data = await this.MapAmr100BatchDAsync();
 
-            int batchSize = Convert.ToInt32(_configuration.GetSection("BulkConfig")["BatchSize"]);
-            int bulkCopyTimeout = Convert.ToInt32(_configuration.GetSection("BulkConfig")["BulkCopyTimeout"]);
-            var amrs = await _amr100BatchDRepository.GetAll();
-
-
-            var bulkConfig = new BulkConfig { BatchSize = batchSize, BulkCopyTimeout = bulkCopyTimeout };
-            foreach (var amr in amrs)
-            {
-                amr.Qty = 1;
-                amr.ColumnBreaks = 0;
-            }
-
-            await _amr100BatchDRepository.BulkUpdate(amrs, bulkConfig);
+            var bulkConfig = new BulkConfig { BatchSize = data.Count(), BulkCopyTimeout = timeOutInSeconds };
+            await _amr100BatchDRepository.BulkUpdate(data, bulkConfig);
 
             return null;
         }
+
+        #region Private
+
+        /// <summary>
+        /// Maps the raw data to amr100 batch D.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<Amr100BatchD>> MapAmr100BatchDAsync()
+        {
+            List<Amr100BatchD> mappedAmr100BatchD = new List<Amr100BatchD>();
+            var amrs = await _amr100BatchDRepository.GetAll();
+
+            amrs.ForEach(amr =>
+            {
+                mappedAmr100BatchD.Add(new Amr100BatchD() { Qty = 1, ColumnBreaks = 0 });
+            });
+
+            return mappedAmr100BatchD;
+        }
+
+        #endregion Private
     }
 }
