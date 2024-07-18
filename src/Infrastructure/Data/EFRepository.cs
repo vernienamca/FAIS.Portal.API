@@ -80,5 +80,18 @@ namespace FAIS.Infrastructure.Data
                 throw ex;
             }
         }
+
+        public async Task BulkDeleteAsync(List<EntityType> entities)
+        {
+            try
+            {
+                await _dbContext.BulkDeleteAsync(entities);
+             
+            }
+            catch(DbUpdateException ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

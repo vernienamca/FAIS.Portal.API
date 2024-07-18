@@ -123,14 +123,14 @@ namespace FAIS.Infrastructure.Data
             return await UpdateAsync(amr);
         }
 
-        public async Task BulkUpdate(List<Amr100BatchD> amrs, BulkConfig bulkConfig)
+        public async Task BulkUpdate(List<Amr100BatchD> amrs)
         {
             await BulkUpdateAsync(amrs);
         }
 
-        public async Task<List<Amr100BatchD>> GetAll()
+        public  IQueryable <Amr100BatchD> GetAll()
         {
-          return await _dbContext.Amr100BatchD.ToListAsync();
+            return _dbContext.Amr100BatchD;
         }
 
         public async Task BulkUpdateIgnoreQuantity(List<Amr100BatchD> amrs)
