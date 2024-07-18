@@ -32,5 +32,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         Task<Amr100BatchDbd> AddAmr100BatchDbd(AddAmr100BatchDbdDTO dto);
         Task<Amr100BatchDbd> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto);
         Task<Amr100BatchStatHistory> AddAmr100BatchStatHistory(Amr100BatchStatHistoryDTO dto);
+        Task<Amr100BatchD> ResetQuantity();
     }
 }

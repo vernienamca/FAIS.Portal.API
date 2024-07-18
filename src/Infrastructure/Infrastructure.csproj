@@ -14,6 +14,7 @@
     </PackageReference>
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="3.21.90" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.120" />
+    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="3.103.0" />
   </ItemGroup>
 
   <ItemGroup>

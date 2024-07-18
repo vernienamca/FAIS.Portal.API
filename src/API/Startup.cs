@@ -174,10 +174,12 @@ namespace FAIS
               .AllowCredentials()
             );
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+
+            app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
             app.UseRouting();

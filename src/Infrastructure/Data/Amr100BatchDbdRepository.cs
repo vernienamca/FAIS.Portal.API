@@ -1,7 +1,9 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -92,6 +94,19 @@ namespace FAIS.Infrastructure.Data
             {
                 return await UpdateAsync(amr);
 
+            }
+             public async Task BulkDelete(List<Amr100BatchDbd> amrs , BulkConfig bulkconfig)
+            {
+                await _dbContext.BulkDeleteAsync(amrs, options =>
+                {
+                    options.BatchSize = bulkconfig.BatchSize;
+                    options.BatchTimeout = bulkconfig.BulkCopyTimeout ?? 0;
+                });
+            }
+
+             public IQueryable<Amr100BatchDbd> GetAll()
+            {
+                return _dbContext.Amr100BatchDbd;
             }
     }
 }
