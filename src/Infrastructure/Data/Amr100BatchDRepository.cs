@@ -1,4 +1,5 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using FAIS.ApplicationCore.DTOs;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -120,6 +121,25 @@ namespace FAIS.Infrastructure.Data
         public async Task<Amr100BatchD> Update(Amr100BatchD amr)
         {
             return await UpdateAsync(amr);
+        }
+
+        public async Task BulkUpdate(List<Amr100BatchD> amrs)
+        {
+            await BulkUpdateAsync(amrs);
+        }
+
+        public  IQueryable <Amr100BatchD> GetAll()
+        {
+            return _dbContext.Amr100BatchD;
+        }
+
+        public async Task BulkUpdateIgnoreQuantity(List<Amr100BatchD> amrs)
+        {
+            await _dbContext.BulkUpdateAsync(amrs, options =>
+            {
+                options.IgnoreOnUpdateExpression = c => c.Qty == 1;
+                options.IgnoreOnUpdateExpression = c => c.ColumnBreaks == 0;
+            });
         }
     }
 }

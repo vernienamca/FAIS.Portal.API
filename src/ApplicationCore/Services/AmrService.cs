@@ -7,9 +7,16 @@ using FAIS.ApplicationCore.Enumeration;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using System.Linq;
+using System.Data.Entity;
+using System.Transactions;
+using System.Diagnostics;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -21,10 +28,11 @@ namespace FAIS.ApplicationCore.Services
         private readonly IAmr100BatchDbdRepository _amr100BatchDbdRepository;
         private readonly IAmr100BatchStatHistoryRepository _amr100BatchStatHistoryRepository;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public AmrService(IAmrRepository repository, IAmr100BatchRepository amr100BatchRepository, 
+        public AmrService(IAmrRepository repository, IAmr100BatchRepository amr100BatchRepository,
             IAmr100BatchDRepository amr100BatchDRepository, IAmr100BatchDbdRepository amr100BatchDbdRepository, IAmr100BatchStatHistoryRepository amr100BatchStatHistoryRepository
-            ,IMapper mapper)
+            , IMapper mapper, IConfiguration configuration)
         {
             _repository = repository;
             _amr100BatchRepository = amr100BatchRepository;
@@ -32,6 +40,7 @@ namespace FAIS.ApplicationCore.Services
             _amr100BatchDbdRepository = amr100BatchDbdRepository;
             _amr100BatchStatHistoryRepository = amr100BatchStatHistoryRepository;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         public IReadOnlyCollection<AmrModel> Get()
@@ -43,11 +52,13 @@ namespace FAIS.ApplicationCore.Services
         {
             return _amr100BatchRepository.Get(reportSeqId, yearMonth);
         }
-        public IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD(int amrBatchSeq, int reportSeq, string yearMonth) { 
+        public IReadOnlyCollection<Amr100BatchDModel> GetAmr100BatchD(int amrBatchSeq, int reportSeq, string yearMonth)
+        {
             return _amr100BatchDRepository.Get(amrBatchSeq, reportSeq, yearMonth);
-        }  
-        
-        public IReadOnlyCollection<Amr100BatchDbdModel> GetAmr100BatchDbd() { 
+        }
+
+        public IReadOnlyCollection<Amr100BatchDbdModel> GetAmr100BatchDbd()
+        {
             return _amr100BatchDbdRepository.Get();
         }
 
@@ -60,7 +71,7 @@ namespace FAIS.ApplicationCore.Services
         {
             return await _amr100BatchRepository.GetById(ReportSeq);
         }
-        
+
         public async Task<Amr100BatchDModel> GetAmr100BatchDById(int id)
         {
             return await _amr100BatchDRepository.GetById(id);
@@ -75,7 +86,7 @@ namespace FAIS.ApplicationCore.Services
             return _amr100BatchStatHistoryRepository.Get();
         }
 
-        public async Task <IReadOnlyCollection<Amr100BatchStatHistoryModel>> GetAmr100BatchStatHistoryById(int batchId)
+        public async Task<IReadOnlyCollection<Amr100BatchStatHistoryModel>> GetAmr100BatchStatHistoryById(int batchId)
         {
             return await _amr100BatchStatHistoryRepository.GetById(batchId);
         }
@@ -94,7 +105,7 @@ namespace FAIS.ApplicationCore.Services
         }
 
         public async Task<Amr100Batch> AddAmr100Batch(AddAmr100BatchDTO dto)
-        { 
+        {
             var amr100batchDto = _mapper.Map<Amr100Batch>(dto);
             return await _amr100BatchRepository.Add(amr100batchDto);
         }
@@ -104,7 +115,7 @@ namespace FAIS.ApplicationCore.Services
             var amr100batchdDto = _mapper.Map<Amr100BatchD>(dto);
             return await _amr100BatchDRepository.Add(amr100batchdDto);
         }
-        
+
         public async Task<Amr100BatchDbd> AddAmr100BatchDbd(AddAmr100BatchDbdDTO dto)
         {
             var amr100batchdbdDto = _mapper.Map<Amr100BatchDbd>(dto);
@@ -144,8 +155,8 @@ namespace FAIS.ApplicationCore.Services
                 mapper.CreatedBy = amr.Result.CreatedBy;
                 mapper.CreatedAt = amr.Result.CreatedAt;
                 return await _repository.Update(mapper);
-            } 
-            catch (Exception ex)             
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -164,7 +175,7 @@ namespace FAIS.ApplicationCore.Services
                 amr.Result.StatusCode = (int)AmrStatusEnum.Open;
                 return await _repository.Update(amr.Result);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -189,6 +200,7 @@ namespace FAIS.ApplicationCore.Services
                 throw new Exception(e.Message);
             }
         }
+
         public async Task<Amr100BatchD> UpdateAmr100BatchD(UpdateAmr100BatchDDTO dto)
         {
             try
@@ -203,11 +215,12 @@ namespace FAIS.ApplicationCore.Services
                 mapper.CreatedAt = amr.Result.CreatedAt;
                 return await _amr100BatchDRepository.Update(mapper);
             }
-            catch (Exception e) { 
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
 
-        }  
+        }
 
         public async Task<Amr100BatchDbd> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto)
         {
@@ -233,5 +246,52 @@ namespace FAIS.ApplicationCore.Services
         {
             return _repository.Get().ToExcel();
         }
+
+        public async Task<Amr100BatchD> ResetQuantity()
+        {
+            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
+            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
+            var (data, mappedAmrSeq) = this.MapAmr100BatchD();
+            var entitiesToDelete = _amr100BatchDbdRepository.GetAll().Where(e => mappedAmrSeq.Contains(e.Amr100BatchDSeq)).ToList();
+            var bulkConfig = new BulkConfig { BatchSize = entitiesToDelete.Count(), BulkCopyTimeout = timeOutInSeconds };
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    await _amr100BatchDbdRepository.BulkDelete(entitiesToDelete, bulkConfig);
+                    await _amr100BatchDRepository.BulkUpdate(data);
+                    scope.Complete();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return null;
+        }
+
+        #region Private
+
+        /// <summary>
+        /// Maps the raw data to amr100 batch D.
+        /// </summary>
+        /// <returns></returns>
+        private (List<Amr100BatchD>, List<int>) MapAmr100BatchD()
+        {
+            List<int> amr100BatchDIds = new List<int>();
+            var amrs = _amr100BatchDRepository.GetAll().Where(x => x.Qty > 1).ToList();
+
+            amrs.ForEach(amr =>
+            {
+                amr100BatchDIds.Add(amr.Id);
+                amr.Qty = 1;
+                amr.ColumnBreaks = 0;
+            });
+
+            return (amrs, amr100BatchDIds);
+        }
+        #endregion Private
     }
 }

@@ -132,6 +132,9 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("USER_MODIFIED");
 
+            builder.Property(e => e.ColumnBreaks)
+                .IsRequired(false)
+                .HasColumnName("COLUMN_BREAK");
         }
     }
 }

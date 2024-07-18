@@ -309,6 +309,17 @@ namespace FAIS.Portal.API.Controllers
                 throw new ArgumentNullException(nameof (dto));
             return Ok(await _service.UpdateAmr100BatchDbd(dto));
         }
+        // <summary>
+        /// Resets the quantity of Amr 100 Batch D and deletes transactions created on AMR100 Batch Dbd.
+        /// </summary>
+        /// <param name="dto">The amr 100 batch_d data object.</param>
+        /// <returns></returns>
+        [HttpPut("AmrResetQuantity")]
+        [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetQuantity()
+        {
+            return Ok(await _service.ResetQuantity());
+        }
 
         #endregion
     }
