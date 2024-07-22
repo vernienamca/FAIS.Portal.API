@@ -22,16 +22,19 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         Task<Amr100BatchDbdModel> GetAmr100BatchDbdById(int id);
         Task <IReadOnlyCollection<Amr100BatchStatHistoryModel>> GetAmr100BatchStatHistoryById(int batchId);
         byte[] ExportAmrLogs();
+        byte[] ExportAmrBatchDLogs();
         Task<Amr> Add(AddAmrDTO dto);
         Task<Amr> Update(UpdateAmrDTO dto);
         Task<Amr> UpdateEncoding(int id);
         Task<Amr100Batch> AddAmr100Batch(AddAmr100BatchDTO dto);
         Task<Amr100Batch> UpdateAmr100Batch(UpdateAmr100BatchDTO dto);
         Task<Amr100BatchD> AddAmr100BatchD(AddAmr100BatchDDTO dto);
+        Task<List<Amr100BatchD>> SaveChanges(List<Amr100BatchDDTO> batchItems);
         Task<Amr100BatchD> UpdateAmr100BatchD(UpdateAmr100BatchDDTO dto); 
         Task<Amr100BatchDbd> AddAmr100BatchDbd(AddAmr100BatchDbdDTO dto);
         Task<Amr100BatchDbd> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto);
         Task<Amr100BatchStatHistory> AddAmr100BatchStatHistory(Amr100BatchStatHistoryDTO dto);
         Task<Amr100BatchD> ResetQuantity();
+        Task<Amr100BatchD> BreakRow(int id);
     }
 }

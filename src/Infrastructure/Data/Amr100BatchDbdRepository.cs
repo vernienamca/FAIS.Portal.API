@@ -85,28 +85,36 @@ namespace FAIS.Infrastructure.Data
                                 }).FirstOrDefaultAsync(t => t.Id == id);
             return await amr;
         }
-            public async Task<Amr100BatchDbd> Add(Amr100BatchDbd amr)
+        public async Task<Amr100BatchDbd> Add(Amr100BatchDbd amr)
+        {
+            return await AddAsync(amr);
+        }
+        public async Task BulkInsert(List<Amr100BatchDbd> amrs, BulkConfig bulkConfig)
+        {
+            await _dbContext.BulkInsertAsync(amrs, options =>
             {
-                return await AddAsync(amr);
-            }
+                options.BatchSize = bulkConfig.BatchSize;
+                options.BatchTimeout = bulkConfig.BulkCopyTimeout ?? 0;
+            });
+            await BulkInsertAsync(amrs);
+        }   
+        public async Task<Amr100BatchDbd> Update(Amr100BatchDbd amr)
+        {
+            return await UpdateAsync(amr);
 
-            public async Task<Amr100BatchDbd> Update(Amr100BatchDbd amr)
+        }
+        public async Task BulkDelete(List<Amr100BatchDbd> amrs , BulkConfig bulkconfig)
+        {
+            await _dbContext.BulkDeleteAsync(amrs, options =>
             {
-                return await UpdateAsync(amr);
+                 options.BatchSize = bulkconfig.BatchSize;
+                 options.BatchTimeout = bulkconfig.BulkCopyTimeout ?? 0;
+            });
+        }
 
-            }
-             public async Task BulkDelete(List<Amr100BatchDbd> amrs , BulkConfig bulkconfig)
-            {
-                await _dbContext.BulkDeleteAsync(amrs, options =>
-                {
-                    options.BatchSize = bulkconfig.BatchSize;
-                    options.BatchTimeout = bulkconfig.BulkCopyTimeout ?? 0;
-                });
-            }
-
-             public IQueryable<Amr100BatchDbd> GetAll()
-            {
-                return _dbContext.Amr100BatchDbd;
-            }
+        public IQueryable<Amr100BatchDbd> GetAll()
+        {
+             return _dbContext.Amr100BatchDbd;
+        }
     }
 }

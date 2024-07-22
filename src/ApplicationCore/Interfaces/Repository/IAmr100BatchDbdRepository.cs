@@ -13,6 +13,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
         Task<Amr100BatchDbdModel> GetById(int id);
         Task<Amr100BatchDbd> Add(Amr100BatchDbd amr);
         Task<Amr100BatchDbd> Update(Amr100BatchDbd amr);
+        Task BulkInsert(List<Amr100BatchDbd> amrs, BulkConfig bulkconfig);
         Task BulkDelete(List<Amr100BatchDbd> amr , BulkConfig bulkconfig);
         IQueryable<Amr100BatchDbd> GetAll();
     }

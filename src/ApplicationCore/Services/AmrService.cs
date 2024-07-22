@@ -116,6 +116,28 @@ namespace FAIS.ApplicationCore.Services
             return await _amr100BatchDRepository.Add(amr100batchdDto);
         }
 
+        public async Task<List<Amr100BatchD>> SaveChanges(List<Amr100BatchDDTO> batchItems)
+        {
+            var result = new List<Amr100BatchD>();
+
+            foreach (var dto in batchItems)
+            {
+                if (dto.TempId == null || dto.TempId == Guid.Empty)
+                {
+                    var amr100batchd = _mapper.Map<Amr100BatchD>(dto);
+                    var added = await _amr100BatchDRepository.Add(amr100batchd);
+                    result.Add(added);
+                }
+                else
+                {
+                    var amr100batchd = _mapper.Map<Amr100BatchD>(dto);
+                    var added = await _amr100BatchDRepository.Update(amr100batchd);
+                    result.Add(added);
+                }
+            }
+
+            return result;
+        }
         public async Task<Amr100BatchDbd> AddAmr100BatchDbd(AddAmr100BatchDbdDTO dto)
         {
             var amr100batchdbdDto = _mapper.Map<Amr100BatchDbd>(dto);
@@ -134,6 +156,7 @@ namespace FAIS.ApplicationCore.Services
                     StatusRemarks = amr100BatchStatHistoryDto.Remarks,
                     CreatedBy = amr100BatchStatHistoryDto.CreatedBy,
                 };
+
                 return await _amr100BatchStatHistoryRepository.Add(batchHistory);
             }
             catch (Exception ex)
@@ -247,6 +270,10 @@ namespace FAIS.ApplicationCore.Services
             return _repository.Get().ToExcel();
         }
 
+        public byte[] ExportAmrBatchDLogs()
+        {
+            return _amr100BatchDRepository.GetAll().ToExcel();
+        }
         public async Task<Amr100BatchD> ResetQuantity()
         {
             var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
@@ -260,7 +287,7 @@ namespace FAIS.ApplicationCore.Services
                 using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     await _amr100BatchDbdRepository.BulkDelete(entitiesToDelete, bulkConfig);
-                    await _amr100BatchDRepository.BulkUpdate(data);
+                    await _amr100BatchDRepository.Update(data);
                     scope.Complete();
                 }
             }
@@ -271,7 +298,48 @@ namespace FAIS.ApplicationCore.Services
 
             return null;
         }
+        public async Task<Amr100BatchD> BreakRow(int id)
+        {
+            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
+            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
+            var amr100BatchD = await _amr100BatchDRepository.GetById(id) ?? throw new ArgumentException("Invalid Amr100BatchD sequence.");
+            var (data, _) = this.MappedBatch(id);
+            var unitsToInsert = amr100BatchD.Qty;
+            var amrBatchdbdEnt = new List<Amr100BatchDbd>();
+            var bulkConfig = new BulkConfig { BatchSize = amrBatchdbdEnt.Count(), BulkCopyTimeout = timeOutInSeconds };
 
+            for (int i = 0; i < unitsToInsert; i++)
+            {
+                var newAmrBatchDbd = new Amr100BatchDbd
+                {
+                    Amr100BatchDSeq = amr100BatchD.Id,
+                    AllocatedCost = amr100BatchD.AmrCost / unitsToInsert,
+                    WithIssues = 'N',
+                    CreatedAt = DateTime.Now,
+                };
+
+                amrBatchdbdEnt.Add(newAmrBatchDbd);
+            }
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    await _amr100BatchDbdRepository.BulkInsert(amrBatchdbdEnt, bulkConfig);
+                    data.ForEach(amr => amr.ColumnBreaks = 1);
+                    await _amr100BatchDRepository.Update(data);
+                    scope.Complete();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return null;
+        }
+
+
+    
         #region Private
 
         /// <summary>
@@ -292,6 +360,21 @@ namespace FAIS.ApplicationCore.Services
 
             return (amrs, amr100BatchDIds);
         }
+
+        private (List<Amr100BatchD>, List<int>) MappedBatch(int id)
+        {
+            List<int> amr100BatchDIds = new List<int>();
+            var amrs = _amr100BatchDRepository.GetAll().Where(x => x.Id == id).ToList();
+
+            amrs.ForEach(amr =>
+            {
+                amr.ColumnBreaks = 1;
+            });
+
+            return (amrs, amr100BatchDIds);
+
+        }
+
         #endregion Private
     }
 }

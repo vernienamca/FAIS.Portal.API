@@ -68,6 +68,19 @@ namespace FAIS.Infrastructure.Data
             return await _dbContext.Set<EntityType>().FindAsync(id);
         }
 
+        public async Task BulkInsertAsync(List<EntityType> entities)
+        {
+            try
+            {
+                await _dbContext.BulkInsertAsync(entities);
+            }
+            catch (DbUpdateException ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task BulkUpdateAsync(List<EntityType> entities)
         {
             try
