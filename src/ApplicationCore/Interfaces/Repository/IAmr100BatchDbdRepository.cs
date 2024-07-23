@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
 {
     public interface IAmr100BatchDbdRepository
     {
-        IReadOnlyCollection<Amr100BatchDbdModel> Get();
+        IReadOnlyCollection<Amr100BatchDbdModel> Get(int amrBatchDSeq, int reportSeq, string yearMonth);
         Task<Amr100BatchDbdModel> GetById(int id);
         Task<Amr100BatchDbd> Add(Amr100BatchDbd amr);
         Task<Amr100BatchDbd> Update(Amr100BatchDbd amr);
