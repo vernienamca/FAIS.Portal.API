@@ -108,7 +108,7 @@ namespace FAIS.Infrastructure.Data
                                     CreatedBy = am.CreatedBy,
                                     UpdatedBy = am.UpdatedBy,
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-
+                                 
                                 }).FirstOrDefaultAsync(t => t.Id == id);
             return await amr;
         }
@@ -133,13 +133,9 @@ namespace FAIS.Infrastructure.Data
             return _dbContext.Amr100BatchD;
         }
 
-        public async Task BulkUpdateIgnoreQuantity(List<Amr100BatchD> amrs)
+        public async Task<Amr100BatchD> GetBatchDById(int id)
         {
-            await _dbContext.BulkUpdateAsync(amrs, options =>
-            {
-                options.IgnoreOnUpdateExpression = c => c.Qty == 1;
-                options.IgnoreOnUpdateExpression = c => c.ColumnBreaks == 0;
-            });
+            return await _dbContext.Amr100BatchD.FirstOrDefaultAsync(i => i.Id == id);
         }
     }
 }

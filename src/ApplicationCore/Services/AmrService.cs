@@ -272,6 +272,41 @@ namespace FAIS.ApplicationCore.Services
             return null;
         }
 
+        public async Task<Amr100BatchD> RemoveBreak(int id)
+        {
+            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
+            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
+            var entitiesToDelete = _amr100BatchDbdRepository.GetAll().Where(dbd => dbd.Amr100BatchDSeq == id).ToList();
+            var bulkConfig = new BulkConfig { BatchSize = entitiesToDelete.Count(), BulkCopyTimeout = timeOutInSeconds };
+
+            var amr = _amr100BatchDRepository.GetBatchDById(id);
+
+            if (amr == null)
+            {
+                throw new ArgumentNullException("Amr Batch D does not exist.");
+            }
+            try
+            {
+                amr.Result.ColumnBreaks = 0;
+                amr.Result.Qty = 1;
+                await _amr100BatchDRepository.Update(amr.Result);
+                await _amr100BatchDbdRepository.BulkDelete(entitiesToDelete, bulkConfig);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return null;
+        }
+
+        public async Task<Amr100Batch> NewAssetApproval(int id)
+        {
+           var batch = _amr100BatchRepository.GetBatchId(id) ?? throw new Exception("Batch Id does not exist");
+
+           batch.Result.StatusCode = (int)AmrStatusEnum.NewAsset;
+           return await _amr100BatchRepository.Update(batch.Result);
+        }
+
         #region Private
 
         /// <summary>

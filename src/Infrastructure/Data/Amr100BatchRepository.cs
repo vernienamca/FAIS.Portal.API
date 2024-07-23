@@ -104,5 +104,10 @@ namespace FAIS.Infrastructure.Data
         {
             return await UpdateAsync(amr);
         }
+
+        public async Task<Amr100Batch> GetBatchId(int id)
+        {
+            return await _dbContext.Amr100Batch.FirstOrDefaultAsync(i => i.Id == id);
+        }
     }
 }

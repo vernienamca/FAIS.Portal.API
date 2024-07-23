@@ -321,6 +321,36 @@ namespace FAIS.Portal.API.Controllers
             return Ok(await _service.ResetQuantity());
         }
 
+        // <summary>
+        /// Resets the quantity and ColumnBreaks of 
+        /// </summary>
+        /// <param name="dto">The amr 100 batch_d data object.</param>
+        /// <returns></returns>
+        [HttpPut("RemoveBreak")]
+        [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
+        public async Task<IActionResult> RemoveBreak(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentNullException(nameof(id));
+
+            return Ok(await _service.RemoveBreak(id));
+        }
+
+        /// <summary>
+        /// Sets the status of the batch to new asset.
+        /// </summary>
+        /// <param name="id">The batch id object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPut("NewAssetApproval")]
+        [ProducesResponseType(typeof(Amr100Batch), StatusCodes.Status200OK)]
+        public async Task<IActionResult> NewAssetApproval(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentNullException(nameof(id));
+
+            return Ok(await _service.NewAssetApproval(id));
+        }
         #endregion
     }
 }  

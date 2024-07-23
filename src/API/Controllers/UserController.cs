@@ -333,7 +333,7 @@ namespace FAIS.API.Controllers
                 }
             }
             else
-                userDTO.Photo = "default.png";
+                userDTO.Photo = "65895453-7d17-4405-b8e9-fd60519ccce2.png";
 
             string generatedPassword = _userService.GeneratePassword();
 
