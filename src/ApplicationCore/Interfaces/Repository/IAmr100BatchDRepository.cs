@@ -15,6 +15,6 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
         Task<Amr100BatchD> Update(Amr100BatchD amr);
         IQueryable <Amr100BatchD> GetAll();
         Task BulkUpdate(List<Amr100BatchD> amrs);
-        Task BulkUpdateIgnoreQuantity(List<Amr100BatchD> amrs);
+        Task<Amr100BatchD> GetBatchDById(int id);
     }
 }

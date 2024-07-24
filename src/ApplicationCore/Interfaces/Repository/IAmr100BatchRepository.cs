@@ -13,5 +13,6 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
         Task<Amr100BatchModel> GetById(int id);
         Task<Amr100Batch> Add(Amr100Batch amr);
         Task<Amr100Batch> Update(Amr100Batch amr);
+        Task<Amr100Batch> GetAmr100Batch(int id);
     }
 }

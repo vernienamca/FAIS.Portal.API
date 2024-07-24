@@ -26,7 +26,7 @@ namespace FAIS.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -333,7 +333,7 @@ namespace FAIS.API.Controllers
                 }
             }
             else
-                userDTO.Photo = "default.png";
+                userDTO.Photo = "default-profile.png";
 
             string generatedPassword = _userService.GeneratePassword();
 
