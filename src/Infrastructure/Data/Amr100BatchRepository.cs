@@ -21,8 +21,6 @@ namespace FAIS.Infrastructure.Data
             int month = int.Parse(parts[1]);
 
             var amrs = (from amr in _dbContext.Amr100Batch.AsNoTracking()
-                        join amrD in _dbContext.Amr100BatchD.AsNoTracking() on amr.Id equals amrD.Amr100BatchSeq into amrDx
-                        from amrD in amrDx.DefaultIfEmpty()
                         join amrA in _dbContext.Amrs.AsNoTracking() on amr.ReportSeq equals amrA.Id
                         join proj in _dbContext.ProjectProfile.AsNoTracking() on amr.ProjectSeq equals proj.Id
                         join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
@@ -53,10 +51,12 @@ namespace FAIS.Infrastructure.Data
                             UpdatedBy = amr.UpdatedBy,
                             UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
                             TotalReport = amr.TotalReport,
-                            TotalAmrIssues = _dbContext.Amr100BatchDbd.AsNoTracking().Where(dbd => dbd.Amr100BatchDSeq == amrD.Id).Sum(dbd => dbd.WithIssues == 'Y' ? 1 : 0)
-                        })
-                                .Where(x => x.ReportSeq == reportSeqId && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month)
-                                .ToList();
+                            TotalAmrIssues = _dbContext.Amr100BatchD.AsNoTracking()
+                                            .Where(d => d.Amr100BatchSeq == amr.Id)
+                                            .SelectMany(d => _dbContext.Amr100BatchDbd.AsNoTracking().Where(dbd => dbd.Amr100BatchDSeq == d.Id))
+                                            .Count(dbd => dbd.WithIssues == 'Y')
+
+                        }).Where(x => x.ReportSeq == reportSeqId && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month).ToList();
 
             return amrs;
         }
@@ -103,6 +103,11 @@ namespace FAIS.Infrastructure.Data
         public async Task<Amr100Batch> Update(Amr100Batch amr)
         {
             return await UpdateAsync(amr);
+        }
+
+        public async Task<Amr100Batch> GetAmr100Batch(int id)
+        {
+            return await _dbContext.Amr100Batch.FirstOrDefaultAsync(i => i.Id == id);
         }
     }
 }
