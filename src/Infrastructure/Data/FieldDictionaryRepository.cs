@@ -70,6 +70,11 @@ namespace FAIS.Infrastructure.Data
             return await _dbContext.FieldDictionaries.FirstOrDefaultAsync(d => d.IsActive == 'Y' && d.TableId == id);
         }
 
+        public async Task<FieldDictionary> GetByColumnId(int id)
+        {
+            return await _dbContext.FieldDictionaries.FirstOrDefaultAsync(d => d.IsActive == 'Y' && d.ColumnId == id);
+        }
+
         public async Task<FieldDictionary> Add(FieldDictionary dto)
         {
             return await AddAsync(dto);

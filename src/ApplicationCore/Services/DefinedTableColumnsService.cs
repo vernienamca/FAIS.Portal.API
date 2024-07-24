@@ -13,11 +13,13 @@ namespace FAIS.ApplicationCore.Services
     public class DefinedTableColumnsService : IDefinedTableColumnsService
     {
         private readonly IDefinedTableColumnsRepository _repository;
+        private readonly IFieldDictionaryRepository _fieldDictionaryRepository;
         private readonly IMapper _mapper;
 
-        public DefinedTableColumnsService(IDefinedTableColumnsRepository repository, IMapper mapper)
+        public DefinedTableColumnsService(IDefinedTableColumnsRepository repository, IFieldDictionaryRepository fieldDictionaryRepository, IMapper mapper)
         {
             _repository = repository;
+            _fieldDictionaryRepository = fieldDictionaryRepository;
             _mapper = mapper;
         }
 
@@ -51,7 +53,15 @@ namespace FAIS.ApplicationCore.Services
                 var definedTableColumns = _repository.GetById(dto.Id) ?? throw new Exception("Defined Table Columns Id does not exist");
 
                 if (definedTableColumns.Result == null)
-                    throw new ArgumentNullException("Defined Table Columns not exist.");
+                    throw new ArgumentNullException("Defined Table Column not exist.");
+
+                dto.UpdatedAt = DateTime.Now;
+                if (definedTableColumns.Result.IsActive != dto.IsActive)
+                {
+                    if (_fieldDictionaryRepository.GetByColumnId(dto.Id).Result != null)
+                        throw new ArgumentException("Defined Table Column is in use by Field Dictionary.");
+                    dto.StatusDate = DateTime.Now;
+                }
 
                 var mapper = _mapper.Map<DefinedTableColumns>(dto);
                 mapper.CreatedBy = definedTableColumns.Result.CreatedBy;

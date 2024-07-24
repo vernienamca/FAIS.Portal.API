@@ -12,6 +12,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
         IReadOnlyCollection<FieldDictionaryModel> Get();
         Task<FieldDictionaryModel> GetById(int id);
         Task<FieldDictionary> GetByTableId(int id);
+        Task<FieldDictionary> GetByColumnId(int id);
         Task<FieldDictionary> Add(FieldDictionary dto);
         Task<FieldDictionary> Update(FieldDictionary dto);
     }

@@ -60,7 +60,7 @@ namespace FAIS.ApplicationCore.Services
                 if (businessProcess.Result.IsActive != dto.IsActive)
                 {
                     if(_depreciationMethodsRepository.GetByBusinessProcessId(dto.Id).Result != null)
-                        throw new ArgumentNullException("Business Process is in use by Define Methods.");
+                        throw new ArgumentException("Business Process is in use by Define Methods.");
                     dto.StatusDate = DateTime.Now;
                 }
                 var mapper = _mapper.Map<BusinessProcess>(dto);
