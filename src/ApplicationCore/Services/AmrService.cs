@@ -282,9 +282,8 @@ namespace FAIS.ApplicationCore.Services
             var amr = _amr100BatchDRepository.GetBatchDById(id);
 
             if (amr == null)
-            {
-                throw new ArgumentNullException("Amr Batch D does not exist.");
-            }
+               throw new ArgumentNullException("Amr Batch does not exist.");
+     
             try
             {
                 amr.Result.ColumnBreaks = 0;
@@ -301,7 +300,7 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<Amr100Batch> NewAssetApproval(int id)
         {
-           var batch = _amr100BatchRepository.GetBatchId(id) ?? throw new Exception("Batch Id does not exist");
+            var batch = _amr100BatchRepository.GetAmr100Batch(id);
 
            batch.Result.StatusCode = (int)AmrStatusEnum.NewAsset;
            return await _amr100BatchRepository.Update(batch.Result);

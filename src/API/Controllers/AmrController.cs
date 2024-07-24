@@ -310,7 +310,7 @@ namespace FAIS.Portal.API.Controllers
             return Ok(await _service.UpdateAmr100BatchDbd(dto));
         }
         // <summary>
-        /// Resets the quantity of Amr 100 Batch D and deletes transactions created on AMR100 Batch Dbd.
+        /// Removes the broke quantity.
         /// </summary>
         /// <param name="dto">The amr 100 batch_d data object.</param>
         /// <returns></returns>
@@ -324,13 +324,13 @@ namespace FAIS.Portal.API.Controllers
         // <summary>
         /// Resets the quantity and ColumnBreaks of 
         /// </summary>
-        /// <param name="dto">The amr 100 batch_d data object.</param>
+        /// <param name="id">The batch object unique identifier.</param>
         /// <returns></returns>
-        [HttpPut("RemoveBreak")]
+        [HttpPut("remove-break")]
         [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
         public async Task<IActionResult> RemoveBreak(int id)
         {
-            if (id <= 0)
+            if (id == 0)
                 throw new ArgumentNullException(nameof(id));
 
             return Ok(await _service.RemoveBreak(id));
@@ -339,18 +339,19 @@ namespace FAIS.Portal.API.Controllers
         /// <summary>
         /// Sets the status of the batch to new asset.
         /// </summary>
-        /// <param name="id">The batch id object.</param>
+        /// <param name="id">The batch object unique identifier.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        [HttpPut("NewAssetApproval")]
+        [HttpPut("asset-approval")]
         [ProducesResponseType(typeof(Amr100Batch), StatusCodes.Status200OK)]
         public async Task<IActionResult> NewAssetApproval(int id)
         {
-            if (id <= 0)
+            if (id == 0)
                 throw new ArgumentNullException(nameof(id));
 
             return Ok(await _service.NewAssetApproval(id));
         }
+
         #endregion
     }
 }  
