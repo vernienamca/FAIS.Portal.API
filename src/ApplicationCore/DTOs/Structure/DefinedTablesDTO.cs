@@ -6,7 +6,7 @@ namespace FAIS.ApplicationCore.DTOs
     public class DefinedTablesDTO
     {
         public int Id { get; set; }
-        public int? BusinessProcessId { get; set; }
+        public string BusinessProcessId { get; set; }
         public string TableName { get; set; }
         public char IsActive { get; set; }
         public DateTime StatusDate { get; set; }

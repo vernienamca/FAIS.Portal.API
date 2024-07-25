@@ -8,7 +8,7 @@ namespace FAIS.ApplicationCore.Models
     public class FieldDictionaryModel
     {
         public int Id { get; set; }
-        public int? BusinessProcessId { get; set; }
+        public string BusinessProcessId { get; set; }
         public string FieldName { get; set; }
         public int? TableId { get; set; }
         public int? ColumnId { get; set; }
