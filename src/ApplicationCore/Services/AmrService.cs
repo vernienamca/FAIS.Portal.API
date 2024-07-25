@@ -346,20 +346,17 @@ namespace FAIS.ApplicationCore.Services
 
             foreach (var dto in batchItems)
             {
-                if (dto.TempId == null || dto.TempId == Guid.Empty)
+                if (dto.TempId != null && dto.TempId != Guid.Empty)
                 {
-                    var amr100batchd = _mapper.Map<Amr100BatchD>(dto);
-                    var added = await _amr100BatchDRepository.Add(amr100batchd);
+                    var entitiesToInsert = _mapper.Map<Amr100BatchD>(dto);
+                    var added = await _amr100BatchDRepository.Add(entitiesToInsert);
                     result.Add(added);
+                    continue;
                 }
-                else
-                {
-                    var amr100batchd = _mapper.Map<Amr100BatchD>(dto);
-                    var added = await _amr100BatchDRepository.Update(amr100batchd);
-                    result.Add(added);
-                }
+                var amr100batchd = _mapper.Map<Amr100BatchD>(dto);
+                var update = await _amr100BatchDRepository.Update(amr100batchd);
+                result.Add(update);
             }
-
             return result;
         }
         public async Task<Amr100Batch> NewAssetApproval(int id)
