@@ -74,9 +74,9 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpGet("batch-d")]
         [ProducesResponseType(typeof(IReadOnlyCollection<Amr100BatchDModel>), StatusCodes.Status200OK)]
-        public IActionResult GetBatchD(int amrBatchSeq, int reportSeq, string yearMonth)
+        public IActionResult GetAmr100BatchD(int amrBatchSeq, int reportSeq, string yearMonth)
         {
-            return Ok(_service.GetBatchD(amrBatchSeq, reportSeq, yearMonth));
+            return Ok(_service.GetAmr100BatchD(amrBatchSeq, reportSeq, yearMonth));
         }
 
         /// <summary>
