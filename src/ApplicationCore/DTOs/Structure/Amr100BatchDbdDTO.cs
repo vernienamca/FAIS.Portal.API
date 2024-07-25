@@ -77,4 +77,9 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public int? UpdatedBy { get; set; }
         public string UpdatedByName { get; set; }
     }
+    public class AmrTransactionsDTO
+    {
+        public int Id { get; set; }
+        public string Remarks { get; set; }
+    }
 }

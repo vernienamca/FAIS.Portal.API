@@ -300,10 +300,19 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<Amr100Batch> NewAssetApproval(int id)
         {
-            var batch = _amr100BatchRepository.GetAmr100Batch(id);
+           var batch = _amr100BatchRepository.GetAmr100Batch(id);
 
            batch.Result.StatusCode = (int)AmrStatusEnum.NewAsset;
            return await _amr100BatchRepository.Update(batch.Result);
+        }
+
+        public async Task<Amr100Batch> ReturnToAnalyst(AmrTransactionsDTO dto)
+        {
+            var batch = _amr100BatchRepository.GetAmr100Batch(dto.Id);
+
+            batch.Result.StatusCode = (int)AmrStatusEnum.Open;
+            batch.Result.Remarks = dto.Remarks;
+            return await _amr100BatchRepository.Update(batch.Result);
         }
 
         #region Private

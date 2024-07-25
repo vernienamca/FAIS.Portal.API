@@ -352,6 +352,22 @@ namespace FAIS.Portal.API.Controllers
             return Ok(await _service.NewAssetApproval(id));
         }
 
+        /// <summary>
+        /// Sets the status of the batch to Open.
+        /// </summary>
+        /// <param name="dto">The transaction data object.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPut("return-to-analyst")]
+        [ProducesResponseType(typeof(AmrTransactionsDTO), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ReturnToAnalyst (AmrTransactionsDTO dto)
+        {
+            if (dto.Id == 0)
+                throw new ArgumentNullException(nameof (dto.Id));
+
+            return Ok(await _service.ReturnToAnalyst(dto));
+        }
+
         #endregion
     }
 }  
