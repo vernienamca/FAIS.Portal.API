@@ -18,7 +18,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class AmrController : ControllerBase
     {
         #region Variables
@@ -230,6 +230,10 @@ namespace FAIS.Portal.API.Controllers
             return Ok(await _service.AddAmr100BatchD(amr100batchdDto));
         }
 
+        /// <summary>
+        /// Posts/Puts the create AMR 100 Batch D.
+        /// </summary>
+        /// <param name="dto">The amr 100 Batch Dbd data object.</param>`1
         [HttpPost("Amr100BatchD/Save")]
         public async Task<IActionResult> SaveChanges([FromBody] BulkAmr100BatchDDTO dto)
         {
@@ -241,19 +245,11 @@ namespace FAIS.Portal.API.Controllers
             return Ok(await _service.SaveChanges(dto.BatchItems));
         }
 
-        /// <summary>
-        /// Posts the create AMR 100 Batch Dbd.
+        // <summary>
+        /// Posts the breakdown of Amr 100 Batch D records.
         /// </summary>
-        /// <param name="amr100BatchDto">The amr 100 Batch data object.</param>
-        [HttpPost("Amr100BatchDbd")]
-        [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddAmr100BatchDbd(AddAmr100BatchDbdDTO amr100batchdbdDto)
-        {
-            if (amr100batchdbdDto == null)
-                throw new ArgumentNullException(nameof(amr100batchdbdDto));
-            return Ok(await _service.AddAmr100BatchDbd(amr100batchdbdDto));
-        }
-
+        /// <param name="id">The batch object unique identifier.</param>
+        /// <returns></returns>
         [HttpPost("BreakRow")]
         [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
         public async Task<IActionResult> BreakRow(int id)

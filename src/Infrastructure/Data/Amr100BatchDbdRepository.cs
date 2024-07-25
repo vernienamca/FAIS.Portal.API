@@ -102,6 +102,11 @@ namespace FAIS.Infrastructure.Data
         {
             return await AddAsync(amr);
         }
+        public async Task<Amr100BatchDbd> Update(Amr100BatchDbd amr)
+        {
+            return await UpdateAsync(amr);
+
+        }
         public async Task BulkInsert(List<Amr100BatchDbd> amrs, BulkConfig bulkConfig)
         {
             await _dbContext.BulkInsertAsync(amrs, options =>
@@ -110,21 +115,15 @@ namespace FAIS.Infrastructure.Data
                 options.BatchTimeout = bulkConfig.BulkCopyTimeout ?? 0;
             });
             await BulkInsertAsync(amrs);
-        }   
-        public async Task<Amr100BatchDbd> Update(Amr100BatchDbd amr)
-        {
-            return await UpdateAsync(amr);
-
         }
-        public async Task BulkDelete(List<Amr100BatchDbd> amrs , BulkConfig bulkconfig)
+        public async Task BulkDelete(List<Amr100BatchDbd> amrs, BulkConfig bulkconfig)
         {
             await _dbContext.BulkDeleteAsync(amrs, options =>
             {
-                 options.BatchSize = bulkconfig.BatchSize;
-                 options.BatchTimeout = bulkconfig.BulkCopyTimeout ?? 0;
+                options.BatchSize = bulkconfig.BatchSize;
+                options.BatchTimeout = bulkconfig.BulkCopyTimeout ?? 0;
             });
         }
-
         public IQueryable<Amr100BatchDbd> GetAll()
         {
              return _dbContext.Amr100BatchDbd;

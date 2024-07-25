@@ -81,8 +81,6 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public string CreatedByName { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int ColumnBreaks { get; set; }
-        //public List<Amr100BatchDDTO> BatchItems { get; set; }
-
     }
     public class UpdateAmr100BatchDDTO
     {
