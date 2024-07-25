@@ -17,20 +17,16 @@ namespace FAIS.Infrastructure.Data
         {
             _dbContext = dbContext;
         }
-
         public async Task<List<EntityType>> ListAllAsync()
         {
             return await _dbContext.Set<EntityType>().ToListAsync();
         }
-
         public async Task<EntityType> AddAsync(EntityType entity)
         {
             try
             {
                 _dbContext.Set<EntityType>().Add(entity);
-
                 await _dbContext.SaveChangesAsync();
-
                 return entity;
             }
             catch (DbUpdateException ex)
@@ -39,7 +35,6 @@ namespace FAIS.Infrastructure.Data
             }
         
         }
-
         public async Task<EntityType> UpdateAsync(EntityType entity)
         {
             try
@@ -53,21 +48,16 @@ namespace FAIS.Infrastructure.Data
             {
                 throw ex;
             }
-
         }
-
         public async Task DeleteAsync(EntityType entity)
         {
             _dbContext.Set<EntityType>().Remove(entity);
-
             await _dbContext.SaveChangesAsync();
         }
-
         public async Task<EntityType> GetByIdAsync(IdType id)
         {
             return await _dbContext.Set<EntityType>().FindAsync(id);
         }
-
         public async Task BulkInsertAsync(List<EntityType> entities)
         {
             try
@@ -76,11 +66,9 @@ namespace FAIS.Infrastructure.Data
             }
             catch (DbUpdateException ex)
             {
-
                 throw ex;
             }
         }
-
         public async Task BulkUpdateAsync(List<EntityType> entities)
         {
             try
@@ -89,17 +77,14 @@ namespace FAIS.Infrastructure.Data
             }
             catch (DbUpdateException ex)
             {
-   
                 throw ex;
             }
         }
-
         public async Task BulkDeleteAsync(List<EntityType> entities)
         {
             try
             {
                 await _dbContext.BulkDeleteAsync(entities);
-             
             }
             catch(DbUpdateException ex)
             {
