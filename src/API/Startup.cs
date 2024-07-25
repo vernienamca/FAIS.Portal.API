@@ -100,6 +100,13 @@ namespace FAIS
             services.AddScoped(typeof(IAmr100BatchRepository), typeof(Amr100BatchRepository));
             services.AddScoped(typeof(IAmr100BatchDRepository), typeof(Amr100BatchDRepository));
             services.AddScoped(typeof(IAmr100BatchDbdRepository), typeof(Amr100BatchDbdRepository));
+            services.AddScoped(typeof(IFieldDictionaryRepository), typeof(FieldDictionaryRepository));
+            services.AddScoped(typeof(IBusinessProcessRepository), typeof(BusinessProcessRepository));
+            services.AddScoped(typeof(IDefinedTablesRepository), typeof(DefinedTablesRepository));
+            services.AddScoped(typeof(IDefinedTableColumnsRepository), typeof(DefinedTableColumnsRepository));
+            services.AddScoped(typeof(IDepreciationMethodsRepository), typeof(DepreciationMethodsRepository));
+            services.AddScoped(typeof(IDefinedMethodsFieldDictionaryRepository), typeof(DefinedMethodsFieldDictionaryRepository));
+            services.AddScoped(typeof(IStepContatinerRepository), typeof(StepContainerRepository));
             services.AddScoped(typeof(IAmr100BatchStatHistoryRepository), typeof(Amr100BatchStatHistoryRepository));
 
             services.AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
@@ -126,6 +133,14 @@ namespace FAIS
             services.AddScoped(typeof(ITransmissionLineProfileService), typeof(TransmissionLineProfileService));
             services.AddScoped(typeof(IPlantInformationService), typeof(PlantInformationService));
             services.AddScoped(typeof(IAmrService), typeof(AmrService));
+            services.AddScoped(typeof(IFieldDictionaryService), typeof(FieldDictionaryService));
+            services.AddScoped(typeof(IBusinessProcessService), typeof(BusinessProcessService));
+            services.AddScoped(typeof(IDefinedTablesService), typeof(DefinedTablesService));
+            services.AddScoped(typeof(IDefinedTableColumnsService), typeof(DefinedTableColumnsService));
+            services.AddScoped(typeof(IDepreciationMethodsService), typeof(DepreciationMethodsService));
+            services.AddScoped(typeof(IDefinedMethodsFieldDictionaryService), typeof(DefinedMethodsFieldDictionaryService));
+            services.AddScoped(typeof(IStepContainerService), typeof(StepContainerService));
+
 
             services.AddSwaggerGen(c =>
             {
