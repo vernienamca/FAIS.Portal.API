@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 
@@ -7,6 +8,7 @@ namespace FAIS.ApplicationCore.DTOs.Structure
     public class Amr100BatchDDTO
     {
         public int Id { get; set; }
+        public Guid? TempId { get; set; }
         public int Amr100BatchSeq { get; set; }
         public int RoaSeq { get; set; }
         public int FgLto { get; set; }
@@ -39,10 +41,16 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public string CreatedByName { get; set; }
         public int? UpdatedBy { get; set; }
         public string UpdatedByName { get; set; }
-    }
+        public int ColumnBreaks { get; set; }
 
+    }
+    public class BulkAmr100BatchDDTO
+    {
+        public List<Amr100BatchDDTO> BatchItems { get; set; }
+    }
     public class AddAmr100BatchDDTO
     {
+        public Guid? TempId { get; set; }
         public int Amr100BatchSeq { get; set; }
         public int RoaSeq { get; set; }
         public int FgLto { get; set; }
@@ -72,11 +80,12 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public int CreatedBy { get; set; }
         public string CreatedByName { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
+        public int ColumnBreaks { get; set; }
     }
     public class UpdateAmr100BatchDDTO
     {
         public int Id { get; set; }
+        public Guid? TempId { get; set; }
         public int RoaSeq { get; set; }
         public int FgLto { get; set; }
         public string AmrLocation { get; set; }
@@ -105,5 +114,6 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public int? UpdatedBy { get; set; }
         public string UpdatedByName { get; set; }
         public DateTime UpdatedAt { get; set; } = DateTime.Now; 
+        public int ColumnBreaks { get; set; }
     }
 }

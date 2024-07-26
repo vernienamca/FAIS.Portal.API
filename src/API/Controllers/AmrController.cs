@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace FAIS.Portal.API.Controllers
 {
@@ -52,10 +53,12 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// List of AMR 100 Batch.
+        /// Gets the AMR 100 Batch by unique identifier.
         /// </summary>
+        /// <param name="reportSeqId">The report sequence unique identifier</param>
+        /// <param name="yearMonth">The year and month unique identifier</param>
         /// <returns></returns>
-        [HttpGet("Amr100Batch")]
+        [HttpGet("batch")]
         [ProducesResponseType(typeof(IReadOnlyCollection<Amr100BatchModel>), StatusCodes.Status200OK)]
         public IActionResult GetAmr100Batch(int reportSeqId, string yearMonth)
         {
@@ -63,10 +66,13 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// List of AMR 100 Batch D.
+        /// Gets the Amr Batch D by unique identifier.
         /// </summary>
+        /// <param name="amrBatchSeq">The AMR batch sequence unique identifier</param>
+        /// <param name="reportSeq">The report sequence unique identifier</param>
+        /// <param name="yearMonth">The year and month unique identifier</param>
         /// <returns></returns>
-        [HttpGet("Amr100BatchD")]
+        [HttpGet("batch-d")]
         [ProducesResponseType(typeof(IReadOnlyCollection<Amr100BatchDModel>), StatusCodes.Status200OK)]
         public IActionResult GetAmr100BatchD(int amrBatchSeq, int reportSeq, string yearMonth)
         {
@@ -74,18 +80,21 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// List of AMR 100 Batch Dbd.
+        /// Gets the AMR Batch Dbd.
         /// </summary>
+        /// <param name="amrBatchSeq">The AMR batch sequence unique identifier</param>
+        /// <param name="reportSeq">The report sequence unique identifier</param>
+        /// <param name="yearMonth">The year and month unique identifier</param>
         /// <returns></returns>
-        [HttpGet("Amr100BatchDbd")]
+        [HttpGet("batch-dbd")]
         [ProducesResponseType(typeof(IReadOnlyCollection<Amr100BatchDbdModel>), StatusCodes.Status200OK)]
-        public IActionResult GetAmr100BatchDbd()
+        public IActionResult GetAmr100BatchDbd(int amrBatchSeq, int reportSeq, string yearMonth)
         {
-            return Ok(_service.GetAmr100BatchDbd());
+            return Ok(_service.GetAmr100BatchDbd(amrBatchSeq, reportSeq, yearMonth));
         }
 
         /// <summary>
-        /// Gets the AMR by id.
+        /// Gets the AMR by unique identifier.
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id:int}")]
@@ -108,7 +117,19 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Gets the AMR 100 Batch by id.
+        /// Gets the exported AMR logs file in bytes.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("batch-d/export")]
+        [ProducesResponseType(typeof(File), StatusCodes.Status200OK)]
+        public IActionResult ExportAmrBatchDLogs()
+        {
+            return File(_service.ExportAmrBatchDLogs(), System.Net.Mime.MediaTypeNames.Application.Octet,
+                $"logs_{DateTime.Now.ToString("MM/dd/yyyy")}.xlsx");
+        }
+
+        /// <summary>
+        /// Gets the AMR 100 Batch by unique identifier.
         /// </summary>
         /// <returns></returns>
         [HttpGet("Amr100Batch/{id:int}")]
@@ -119,7 +140,7 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Gets the AMR 100 Batch D by id.
+        /// Gets the AMR 100 Batch D by unique identifier.
         /// </summary>
         /// <returns></returns>
         [HttpGet("Amr100BatchD/{id:int}")]
@@ -130,7 +151,7 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Gets the AMR 100 Batch Dbd by id.
+        /// Gets the AMR 100 Batch Dbd by unique identifier.
         /// </summary>
         /// <returns></returns>
         [HttpGet("Amr100BatchDbd/{id:int}")]
@@ -181,7 +202,6 @@ namespace FAIS.Portal.API.Controllers
             return Ok(await _service.Add(dto));
         }
 
-
         /// <summary>
         /// Posts the create AMR 100 Batch.
         /// </summary>
@@ -222,16 +242,36 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Posts the create AMR 100 Batch Dbd.
+        /// Posts/Puts the create AMR 100 Batch D.
         /// </summary>
-        /// <param name="amr100BatchDto">The amr 100 Batch data object.</param>
-        [HttpPost("Amr100BatchDbd")]
-        [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddAmr100BatchDbd(AddAmr100BatchDbdDTO amr100batchdbdDto)
+        /// <param name="dto">The amr 100 Batch Dbd data object.</param>`1
+        [HttpPost("batch-d/save")]
+        public async Task<IActionResult> SaveChanges([FromBody] BulkAmr100BatchDDTO dto)
         {
-            if (amr100batchdbdDto == null)
-                throw new ArgumentNullException(nameof(amr100batchdbdDto));
-            return Ok(await _service.AddAmr100BatchDbd(amr100batchdbdDto));
+            if (dto.BatchItems == null || !dto.BatchItems.Any())
+            {
+                return BadRequest("Null Batch.");
+            }
+            return Ok(await _service.SaveChanges(dto.BatchItems));
+        }
+
+        // <summary>
+        /// Posts the breakdown of Amr 100 Batch D records.
+        /// </summary>
+        /// <param name="id">The batch object unique identifier.</param>
+        /// <returns></returns>
+        [HttpPost("BreakRow")]
+        [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
+        public async Task<IActionResult> BreakRow(int id)
+        {
+            try
+            { 
+                return Ok(await _service.BreakRow(id));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"An error has occurred: {e.Message}");
+            }
         }
 
         #endregion
@@ -244,7 +284,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(UpdateAmrDTO dto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAmrDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -289,10 +329,11 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("Amr100BatchD/{id:int}")]
         [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateAmr100BatchD(UpdateAmr100BatchDDTO dto)
+        public async Task<IActionResult> UpdateAmr100BatchD(Guid id, UpdateAmr100BatchDDTO dto)
         {
             if(dto == null)
                 throw new ArgumentNullException(nameof (dto));
+            
             return Ok(await _service.UpdateAmr100BatchD(dto));
         }
 
@@ -301,12 +342,13 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <param name="dto">The amr 100 batch dbd data object.</param>
         /// <returns></returns>
-        [HttpPut("Amr100BatchDbd/{id:int}")]
+        [HttpPut("Amr100BatchDbd")]
         [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto)
         {
             if(dto == null)
                 throw new ArgumentNullException(nameof (dto));
+            
             return Ok(await _service.UpdateAmr100BatchDbd(dto));
         }
         // <summary>

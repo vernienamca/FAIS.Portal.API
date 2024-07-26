@@ -14,15 +14,26 @@ namespace FAIS.Infrastructure.Data
     {
         public Amr100BatchDbdRepository(FAISContext context) : base(context) { }
 
-        public IReadOnlyCollection<Amr100BatchDbdModel> Get()
+        public IReadOnlyCollection<Amr100BatchDbdModel> Get(int amrBatchSeq, int reportSeq, string yearMonth)
         {
+            var parts = yearMonth.Split('-');
+            int year = int.Parse(parts[0]);
+            int month = int.Parse(parts[1]);
+
             var amrs = (from amr in _dbContext.Amr100BatchDbd.AsNoTracking()
+                                join amrD in _dbContext.Amr100BatchD.AsNoTracking() on amr.Amr100BatchDSeq equals amrD.Id
+                                join amrB in _dbContext.Amr100Batch.AsNoTracking() on amrD.Amr100BatchSeq equals amrB.Id
+                                join amrA in _dbContext.Amrs.AsNoTracking() on amrB.ReportSeq equals amrA.Id
+                                join proj in _dbContext.ProjectProfile.AsNoTracking() on amrB.ProjectSeq equals proj.Id
                                 join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
                                 join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX from usrU in usrUX.DefaultIfEmpty()
                                 orderby amr.Id descending
                                 select new Amr100BatchDbdModel()
                                 {
                                     Id = amr.Id,
+                                    ReportSeq = amrB.ReportSeq,
+                                    AmrYearMonth = amrA.AmrYm,
+                                    Amr100BatchSeq = amrD.Amr100BatchSeq, 
                                     Amr100BatchDSeq = amr.Amr100BatchDSeq,
                                     AmrSeq = amr.AmrSeq,
                                     NewAsset = amr.NewAsset,
@@ -45,8 +56,10 @@ namespace FAIS.Infrastructure.Data
                                     UpdatedBy = amr.UpdatedBy,
                                     UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
 
-                                }).ToList();
-         return amrs;
+                                })
+                                .Where(x => x.ReportSeq == reportSeq && x.Amr100BatchSeq == amrBatchSeq && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month)
+                                .ToList();
+            return amrs;
         }
 
         public async Task<Amr100BatchDbdModel> GetById(int id)
@@ -85,28 +98,35 @@ namespace FAIS.Infrastructure.Data
                                 }).FirstOrDefaultAsync(t => t.Id == id);
             return await amr;
         }
-            public async Task<Amr100BatchDbd> Add(Amr100BatchDbd amr)
-            {
-                return await AddAsync(amr);
-            }
+        public async Task<Amr100BatchDbd> Add(Amr100BatchDbd amr)
+        {
+            return await AddAsync(amr);
+        }
+        public async Task<Amr100BatchDbd> Update(Amr100BatchDbd amr)
+        {
+            return await UpdateAsync(amr);
 
-            public async Task<Amr100BatchDbd> Update(Amr100BatchDbd amr)
+        }
+        public async Task BulkInsert(List<Amr100BatchDbd> amrs, BulkConfig bulkConfig)
+        {
+            await _dbContext.BulkInsertAsync(amrs, options =>
             {
-                return await UpdateAsync(amr);
-
-            }
-             public async Task BulkDelete(List<Amr100BatchDbd> amrs , BulkConfig bulkconfig)
+                options.BatchSize = bulkConfig.BatchSize;
+                options.BatchTimeout = bulkConfig.BulkCopyTimeout ?? 0;
+            });
+            await BulkInsertAsync(amrs);
+        }
+        public async Task BulkDelete(List<Amr100BatchDbd> amrs, BulkConfig bulkconfig)
+        {
+            await _dbContext.BulkDeleteAsync(amrs, options =>
             {
-                await _dbContext.BulkDeleteAsync(amrs, options =>
-                {
-                    options.BatchSize = bulkconfig.BatchSize;
-                    options.BatchTimeout = bulkconfig.BulkCopyTimeout ?? 0;
-                });
-            }
-
-             public IQueryable<Amr100BatchDbd> GetAll()
-            {
-                return _dbContext.Amr100BatchDbd;
-            }
+                options.BatchSize = bulkconfig.BatchSize;
+                options.BatchTimeout = bulkconfig.BulkCopyTimeout ?? 0;
+            });
+        }
+        public IQueryable<Amr100BatchDbd> GetAll()
+        {
+             return _dbContext.Amr100BatchDbd;
+        }
     }
 }
