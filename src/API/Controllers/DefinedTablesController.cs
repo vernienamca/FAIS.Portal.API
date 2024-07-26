@@ -27,7 +27,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefinedTablesController"/> class.
-        /// <param name="service">List the business process.</param>
+        /// <param name="service">The defined tables service.</param>
         /// </summary>
         public DefinedTablesController(IDefinedTablesService service) 
         {
@@ -37,8 +37,9 @@ namespace FAIS.Portal.API.Controllers
         #endregion Constructor
 
         #region Get
+
         /// <summary>
-        /// Retrieve the list of defined tables.
+        /// List the defined tables.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -49,49 +50,55 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Retrieve the defined tables by id
+        /// Get the defined methods field dictionary by unique identifier.
         /// </summary>
+        /// <param name="id">The defined methods field dictionary unique identifier.</par
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(DefinedTablesModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
         }
+
         #endregion Get
 
         #region Post
+
         /// <summary>
         /// Posts the create defined tables.
         /// </summary>
-        /// <param name="DTO">The defined tables data object.</param>
+        /// <param name="definedTablesDto">The defined tables data object.</param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(typeof(DefinedTables), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(DefinedTablesDTO DTO)
+        public async Task<IActionResult> Add(DefinedTablesDTO definedTablesDto)
         {
-            if (DTO == null)
-                throw new ArgumentNullException(nameof(DTO));
+            if (definedTablesDto == null)
+                throw new ArgumentNullException(nameof(definedTablesDto));
 
-            return Ok(await _service.Add(DTO));
+            return Ok(await _service.Add(definedTablesDto));
         }
+
         #endregion
 
         #region Put
+
         /// <summary>
-        /// Puts the update defined tables
+        /// Puts the update defined tables.
         /// </summary>
-        /// <param name="dto">The defined tables data object.</param>
+        /// <param name="definedTablesDto">The defined tables data object.</param>
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(DefinedTables), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(DefinedTablesDTO dto)
+        public async Task<IActionResult> Update(DefinedTablesDTO definedTablesDto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (definedTablesDto == null)
+                throw new ArgumentNullException(nameof(definedTablesDto));
 
-            return Ok(await _service.Update(dto));
+            return Ok(await _service.Update(definedTablesDto));
         }
+
         #endregion
     }
 }  

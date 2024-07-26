@@ -2,7 +2,6 @@
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Service;
 using FAIS.ApplicationCore.Models;
-using FAIS.ApplicationCore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +27,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefinedMethodsFieldDictionaryController"/> class.
-        /// <param name="service">List the defined methods field dictionary .</param>
+        /// <param name="service">The defined methods field dictionary service.</param>
         /// </summary>
         public DefinedMethodsFieldDictionaryController(IDefinedMethodsFieldDictionaryService service) 
         {
@@ -38,8 +37,9 @@ namespace FAIS.Portal.API.Controllers
         #endregion Constructor
 
         #region Get
+
         /// <summary>
-        /// List of defined methods field dictionary.
+        /// List the defined methods field dictionaries.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -50,49 +50,55 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Get the defined methods field dictionary by id
+        /// Get the defined methods field dictionary by unique identifier.
         /// </summary>
+        /// <param name="id">The defined methods field dictionary unique identifier.</param>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(DefinedMethodsFieldDictionaryModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
         }
+
         #endregion Get
 
         #region Post
+
         /// <summary>
         /// Posts the create defined methods field dictionary.
         /// </summary>
-        /// <param name="DTO">The defined methods field dictionary data object.</param>
+        /// <param name="defineMethodFdDto">The defined methods field dictionary data object.</param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(typeof(DefinedMethodsFieldDictionary), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(DefinedMethodsFieldDictionaryDTO DTO)
+        public async Task<IActionResult> Add(DefinedMethodsFieldDictionaryDTO defineMethodFdDto)
         {
-            if (DTO == null)
-                throw new ArgumentNullException(nameof(DTO));
+            if (defineMethodFdDto == null)
+                throw new ArgumentNullException(nameof(defineMethodFdDto));
 
-            return Ok(await _service.Add(DTO));
+            return Ok(await _service.Add(defineMethodFdDto));
         }
+
         #endregion
 
         #region Put
+
         /// <summary>
-        /// Puts the update defined methods field dictionary
+        /// Puts the update defined methods field dictionary.
         /// </summary>
-        /// <param name="dto">The defined methods field dictionary data object.</param>
+        /// <param name="defineMethodFdDto">The defined methods field dictionary data object.</param>
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(DefinedMethodsFieldDictionary), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(DefinedMethodsFieldDictionaryDTO dto)
+        public async Task<IActionResult> Update(DefinedMethodsFieldDictionaryDTO defineMethodFdDto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (defineMethodFdDto == null)
+                throw new ArgumentNullException(nameof(defineMethodFdDto));
 
-            return Ok(await _service.Update(dto));
+            return Ok(await _service.Update(defineMethodFdDto));
         }
+
         #endregion
     }
 }  
