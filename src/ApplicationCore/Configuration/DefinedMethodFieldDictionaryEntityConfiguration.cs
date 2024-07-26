@@ -5,9 +5,9 @@ using System;
 
 namespace FAIS.ApplicationCore.Configuration
 {
-    public class DefinedMethodFieldDictionaryEntityConfiguration : IEntityTypeConfiguration<DefinedMethodFieldDictionary>
+    public class DefinedMethodsFieldDictionaryEntityConfiguration : IEntityTypeConfiguration<DefinedMethodsFieldDictionary>
     {
-        public void Configure(EntityTypeBuilder<DefinedMethodFieldDictionary> builder)
+        public void Configure(EntityTypeBuilder<DefinedMethodsFieldDictionary> builder)
         {
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
@@ -51,7 +51,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
 
-            builder.Property(e => e.DateRemoved)
+            builder.Property(e => e.RemovedAt)
                 .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_REMOVED");

@@ -24,7 +24,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .IsRequired(false)
                 .HasColumnName("DEPEX_TABLES_SEQ");
 
-            builder.Property(e => e.ColumName)
+            builder.Property(e => e.ColumnName)
                 .IsRequired(false)
                 .HasMaxLength(50)
                 .HasColumnName("COLUMN_NAME");

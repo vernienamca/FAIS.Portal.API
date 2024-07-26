@@ -3,22 +3,19 @@ using System.Runtime.Serialization;
 
 namespace FAIS.ApplicationCore.Entities.Structure
 {
-    public class DefinedTables : BaseEntity<int>
+    public class DefinedMethodsFieldDictionary : BaseEntity<int>
     {
         [DataMember]
         public int Id { get; set; }
 
         [DataMember]
-        public string BusinessProcessId { get; set; }
+        public int DefinedMethodId { get; set; }
 
         [DataMember]
-        public string TableName { get; set; }
+        public int FieldDictionaryId { get; set; }
 
         [DataMember]
-        public char IsActive { get; set; }
-
-        [DataMember]
-        public DateTime StatusDate { get; set; }
+        public string Description { get; set; }
 
         [DataMember]
         public DateTime CreatedAt { get; set; }
@@ -31,5 +28,8 @@ namespace FAIS.ApplicationCore.Entities.Structure
 
         [DataMember]
         public int? UpdatedBy { get; set; }
+
+        [DataMember]
+        public DateTime? RemovedAt { get; set; }
     }
 }

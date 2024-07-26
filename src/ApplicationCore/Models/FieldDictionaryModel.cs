@@ -1,35 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 
-namespace FAIS.ApplicationCore.Entities.Structure
+namespace FAIS.ApplicationCore.Models
 {
-    public class DefinedTables : BaseEntity<int>
+    public class FieldDictionaryModel
     {
-        [DataMember]
         public int Id { get; set; }
-
-        [DataMember]
         public string BusinessProcessId { get; set; }
-
-        [DataMember]
-        public string TableName { get; set; }
-
-        [DataMember]
+        public string FieldName { get; set; }
+        public int? TableId { get; set; }
+        public int? ColumnId { get; set; }
         public char IsActive { get; set; }
-
-        [DataMember]
         public DateTime StatusDate { get; set; }
-
-        [DataMember]
+        public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
-
-        [DataMember]
         public DateTime? UpdatedAt { get; set; }
-
-        [DataMember]
         public int CreatedBy { get; set; }
-
-        [DataMember]
         public int? UpdatedBy { get; set; }
     }
 }
