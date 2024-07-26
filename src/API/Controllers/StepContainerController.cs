@@ -27,7 +27,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StepContainerController"/> class.
-        /// <param name="service">List the step container.</param>
+        /// <param name=service">The step container service.</param>
         /// </summary>
         public StepContainerController(IStepContainerService service) 
         {
@@ -37,8 +37,9 @@ namespace FAIS.Portal.API.Controllers
         #endregion Constructor
 
         #region Get
+
         /// <summary>
-        /// List of step container.
+        /// List the step containers.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -49,49 +50,55 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Get the step container by id
+        /// Get the step container by unique identifier.
         /// </summary>
+        /// <param name="id">The step container unique identifier.</param>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(StepContainerModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
         }
+
         #endregion Get
 
         #region Post
+
         /// <summary>
         /// Posts the create step container.
         /// </summary>
-        /// <param name="DTO">The step container data object.</param>
+        /// <param name="stepContainerDto">The step container data object.</param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(typeof(StepContainer), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(StepContainerDTO DTO)
+        public async Task<IActionResult> Add(StepContainerDTO stepContainerDto)
         {
-            if (DTO == null)
-                throw new ArgumentNullException(nameof(DTO));
+            if (stepContainerDto == null)
+                throw new ArgumentNullException(nameof(stepContainerDto));
 
-            return Ok(await _service.Add(DTO));
+            return Ok(await _service.Add(stepContainerDto));
         }
+
         #endregion
 
         #region Put
+
         /// <summary>
-        /// Puts the update step container
+        /// Puts the update step container.
         /// </summary>
-        /// <param name="dto">The step container data object.</param>
+        /// <param name="stepContainerDto">The step container data object.</param>
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(StepContainer), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(StepContainerDTO dto)
+        public async Task<IActionResult> Update(StepContainerDTO stepContainerDto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (stepContainerDto == null)
+                throw new ArgumentNullException(nameof(stepContainerDto));
 
-            return Ok(await _service.Update(dto));
+            return Ok(await _service.Update(stepContainerDto));
         }
+
         #endregion
     }
 }  

@@ -27,7 +27,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FieldDIctionaryController"/> class.
-        /// <param name="service">List the field dictionary.</param>
+        /// <param name=service">The field dictionary service.</param>
         /// </summary>
         public FieldDictionaryController(IFieldDictionaryService service) 
         {
@@ -37,8 +37,9 @@ namespace FAIS.Portal.API.Controllers
         #endregion Constructor
 
         #region Get
+
         /// <summary>
-        /// List of field dictionary.
+        /// List the field dictionaries.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -49,49 +50,55 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Get the field dictionary by id
+        /// Get the field dictionary by unique identifier.
         /// </summary>
+        /// <param name="id">The field dictionary unique identifier.</param>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(FieldDictionaryModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
         }
+
         #endregion Get
 
         #region Post
+
         /// <summary>
         /// Posts the create field dictionary.
         /// </summary>
-        /// <param name="DTO">The field dictionary data object.</param>
+        /// <param name="fieldDictionaryDto">The field dictionary data object.</param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(typeof(FieldDictionary), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(FieldDictionaryDTO DTO)
+        public async Task<IActionResult> Add(FieldDictionaryDTO fieldDictionaryDto)
         {
-            if (DTO == null)
-                throw new ArgumentNullException(nameof(DTO));
+            if (fieldDictionaryDto == null)
+                throw new ArgumentNullException(nameof(fieldDictionaryDto));
 
-            return Ok(await _service.Add(DTO));
+            return Ok(await _service.Add(fieldDictionaryDto));
         }
+
         #endregion
 
         #region Put
+
         /// <summary>
-        /// Puts the update field dictionary
+        /// Puts the update field dictionary.
         /// </summary>
-        /// <param name="dto">The field dictionary data object.</param>
+        /// <param name="fieldDictionaryDto">The field dictionary data object.</param>
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(FieldDictionary), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(FieldDictionaryDTO dto)
+        public async Task<IActionResult> Update(FieldDictionaryDTO fieldDictionaryDto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (fieldDictionaryDto == null)
+                throw new ArgumentNullException(nameof(fieldDictionaryDto));
 
-            return Ok(await _service.Update(dto));
+            return Ok(await _service.Update(fieldDictionaryDto));
         }
+
         #endregion
     }
 }  
