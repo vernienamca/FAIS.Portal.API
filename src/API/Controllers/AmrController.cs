@@ -18,7 +18,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AmrController : ControllerBase
     {
         #region Variables
@@ -244,15 +244,15 @@ namespace FAIS.Portal.API.Controllers
         /// <summary>
         /// Posts/Puts the create AMR 100 Batch D.
         /// </summary>
-        /// <param name="dto">The amr 100 Batch Dbd data object.</param>`1
+        /// <param name="dtos">The amr 100 Batch D data object.</param>`1
         [HttpPost("batch-d/save")]
-        public async Task<IActionResult> SaveChanges([FromBody] BulkAmr100BatchDDTO dto)
+        public async Task<IActionResult> SaveChanges(List<Amr100BatchDDTO> dtos)
         {
-            if (dto.BatchItems == null || !dto.BatchItems.Any())
-            {
-                return BadRequest("Null Batch.");
-            }
-            return Ok(await _service.SaveChanges(dto.BatchItems));
+            if (dtos == null)
+                throw new ArgumentNullException(nameof(dtos));
+
+            var items = await _service.SaveChanges(dtos);
+            return Ok(items);
         }
 
         // <summary>
@@ -260,7 +260,7 @@ namespace FAIS.Portal.API.Controllers
         /// </summary>
         /// <param name="id">The batch object unique identifier.</param>
         /// <returns></returns>
-        [HttpPost("BreakRow")]
+        [HttpPost("batch-d/breakrow")]
         [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
         public async Task<IActionResult> BreakRow(int id)
         {
@@ -273,6 +273,19 @@ namespace FAIS.Portal.API.Controllers
                 return StatusCode(500, $"An error has occurred: {e.Message}");
             }
         }
+        /// Posts the breakdown of Amr 100 Batch D records.
+        /// </summary>
+        /// <param name="id">The batch object unique identifier.</param>
+        /// <returns></returns>
+        [HttpPost("batch-d/break-all")]
+        [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
+        public async Task<IActionResult> BreakMultipleRows(List<Amr100BatchDbdDTO> dtos)
+        {
+            if (dtos == null)
+                throw new ArgumentNullException(nameof(dtos));
+            var addedItems = await _service.BreakMultipleRows(dtos);
+            return Ok(addedItems);
+        }
 
         #endregion
 
@@ -284,7 +297,7 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(Amr), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAmrDTO dto)
+        public async Task<IActionResult> Update(UpdateAmrDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -351,6 +364,17 @@ namespace FAIS.Portal.API.Controllers
             
             return Ok(await _service.UpdateAmr100BatchDbd(dto));
         }
+
+        [HttpPut("batch-dbd/Save")]
+        public async Task<IActionResult> UpdateRows(List<UpdateAmr100BatchDbdDTO> dtos)
+        {
+            if (dtos == null)
+                throw new ArgumentNullException(nameof(dtos));
+
+            var updatedItems = await _service.UpdateRows(dtos);
+            return Ok(updatedItems);
+        }
+
         // <summary>
         /// Removes the broke quantity.
         /// </summary>

@@ -44,10 +44,10 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public int ColumnBreaks { get; set; }
 
     }
-    public class BulkAmr100BatchDDTO
-    {
-        public List<Amr100BatchDDTO> BatchItems { get; set; }
-    }
+    //public class BulkAmr100BatchDDTO
+    //{
+    //    public List<Amr100BatchDDTO> BatchItems { get; set; }
+    //}
     public class AddAmr100BatchDDTO
     {
         public Guid? TempId { get; set; }

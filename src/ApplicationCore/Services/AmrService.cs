@@ -282,29 +282,30 @@ namespace FAIS.ApplicationCore.Services
             var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
             int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
             var amrBatchdbdEnt = new List<Amr100BatchDbd>();
+            var amr = await _amr100BatchDRepository.GetBatchDById(id);
             var bulkConfig = new BulkConfig { BatchSize = amrBatchdbdEnt.Count(), BulkCopyTimeout = timeOutInSeconds };
-            var amr = _amr100BatchDRepository.GetBatchDById(id);
+
             if (amr == null)
                 throw new ArgumentNullException("Amr Batch does not exist.");
 
-            for (var i = 0; i < amr.Result.Qty; i++)
+            var units = amr.Qty;
+            for (var i = 0; i < units; i++)
             {
                 var newAmrBatchDbd = new Amr100BatchDbd
                 {
-                    Amr100BatchDSeq = amr.Result.Id,
-                    AllocatedCost = amr.Result.AmrCost / amr.Result.Qty,
+                    Amr100BatchDSeq = amr.Id,
+                    AllocatedCost = amr.AmrCost / units,
                     WithIssues = 'N',
                     CreatedAt = DateTime.Now,
                 };
                 amrBatchdbdEnt.Add(newAmrBatchDbd);
             }
-
             try
             {
-                using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    amr.Result.ColumnBreaks = 1;
-                    await _amr100BatchDRepository.Update(amr.Result);
+                    amr.ColumnBreaks = 1;
+                    await _amr100BatchDRepository.Update(amr);
                     await _amr100BatchDbdRepository.BulkInsert(amrBatchdbdEnt, bulkConfig);
                     scope.Complete();
                 }
@@ -315,6 +316,34 @@ namespace FAIS.ApplicationCore.Services
             }
             return null;
         }
+        public async Task<List<Amr100BatchDbd>> BreakMultipleRows(List<Amr100BatchDbdDTO> dtos)
+        {
+            var result = new List<Amr100BatchDbd>();
+
+            foreach (var dto in dtos)
+            {
+                var entity = _mapper.Map<Amr100BatchDbd>(dto);
+                var addedEntity = await _amr100BatchDbdRepository.Add(entity);
+                result.Add(addedEntity);
+            }
+
+
+            var amrBatchDSeqs = dtos.Select(dto => dto.Amr100BatchDSeq).Distinct().ToList();
+
+            foreach (var batchDSeq in amrBatchDSeqs)
+            {
+                var entitiesToUpdate = _amr100BatchDRepository.GetAll().Where(x => x.Id == batchDSeq).ToList(); 
+
+                foreach (var updateItem in entitiesToUpdate)
+                {
+                    updateItem.ColumnBreaks = 1;
+                    await _amr100BatchDRepository.Update(updateItem);
+                }
+            }
+
+            return result;
+        }
+
         public async Task<Amr100BatchD> RemoveBreak(int id)
         {
             var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
@@ -340,11 +369,11 @@ namespace FAIS.ApplicationCore.Services
             }
             return null;
         }
-        public async Task<List<Amr100BatchD>> SaveChanges(List<Amr100BatchDDTO> batchItems)
+        public async Task<List<Amr100BatchD>> SaveChanges(List<Amr100BatchDDTO> dtos)
         {
             var result = new List<Amr100BatchD>();
 
-            foreach (var dto in batchItems)
+            foreach (var dto in dtos)
             {
                 if (dto.TempId != null && dto.TempId != Guid.Empty)
                 {
@@ -358,6 +387,21 @@ namespace FAIS.ApplicationCore.Services
                 result.Add(update);
             }
             return result;
+        }
+        public async Task<List<Amr100BatchDbd>> UpdateRows(List<UpdateAmr100BatchDbdDTO> dtos)
+        {
+            var amrList = new List<Amr100BatchDbd>();
+
+            foreach (var item in dtos)
+            {
+                var amr = _mapper.Map<Amr100BatchDbd>(item);
+                amr.UpdatedBy = item.UpdatedBy;
+                amr.UpdatedAt = item.UpdatedAt ?? DateTime.UtcNow;
+                await _amr100BatchDbdRepository.Update(amr);
+                amrList.Add(amr);
+            }
+
+            return amrList;
         }
         public async Task<Amr100Batch> NewAssetApproval(int id)
         {
