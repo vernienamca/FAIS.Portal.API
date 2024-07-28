@@ -318,30 +318,40 @@ namespace FAIS.ApplicationCore.Services
         }
         public async Task<List<Amr100BatchDbd>> BreakMultipleRows(List<Amr100BatchDbdDTO> dtos)
         {
-            var result = new List<Amr100BatchDbd>();
+            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
+            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
+            var entities = dtos.Select(dto => _mapper.Map<Amr100BatchDbd>(dto)).ToList();
+            var bulkConfig = new BulkConfig { BatchSize = entities.Count, BulkCopyTimeout = timeOutInSeconds };
 
-            foreach (var dto in dtos)
+            if (entities == null)
+                throw new ArgumentNullException("Amr Batch does not exist.");
+
+            try
             {
-                var entity = _mapper.Map<Amr100BatchDbd>(dto);
-                var addedEntity = await _amr100BatchDbdRepository.Add(entity);
-                result.Add(addedEntity);
-            }
-
-
-            var amrBatchDSeqs = dtos.Select(dto => dto.Amr100BatchDSeq).Distinct().ToList();
-
-            foreach (var batchDSeq in amrBatchDSeqs)
-            {
-                var entitiesToUpdate = _amr100BatchDRepository.GetAll().Where(x => x.Id == batchDSeq).ToList(); 
-
-                foreach (var updateItem in entitiesToUpdate)
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    updateItem.ColumnBreaks = 1;
-                    await _amr100BatchDRepository.Update(updateItem);
+                    var amrBatchDSeqs = dtos.Select(dto => dto.Amr100BatchDSeq).Distinct().ToList();
+                    foreach (var batchDSeq in amrBatchDSeqs)
+                    {
+                        var entitiesToUpdate = _amr100BatchDRepository.GetAll().Where(x => x.Id == batchDSeq).ToList();
+
+                        foreach (var updateItem in entitiesToUpdate)
+                        {
+                            updateItem.ColumnBreaks = 1;
+                            await _amr100BatchDRepository.Update(updateItem);
+                        }
+                    }
+                    await _amr100BatchDbdRepository.BulkInsert(entities, bulkConfig);
+
+                    scope.Complete();
+
                 }
             }
-
-            return result;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return entities;
         }
 
         public async Task<Amr100BatchD> RemoveBreak(int id)
