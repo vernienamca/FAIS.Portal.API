@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 
@@ -53,7 +54,6 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public string CreatedByName { get; set; }
 
     }
-
     public class UpdateAmr100BatchDbdDTO
     {
         public int Id { get; set; }
@@ -72,9 +72,13 @@ namespace FAIS.ApplicationCore.DTOs.Structure
         public string UDF1 { get; set; }
         public string UDF2 { get; set; }
         public string UDF3 { get; set; }
-        public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public int? UpdatedBy { get; set; }
         public string UpdatedByName { get; set; }
+    }
+    public class AmrTransactionsDTO
+    {
+        public int Id { get; set; }
+        public string Remarks { get; set; }
     }
 }

@@ -29,14 +29,17 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         Task<Amr100Batch> AddAmr100Batch(AddAmr100BatchDTO dto);
         Task<Amr100Batch> UpdateAmr100Batch(UpdateAmr100BatchDTO dto);
         Task<Amr100BatchD> AddAmr100BatchD(AddAmr100BatchDDTO dto);
-        Task<List<Amr100BatchD>> SaveChanges(List<Amr100BatchDDTO> batchItems);
+        Task<List<Amr100BatchD>> SaveChanges(List<Amr100BatchDDTO> dtos);
         Task<Amr100BatchD> UpdateAmr100BatchD(UpdateAmr100BatchDDTO dto); 
         Task<Amr100BatchDbd> AddAmr100BatchDbd(AddAmr100BatchDbdDTO dto);
         Task<Amr100BatchDbd> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto);
+        Task<List<Amr100BatchDbd>> UpdateRows(List<UpdateAmr100BatchDbdDTO> dtos);
         Task<Amr100BatchStatHistory> AddAmr100BatchStatHistory(Amr100BatchStatHistoryDTO dto);
         Task<Amr100BatchD> ResetQuantity();
         Task<Amr100BatchD> BreakRow(int id);
+        Task<List<Amr100BatchDbd>> BreakMultipleRows(List<Amr100BatchDbdDTO> dtos);
         Task<Amr100BatchD> RemoveBreak(int id);
         Task<Amr100Batch> NewAssetApproval(int id);
+        Task<Amr100Batch> ReturnToAnalyst(AmrTransactionsDTO dto);
     }
 }
