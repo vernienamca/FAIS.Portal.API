@@ -66,6 +66,7 @@ namespace FAIS.ApplicationCore.Services
             var mapper = _mapper.Map<StringInterpolation>(dto);
             mapper.CreatedBy = stringInterpolation.Result.CreatedBy;
             mapper.CreatedAt = stringInterpolation.Result.CreatedAt;
+            mapper.UpdatedAt = DateTime.Now;
             return await _interpolationRepository.Update(mapper);
         }
 
