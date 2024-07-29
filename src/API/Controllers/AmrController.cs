@@ -18,7 +18,7 @@ namespace FAIS.Portal.API.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class AmrController : ControllerBase
     {
         #region Variables
@@ -275,7 +275,6 @@ namespace FAIS.Portal.API.Controllers
         }
         /// Posts the breakdown of Amr 100 Batch D records.
         /// </summary>
-        /// <param name="id">The batch object unique identifier.</param>
         /// <returns></returns>
         [HttpPost("batch-d/break-all")]
         [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
