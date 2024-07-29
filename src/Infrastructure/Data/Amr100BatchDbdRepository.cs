@@ -108,9 +108,14 @@ namespace FAIS.Infrastructure.Data
 
         }
         public async Task BulkInsert(List<Amr100BatchDbd> amrs, BulkConfig bulkConfig)
-        { 
-            await BulkInsertAsync(amrs);
-        } 
+        {
+            await _dbContext.BulkInsertAsync(amrs, options =>
+            {
+                options.BatchSize = bulkConfig.BatchSize;
+                options.BatchTimeout = bulkConfig.BulkCopyTimeout ?? 0;
+            });
+        }
+
         public async Task BulkUpdate(List<Amr100BatchDbd> amrs, BulkConfig bulkConfig)
         {
             await _dbContext.BulkUpdateAsync(amrs, options =>
@@ -118,8 +123,8 @@ namespace FAIS.Infrastructure.Data
                 options.BatchSize = bulkConfig.BatchSize;
                 options.BatchTimeout = bulkConfig.BulkCopyTimeout ?? 0;
             });
-            await BulkUpdateAsync(amrs);
         }
+
         public async Task BulkDelete(List<Amr100BatchDbd> amrs, BulkConfig bulkconfig)
         {
             await _dbContext.BulkDeleteAsync(amrs, options =>
