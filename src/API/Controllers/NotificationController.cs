@@ -159,6 +159,7 @@ namespace FAIS.API.Controllers
                 throw new ArgumentNullException(nameof(dto));
 
             var interpolation = await _notificationService.GetInterpolationById(dto.Id);
+
             if (dto.IsActive != interpolation.IsActive)
             {
                 interpolation.IsActive = dto.IsActive;

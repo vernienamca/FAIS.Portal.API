@@ -27,7 +27,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefinedTableColumnsController"/> class.
-        /// <param name=service">List the defined table columnds.</param>
+        /// <param name=service">The defined table columns service.</param>
         /// </summary>
         public DefinedTableColumnsController(IDefinedTableColumnsService service) 
         {
@@ -37,6 +37,7 @@ namespace FAIS.Portal.API.Controllers
         #endregion Constructor
 
         #region Get
+
         /// <summary>
         /// List of defined table columns.
         /// </summary>
@@ -49,49 +50,55 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Get the defined table columns by id
+        /// Gets the defined table columns by unique identifier.
         /// </summary>
+        /// <param name="id">The defined table columns unique identifier.</param>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(DefinedTableColumnsModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
         }
+
         #endregion Get
 
         #region Post
+
         /// <summary>
         /// Posts the create defined table columns.
         /// </summary>
-        /// <param name="DTO">The defined table columns data object.</param>
+        /// <param name="definedTableColumnsDto">The defined table columns data object.</param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(typeof(DefinedTableColumns), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(DefinedTableColumnsDTO DTO)
+        public async Task<IActionResult> Add(DefinedTableColumnsDTO definedTableColumnsDto)
         {
-            if (DTO == null)
-                throw new ArgumentNullException(nameof(DTO));
+            if (definedTableColumnsDto == null)
+                throw new ArgumentNullException(nameof(definedTableColumnsDto));
 
-            return Ok(await _service.Add(DTO));
+            return Ok(await _service.Add(definedTableColumnsDto));
         }
+
         #endregion
 
         #region Put
+
         /// <summary>
-        /// Puts the update defined table columns
+        /// Puts the update defined table columns.
         /// </summary>
-        /// <param name="dto">The defined table columns data object.</param>
+        /// <param name="definedTableColumnsDto">The defined tables data object.</param>
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(DefinedTableColumns), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(DefinedTableColumnsDTO dto)
+        public async Task<IActionResult> Update(DefinedTableColumnsDTO definedTableColumnsDto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (definedTableColumnsDto == null)
+                throw new ArgumentNullException(nameof(definedTableColumnsDto));
 
-            return Ok(await _service.Update(dto));
+            return Ok(await _service.Update(definedTableColumnsDto));
         }
+
         #endregion
     }
 }  

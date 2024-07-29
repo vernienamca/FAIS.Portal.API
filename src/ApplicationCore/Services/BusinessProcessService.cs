@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FAIS.ApplicationCore.DTOs;
-using FAIS.ApplicationCore.Entities.Security;
 using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces.Repository;
 using FAIS.ApplicationCore.Interfaces.Service;
@@ -14,13 +13,15 @@ namespace FAIS.ApplicationCore.Services
     public class BusinessProcessService : IBusinessProcessService
     {
         private readonly IBusinessProcessRepository _repository;
-        private readonly IDepreciationMethodsRepository _depreciationMethodsRepository;
+        private readonly IDepreciationMethodsRepository _depreciationRepository;
         private readonly IMapper _mapper;
 
-        public BusinessProcessService(IBusinessProcessRepository repository,  IDepreciationMethodsRepository depreciationMethodsRepository, IMapper mapper)
+        public BusinessProcessService(IBusinessProcessRepository repository
+            , IDepreciationMethodsRepository depreciationRepository
+            , IMapper mapper)
         {
             _repository = repository;
-            _depreciationMethodsRepository = depreciationMethodsRepository;
+            _depreciationRepository = depreciationRepository;
             _mapper = mapper;
         }
 
@@ -36,15 +37,9 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<BusinessProcess> Add(BusinessProcessDTO dto)
         {
-            try
-            {
-                var businessProcessDto = _mapper.Map<BusinessProcess>(dto);
-                return await _repository.Add(businessProcessDto);
-            } 
-            catch(Exception ex)
-            {
-                throw ex;
-            }
+            var businessProcessDto = _mapper.Map<BusinessProcess>(dto);
+
+            return await _repository.Add(businessProcessDto);
         }
 
         public async Task<BusinessProcess> Update(BusinessProcessDTO dto)
@@ -59,7 +54,7 @@ namespace FAIS.ApplicationCore.Services
                 dto.UpdatedAt = DateTime.Now;
                 if (businessProcess.Result.IsActive != dto.IsActive)
                 {
-                    if(_depreciationMethodsRepository.GetByBusinessProcessId(dto.Id).Result != null)
+                    if(_depreciationRepository.GetByBusinessProcessId(dto.Id).Result != null)
                         throw new ArgumentException("Business Process is in use by Define Methods.");
                     dto.StatusDate = DateTime.Now;
                 }
@@ -72,7 +67,6 @@ namespace FAIS.ApplicationCore.Services
             {
                 throw ex;
             }
-            
         }
     }
 }

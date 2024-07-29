@@ -27,7 +27,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DepreciationMethodsController"/> class.
-        /// <param name="service">List the depreciation methods.</param>
+        /// <param name=service">The depreciation methods service.</param>
         /// </summary>
         public DepreciationMethodsController(IDepreciationMethodsService service) 
         {
@@ -37,8 +37,9 @@ namespace FAIS.Portal.API.Controllers
         #endregion Constructor
 
         #region Get
+
         /// <summary>
-        /// List of depreciation methods.
+        /// List the depreciation methods.
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -49,49 +50,55 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Get the depreciation methods by id
+        /// Gets the depreciation methods by unique identifier.
         /// </summary>
+        /// <param name="id">The depreciation methods unique identifier.</param>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(DepreciationMethodsModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
         }
+
         #endregion Get
 
         #region Post
+
         /// <summary>
         /// Posts the create depreciation methods.
         /// </summary>
-        /// <param name="DTO">The depreciation methods data object.</param>
+        /// <param name="depreciationMethodsDto">The depreciation methods data object.</param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(typeof(DepreciationMethods), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(DepreciationMethodsDTO DTO)
+        public async Task<IActionResult> Add(DepreciationMethodsDTO depreciationMethodsDto)
         {
-            if (DTO == null)
-                throw new ArgumentNullException(nameof(DTO));
+            if (depreciationMethodsDto == null)
+                throw new ArgumentNullException(nameof(depreciationMethodsDto));
 
-            return Ok(await _service.Add(DTO));
+            return Ok(await _service.Add(depreciationMethodsDto));
         }
+
         #endregion
 
         #region Put
+
         /// <summary>
-        /// Puts the update depreciation methods
+        /// Puts the update depreciation methods.
         /// </summary>
-        /// <param name="dto">The depreciation methods data object.</param>
+        /// <param name="depreciationMethodsDto">The depreciation methods data object.</param>
         /// <returns></returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(DepreciationMethods), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(DepreciationMethodsDTO dto)
+        public async Task<IActionResult> Update(DepreciationMethodsDTO depreciationMethodsDto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            if (depreciationMethodsDto == null)
+                throw new ArgumentNullException(nameof(depreciationMethodsDto));
 
-            return Ok(await _service.Update(dto));
+            return Ok(await _service.Update(depreciationMethodsDto));
         }
+
         #endregion
     }
 }  

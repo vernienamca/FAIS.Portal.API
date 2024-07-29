@@ -58,18 +58,19 @@ namespace FAIS.Infrastructure.Data
 
         public IReadOnlyCollection<Role> GetUserRolesById(int id)
         {
-            IReadOnlyCollection<int> UserRolesId = _dbContext.UserRoles.AsNoTracking().Where(u => u.UserId == id).Select(s => s.RoleId).ToList();
-            var UserRoles = _dbContext.Roles.Where(r => UserRolesId.Contains(r.Id))
+            IReadOnlyCollection<int> userRolesIds = _dbContext.UserRoles.AsNoTracking().Where(u => u.UserId == id).Select(s => s.RoleId).ToList();
+
+            var userRoles = _dbContext.Roles.Where(r => userRolesIds.Contains(r.Id))
                 .Select(r => new Role
                 {
                     Id = r.Id,
                     Name = r.Name,
                     Description = r.Description,
-                    CreatedAt = r.CreatedAt
-                })
-                .ToList();
+                    CreatedAt = r.CreatedAt,
+                    IsActive = r.IsActive
+                }).ToList();
 
-            return UserRoles;
+            return userRoles;
         }
         public Role GetRoleIdByName(string rolename)
         {

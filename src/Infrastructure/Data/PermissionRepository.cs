@@ -72,8 +72,9 @@ namespace FAIS.Infrastructure.Data
 
         public RolePermission GetById(int id)
         {
-            return _dbContext.RolePermissions.Where(t => t.Id == id).ToList()[0];
+            return _dbContext.RolePermissions.FirstOrDefault(t => t.Id == id);
         }
+
         public List<RolePermission> GetListById(int id)
         {
             return _dbContext.RolePermissions.Where(t => t.Id == id).ToList();

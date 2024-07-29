@@ -27,7 +27,7 @@ namespace FAIS.Portal.API.Controllers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BusinessProcessController"/> class.
-        /// <param name="service">List the business process.</param>
+        /// <param name="service">The business process service.</param>
         /// </summary>
         public BusinessProcessController(IBusinessProcessService service) 
         {
@@ -37,11 +37,12 @@ namespace FAIS.Portal.API.Controllers
         #endregion Constructor
 
         #region Get
+
         /// <summary>
         /// List of business process.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet]
         [ProducesResponseType(typeof(IReadOnlyCollection<BusinessProcessModel>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
@@ -49,37 +50,42 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Get the business process by id
+        /// Gets the business process by unique identifier.
         /// </summary>
+        /// <param name="id">The business process unique identifier.</param>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(BusinessProcessModel), StatusCodes.Status200OK)]
         public IActionResult GetById(int id)
         {
             return Ok(_service.GetById(id));
         }
+
         #endregion Get
 
         #region Post
+
         /// <summary>
         /// Posts the create business process.
         /// </summary>
-        /// <param name="DTO">The business process data object.</param>
+        /// <param name="businessProcessDto">The business process data object.</param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(typeof(BusinessProcess), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Add(BusinessProcessDTO DTO)
+        public async Task<IActionResult> Add(BusinessProcessDTO businessProcessDto)
         {
-            if (DTO == null)
-                throw new ArgumentNullException(nameof(DTO));
+            if (businessProcessDto == null)
+                throw new ArgumentNullException(nameof(businessProcessDto));
 
-            return Ok(await _service.Add(DTO));
+            return Ok(await _service.Add(businessProcessDto));
         }
+
         #endregion
 
         #region Put
+
         /// <summary>
-        /// Puts the update business process
+        /// Puts the update business process.
         /// </summary>
         /// <param name="dto">The business process data object.</param>
         /// <returns></returns>
@@ -92,6 +98,7 @@ namespace FAIS.Portal.API.Controllers
            
             return Ok(await _service.Update(dto));
         }
+
         #endregion
     }
 }  
