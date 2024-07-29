@@ -8,6 +8,9 @@ namespace FAIS.ApplicationCore.Models
     public class Amr100BatchDbdModel
     {
         public int Id { get; set; }
+        public int ReportSeq { get; set; }
+        public DateTime AmrYearMonth { get; set; }
+        public int Amr100BatchSeq { get; set; }
         public int Amr100BatchDSeq { get; set; }
         public int AmrSeq { get; set; }
         public char NewAsset { get; set; }

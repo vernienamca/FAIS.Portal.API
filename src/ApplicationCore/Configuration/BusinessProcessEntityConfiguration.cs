@@ -23,7 +23,7 @@ namespace FAIS.ApplicationCore.Configuration
             builder.Property(e => e.BusinessProcessName)
                 .IsRequired()
                 .HasMaxLength(50)
-                .HasColumnName("FIELD_NAME");
+                .HasColumnName("BUS_PROCESS_NAME");
 
             builder.Property(e => e.Description)
                 .IsRequired(false)

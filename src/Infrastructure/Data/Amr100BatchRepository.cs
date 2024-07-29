@@ -21,42 +21,42 @@ namespace FAIS.Infrastructure.Data
             int month = int.Parse(parts[1]);
 
             var amrs = (from amr in _dbContext.Amr100Batch.AsNoTracking()
-                        join amrA in _dbContext.Amrs.AsNoTracking() on amr.ReportSeq equals amrA.Id
-                        join proj in _dbContext.ProjectProfile.AsNoTracking() on amr.ProjectSeq equals proj.Id
-                        join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
-                        join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX
-                        from usrU in usrUX.DefaultIfEmpty()
-                        orderby amr.Id descending
-                        select new Amr100BatchModel()
-                        {
-                            Id = amr.Id,
-                            AmrYearMonth = amrA.AmrYm,
-                            ReportSeq = amr.ReportSeq,
-                            ReportFgLto = amr.ReportFgLto,
-                            ProjectSeq = amr.ProjectSeq,
-                            ProjectName = proj.ProjectName,
-                            ProjectComponentLto = amr.ProjectComponentLto,
-                            Remarks = amr.Remarks,
-                            UDF1 = amr.UDF1,
-                            UDF2 = amr.UDF2,
-                            UDF3 = amr.UDF3,
-                            StatusCode = amr.StatusCode,
-                            StatusDate = amr.StatusDate,
-                            AccStatusDate = amr.AccStatusDate,
-                            AssignedTo = amr.AssignedTo,
-                            CreatedAt = amr.CreatedAt,
-                            CreatedByName = $"{usr.FirstName} {usr.LastName}",
-                            UpdatedAt = amr.UpdatedAt,
-                            CreatedBy = amr.CreatedBy,
-                            UpdatedBy = amr.UpdatedBy,
-                            UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
-                            TotalReport = amr.TotalReport,
-                            TotalAmrIssues = _dbContext.Amr100BatchD.AsNoTracking()
-                                            .Where(d => d.Amr100BatchSeq == amr.Id)
-                                            .SelectMany(d => _dbContext.Amr100BatchDbd.AsNoTracking().Where(dbd => dbd.Amr100BatchDSeq == d.Id))
-                                            .Count(dbd => dbd.WithIssues == 'Y')
+                                join amrA in _dbContext.Amrs.AsNoTracking() on amr.ReportSeq equals amrA.Id
+                                join proj in _dbContext.ProjectProfile.AsNoTracking() on amr.ProjectSeq equals proj.Id
+                                join usr in _dbContext.Users.AsNoTracking() on amr.CreatedBy equals usr.Id
+                                join usrU in _dbContext.Users.AsNoTracking() on amr.UpdatedBy equals usrU.Id into usrUX
+                                from usrU in usrUX.DefaultIfEmpty()
+                                orderby amr.Id descending
+                                select new Amr100BatchModel()
+                                {
+                                    Id = amr.Id,
+                                    AmrYearMonth = amrA.AmrYm,
+                                    ReportSeq = amr.ReportSeq,
+                                    ReportFgLto = amr.ReportFgLto,
+                                    ProjectSeq = amr.ProjectSeq,
+                                    ProjectName = proj.ProjectName,
+                                    ProjectComponentLto = amr.ProjectComponentLto,
+                                    Remarks = amr.Remarks,
+                                    UDF1 = amr.UDF1,
+                                    UDF2 = amr.UDF2,
+                                    UDF3 = amr.UDF3,
+                                    StatusCode = amr.StatusCode,
+                                    StatusDate = amr.StatusDate,
+                                    AccStatusDate = amr.AccStatusDate,
+                                    AssignedTo = amr.AssignedTo,
+                                    CreatedAt = amr.CreatedAt,
+                                    CreatedByName = $"{usr.FirstName} {usr.LastName}",
+                                    UpdatedAt = amr.UpdatedAt,
+                                    CreatedBy = amr.CreatedBy,
+                                    UpdatedBy = amr.UpdatedBy,
+                                    UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                                    TotalReport = amr.TotalReport,
+                                    TotalAmrIssues = _dbContext.Amr100BatchD.AsNoTracking()
+                                                    .Where(d => d.Amr100BatchSeq == amr.Id)
+                                                    .SelectMany(d => _dbContext.Amr100BatchDbd.AsNoTracking().Where(dbd => dbd.Amr100BatchDSeq == d.Id))
+                                                    .Count(dbd => dbd.WithIssues == 'Y')
 
-                        }).Where(x => x.ReportSeq == reportSeqId && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month).ToList();
+                                }).Where(x => x.ReportSeq == reportSeqId && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month).ToList();
 
             return amrs;
         }

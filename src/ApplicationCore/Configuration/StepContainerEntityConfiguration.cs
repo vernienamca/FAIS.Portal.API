@@ -37,7 +37,6 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnName("STEP_TYPE");
 
             builder.Property(e => e.FieldDictionaryId)
-                .IsRequired(false)
                 .HasColumnName("FIELD_DICT_SEQ");
 
             builder.Property(e => e.IsElse)
@@ -73,7 +72,7 @@ namespace FAIS.ApplicationCore.Configuration
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_MODIFIED");
 
-            builder.Property(e => e.DateRemoved)
+            builder.Property(e => e.RemovedAt)
                 .IsRequired(false)
                 .HasColumnType("datetime")
                 .HasColumnName("DATE_REMOVED");

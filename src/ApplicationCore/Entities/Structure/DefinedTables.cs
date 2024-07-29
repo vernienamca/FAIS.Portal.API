@@ -9,7 +9,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int Id { get; set; }
 
         [DataMember]
-        public int? BusinessProcessId { get; set; }
+        public string BusinessProcessId { get; set; }
 
         [DataMember]
         public string TableName { get; set; }

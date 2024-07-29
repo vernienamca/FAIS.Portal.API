@@ -21,7 +21,7 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int StepType { get; set; }
 
         [DataMember]
-        public int? FieldDictionaryId { get; set; }
+        public int FieldDictionaryId { get; set; }
 
         [DataMember]
         public char IsElse { get; set; }
@@ -45,6 +45,6 @@ namespace FAIS.ApplicationCore.Entities.Structure
         public int? UpdatedBy { get; set; }
 
         [DataMember]
-        public DateTime? DateRemoved { get; set; }
+        public DateTime? RemovedAt { get; set; }
     }
 }
