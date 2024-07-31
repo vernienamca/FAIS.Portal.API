@@ -15,6 +15,7 @@ namespace FAIS.Infrastructure.Data
         public IReadOnlyCollection<DepreciationMethodsModel> Get()
         {
             var ret = (from dm in _dbContext.DepreciationMethods.AsNoTracking()
+                       join bp in _dbContext.BusinessProcess.AsNoTracking() on dm.BusinessProcessId equals bp.Id
                        join usr in _dbContext.Users.AsNoTracking() on dm.CreatedBy equals usr.Id
                        join usrU in _dbContext.Users.AsNoTracking() on dm.UpdatedBy equals usrU.Id into usrUX
                        from usrU in usrUX.DefaultIfEmpty()
@@ -27,6 +28,7 @@ namespace FAIS.Infrastructure.Data
                            StartDate = dm.StartDate,
                            EndDate = dm.EndDate,
                            BusinessProcessId = dm.BusinessProcessId,
+                           BusinessProcessName = bp.BusinessProcessName,
                            IsSingleTransaction = dm.IsSingleTransaction,
                            FinalResultId = dm.FinalResultId,
                            IsActive = dm.IsActive,

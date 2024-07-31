@@ -13,6 +13,7 @@ namespace FAIS.ApplicationCore.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int? BusinessProcessId { get; set; }
+        public string BusinessProcessName { get; set; }
         public char IsSingleTransaction { get; set; }
         public int? FinalResultId { get; set; }
         public char IsActive { get; set; }
