@@ -11,8 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using System.Linq;
-
 namespace FAIS.Portal.API.Controllers
 {
     [Produces("application/json")]
@@ -395,7 +393,7 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
         public async Task<IActionResult> RemoveBreak(int id)
         {
-            if (id == 0)
+            if (id <= 0)
                 throw new ArgumentNullException(nameof(id));
 
             return Ok(await _service.RemoveBreak(id));
@@ -411,7 +409,7 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(Amr100Batch), StatusCodes.Status200OK)]
         public async Task<IActionResult> NewAssetApproval(int id)
         {
-            if (id == 0)
+            if (id <= 0)
                 throw new ArgumentNullException(nameof(id));
 
             return Ok(await _service.NewAssetApproval(id));
@@ -427,12 +425,27 @@ namespace FAIS.Portal.API.Controllers
         [ProducesResponseType(typeof(AmrTransactionsDTO), StatusCodes.Status200OK)]
         public async Task<IActionResult> ReturnToAnalyst (AmrTransactionsDTO dto)
         {
-            if (dto.Id == 0)
+            if (dto.Id <= 0)
                 throw new ArgumentNullException(nameof (dto.Id));
 
             return Ok(await _service.ReturnToAnalyst(dto));
         }
 
+        /// <summary>
+        /// Sets the status of the batch to for Review.
+        /// </summary>
+        /// <param name="id">The batch object unique identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPut("for-review")]
+        [ProducesResponseType(typeof(Amr100Batch), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ForReview (int id)
+        {
+            if (id <= 0)
+                throw new ArgumentNullException(nameof(id));
+            
+            return Ok(await _service.ForReview(id));
+        }
         #endregion
     }
 }  
