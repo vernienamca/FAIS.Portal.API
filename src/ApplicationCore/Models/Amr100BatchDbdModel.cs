@@ -32,7 +32,7 @@ namespace FAIS.ApplicationCore.Models
         public string CreatedByName { get; set; }
         public int? UpdatedBy { get; set; }
         public string UpdatedByName { get; set; }
-
-
+        public int RoaSeq { get; set; }
+        public string AmrAsset { get; set; }
     }
 }

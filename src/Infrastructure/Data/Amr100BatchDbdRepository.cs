@@ -55,6 +55,8 @@ namespace FAIS.Infrastructure.Data
                                 CreatedBy = amr.CreatedBy,
                                 UpdatedBy = amr.UpdatedBy,
                                 UpdatedByName = $"{usrU.FirstName} {usrU.LastName}",
+                                AmrAsset = amrD.AmrAsset,
+                                RoaSeq = amrD.RoaSeq
 
                             })
                             .Where(x => x.ReportSeq == reportSeq && x.Amr100BatchSeq == amrBatchSeq && x.AmrYearMonth.Year == year && x.AmrYearMonth.Month == month)
