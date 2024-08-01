@@ -60,6 +60,7 @@ namespace FAIS
 
             services.AddDbContext<FAISContext>(options =>
             {
+                options.EnableSensitiveDataLogging();
                 options.UseOracle(Configuration.GetConnectionString("DefaultConnection"), oracleOptions =>
                 {
                     oracleOptions.UseOracleSQLCompatibility("11");
