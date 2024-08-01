@@ -52,14 +52,12 @@ namespace FAIS.ApplicationCore.Services
             var permissionDto = _mapper.Map<RolePermission>(permissionDTO);
             await _permissionRepository.Add(permissionDto);
         }
-        public async Task UpdatePermission(PermissionDTO permissionDTO)
+        public async Task UpdatePermission(UpdatePermissionDTO permissionDTO)
         {
             var permission = _permissionRepository.GetById(permissionDTO.Id);
             var updatedDto = _mapper.Map(permissionDTO, permission);
-            permission.CreatedBy = permission.CreatedBy;
-            permission.CreatedAt = updatedDto.CreatedAt;
-            permission.UpdatedAt = updatedDto.UpdatedAt;
-
+            permission.CreatedAt = permission.CreatedAt;
+            permission.UpdatedBy = permissionDTO.UpdatedBy;
             await _permissionRepository.Update(permission);
         }
 

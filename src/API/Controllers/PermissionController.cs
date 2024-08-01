@@ -116,7 +116,7 @@ namespace FAIS.Portal.API.Controllers
         /// <param name="permission">permission identifier.</param>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult Update(PermissionDTO permission)
+        public IActionResult Update(UpdatePermissionDTO permission)
         {
             return Ok(_permissionService.UpdatePermission(permission));
         }

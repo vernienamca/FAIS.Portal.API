@@ -24,6 +24,7 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<UpdatePermissionDTO, RolePermission>()
                 .ForMember(x => x.IsCreate, opt => opt.MapFrom(s => s.IsCreate ? 'Y' : 'N'))
                 .ForMember(x => x.IsUpdate, opt => opt.MapFrom(s => s.IsUpdate ? 'Y' : 'N'))
+                .ForMember(x => x.CreatedBy, opt => opt.Ignore())
                 .ForMember(x => x.IsRead, opt => opt.MapFrom(s => s.IsRead ? 'Y' : 'N')).ReverseMap();
             CreateMap<ProformaEntryDTO, ProformaEntry>();
             CreateMap<ProformaEntryDetailDTO, ProformaEntryDetail>();
