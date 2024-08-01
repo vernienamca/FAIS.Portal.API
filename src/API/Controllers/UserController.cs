@@ -455,6 +455,7 @@ namespace FAIS.API.Controllers
                 user.PositionId = int.Parse(userDTO.Position);
                 user.FirstName = userDTO.FirstName;
                 user.EmailAddress = userDTO.EmailAddress;
+                user.UserName = userDTO.UserName;
 
                 _userService.SetTAFGs(user.Id, userDTO.TAFG);
 
