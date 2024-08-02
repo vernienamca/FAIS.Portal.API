@@ -33,6 +33,7 @@ namespace FAIS.ApplicationCore.DTOs
 
     public class UpdatePermissionDTO
     {
+        public int Id { get; set; }
         public int RoleId { get; set; }
         public int ModuleId { get; set; }
         public bool IsCreate { get; set; }
@@ -40,7 +41,6 @@ namespace FAIS.ApplicationCore.DTOs
         public bool IsUpdate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-        public int CreatedBy { get; set; }
         public int UpdatedBy { get; set; }
     }
 

@@ -430,6 +430,14 @@ namespace FAIS.ApplicationCore.Services
             return await _amr100BatchRepository.Update(batch.Result);
         }
 
+        public async Task<Amr100Batch> ForReview(int id)
+        {
+            var batch = _amr100BatchRepository.GetAmr100Batch(id);
+
+            batch.Result.StatusCode = (int)AmrStatusEnum.ForReview;
+            return await _amr100BatchRepository.Update(batch.Result);
+        }
+
         #region Private
 
         /// <summary>

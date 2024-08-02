@@ -41,5 +41,6 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         Task<Amr100BatchD> RemoveBreak(int id);
         Task<Amr100Batch> NewAssetApproval(int id);
         Task<Amr100Batch> ReturnToAnalyst(AmrTransactionsDTO dto);
+        Task<Amr100Batch> ForReview(int id);
     }
 }

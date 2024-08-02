@@ -12,7 +12,7 @@ namespace FAIS.ApplicationCore.Interfaces
         List<PermissionModel> GetListPermission();
         Task DeletePermission(int id);
         Task AddPermission(AddPermissionDTO permissionDTO);
-        Task UpdatePermission(PermissionDTO permissionDTO);
+        Task UpdatePermission(UpdatePermissionDTO permissionDTO);
         List<PermissionModel> GetListPermissionByRoleId(int roleId);
         RolePermissionModel GetRolePermissionListByRoleId(int roleId);
         Task UpdateRoleAddPermission(UpdateRolePermissionDTO rolePermission);
