@@ -16,6 +16,7 @@ namespace FAIS.ApplicationCore.Interfaces.Repository
         Task BulkInsert(List<Amr100BatchDbd> amrs, BulkConfig bulkconfig);
         Task BulkUpdate(List<Amr100BatchDbd> amrs, BulkConfig bulkConfig);
         Task BulkDelete(List<Amr100BatchDbd> amrs, BulkConfig bulkConfig);
+        Task<List<Amr100BatchDbd>> InsertMultipleRecords(List<Amr100BatchDbd> amr);
         Task<List<Amr100BatchDbd>> RemoveMultipleRecords(List<Amr100BatchDbd> amr);
         IQueryable<Amr100BatchDbd> GetAll();
     }

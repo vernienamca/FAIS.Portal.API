@@ -274,16 +274,14 @@ namespace FAIS.ApplicationCore.Services
 
             return null;
         }
+
         public async Task<Amr100BatchD> BreakRow(int id)
         {
-            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
-            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
-            var amrBatchdbdEnt = new List<Amr100BatchDbd>();
+            var amrBatchDbdEnt = new List<Amr100BatchDbd>();
             var amr = await _amr100BatchDRepository.GetBatchDById(id);
-            var bulkConfig = new BulkConfig { BatchSize = amrBatchdbdEnt.Count(), BulkCopyTimeout = timeOutInSeconds };
 
             if (amr == null)
-                throw new ArgumentNullException("Amr Batch does not exist.");
+                throw new ArgumentNullException("Amr Batch does not exist");
 
             var units = amr.Qty;
             for (var i = 0; i < units; i++)
@@ -293,17 +291,19 @@ namespace FAIS.ApplicationCore.Services
                     Amr100BatchDSeq = amr.Id,
                     AllocatedCost = amr.AmrCost / units,
                     WithIssues = 'N',
+                    CreatedBy = amr.CreatedBy,
                     CreatedAt = DateTime.Now,
                 };
-                amrBatchdbdEnt.Add(newAmrBatchDbd);
+                amrBatchDbdEnt.Add(newAmrBatchDbd);
             }
+            
             try
             {
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     amr.ColumnBreaks = 1;
                     await _amr100BatchDRepository.Update(amr);
-                    await _amr100BatchDbdRepository.BulkInsert(amrBatchdbdEnt, bulkConfig);
+                    await _amr100BatchDbdRepository.InsertMultipleRecords(amrBatchDbdEnt);
                     scope.Complete();
                 }
             }
@@ -311,14 +311,12 @@ namespace FAIS.ApplicationCore.Services
             {
                 throw ex;
             }
+
             return null;
         }
         public async Task<List<Amr100BatchDbd>> BreakMultipleRows(List<Amr100BatchDbdDTO> dtos)
         {
-            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
-            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
             var entities = dtos.Select(dto => _mapper.Map<Amr100BatchDbd>(dto)).ToList();
-            var bulkConfig = new BulkConfig { BatchSize = entities.Count, BulkCopyTimeout = timeOutInSeconds };
 
             if (entities == null)
                 throw new ArgumentNullException("Amr Batch does not exist.");
@@ -338,7 +336,7 @@ namespace FAIS.ApplicationCore.Services
                             await _amr100BatchDRepository.Update(updateItem);
                         }
                     }
-                    await _amr100BatchDbdRepository.BulkInsert(entities, bulkConfig);
+                    await _amr100BatchDbdRepository.InsertMultipleRecords(entities);
 
                     scope.Complete();
 

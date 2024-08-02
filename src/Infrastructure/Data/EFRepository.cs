@@ -120,5 +120,20 @@ namespace FAIS.Infrastructure.Data
                 }
             }
         }
+
+        public async Task InsertRangeAsync(List<EntityType> entities)
+        {
+            try
+            {
+                _dbContext.Set<EntityType>().AddRange(entities);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                {
+                    throw ex;
+                }
+            }
+        }
     }
 }
