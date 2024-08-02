@@ -123,9 +123,10 @@ namespace FAIS.Infrastructure.Data
             return await UpdateAsync(amr);
         }
 
-        public async Task Update(List<Amr100BatchD> amrs)
+        public async Task<List<Amr100BatchD>> UpdateMultipleRecords(List<Amr100BatchD> amrs)
         {
-            await BulkUpdateAsync(amrs);
+            await UpdateRangeAsync(amrs);
+            return amrs;
         }
 
         public  IQueryable <Amr100BatchD> GetAll()

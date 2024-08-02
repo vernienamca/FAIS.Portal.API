@@ -255,18 +255,15 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<Amr100BatchD> ResetQuantity()
         {
-            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
-            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
             var (data, mappedAmrSeq) = this.MapAmr100BatchD();
             var entitiesToDelete = _amr100BatchDbdRepository.GetAll().Where(e => mappedAmrSeq.Contains(e.Amr100BatchDSeq)).ToList();
-            var bulkConfig = new BulkConfig { BatchSize = entitiesToDelete.Count(), BulkCopyTimeout = timeOutInSeconds };
 
             try
             {
                 using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    await _amr100BatchDbdRepository.BulkDelete(entitiesToDelete, bulkConfig);
-                    await _amr100BatchDRepository.Update(data);
+                    await _amr100BatchDbdRepository.RemoveMultipleRecords(entitiesToDelete);
+                    await _amr100BatchDRepository.UpdateMultipleRecords(data);
                     scope.Complete();
                 }
             }

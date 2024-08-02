@@ -129,13 +129,20 @@ namespace FAIS.Infrastructure.Data
             });
         }
 
-        public async Task BulkDelete(List<Amr100BatchDbd> amrs, BulkConfig bulkconfig)
+        public async Task BulkDelete(List<Amr100BatchDbd> amrs, BulkConfig bulkConfig)
         {
             await _dbContext.BulkDeleteAsync(amrs, options =>
             {
-                options.BatchSize = bulkconfig.BatchSize;
-                options.BatchTimeout = bulkconfig.BulkCopyTimeout ?? 0;
+                options.BatchSize = bulkConfig.BatchSize;
+                options.BatchTimeout = bulkConfig.BulkCopyTimeout ?? 0;
             });
+        }
+
+        public async Task<List<Amr100BatchDbd>> RemoveMultipleRecords(List<Amr100BatchDbd> amrs)
+        {
+            await DeleteRangeAsync(amrs);
+            return amrs;
+             
         }
         public IQueryable<Amr100BatchDbd> GetAll()
         {
