@@ -33,7 +33,7 @@ namespace FAIS.Infrastructure.Data
             {
                 throw ex;
             }
-        
+
         }
         public async Task<EntityType> UpdateAsync(EntityType entity)
         {
@@ -86,9 +86,53 @@ namespace FAIS.Infrastructure.Data
             {
                 await _dbContext.BulkDeleteAsync(entities);
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 throw ex;
+            }
+        }
+        public async Task DeleteRangeAsync(List<EntityType> entities)
+        {
+            try
+            {
+                _dbContext.Set<EntityType>().RemoveRange(entities);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public async Task UpdateRangeAsync(List<EntityType> entities)
+        {
+            try
+            {
+                _dbContext.Set<EntityType>().UpdateRange(entities);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public async Task InsertRangeAsync(List<EntityType> entities)
+        {
+            try
+            {
+                _dbContext.Set<EntityType>().AddRange(entities);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                {
+                    throw ex;
+                }
             }
         }
     }

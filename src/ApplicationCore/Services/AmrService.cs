@@ -17,6 +17,7 @@ using System.Linq;
 using System.Data.Entity;
 using System.Transactions;
 using System.Diagnostics;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -255,18 +256,15 @@ namespace FAIS.ApplicationCore.Services
 
         public async Task<Amr100BatchD> ResetQuantity()
         {
-            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
-            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
             var (data, mappedAmrSeq) = this.MapAmr100BatchD();
             var entitiesToDelete = _amr100BatchDbdRepository.GetAll().Where(e => mappedAmrSeq.Contains(e.Amr100BatchDSeq)).ToList();
-            var bulkConfig = new BulkConfig { BatchSize = entitiesToDelete.Count(), BulkCopyTimeout = timeOutInSeconds };
 
             try
             {
                 using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    await _amr100BatchDbdRepository.BulkDelete(entitiesToDelete, bulkConfig);
-                    await _amr100BatchDRepository.Update(data);
+                    await _amr100BatchDbdRepository.RemoveMultipleRecords(entitiesToDelete);
+                    await _amr100BatchDRepository.UpdateMultipleRecords(data);
                     scope.Complete();
                 }
             }
@@ -277,36 +275,36 @@ namespace FAIS.ApplicationCore.Services
 
             return null;
         }
+
         public async Task<Amr100BatchD> BreakRow(int id)
         {
-            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
-            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
-            var amrBatchdbdEnt = new List<Amr100BatchDbd>();
+            var amrBatchDbdEnt = new List<Amr100BatchDbd>();
             var amr = await _amr100BatchDRepository.GetBatchDById(id);
-            var bulkConfig = new BulkConfig { BatchSize = amrBatchdbdEnt.Count(), BulkCopyTimeout = timeOutInSeconds };
 
             if (amr == null)
-                throw new ArgumentNullException("Amr Batch does not exist.");
-
-            var units = amr.Qty;
-            for (var i = 0; i < units; i++)
-            {
-                var newAmrBatchDbd = new Amr100BatchDbd
-                {
-                    Amr100BatchDSeq = amr.Id,
-                    AllocatedCost = amr.AmrCost / units,
-                    WithIssues = 'N',
-                    CreatedAt = DateTime.Now,
-                };
-                amrBatchdbdEnt.Add(newAmrBatchDbd);
-            }
+                throw new ArgumentNullException("Amr Batch does not exist");
+            
             try
             {
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
+                    var units = amr.Qty;
+                    for (var i = 0; i < units; i++)
+                    {
+                        var newAmrBatchDbd = new Amr100BatchDbd
+                        {
+                            Amr100BatchDSeq = amr.Id,
+                            AllocatedCost = amr.AmrCost / units,
+                            WithIssues = 'N',
+                            CreatedBy = amr.CreatedBy,
+                            CreatedAt = DateTime.Now,
+                        };
+                        amrBatchDbdEnt.Add(newAmrBatchDbd);
+                    }
+
                     amr.ColumnBreaks = 1;
+                    await _amr100BatchDbdRepository.InsertMultipleRecords(amrBatchDbdEnt);
                     await _amr100BatchDRepository.Update(amr);
-                    await _amr100BatchDbdRepository.BulkInsert(amrBatchdbdEnt, bulkConfig);
                     scope.Complete();
                 }
             }
@@ -314,53 +312,56 @@ namespace FAIS.ApplicationCore.Services
             {
                 throw ex;
             }
+
             return null;
         }
-        public async Task<List<Amr100BatchDbd>> BreakMultipleRows(List<Amr100BatchDbdDTO> dtos)
+        public async Task<List<Amr100BatchD>> BreakMultipleRows()
         {
-            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
-            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
-            var entities = dtos.Select(dto => _mapper.Map<Amr100BatchDbd>(dto)).ToList();
-            var bulkConfig = new BulkConfig { BatchSize = entities.Count, BulkCopyTimeout = timeOutInSeconds };
+            var (data, mappedAmrSeq) = this.MapBatchD();
+            var amrBatchDbdEnt = new List<Amr100BatchDbd>();
 
-            if (entities == null)
-                throw new ArgumentNullException("Amr Batch does not exist.");
+
+            if (data == null)
+                throw new ArgumentNullException("No Amr Batch records exist");
 
             try
             {
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var amrBatchDSeqs = dtos.Select(dto => dto.Amr100BatchDSeq).Distinct().ToList();
-                    foreach (var batchDSeq in amrBatchDSeqs)
+                    foreach (var amrs in data)
                     {
-                        var entitiesToUpdate = _amr100BatchDRepository.GetAll().Where(x => x.Id == batchDSeq).ToList();
-
-                        foreach (var updateItem in entitiesToUpdate)
+                        var units = amrs.Qty;
+                        for (var i = 0; i < units; i++)
                         {
-                            updateItem.ColumnBreaks = 1;
-                            await _amr100BatchDRepository.Update(updateItem);
+                            var newAmrBatchDbd = new Amr100BatchDbd
+                            {
+                                Amr100BatchDSeq = amrs.Id,
+                                AllocatedCost = amrs.AmrCost / units,
+                                WithIssues = 'N',
+                                CreatedBy = amrs.CreatedBy,
+                                CreatedAt = DateTime.Now,
+                            };
+                            amrBatchDbdEnt.Add(newAmrBatchDbd);
                         }
                     }
-                    await _amr100BatchDbdRepository.BulkInsert(entities, bulkConfig);
+                    await _amr100BatchDbdRepository.InsertMultipleRecords(amrBatchDbdEnt);
+                    await _amr100BatchDRepository.UpdateMultipleRecords(data);
 
                     scope.Complete();
-
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("An error occurred while breaking multiple rows", ex);
             }
-            return entities;
+
+            return null;
         }
+
 
         public async Task<Amr100BatchD> RemoveBreak(int id)
         {
-            var timeOutConfig = _configuration.GetSection("BulkConfig")["BulkCopyTimeout"];
-            int timeOutInSeconds = timeOutConfig != null ? Convert.ToInt32(timeOutConfig) : 0;
             var entitiesToDelete = _amr100BatchDbdRepository.GetAll().Where(dbd => dbd.Amr100BatchDSeq == id).ToList();
-            var bulkConfig = new BulkConfig { BatchSize = entitiesToDelete.Count(), BulkCopyTimeout = timeOutInSeconds };
-
             var amr = _amr100BatchDRepository.GetBatchDById(id);
 
             if (amr == null)
@@ -371,7 +372,7 @@ namespace FAIS.ApplicationCore.Services
                 amr.Result.ColumnBreaks = 0;
                 amr.Result.Qty = 1;
                 await _amr100BatchDRepository.Update(amr.Result);
-                await _amr100BatchDbdRepository.BulkDelete(entitiesToDelete, bulkConfig);
+                await _amr100BatchDbdRepository.RemoveMultipleRecords(entitiesToDelete);
             }
             catch (Exception ex)
             {
@@ -454,6 +455,19 @@ namespace FAIS.ApplicationCore.Services
                 amr100BatchDIds.Add(amr.Id);
                 amr.Qty = 1;
                 amr.ColumnBreaks = 0;
+            });
+
+            return (amrs, amr100BatchDIds);
+        }       
+        private (List<Amr100BatchD>, List<int>) MapBatchD()
+        {
+            List<int> amr100BatchDIds = new List<int>();
+            var amrs = _amr100BatchDRepository.GetAll().Where(x => x.Qty > 1).ToList();
+
+            amrs.ForEach(amr =>
+            {
+                amr100BatchDIds.Add(amr.Id);
+                amr.ColumnBreaks = 1;
             });
 
             return (amrs, amr100BatchDIds);

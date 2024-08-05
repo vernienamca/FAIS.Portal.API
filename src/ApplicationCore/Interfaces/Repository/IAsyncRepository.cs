@@ -11,6 +11,9 @@ namespace FAIS.ApplicationCore.Interfaces
         Task DeleteAsync(EntityType entity);
         Task BulkUpdateAsync(List<EntityType> entities);
         Task BulkInsertAsync(List<EntityType> entities);
+        Task DeleteRangeAsync(List<EntityType> entities);
+        Task UpdateRangeAsync(List<EntityType> entities);
+        Task InsertRangeAsync(List<EntityType> entities);
     }
 }
 

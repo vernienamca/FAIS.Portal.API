@@ -276,12 +276,9 @@ namespace FAIS.Portal.API.Controllers
         /// <returns></returns>
         [HttpPost("batch-d/break-all")]
         [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
-        public async Task<IActionResult> BreakMultipleRows(List<Amr100BatchDbdDTO> dtos)
+        public async Task<IActionResult> BreakMultipleRows()
         {
-            if (dtos == null)
-                throw new ArgumentNullException(nameof(dtos));
-            var addedItems = await _service.BreakMultipleRows(dtos);
-            return Ok(addedItems);
+            return Ok(await _service.BreakMultipleRows());
         }
 
         #endregion
