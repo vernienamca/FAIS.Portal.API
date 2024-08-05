@@ -17,6 +17,7 @@ using System.Linq;
 using System.Data.Entity;
 using System.Transactions;
 using System.Diagnostics;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace FAIS.ApplicationCore.Services
 {
@@ -282,28 +283,28 @@ namespace FAIS.ApplicationCore.Services
 
             if (amr == null)
                 throw new ArgumentNullException("Amr Batch does not exist");
-
-            var units = amr.Qty;
-            for (var i = 0; i < units; i++)
-            {
-                var newAmrBatchDbd = new Amr100BatchDbd
-                {
-                    Amr100BatchDSeq = amr.Id,
-                    AllocatedCost = amr.AmrCost / units,
-                    WithIssues = 'N',
-                    CreatedBy = amr.CreatedBy,
-                    CreatedAt = DateTime.Now,
-                };
-                amrBatchDbdEnt.Add(newAmrBatchDbd);
-            }
             
             try
             {
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
+                    var units = amr.Qty;
+                    for (var i = 0; i < units; i++)
+                    {
+                        var newAmrBatchDbd = new Amr100BatchDbd
+                        {
+                            Amr100BatchDSeq = amr.Id,
+                            AllocatedCost = amr.AmrCost / units,
+                            WithIssues = 'N',
+                            CreatedBy = amr.CreatedBy,
+                            CreatedAt = DateTime.Now,
+                        };
+                        amrBatchDbdEnt.Add(newAmrBatchDbd);
+                    }
+
                     amr.ColumnBreaks = 1;
-                    await _amr100BatchDRepository.Update(amr);
                     await _amr100BatchDbdRepository.InsertMultipleRecords(amrBatchDbdEnt);
+                    await _amr100BatchDRepository.Update(amr);
                     scope.Complete();
                 }
             }
@@ -314,40 +315,49 @@ namespace FAIS.ApplicationCore.Services
 
             return null;
         }
-        public async Task<List<Amr100BatchDbd>> BreakMultipleRows(List<Amr100BatchDbdDTO> dtos)
+        public async Task<List<Amr100BatchD>> BreakMultipleRows()
         {
-            var entities = dtos.Select(dto => _mapper.Map<Amr100BatchDbd>(dto)).ToList();
+            var (data, mappedAmrSeq) = this.MapBatchD();
+            var amrBatchDbdEnt = new List<Amr100BatchDbd>();
 
-            if (entities == null)
-                throw new ArgumentNullException("Amr Batch does not exist.");
+
+            if (data == null)
+                throw new ArgumentNullException("No Amr Batch records exist");
 
             try
             {
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var amrBatchDSeqs = dtos.Select(dto => dto.Amr100BatchDSeq).Distinct().ToList();
-                    foreach (var batchDSeq in amrBatchDSeqs)
+                    foreach (var amrs in data)
                     {
-                        var entitiesToUpdate = _amr100BatchDRepository.GetAll().Where(x => x.Id == batchDSeq).ToList();
-
-                        foreach (var updateItem in entitiesToUpdate)
+                        var units = amrs.Qty;
+                        for (var i = 0; i < units; i++)
                         {
-                            updateItem.ColumnBreaks = 1;
-                            await _amr100BatchDRepository.Update(updateItem);
+                            var newAmrBatchDbd = new Amr100BatchDbd
+                            {
+                                Amr100BatchDSeq = amrs.Id,
+                                AllocatedCost = amrs.AmrCost / units,
+                                WithIssues = 'N',
+                                CreatedBy = amrs.CreatedBy,
+                                CreatedAt = DateTime.Now,
+                            };
+                            amrBatchDbdEnt.Add(newAmrBatchDbd);
                         }
                     }
-                    await _amr100BatchDbdRepository.InsertMultipleRecords(entities);
+                    await _amr100BatchDbdRepository.InsertMultipleRecords(amrBatchDbdEnt);
+                    await _amr100BatchDRepository.UpdateMultipleRecords(data);
 
                     scope.Complete();
-
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("An error occurred while breaking multiple rows", ex);
             }
-            return entities;
+
+            return null;
         }
+
 
         public async Task<Amr100BatchD> RemoveBreak(int id)
         {
@@ -445,6 +455,19 @@ namespace FAIS.ApplicationCore.Services
                 amr100BatchDIds.Add(amr.Id);
                 amr.Qty = 1;
                 amr.ColumnBreaks = 0;
+            });
+
+            return (amrs, amr100BatchDIds);
+        }       
+        private (List<Amr100BatchD>, List<int>) MapBatchD()
+        {
+            List<int> amr100BatchDIds = new List<int>();
+            var amrs = _amr100BatchDRepository.GetAll().Where(x => x.Qty > 1).ToList();
+
+            amrs.ForEach(amr =>
+            {
+                amr100BatchDIds.Add(amr.Id);
+                amr.ColumnBreaks = 1;
             });
 
             return (amrs, amr100BatchDIds);
