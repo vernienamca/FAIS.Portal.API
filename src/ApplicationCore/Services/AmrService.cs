@@ -254,9 +254,9 @@ namespace FAIS.ApplicationCore.Services
             return _amr100BatchDRepository.GetAll().ToExcel();
         }
 
-        public async Task<Amr100BatchD> ResetQuantity()
+        public async Task<Amr100BatchD> ResetQuantity(int amrBatchSeq)
         {
-            var (data, mappedAmrSeq) = this.MapAmr100BatchD();
+            var (data, mappedAmrSeq) = this.MapAmr100BatchD(amrBatchSeq);
             var entitiesToDelete = _amr100BatchDbdRepository.GetAll().Where(e => mappedAmrSeq.Contains(e.Amr100BatchDSeq)).ToList();
 
             try
@@ -315,9 +315,9 @@ namespace FAIS.ApplicationCore.Services
 
             return null;
         }
-        public async Task<List<Amr100BatchD>> BreakMultipleRows()
+        public async Task<List<Amr100BatchD>> BreakMultipleRows(int amrBatchSeq)
         {
-            var (data, mappedAmrSeq) = this.MapBatchD();
+            var (data, mappedAmrSeq) = this.MapBatchD(amrBatchSeq);
             var amrBatchDbdEnt = new List<Amr100BatchDbd>();
 
 
@@ -445,10 +445,10 @@ namespace FAIS.ApplicationCore.Services
         /// Maps the raw data to amr100 batch D.
         /// </summary>
         /// <returns></returns>
-        private (List<Amr100BatchD>, List<int>) MapAmr100BatchD()
+        private (List<Amr100BatchD>, List<int>) MapAmr100BatchD(int amrBatchSeq)
         {
             List<int> amr100BatchDIds = new List<int>();
-            var amrs = _amr100BatchDRepository.GetAll().Where(x => x.Qty > 1).ToList();
+            var amrs = _amr100BatchDRepository.GetAll().Where(x => x.Amr100BatchSeq == amrBatchSeq && x.Qty > 1).ToList();
 
             amrs.ForEach(amr =>
             {
@@ -459,10 +459,10 @@ namespace FAIS.ApplicationCore.Services
 
             return (amrs, amr100BatchDIds);
         }       
-        private (List<Amr100BatchD>, List<int>) MapBatchD()
+        private (List<Amr100BatchD>, List<int>) MapBatchD(int amrBatchSeq)
         {
             List<int> amr100BatchDIds = new List<int>();
-            var amrs = _amr100BatchDRepository.GetAll().Where(x => x.Qty > 1).ToList();
+            var amrs = _amr100BatchDRepository.GetAll().Where(x => x.Amr100BatchSeq == amrBatchSeq).ToList();
 
             amrs.ForEach(amr =>
             {

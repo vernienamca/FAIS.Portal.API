@@ -35,9 +35,9 @@ namespace FAIS.ApplicationCore.Interfaces.Service
         Task<Amr100BatchDbd> UpdateAmr100BatchDbd(UpdateAmr100BatchDbdDTO dto);
         Task<List<Amr100BatchDbd>> UpdateRows(List<UpdateAmr100BatchDbdDTO> dtos);
         Task<Amr100BatchStatHistory> AddAmr100BatchStatHistory(Amr100BatchStatHistoryDTO dto);
-        Task<Amr100BatchD> ResetQuantity();
+        Task<Amr100BatchD> ResetQuantity(int amrBatchDSeq);
         Task<Amr100BatchD> BreakRow(int id);
-        Task<List<Amr100BatchD>> BreakMultipleRows();
+        Task<List<Amr100BatchD>> BreakMultipleRows(int amrBatchDSeq);
         Task<Amr100BatchD> RemoveBreak(int id);
         Task<Amr100Batch> NewAssetApproval(int id);
         Task<Amr100Batch> ReturnToAnalyst(AmrTransactionsDTO dto);
