@@ -53,6 +53,9 @@ namespace FAIS.ApplicationCore.Services
                 if (fieldDictionary.Result == null)
                     throw new ArgumentNullException("Field Dictionary not exist.");
 
+                if (fieldDictionary.Result.IsActive != dto.IsActive)
+                    dto.StatusDate = DateTime.Now;
+
                 var mapper = _mapper.Map<FieldDictionary>(dto);
                 mapper.CreatedBy = fieldDictionary.Result.CreatedBy;
                 mapper.CreatedAt = fieldDictionary.Result.CreatedAt;

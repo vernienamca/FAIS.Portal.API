@@ -22,5 +22,6 @@ namespace FAIS.ApplicationCore.Models
         public DateTime? UpdatedAt { get; set; }
         public int CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
+        public List<StepContainerModel> StepContainerModels { get; set; }
     }
 }

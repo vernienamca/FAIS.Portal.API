@@ -13,11 +13,13 @@ namespace FAIS.ApplicationCore.Services
     public class DepreciationMethodsService : IDepreciationMethodsService
     {
         private readonly IDepreciationMethodsRepository _repository;
+        private readonly IStepContatinerRepository _stepContatinerRepository;
         private readonly IMapper _mapper;
 
-        public DepreciationMethodsService(IDepreciationMethodsRepository repository, IMapper mapper)
+        public DepreciationMethodsService(IDepreciationMethodsRepository repository, IStepContatinerRepository stepContatinerRepository, IMapper mapper)
         {
             _repository = repository;
+            _stepContatinerRepository = stepContatinerRepository;
             _mapper = mapper;
         }
 
@@ -35,7 +37,20 @@ namespace FAIS.ApplicationCore.Services
         {
             try { 
                 var depreciationMethodsDto = _mapper.Map<DepreciationMethods>(dto);
-                return await _repository.Add(depreciationMethodsDto);
+
+                var dm = await _repository.Add(depreciationMethodsDto);
+
+                var stepContainerList = dto.StepContainerDto;
+
+                stepContainerList.ForEach(async scDto =>
+                {
+                    scDto.DefinedMethodId = dm.Id;
+                    var sc = _mapper.Map<StepContainer>(scDto);
+                    await _stepContatinerRepository.Add(sc);
+                });
+
+
+                return dm;
             }
             catch (Exception ex)
             {
@@ -50,6 +65,9 @@ namespace FAIS.ApplicationCore.Services
 
                 if (depreciationMethods.Result == null)
                     throw new ArgumentNullException("Depreciation Methods not exist.");
+
+                if (depreciationMethods.Result.IsActive != dto.IsActive)
+                    dto.StatusDate = DateTime.Now;
 
                 var mapper = _mapper.Map<DepreciationMethods>(dto);
                 mapper.CreatedBy = depreciationMethods.Result.CreatedBy;

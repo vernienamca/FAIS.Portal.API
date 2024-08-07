@@ -13,6 +13,7 @@ namespace FAIS.ApplicationCore.Models
         public int SortOrder { get; set; }
         public int StepType { get; set; }
         public int? FieldDictionaryId { get; set; }
+        public string FieldDictionaryDescription { get; set; }
         public char IsElse { get; set; }
         public string Value { get; set; }
         public string Comments { get; set; }
@@ -21,5 +22,6 @@ namespace FAIS.ApplicationCore.Models
         public DateTime? RemovedAt { get; set; }
         public int CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
+        public List<StepContainerModel> ChildStepContainer { get; set; }
     }
 }

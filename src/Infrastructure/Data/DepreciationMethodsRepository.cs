@@ -62,10 +62,52 @@ namespace FAIS.Infrastructure.Data
                            StatusDate = dm.StatusDate,
                            CreatedAt = dm.CreatedAt,
                            UpdatedBy = dm.UpdatedBy,
-                           UpdatedAt = dm.UpdatedAt,
+                           UpdatedAt = dm.UpdatedAt
 
                        }).FirstOrDefaultAsync(t => t.Id == id);
+
+            var stepContainers = (from sc in _dbContext.StepContainers.AsNoTracking()
+                                  join fd in _dbContext.FieldDictionaries.AsNoTracking() on sc.FieldDictionaryId equals fd.Id into fdX
+                                  from fd in fdX.DefaultIfEmpty()
+                                  orderby sc.Id
+                                  select new StepContainerModel()
+                                  {
+                                      Id = sc.Id,
+                                      DefinedMethodId = sc.DefinedMethodId,
+                                      FieldDictionaryId = sc.FieldDictionaryId,
+                                      FieldDictionaryDescription = fd.Description,
+                                      ParentId = sc.ParentId,
+                                      SortOrder = sc.SortOrder,
+                                      StepType = sc.StepType,
+                                      IsElse = sc.IsElse,
+                                      Value = sc.Value,
+                                      Comments = sc.Comments,
+                                      ChildStepContainer = GetChildren(_dbContext.StepContainers.AsNoTracking().ToList(), sc.Id)
+                                  }).Where(x => x.DefinedMethodId == id).ToList();
+
+            ret.Result.StepContainerModels = stepContainers;
+
             return await ret;
+        }
+
+        private static List<StepContainerModel> GetChildren(List<StepContainer> steps, int parentId)
+        {
+            return steps
+                    .Where(sc => sc.ParentId == parentId)
+                    .Select(sc => new StepContainerModel
+                    {
+                        Id = sc.Id,
+                        DefinedMethodId = sc.DefinedMethodId,
+                        FieldDictionaryId = sc.FieldDictionaryId,
+                        //FieldDictionaryDescription = fd.Description,
+                        ParentId = sc.ParentId,
+                        SortOrder = sc.SortOrder,
+                        StepType = sc.StepType,
+                        IsElse = sc.IsElse,
+                        Value = sc.Value,
+                        Comments = sc.Comments,
+                        ChildStepContainer = GetChildren(steps, sc.Id)
+                    }).ToList();
         }
 
         public async Task<DepreciationMethods> GetByBusinessProcessId(int id)
