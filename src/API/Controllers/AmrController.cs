@@ -274,11 +274,11 @@ namespace FAIS.Portal.API.Controllers
         /// Posts the breakdown of Amr 100 Batch D records.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("batch-d/break-all")]
+        [HttpPost("batch-d/break-all/{amrBatchSeq:int}")]
         [ProducesResponseType(typeof(Amr100BatchDbd), StatusCodes.Status200OK)]
-        public async Task<IActionResult> BreakMultipleRows()
+        public async Task<IActionResult> BreakMultipleRows(int amrBatchSeq)
         {
-            return Ok(await _service.BreakMultipleRows());
+            return Ok(await _service.BreakMultipleRows(amrBatchSeq));
         }
 
         #endregion
@@ -372,13 +372,13 @@ namespace FAIS.Portal.API.Controllers
         // <summary>
         /// Removes the broke quantity.
         /// </summary>
-        /// <param name="dto">The amr 100 batch_d data object.</param>
+        /// <param name="amrbatchseq">Amr Batch D unique identifier.</param>
         /// <returns></returns>
-        [HttpPut("AmrResetQuantity")]
+        [HttpPut("batch-d/reset-quantity/{amrBatchSeq:int}")]
         [ProducesResponseType(typeof(Amr100BatchD), StatusCodes.Status200OK)]
-        public async Task<IActionResult> ResetQuantity()
+        public async Task<IActionResult> ResetQuantity(int amrBatchSeq)
         {
-            return Ok(await _service.ResetQuantity());
+            return Ok(await _service.ResetQuantity(amrBatchSeq));
         }
 
         // <summary>
