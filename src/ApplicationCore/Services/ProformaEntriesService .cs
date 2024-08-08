@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FAIS.ApplicationCore.BusinessRules;
 using FAIS.ApplicationCore.DTOs;
@@ -36,6 +37,11 @@ namespace FAIS.ApplicationCore.Services
             return _repository.GetById(id);
         }
 
+        public IReadOnlyCollection<ProformaEntryDetail> GetDetailById(int id)
+        {
+            return _detailsRepository.GetById(id);
+        }
+
         public async Task<ProformaEntry> Add(ProformaEntryDTO proformaEntryDTO)
         {
             ProformaEntry proformaEntry = new ProformaEntry()
@@ -56,7 +62,7 @@ namespace FAIS.ApplicationCore.Services
                 {
                     await _detailsRepository.Add(new ProformaEntryDetail()
                     {
-                        ProformaEntryId = item.ProformaEntryId,
+                        ProformaEntryId = result.Id,
                         FaisRefNo = item.FaisRefNo,
                         TranTypeSeq = item.TranTypeSeq,
                         CostCenter = item.CostCenter,
@@ -112,7 +118,7 @@ namespace FAIS.ApplicationCore.Services
         public async Task<ProformaEntry> Update(ProformaEntryDTO proformaEntryDTO)
         {
             var proformaEntry = _repository.GetById(proformaEntryDTO.Id);
-
+            
             proformaEntry.TranTypeSeq = proformaEntryDTO.TranTypeSeq;
             proformaEntry.Description = proformaEntryDTO.Description;
             proformaEntry.IsActive = proformaEntryDTO.IsActive;
@@ -123,6 +129,7 @@ namespace FAIS.ApplicationCore.Services
             proformaEntry.UpdatedBy = proformaEntryDTO.UpdatedBy;
             proformaEntry.UpdatedAt = DateTime.Now;
 
+           
             var result = await _repository.Update(proformaEntry);
 
             var proformaEntryDetails = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.Details);
@@ -147,7 +154,8 @@ namespace FAIS.ApplicationCore.Services
                     foreach (var item in proformaEntryDetails)
                     {
                         if (item.Id > 0)
-                            await _detailsRepository.Update(item);
+                        
+                        await _detailsRepository.Update(item);
                         else
                         {
                             item.ProformaEntryId = result.Id;

@@ -1,5 +1,7 @@
-﻿using FAIS.ApplicationCore.Entities.Structure;
+﻿using DocumentFormat.OpenXml.Vml.Office;
+using FAIS.ApplicationCore.Entities.Structure;
 using FAIS.ApplicationCore.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,16 +22,8 @@ namespace FAIS.Infrastructure.Data
         public ProformaEntry GetById(int id)
         {
             var proformaEntry = _dbContext.ProformaEntries.FirstOrDefault(t => t.Id == id);
-
-            if (proformaEntry != null)
-            {
-                var proformaDetails = _dbContext.ProformaEntryDetails.Where(t => t.ProformaEntryId == id && t.DeletedAt == null).ToList();
-                proformaEntry.ProformaEntryDetails = proformaDetails;
-
-                return proformaEntry;
-            }
-
-            return null;
+            return proformaEntry;
+ 
         }
 
         public async Task<ProformaEntry> Add(ProformaEntry proforma)

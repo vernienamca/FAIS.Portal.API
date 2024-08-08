@@ -19,7 +19,7 @@ namespace FAIS.Infrastructure.Data
 
         public List<ProformaEntryDetail> GetById(int id)
         {
-            return _dbContext.ProformaEntryDetails.Where(t => t.ProformaEntryId == id).AsNoTracking().ToList();
+            return _dbContext.ProformaEntryDetails.Where(t => t.ProformaEntryId == id && t.DeletedAt == null).ToList();
         }
         public async Task<ProformaEntryDetail> Add(ProformaEntryDetail proformaDetail)
         {

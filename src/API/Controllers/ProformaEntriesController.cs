@@ -50,9 +50,9 @@ namespace FAIS.Portal.API.Controllers
         }
 
         /// <summary>
-        /// Retrieve the chart of accounts by unique identifier.
+        /// Retrieve the proforma entries by unique identifier.
         /// </summary>
-        /// <param name="id">The chart of accounts identifier.</param>
+        /// <param name="id">The proforma entries identifier.</param>
         /// <returns>The chart of accounts.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(ProformaEntry), StatusCodes.Status200OK)]
@@ -61,6 +61,17 @@ namespace FAIS.Portal.API.Controllers
             return Ok(_proformaEntriesService.GetById(id));
         }
 
+        /// <summary>
+        /// Retrieve a list of proforma entry details by unique identifier.
+        /// </summary>
+        /// <param name="id">The proforma entry detail identifier</param>
+        /// <returns></returns>
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(ProformaEntryDetail), StatusCodes.Status200OK)]
+        public IActionResult GetDetailById(int id)
+        {
+            return Ok(_proformaEntriesService.GetDetailById(id));
+        }
         #endregion Get
 
         #region Post

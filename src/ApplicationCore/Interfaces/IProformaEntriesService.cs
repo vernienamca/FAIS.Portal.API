@@ -16,5 +16,6 @@ namespace FAIS.ApplicationCore.Interfaces
         Task<ProformaEntry> Update(ProformaEntryDTO proformaEntryDTO);
 
         Task Delete(int id);
+        IReadOnlyCollection<ProformaEntryDetail> GetDetailById(int id);
     }
 }
