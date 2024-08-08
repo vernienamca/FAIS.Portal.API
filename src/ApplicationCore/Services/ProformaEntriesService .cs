@@ -36,6 +36,11 @@ namespace FAIS.ApplicationCore.Services
             return _repository.GetById(id);
         }
 
+        public IReadOnlyCollection<ProformaEntryDetail> GetDetailById(int id)
+        {
+            return _detailsRepository.GetById(id);
+        }
+
         public async Task<ProformaEntry> Add(ProformaEntryDTO proformaEntryDTO)
         {
             ProformaEntry proformaEntry = new ProformaEntry()
@@ -87,26 +92,6 @@ namespace FAIS.ApplicationCore.Services
             }
 
             return result;
-
-            //var proformaEntry = _mapper.Map<ProformaEntry>(proformaEntryDTO);
-            //proformaEntry.CreatedAt = DateTime.Now;
-            //proformaEntry.StatusDate = DateTime.Now;
-
-            //var result = await _repository.Add(proformaEntry);
-
-            //var details = _mapper.Map<List<ProformaEntryDetail>>(proformaEntryDTO.ProformaEntryDetailsDTO);
-
-            //if (details.Any())
-            //{
-            //    foreach (var detail in details)
-            //    {
-            //        detail.ProformaEntryId = result.Id;
-
-            //        await _detailsRepository.Add(detail);
-            //    }
-            //}
-
-            //return result;
         }
 
         public async Task<ProformaEntry> Update(ProformaEntryDTO proformaEntryDTO)
