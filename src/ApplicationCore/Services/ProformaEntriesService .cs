@@ -61,7 +61,7 @@ namespace FAIS.ApplicationCore.Services
                 {
                     await _detailsRepository.Add(new ProformaEntryDetail()
                     {
-                        ProformaEntryId = item.ProformaEntryId,
+                        ProformaEntryId = result.Id,
                         FaisRefNo = item.FaisRefNo,
                         TranTypeSeq = item.TranTypeSeq,
                         CostCenter = item.CostCenter,
