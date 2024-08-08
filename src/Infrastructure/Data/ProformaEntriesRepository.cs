@@ -20,16 +20,7 @@ namespace FAIS.Infrastructure.Data
         public ProformaEntry GetById(int id)
         {
             var proformaEntry = _dbContext.ProformaEntries.FirstOrDefault(t => t.Id == id);
-
-            if (proformaEntry != null)
-            {
-                var proformaDetails = _dbContext.ProformaEntryDetails.Where(t => t.ProformaEntryId == id && t.DeletedAt == null).ToList();
-                proformaEntry.ProformaEntryDetails = proformaDetails;
-
-                return proformaEntry;
-            }
-
-            return null;
+            return proformaEntry;
         }
 
         public async Task<ProformaEntry> Add(ProformaEntry proforma)
