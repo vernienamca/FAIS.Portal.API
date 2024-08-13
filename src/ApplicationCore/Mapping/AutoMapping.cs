@@ -76,6 +76,7 @@ namespace FAIS.ApplicationCore.Mapping
             CreateMap<Amr100BatchDbd, AddAmr100BatchDbdDTO>().ReverseMap();
             CreateMap<Amr100BatchDbd, UpdateAmr100BatchDbdDTO>().ReverseMap();
             CreateMap<Amr100BatchDbd, Amr100BatchDbdDTO>().ReverseMap();
+            CreateMap<BusinessProcess, BusinessProcessDTO>().ReverseMap();
         }        
     }
 }
